@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PL2 Creative Studio</title>
+    <meta name="description" content="PL2 Creative Studio" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="PL2 Creative Studio" />
+    <meta property="og:description" content="PL2 Creative Studio" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="assets/base.css" />
+    <link rel="stylesheet" href="assets/index.css" />
+  </head>
+  <body class="hm-body">
+    <div class="hm-hero">
+      <!-- 피그마 Home 의 "Video" 레이어. 파일은 assets/home-hero.mp4 로 넣는다. -->
+      <video
+        class="hm-hero-media"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+      >
+        <source src="assets/home-hero.mp4" type="video/mp4" />
+      </video>
+      <div class="hm-hero-scrim" aria-hidden="true"></div>
+
+      <nav class="gnb" data-dropdown="off">
+        <div class="gnb-bar">
+          <span class="gnb-brand">PL2 Creative Studio</span>
+          <button
+            type="button"
+            class="gnb-toggle"
+            aria-label="메뉴 열기"
+            aria-expanded="false"
+            aria-controls="gnb-panel"
+          ></button>
+        </div>
+        <div class="gnb-panel" id="gnb-panel">
+          <a class="gnb-item" href="index.html" aria-current="page">Home</a>
+          <a class="gnb-item" href="works.html">Works</a>
+          <a class="gnb-item" href="about.html">About</a>
+          <a class="gnb-item" href="contact.html">Contact</a>
+        </div>
+      </nav>
+    </div>
+
+    <script src="assets/gnb.js"></script>
+  </body>
+</html>

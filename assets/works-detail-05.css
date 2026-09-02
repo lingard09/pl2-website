@@ -1,0 +1,168 @@
+/* PL2 works detail 05 전용 (공통 구조는 works-detail.css)
+   피그마: Works_Detail (node 2345:61435) — Shinsegae Duty Free Content Production
+   라이트 테마 + GNB Type=T/B 인데 **히어로만 어두운 영상**이라 `.wd-hero--dark` 를 쓴다.
+   섹션 리듬 320px, 섹션 내부 160 / 120 / 80 / 60. */
+
+.wd-head-desc {
+  line-height: 32px; /* 이 페이지 헤더 설명은 전부 32 */
+}
+
+.wd5-section {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+/* ══ 2·8. 가운데 질문 (세로 여백 240 / 0) ══════════════ */
+.wd5-question {
+  padding: 240px 0;
+}
+
+.wd-head--center {
+  gap: 40px;
+}
+
+/* ══ 3. 동선 안내 이미지 (전체 폭) ═════════════════════ */
+.wd5-route {
+  width: 100%;
+  aspect-ratio: 1920 / 532;
+  object-fit: cover;
+}
+
+/* ══ 4. 스틸 + 캡션 ════════════════════════════════════ */
+.wd5-still-block {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+.wd5-still {
+  display: block;
+  width: 64.792%; /* 1244 / 1920 */
+  margin: 0 auto;
+  aspect-ratio: 1244 / 686;
+  object-fit: cover;
+}
+
+/* ══ 5. 2열 4장 (오른쪽 열이 120 내려간다) ═════════════ */
+.wd5-quad {
+  display: flex;
+  align-items: flex-start; /* 열 높이가 서로 다르다 (오른쪽이 120 내려감) */
+  gap: 0.417%; /* 8 / 1920 */
+}
+
+.wd5-quad-col {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 8px;
+  width: 49.792%; /* 956 / 1920 */
+}
+
+.wd5-quad-col--low {
+  margin-top: 120px;
+}
+
+.wd5-quad-col img {
+  width: 100%;
+  aspect-ratio: 956 / 514;
+  object-fit: cover;
+}
+
+/* ══ 6. 엇갈린 3장 ═════════════════════════════════════ */
+.wd5-trio {
+  display: flex;
+  flex-direction: column;
+  gap: 120px;
+}
+
+.wd5-trio-01 {
+  align-self: flex-end;
+  width: 57.865%; /* 1111 / 1920 */
+  aspect-ratio: 1111 / 595;
+  object-fit: cover;
+}
+
+.wd5-trio-02 {
+  align-self: flex-start;
+  width: 37.292%; /* 716 / 1920 */
+  aspect-ratio: 716 / 384;
+  object-fit: cover;
+}
+
+.wd5-trio-03 {
+  align-self: flex-end;
+  width: 49.688%; /* 954 / 1920 */
+  aspect-ratio: 954 / 513;
+  object-fit: cover;
+}
+
+/* ══ 7. 영상 섹션 ══════════════════════════════════════ */
+.wd5-video {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1920 / 1080;
+  overflow: hidden;
+}
+
+.wd5-video img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wd5-video-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-top: 41px solid transparent;
+  border-bottom: 41px solid transparent;
+  border-left: 94.685px solid var(--pl2-white);
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 6.312px 31.562px rgba(0, 0, 0, 0.25));
+  pointer-events: none;
+}
+
+/* ══ 9. 리터칭 (비교 컷 + KYOKA 6장) ═══════════════════ */
+.wd5-retouch-block {
+  display: flex;
+  flex-direction: column;
+  gap: 120px;
+}
+
+.wd5-retouch {
+  width: 100%;
+  aspect-ratio: 1920 / 835;
+  object-fit: cover;
+}
+
+/* 381x571 3장이 붙은 띠. 첫 줄은 x=199, 둘째 줄은 x=580.
+   피그마 첫 줄 프레임이 720 높이(이미지 571 + 아래 여백 149)라 그만큼 아래 간격이 생긴다. */
+.wd5-kyoka-row {
+  display: flex;
+  width: 59.479%; /* 1142 / 1920 */
+}
+
+.wd5-kyoka-row img {
+  width: 33.333%;
+  aspect-ratio: 381 / 571;
+  object-fit: cover;
+}
+
+.wd5-kyoka-row--first {
+  margin-left: 10.365%; /* 199 / 1920 */
+  /* 피그마 첫 줄 프레임(720)의 아래 여백 149 — stack gap 60 과 합쳐 209 */
+  margin-bottom: 149px;
+}
+
+.wd5-kyoka-row--second {
+  margin-left: 30.208%; /* 580 / 1920 */
+}
+
+.wd5-kyoka-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}

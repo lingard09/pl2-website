@@ -1,0 +1,145 @@
+/* PL2 works detail 08 전용 (공통 구조는 works-detail.css)
+   피그마: Works_Detail (node 2345:67312, 콘텐츠 12134) — Smart things 2D Motion Project
+   **다크 테마** (Content fill #000000) + GNB Type=T/W. 섹션 리듬 320px, 내부 160 / 120 / 80. */
+
+.wd-head-desc {
+  line-height: 32px;
+}
+
+/* 가운데 헤더는 제목↔설명 24 */
+.wd-head--center {
+  gap: 24px;
+}
+
+.wd8-section {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+.wd8-stack120 {
+  display: flex;
+  flex-direction: column;
+  gap: 120px;
+}
+
+/* ══ 1558x835 미디어 (가운데) — 2번은 영상, 6번은 이미지 ══ */
+.wd8-wide {
+  display: block;
+  width: 81.146%; /* 1558 / 1920 */
+  margin: 0 auto;
+  aspect-ratio: 1558 / 835;
+  object-fit: cover;
+  background: var(--pl2-neutral-5);
+}
+
+/* ══ 3. 엇갈린 3장 (좌 / 우 / 좌) ══════════════════════ */
+.wd8-connect-01 {
+  align-self: flex-start;
+  width: 57.865%; /* 1111 / 1920 */
+  aspect-ratio: 1111 / 595;
+  object-fit: cover;
+}
+
+.wd8-connect-02 {
+  align-self: flex-end;
+  width: 37.292%; /* 716 / 1920 */
+  aspect-ratio: 716 / 384;
+  object-fit: cover;
+}
+
+.wd8-connect-03 {
+  align-self: flex-start;
+  width: 49.688%; /* 954 / 1920 */
+  aspect-ratio: 954 / 513;
+  object-fit: cover;
+}
+
+/* ══ 4. 모션 에셋 그리드 ═══════════════════════════════ */
+.wd8-grid-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.wd8-grid {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1920 / 954;
+  object-fit: cover;
+}
+
+/* 그리드 안에서 애니메이션 GIF 였던 두 칸만 영상으로 덮는다.
+   좌표는 피그마 기준 (그리드 좌상단 0,5759 / 1920x954). */
+.wd8-grid-cell {
+  position: absolute;
+  object-fit: cover;
+}
+
+.wd8-grid-cell--icon {
+  top: 0;
+  left: 80.469%; /* 1545 / 1920 */
+  width: 15.365%; /* 295 / 1920 */
+  aspect-ratio: 1 / 1;
+}
+
+.wd8-grid-cell--card {
+  top: 43.082%; /* (6170 - 5759) / 954 */
+  left: 49.948%; /* 959 / 1920 */
+  width: 29.948%; /* 575 / 1920 */
+  aspect-ratio: 575 / 543;
+}
+
+/* ══ 5. 954 듀오 (오른쪽이 120 아래) ═══════════════════ */
+.wd8-duo {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625%; /* 12 / 1920 */
+}
+
+.wd8-duo img {
+  width: 49.688%; /* 954 / 1920 */
+  aspect-ratio: 954 / 580;
+  object-fit: cover;
+}
+
+.wd8-duo img:last-child {
+  margin-top: 120px;
+}
+
+/* ══ 7. 영상 ═══════════════════════════════════════════ */
+.wd8-video {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1920 / 1080;
+  background: var(--pl2-neutral-5);
+  overflow: hidden;
+}
+
+.wd8-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 피그마: 영상 위에 검정 60% */
+.wd8-video::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--pl2-alpha-60);
+}
+
+.wd8-video-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  width: 0;
+  height: 0;
+  border-top: 41px solid transparent;
+  border-bottom: 41px solid transparent;
+  border-left: 94.685px solid var(--pl2-white);
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 6.312px 31.562px rgba(0, 0, 0, 0.25));
+  pointer-events: none;
+}

@@ -1,0 +1,51 @@
+/* PL2 home (index.html)
+   피그마: PL2 Production (전달) > Home (node 2345:59569), 1920x1080
+   - 전체 화면 히어로(피그마 레이어 이름 "Video" = 영상 fill)
+   - 화면 정중앙에 GNB 400x60 (공유 컴포넌트, base.css) */
+
+.hm-body {
+  min-height: 100dvh;
+  overflow: hidden;
+}
+
+/* ── 히어로 ─────────────────────────────────────────────
+   배경색은 영상이 없을 때 보이는 자리(피그마 Video 레이어의 solid fill #C9C9C9). */
+.hm-hero {
+  position: relative;
+  width: 100%;
+  height: 100dvh;
+  background-color: var(--pl2-gray-placeholder);
+  overflow: hidden;
+}
+
+/* 영상 파일은 assets/home-hero.mp4 로 넣는다 (피그마에서 추출 불가 - NOTES 참고) */
+.hm-hero-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 상단 그라디언트: 피그마 GRADIENT_LINEAR, 전체 opacity 0.4,
+   검정(a=1) → #666666(a=0), 축이 프레임 높이의 18.84% 에서 끝난다(1080 기준 203px). */
+.hm-hero-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(102, 102, 102, 0) 18.84%
+  );
+  pointer-events: none;
+}
+
+/* ── 화면 정중앙 GNB ─────────────────────────────────────
+   피그마: left calc(37.5% + 40px)=760, top 510 → 1920x1080 의 정중앙. */
+.hm-hero .gnb {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}

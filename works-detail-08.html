@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart things 2D Motion Project | PL2 Creative Studio</title>
+    <meta
+      name="description"
+      content="SmartThings 브랜드 영상용 2D 모션 그래픽 프로젝트"
+    />
+    <meta property="og:type" content="article" />
+    <meta
+      property="og:title"
+      content="Smart things 2D Motion Project | PL2 Creative Studio"
+    />
+    <meta
+      property="og:description"
+      content="SmartThings 브랜드 영상용 2D 모션 그래픽 프로젝트"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="assets/base.css" />
+    <link rel="stylesheet" href="assets/works-detail.css" />
+    <link rel="stylesheet" href="assets/works-detail-08.css" />
+  </head>
+  <body class="wd-body">
+    <!-- 피그마 GNB Type=T/W (다크 테마) -->
+    <nav class="gnb gnb--tw" data-dropdown="off">
+      <div class="gnb-bar">
+        <span class="gnb-brand">PL2 Creative Studio</span>
+        <button
+          type="button"
+          class="gnb-toggle"
+          aria-label="메뉴 열기"
+          aria-expanded="false"
+          aria-controls="gnb-panel"
+        ></button>
+      </div>
+      <div class="gnb-panel" id="gnb-panel">
+        <a class="gnb-item" href="index.html">Home</a>
+        <a class="gnb-item" href="works.html" aria-current="page">Works</a>
+        <a class="gnb-item" href="about.html">About</a>
+        <a class="gnb-item" href="contact.html">Contact</a>
+      </div>
+    </nav>
+
+    <main class="wd-main">
+      <div class="wd-container">
+        <!-- ══ 1. 히어로 + 프로젝트 개요 ══ -->
+        <section class="wd-top">
+          <div class="wd-hero">
+            <!-- 피그마 히어로 fill 은 1080x594 애니메이션 GIF (fffaef1ff09a) → mp4 로 변환.
+                 정지 프레임은 poster 로 남겼다. Works 3번 카드·About 모션 섹션과 같은 파일.
+                 원본이 1080x594 라 1920 으로 늘려 쓴다 (피그마도 같은 확대) -->
+            <video
+              class="wd-hero-media"
+              poster="assets/wd8-hero.jpg"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+            >
+              <source src="assets/wd8-hero.mp4" type="video/mp4" />
+            </video>
+            <div class="wd-hero-dim" aria-hidden="true"></div>
+
+            <div class="wd-hero-title">
+              <div class="wd-hero-head">
+                <span class="wd-hero-brand">Samsung</span>
+                <h1 class="wd-hero-h1">Smart things<br />2D Motion Project</h1>
+              </div>
+              <!-- TODO: 피그마가 "Tag" placeholder 5개로 두고 있다 -->
+              <div class="wd-hero-tags">
+                <span class="wd-tag">Tag</span>
+                <span class="wd-tag">Tag</span>
+                <span class="wd-tag">Tag</span>
+                <span class="wd-tag">Tag</span>
+                <span class="wd-tag">Tag</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="wd-intro">
+            <p class="wd-intro-title">Motion for Everyday Living</p>
+            <p class="wd-intro-desc">
+              SmartThings의 다양한 IoT 기능과 센서 기술을 쉽고 직관적으로 전달하기
+              위해 브랜드 영상에 삽입되는<br />
+              2D 모션 그래픽을 제작했습니다. 센서가 주변 환경을 감지하고, 연결된
+              기기가 상황에 맞게 반응하는 과정을<br />
+              시각화하여 복잡한 서비스의 작동 원리를 자연스럽게 이해할 수 있도록
+              구성했습니다.
+            </p>
+          </div>
+        </section>
+
+        <!-- ══ 2. 질문 + 영상 ══ -->
+        <section class="wd8-section">
+          <div class="wd-head wd-head--center">
+            <h2 class="wd-head-title">
+              보이지 않는 연결은<br />어떻게 일상을 바꿀 수 있을까?
+            </h2>
+            <p class="wd-head-desc">
+              SmartThings는 다양한 센서를 통해 주변의 밝기와 소리, 생활 환경의
+              변화를 감지하고 연결된 기기가 적절하게 반응하도록 돕습니다. 이러한
+              보이지 않는 감지와 연결의 과정을 모션 그래픽으로 시각화하여, 기술이
+              일상에서 어떻게 작동하고 어떤 변화를 만드는지 직관적으로 전달했습니다.
+            </p>
+          </div>
+
+          <!-- 피그마에서 이 자리는 영상이다. 파일은 assets/wd8-intro.mp4 (아직 없음).
+               poster 는 피그마 노드 렌더 = 영상 첫 프레임으로 채워뒀다. -->
+          <video
+            poster="assets/wd8-intro-poster.jpg"
+            class="wd8-wide"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          >
+            <source src="assets/wd8-intro.mp4" type="video/mp4" />
+          </video>
+        </section>
+
+        <!-- ══ 3. 연결의 시각화 ══ -->
+        <section class="wd8-section">
+          <div class="wd-head wd-head--right">
+            <h2 class="wd-head-title">Visualizing Sustainable Connections</h2>
+            <p class="wd-head-desc">
+              SmartThings가 만드는 연결은 단순히 기기를 제어하는 것을 넘어 보다
+              효율적인 자원 활용으로 이어집니다. 다양한 기능과 디바이스가 하나의
+              시스템으로 연결되고, 그 연결이 업사이클링과 리사이클링이라는 가치로
+              확장되는 과정을 일관된 모션 그래픽으로 표현했습니다.
+            </p>
+          </div>
+
+          <div class="wd8-stack120">
+            <img class="wd8-connect-01" src="assets/wd8-connect-01.jpg" alt="" />
+            <img class="wd8-connect-02" src="assets/wd8-connect-02.jpg" alt="" />
+            <img class="wd8-connect-03" src="assets/wd8-connect-03.jpg" alt="" />
+          </div>
+        </section>
+
+        <!-- ══ 4. 모션 에셋 ══ -->
+        <section class="wd8-section">
+          <div class="wd-head wd-head--left">
+            <h2 class="wd-head-title">Designing Motion Assets</h2>
+            <p class="wd-head-desc">
+              브랜드 영상 전반에 활용되는 다양한 모션 그래픽 에셋을 제작했습니다.
+              센서의 동작과 자동화 과정, 디바이스 간 연결, 인터페이스 요소 등
+              서비스를 설명하는 핵심 그래픽을 하나의 시스템으로 구성하여 영상
+              전반에서 일관된 시각 경험을 제공했습니다.
+            </p>
+          </div>
+
+          <!-- 그리드는 셀이 수십 개라 평면 이미지 한 장으로 export 했는데,
+               그중 두 셀이 애니메이션 GIF (aa9ceec4f7b2 / 969102dee556) 다.
+               평면 이미지를 그대로 깔고 그 두 칸 위에만 영상을 덮는다. -->
+          <div class="wd8-grid-wrap">
+            <img class="wd8-grid" src="assets/wd8-assets-grid.jpg" alt="" />
+            <video
+              class="wd8-grid-cell wd8-grid-cell--icon"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              aria-hidden="true"
+            >
+              <source src="assets/wd8-grid-icon.mp4" type="video/mp4" />
+            </video>
+            <video
+              class="wd8-grid-cell wd8-grid-cell--card"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              aria-hidden="true"
+            >
+              <source src="assets/wd8-grid-card.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </section>
+
+        <!-- ══ 5. 일상 속 모션 ══ -->
+        <section class="wd8-section">
+          <div class="wd-head wd-head--right">
+            <h2 class="wd-head-title">Bringing Motion into Everyday Life</h2>
+            <p class="wd-head-desc">
+              제작한 모션 그래픽을 실제 촬영 장면과 결합하여 SmartThings가 일상 속에서
+              어떻게 활용되는지를 자연스럽게 표현했습니다. 조도 변화에 따른 자동화,
+              반려동물과 아기의 소리 인식 등 다양한 생활 환경을 시각적으로 연결하여
+              기술이 실제 경험으로 이어지는 과정을 전달했습니다.
+            </p>
+          </div>
+
+          <div class="wd8-duo">
+            <img src="assets/wd8-life-01.jpg" alt="" />
+            <img src="assets/wd8-life-02.jpg" alt="" />
+          </div>
+        </section>
+
+        <!-- ══ 6. 마무리 ══ -->
+        <section class="wd8-section">
+          <div class="wd-head wd-head--left">
+            <h2 class="wd-head-title">Connected in Motion</h2>
+            <p class="wd-head-desc">
+              영상 전반에 사용된 모션 요소를 하나의 흐름으로 연결하여 SmartThings의
+              연결성과 서비스 구조를 직관적으로 전달했습니다. 센서와 인터페이스가
+              순차적으로 구성되는 움직임을 통해 브랜드의 핵심 경험을 정리하고,
+              SmartThings 로고 애니메이션으로 자연스럽게 마무리했습니다.
+            </p>
+          </div>
+
+          <img class="wd8-wide" src="assets/wd8-final.jpg" alt="" />
+        </section>
+
+        <!-- ══ 7. 영상 ══ -->
+        <section class="wd8-video">
+          <!-- 피그마 fill 이 영상뿐이라 포스터가 없다. 파일은 assets/wd8-video.mp4 -->
+          <video autoplay muted loop playsinline preload="metadata">
+            <source src="assets/wd8-video.mp4" type="video/mp4" />
+          </video>
+          <span class="wd8-video-play" aria-hidden="true"></span>
+        </section>
+
+        <!-- ══ 8. 크레딧 ══ -->
+        <section class="wd-credit">
+          <dl class="wd-credit-list">
+          <div class="wd-credit-row">
+            <dt>Creative Director</dt>
+            <dd>Ryan JW Kim</dd>
+          </div>
+          <div class="wd-credit-row">
+            <dt>Project Manager</dt>
+            <dd>Park Min Jun</dd>
+          </div>
+          <div class="wd-credit-row">
+            <dt>Art Direction</dt>
+            <dd>FoodBook 945</dd>
+          </div>
+          <div class="wd-credit-row">
+            <dt>Design / Compositing</dt>
+            <dd>Ahn Jeong Yeol</dd>
+          </div>
+          <div class="wd-credit-row">
+            <dt>3D Animation</dt>
+            <dd>PL2 Production</dd>
+          </div>
+          <div class="wd-credit-row">
+            <dt>Client</dt>
+            <dd>Samsung / SmartThings</dd>
+          </div>
+          </dl>
+        </section>
+      </div>
+    </main>
+
+    <footer class="ft">
+      <div class="ft-hero">
+        <div class="ft-hero-content">
+          <p class="ft-wordmark">PL2 Creative Studio</p>
+        </div>
+      </div>
+      <div class="ft-bar">
+        <div class="ft-bar-left">
+          <img class="ft-logo" src="assets/logo-pl2.svg" alt="PL2" />
+          <p class="ft-copy">© 2026 PL2 All Rights Resrved.</p>
+        </div>
+        <nav class="ft-links">
+          <a href="privacy.html">Privacy Policy</a>
+          <span class="ft-divider" aria-hidden="true"></span>
+          <a href="terms.html">Terms of Use</a>
+          <span class="ft-divider" aria-hidden="true"></span>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script src="assets/gnb.js"></script>
+  </body>
+</html>

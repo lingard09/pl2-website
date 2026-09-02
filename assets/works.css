@@ -1,0 +1,144 @@
+/* PL2 works (works.html)
+   피그마: PL2 Production (전달) > Works (node 2345:59585), 1920x5242
+   - 2열 그리드(각 942px) + 12px 거터, 프레임 좌우 여백 12px → 12+942+12+942+12 = 1920
+   - 카드 3종: Small 942x530 / Medium 942x800 / Large 942x1180
+   - GNB 는 상단 중앙 고정(피그마 좌표 760,12), 우하단에 맨 위로 버튼 */
+
+.wk-body {
+  background: var(--pl2-white);
+}
+
+/* GNB: 스크롤해도 상단에 붙어 있게 fixed (피그마는 프레임 최상단 y=12 에 배치) */
+.wk-body .gnb {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+}
+
+/* ── 그리드 ─────────────────────────────────────────── */
+.wk-main {
+  /* 1920 초과 화면에서는 카드가 무한히 커지지 않게 피그마 폭에서 멈춘다 */
+  max-width: 1920px;
+  margin: 0 auto;
+  /* 피그마: 섹션이 x=12, y=0 → 좌우 12px 만, 위아래 여백은 없다.
+     첫 카드가 화면 최상단에 붙고 그 위로 GNB(top 12)가 겹친다. */
+  padding: 0 12px;
+}
+
+.wk-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+
+.wk-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ── 카드 ───────────────────────────────────────────── */
+.wk-card {
+  position: relative;
+  display: block; /* <a> 로 쓸 때도 동일하게 */
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--pl2-radius);
+  overflow: hidden;
+  /* 이미지/영상이 없을 때 보이는 자리 */
+  background: var(--pl2-gray-placeholder);
+  /* 카드 폭 기준으로 오버레이 타이포를 비율 스케일 (942px 에서 피그마 값과 일치).
+     제목이 두 줄로 꺾이지 않게 하는 목적도 있다. */
+  container-type: inline-size;
+}
+
+.wk-card--s {
+  aspect-ratio: 942 / 530;
+}
+
+.wk-card--m {
+  aspect-ratio: 942 / 800;
+}
+
+.wk-card--l {
+  aspect-ratio: 942 / 1180;
+}
+
+.wk-card-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Dim (피그마 Dim 레이어, Color/Alpha/60). Hover=true 상태에서만 보인다. */
+.wk-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--pl2-alpha-60);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.wk-card:hover::after {
+  opacity: 1;
+}
+
+/* Overlay (피그마 Overlay: padding 24, gap 8, 좌하단 정렬) */
+.wk-card-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 0.849cqw; /* 8 / 942 */
+  padding: 2.548cqw; /* 24 / 942 */
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.wk-card:hover .wk-card-overlay {
+  opacity: 1;
+}
+
+/* Subtitle/Neo/Pc.M — 30px, Medium, Color/Neutral/90 */
+.wk-card-brand {
+  padding-left: 0.212cqw; /* 2 / 942 */
+  color: var(--pl2-neutral-90);
+  font-size: 3.185cqw; /* 30 / 942 */
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* Headline/Title/Neo/Pc.B — 44px/54px, Bold, letter-spacing -2% */
+.wk-card-project {
+  color: var(--pl2-white);
+  font-size: 4.671cqw; /* 44 / 942 */
+  font-weight: 700;
+  line-height: 1.227; /* 54 / 44 */
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+/* ── 맨 위로 버튼 (피그마 2345:59614, 64x64 @ 1816,972 → 우 40 / 하 44) ── */
+.wk-top {
+  position: fixed;
+  right: 40px;
+  bottom: 44px;
+  z-index: 100;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  /* 원(#303030 = Neutral/20) + 노란 화살표를 피그마에서 4x PNG 로 그대로 받아 씀.
+     SVG 로 export 하면 상위 섹션 배경(#F5F5F5)까지 끌려온다. */
+  background: url("icon-scroll-top.png") center / 64px 64px no-repeat;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}

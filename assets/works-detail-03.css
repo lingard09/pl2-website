@@ -1,0 +1,131 @@
+/* PL2 works detail 03 전용 (공통 구조는 works-detail.css)
+   피그마: Works_Detail (node 2345:60592) — Haruharu Product Production
+   라이트 테마(`.wd-body--light`) + GNB Type=T/B.
+   섹션 리듬 320px, 섹션 내부는 160 / 120 / 80 / 32. */
+
+/* 헤더 설명 행간: 섹션 3·5·6 은 34, 섹션 2(가운데)는 32 */
+.wd-head-desc {
+  line-height: 34px;
+}
+
+.wd-head--center .wd-head-desc {
+  line-height: 32px;
+}
+
+/* ══ 2. 브랜드 필름 ════════════════════════════════════ */
+.wd3-film {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+/* 피그마: 1244x700 연회색 판 위에 892x596 이미지를 176/52 인셋으로 얹음 */
+.wd3-film-plate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64.792%; /* 1244 / 1920 */
+  margin: 0 auto;
+  aspect-ratio: 1244 / 700;
+  background: #f5f6f7;
+}
+
+.wd3-film-plate img {
+  width: 71.704%; /* 892 / 1244 */
+  aspect-ratio: 892 / 596;
+  object-fit: cover;
+}
+
+/* 판 ↔ 캡션 32 (헤더 ↔ 판은 부모의 80) */
+.wd3-film-media {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.wd3-film-caption {
+  color: var(--pl2-neutral-40);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 32px;
+  text-align: center;
+}
+
+/* ══ 3·5. 큰 이미지 2장 (좌 → 우 엇갈림) ═══════════════ */
+.wd3-pair {
+  display: flex;
+  flex-direction: column;
+  gap: 120px;
+}
+
+.wd3-pair-a {
+  width: 53.802%; /* 1033 / 1920 */
+  aspect-ratio: 1033 / 554;
+  object-fit: cover;
+}
+
+.wd3-pair-b {
+  align-self: flex-end;
+  width: 61.927%; /* 1189 / 1920 */
+  aspect-ratio: 1189 / 639;
+  object-fit: cover;
+}
+
+/* 섹션 3·5 는 헤더와 이미지 사이 80 */
+.wd3-section {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+/* 섹션 4 는 헤더와 이미지 사이 120 */
+.wd3-section--gap120 {
+  gap: 120px;
+}
+
+/* ══ 4. 제품 컷 ════════════════════════════════════════ */
+.wd3-products {
+  width: 100%;
+  aspect-ratio: 1920 / 1080;
+  object-fit: cover;
+}
+
+/* 954 두 장 (12px 간격), 한쪽은 아래/한쪽은 위로 120 엇갈림 */
+.wd3-duo {
+  display: flex;
+  gap: 0.625%; /* 12 / 1920 */
+  height: 700px;
+}
+
+.wd3-duo img {
+  width: 49.688%; /* 954 / 1920 */
+  aspect-ratio: 954 / 580;
+  object-fit: cover;
+}
+
+.wd3-duo--left-low img:first-child {
+  align-self: flex-end;
+}
+
+.wd3-duo--right-low img:last-child {
+  align-self: flex-end;
+}
+
+.wd3-duo--left-low img:last-child,
+.wd3-duo--right-low img:first-child {
+  align-self: flex-start;
+}
+
+/* ══ 6. 모델 컷 ════════════════════════════════════════ */
+.wd3-model-last {
+  width: 50%; /* 960 / 1920 */
+  aspect-ratio: 960 / 1141;
+  object-fit: cover;
+}
+
+/* 섹션 6: 헤더 ↔ 본문 80, 본문 안(듀오 ↔ 마지막 컷) 120 */
+.wd3-stack120 {
+  display: flex;
+  flex-direction: column;
+  gap: 120px;
+}

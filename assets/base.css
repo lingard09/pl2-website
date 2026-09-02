@@ -1,0 +1,419 @@
+/* PL2 - 공통 리셋 & 디자인 토큰 & 공유 컴포넌트(GNB)
+   토큰 값은 피그마 @DESIGNSYSTEM 페이지(node 33:4) Foundation 변수에서 그대로 가져옴. */
+
+/* ── 폰트 ────────────────────────────────────────────────
+   피그마가 쓰는 두 스타일: Tannakone Regular Condensed(400) / Medium Condensed(500).
+   파일을 fonts/ 에 넣으면 활성화되고, 없으면 조용히 폴백 스택으로 떨어진다. */
+@font-face {
+  font-family: "Tannakone";
+  src: url("../fonts/Tannakone-RegularCondensed.woff2") format("woff2"),
+    url("../fonts/Tannakone-RegularCondensed.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Tannakone";
+  src: url("../fonts/Tannakone-MediumCondensed.woff2") format("woff2"),
+    url("../fonts/Tannakone-MediumCondensed.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Works_Detail 프롬프트 카드에서 쓰는 모노 폰트 (DM Mono). 파일 없으면 시스템 모노로 폴백. */
+@font-face {
+  font-family: "DM Mono";
+  src: url("../fonts/DMMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DM Mono";
+  src: url("../fonts/DMMono-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Headline/Quantify/Pc (26px) 에서 쓰는 폰트. 아직 사용 페이지 없음. */
+@font-face {
+  font-family: "Quantify";
+  src: url("../fonts/Quantify.woff2") format("woff2"),
+    url("../fonts/Quantify.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* 컬러 - Color/Primary */
+  --pl2-yellow: #ffe100; /* Primary/Normal */
+  --pl2-primary-dark: #c4e77e; /* Primary/Dark */
+
+  /* 컬러 - Color/Neutral (피그마 스케일 그대로) */
+  --pl2-black: #000000; /* Neutral/0 */
+  --pl2-neutral-5: #111111;
+  --pl2-neutral-10: #212121;
+  --pl2-neutral-20: #303030;
+  --pl2-neutral-30: #555555;
+  --pl2-neutral-40: #777777;
+  --pl2-neutral-50: #a6a6a6;
+  --pl2-neutral-60: #c8c8c8;
+  --pl2-neutral-70: #dfdfdf;
+  --pl2-neutral-80: #efefef;
+  --pl2-neutral-90: #f5f5f5;
+  --pl2-neutral-95: #fcfcfc;
+  --pl2-white: #ffffff; /* Neutral/100 */
+
+  /* 컬러 - Color/Alpha (검정 투명도) */
+  --pl2-alpha-20: rgba(0, 0, 0, 0.2);
+  --pl2-alpha-60: rgba(0, 0, 0, 0.6);
+
+  /* 히어로 영상/이미지가 로드되기 전 자리 (피그마 Video 레이어의 solid fill) */
+  --pl2-gray-placeholder: #c9c9c9;
+
+  /* 타이포 */
+  /* Tannakone 은 컨덴스트 폰트다. fonts/ 에 실제 파일이 들어와 있어서(2026-08-29)
+     평소엔 폴백까지 갈 일이 없지만, 로딩 실패 대비로 컨덴스트를 앞에 둔다. */
+  --pl2-font-display: "Tannakone", "Avenir Next Condensed", "Arial Narrow",
+    "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+    sans-serif;
+  --pl2-font-body: "Apple SD Gothic Neo", "Pretendard", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  --pl2-font-accent: "Quantify", var(--pl2-font-display);
+  --pl2-font-mono: "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* 형태 */
+  --pl2-radius: 12px;
+  --pl2-shadow-card: 0 4px 20px rgba(0, 0, 0, 0.04); /* DROP_SHADOW r20 y4 4% */
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--pl2-white);
+  color: var(--pl2-black);
+  font-family: var(--pl2-font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+/* 폼 요소는 UA 기본 폰트를 쓰므로 본문 폰트로 강제 */
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* ══ GNB (모든 페이지 공유) ═══════════════════════════════
+   피그마 컴포넌트: GNB/Bar (Dropdown=Off|On, Type=Default|T/W|T/B)
+              + GNB/Dropdown (Select=Default|Home|Works|About|Contact)
+   페이지 안에서의 위치는 각 페이지 CSS 가 잡는다 (home 은 .hm-hero 중앙).
+   Type 모디파이어: 기본(노란 바) / .gnb--tw (어두운 배경 위, 흰 텍스트)
+                    / .gnb--tb (밝은 배경 위, 검은 텍스트) */
+.gnb {
+  position: relative;
+  width: 400px;
+  max-width: calc(100% - 40px);
+}
+
+.gnb-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 60px;
+  padding-left: 24px;
+  padding-right: 20px;
+  background: var(--pl2-yellow);
+  border-radius: var(--pl2-radius);
+  box-shadow: var(--pl2-shadow-card);
+}
+
+.gnb-brand {
+  color: var(--pl2-black);
+  font-family: var(--pl2-font-display);
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0.25px;
+  white-space: nowrap;
+}
+
+.gnb-toggle {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  background: url("icon-hamburger.svg") center / 32px 32px no-repeat;
+}
+
+.gnb[data-dropdown="on"] .gnb-toggle {
+  background-image: url("icon-x.svg");
+}
+
+/* ── 드롭다운 패널 ───────────────────────────────────────
+   피그마 상세 03·04·05·06·07 에 숨겨져 있던 GNB 프레임(400x480, y=84) 스펙.
+   디자인시스템 컴포넌트(GNB/Dropdown, 노랑/60px, 타입별 3종)와는 다른 안이고,
+   이쪽은 타입 구분 없이 흰 글라스 패널 하나로 통일돼 있다.
+   fill #ffffff@50% / radius 4 / DROP_SHADOW 0 4 20 #000@4% / GLASS:4 / 바와 간격 12.
+   바 자체는 열려도 제자리에 있어야 하므로 흐름에서 빼서 absolute 로 매단다. */
+.gnb-panel {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  z-index: 1;
+  display: none;
+  flex-direction: column;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(4px); /* GLASS radius 4 근사 */
+  -webkit-backdrop-filter: blur(4px);
+  overflow: hidden; /* 첫/마지막 행 배경을 라운드에 맞춰 잘라낸다 */
+}
+
+.gnb[data-dropdown="on"] .gnb-panel {
+  display: flex;
+  /* 1080 미만 창에서 화면 밖으로 나가지 않게 (피그마 1080 기준으로는 항상 들어감).
+     바 중심이 화면 중앙이므로 남는 아래 높이는 50dvh - (바 절반 30 + gap 8). */
+  max-height: calc(50dvh - 38px);
+  overflow-y: auto;
+}
+
+.gnb-item {
+  display: flex;
+  align-items: center;
+  /* 피그마: 위아래 패딩 24 + 텍스트 100(110px/행간 100) = 행 148 로 적혀 있지만
+     실제 배치는 120 간격이고 패널 480 = 120 x 4 라 120 을 따른다.
+     구분선이 그 120 안에 그려져야 하므로 높이를 고정한다 (auto 면 121 이 된다). */
+  flex: none; /* 패널이 max-height 로 잘릴 때 행이 눌리지 않게 */
+  height: 120px;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--pl2-white);
+  color: var(--pl2-neutral-10); /* #212121 */
+  font-family: var(--pl2-font-display);
+  font-size: 110px;
+  font-weight: 500;
+  line-height: 100px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.gnb-item:last-child {
+  border-bottom: 0;
+}
+
+/* Hover=On / 현재 페이지: 검정 60% 배경 + 노란 글자 (#EEE021 — 토큰 노랑과 미세하게 다르다) */
+.gnb-item:hover,
+.gnb-item[aria-current="page"] {
+  background: rgba(0, 0, 0, 0.6);
+  color: #eee021;
+}
+
+/* ── 타입별 패널 색 ──────────────────────────────────────
+   숨은 110px 안은 T/B(밝은 배경) 페이지 5장에만 그려져 있다. 그래서
+   치수(110px / 행 120 / 간격 12 / radius 4)는 전 타입에 공용으로 쓰되,
+   패널·글자 색은 각 타입에 대해 피그마가 정의해 둔 값을 쓴다.
+   흰 반투명 패널을 그대로 어두운 페이지에 얹으면 #212121 글자가 묻힌다
+   (실측 대비 1.12:1 — WCAG AA 4.5:1 한참 미달). */
+
+/* Default (노란 바): 컴포넌트 GNB/Dropdown Select=* 는 불투명 노란 패널 */
+:where(.gnb:not(.gnb--tw):not(.gnb--tb)) .gnb-panel {
+  background: var(--pl2-yellow);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+:where(.gnb:not(.gnb--tw):not(.gnb--tb)) .gnb-item {
+  color: var(--pl2-black);
+  border-bottom-color: var(--pl2-alpha-20);
+}
+
+/* T/W (어두운 배경): 컴포넌트는 검정 10% + GLASS, 글자 흰색 */
+:where(.gnb--tw) .gnb-panel {
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+:where(.gnb--tw) .gnb-item {
+  color: var(--pl2-white);
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 노란 패널 위에서는 검정 60% 가 올리브색으로 떠서 탁하다.
+   컴포넌트 GNB/Dropdown Select=<page> 가 정의한 대로 불투명 검정 + 노랑을 쓴다. */
+.gnb:not(.gnb--tw):not(.gnb--tb) .gnb-item:hover,
+.gnb:not(.gnb--tw):not(.gnb--tb) .gnb-item[aria-current="page"] {
+  background: var(--pl2-black);
+  color: var(--pl2-yellow);
+}
+
+/* T/B (밝은 배경) 는 숨은 안 그대로라 추가 규칙이 필요 없다.
+   위 타입 규칙은 :where() 로 감싸 특이도를 0 으로 만들었다 —
+   그래야 아래의 hover/현재페이지 규칙이 타입 규칙을 이긴다. */
+
+/* ── Type=T/W : 어두운 배경 위 (fill 검정 10% + 흰 테두리 + glass) ── */
+.gnb--tw .gnb-bar {
+  background: rgba(0, 0, 0, 0.1);
+  /* 피그마는 흰색 10% 그라디언트 stroke + 흰색 10% solid stroke 2겹 → 합쳐 20% 로 근사 */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px); /* GLASS 효과 근사 */
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.gnb--tw .gnb-brand {
+  color: var(--pl2-white);
+}
+
+.gnb--tw .gnb-toggle {
+  background-image: url("icon-hamburger-white.svg");
+}
+
+.gnb--tw[data-dropdown="on"] .gnb-toggle {
+  background-image: url("icon-x-white.svg");
+}
+
+
+/* ── Type=T/B : 밝은 배경 위 (fill 흰색 30% + glass) ────── */
+.gnb--tb .gnb-bar {
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+
+
+/* ══ 푸터 (여러 페이지 공유) ═══════════════════════════════
+   피그마 About > Frame 1428752813 (2345:61393)
+   = 노란 워드마크 블록 480 + 하단 바 90. 디자인시스템의 Footer(1960:7789)는 하단 바만. */
+.ft {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 워드마크 블록: padding 120 상하 + content padding 24 상하 = 480 */
+.ft-hero {
+  display: flex;
+  justify-content: center;
+  padding: 120px 0;
+  background: var(--pl2-yellow);
+  overflow: hidden; /* 피그마 overflow-clip — 좁은 창에서는 잘린다 */
+}
+
+.ft-hero-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 24px 40px 24px 64px;
+}
+
+.ft-wordmark {
+  color: var(--pl2-black);
+  font-family: var(--pl2-font-display);
+  font-size: 160px;
+  font-weight: 500;
+  line-height: 192px; /* 120% */
+  white-space: nowrap;
+}
+
+/* 하단 바: 30+30 padding + content 30 = 90 */
+.ft-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30px 40px;
+  background: var(--pl2-yellow);
+  overflow: hidden;
+}
+
+.ft-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.ft-logo {
+  width: 23.973px;
+  height: 30.276px;
+}
+
+.ft-copy {
+  color: var(--pl2-neutral-10);
+  font-size: 16.399px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.04em; /* 4% */
+  white-space: nowrap;
+}
+
+.ft-links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.ft-links a {
+  color: var(--pl2-neutral-10);
+  font-size: 18.922px;
+  font-weight: 500;
+  line-height: 23px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.ft-links a:hover {
+  text-decoration: underline;
+}
+
+/* 구분선: 피그마 Line 49 (stroke #555555, 1.2615px, 길이 10.092px) */
+.ft-divider {
+  flex: none;
+  width: 1.2615px;
+  height: 10.092px;
+  background: var(--pl2-neutral-30);
+}
+
+/* 화면에는 없지만 스크린리더에는 읽히는 텍스트 (피그마에 제목이 없는 페이지의 h1) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

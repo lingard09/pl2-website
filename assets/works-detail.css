@@ -1,0 +1,335 @@
+/* PL2 Works_Detail 공통 (works-detail-NN.html 이 함께 불러온다)
+   피그마 Works_Detail 프레임들이 공유하는 구조:
+   - 검정 배경 다크 테마 / GNB Type=T/W / 320px 섹션 리듬
+   - 히어로(영상 or 이미지 + Dim + 타이틀 + 태그) / 프로젝트 개요 / 섹션 헤더 / 크레딧
+   페이지별 고유 섹션은 works-detail-NN.css 에 둔다. */
+
+.wd-body {
+  background: var(--pl2-black);
+  color: var(--pl2-white);
+}
+
+/* GNB: 피그마 Type=T/W (어두운 히어로 위) */
+.wd-body .gnb {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+}
+
+.wd-main {
+  max-width: 1920px;
+  margin: 0 auto;
+  overflow: hidden; /* 필름스트립이 좌우로 넘치므로 */
+}
+
+.wd-container {
+  display: flex;
+  flex-direction: column;
+  gap: 320px;
+}
+
+/* ══ 1. 히어로 + 프로젝트 타이틀 ═══════════════════════ */
+.wd-top {
+  display: flex;
+  flex-direction: column;
+  gap: 160px;
+}
+
+/* 히어로는 '배경 아트워크 + 그 위 텍스트' 가 한 덩어리라, 뷰포트가 좁아져도
+   둘이 같은 비율로 줄어야 한다. 안 그러면 배경만 줄고 제목은 px 고정이라
+   남아서 겹쳐 버린다 (상세 04 Samsung Internet 로고 사례: 1920 에서 39px 겹침이
+   1280 에서 222px 로 벌어졌다). 그래서 히어로를 컨테이너로 잡고 안쪽 타이포를
+   전부 cqw(= 피그마 px / 1920 * 100) 로 쓴다. Works 카드에 쓴 것과 같은 방식.
+   1920 에서는 px 값과 완전히 동일하다. */
+.wd-hero {
+  position: relative;
+  container-type: inline-size;
+  width: 100%;
+  aspect-ratio: 1920 / 1080;
+  background: var(--pl2-neutral-5);
+  overflow: hidden;
+}
+
+.wd-hero-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 피그마 Dim: 왼쪽 검정 20% → 오른쪽 투명 */
+.wd-hero-dim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.2) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+/* 피그마 Hero Title: x=77, y=389, w=883 (세로 중앙 기준 +14) */
+.wd-hero-title {
+  position: absolute;
+  top: 50%;
+  left: 4.01%; /* 77 / 1920 */
+  display: flex;
+  flex-direction: column;
+  gap: 2.0833cqw; /* 40 */
+  width: 46.0%; /* 883 / 1920 */
+  transform: translateY(calc(-50% + 0.7292cqw)); /* +14 */
+}
+
+.wd-hero-head {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25cqw; /* 24 */
+  align-items: flex-start;
+}
+
+.wd-hero-brand {
+  padding: 0.3646cqw 0.625cqw 0.1042cqw; /* 7 12 2 */
+  border-radius: 0.2083cqw; /* 4 */
+  background: rgba(255, 255, 255, 0.24);
+  color: var(--pl2-neutral-90);
+  font-size: 1.4583cqw; /* 28 */
+  font-weight: 500;
+  line-height: 1.6667cqw; /* 32 */
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.wd-hero-h1 {
+  color: var(--pl2-white);
+  font-family: var(--pl2-font-display);
+  font-size: 5.7292cqw; /* 110 */
+  font-weight: 500;
+  line-height: 5.2083cqw; /* 100 */
+  /* 피그마 그대로: 883px 박스(.wd-hero-title) 안에서 <br> 로 2줄.
+     Tannakone 이 들어오기 전에는 폴백 폭 때문에 nowrap 으로 막아뒀었는데,
+     실제 폰트가 붙은 뒤로는 전 페이지가 883 안에 들어와서 필요 없어졌다. */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+.wd-hero-tags {
+  display: flex;
+  gap: 0.4167cqw; /* 8 */
+  align-items: center;
+}
+
+.wd-tag {
+  padding: 0.2083cqw 0.3125cqw; /* 4 6 */
+  border-radius: 0.2083cqw; /* 4 */
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--pl2-neutral-80);
+  font-size: 0.7813cqw; /* 15 */
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+/* 프로젝트 타이틀 + 개요 */
+.wd-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  padding: 0 3.125%; /* 60 / 1920 */
+}
+
+.wd-intro-title {
+  color: var(--pl2-neutral-95);
+  font-family: var(--pl2-font-display);
+  font-size: 60px;
+  font-weight: 500;
+  line-height: 64px;
+}
+
+.wd-intro-desc {
+  color: var(--pl2-neutral-70);
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 36px;
+  letter-spacing: -0.02em;
+}
+
+/* ══ 공통 섹션 헤더 ════════════════════════════════════ */
+.wd-head {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 피그마 32px 섹션 헤더는 SemiBold(600) 28개 / Bold(700) 14개로 섞여 있다.
+   한 페이지 안에서도 섞이는데(예: 상세 04 는 가운데만 SemiBold, 나머지 Bold)
+   디자인을 그대로 따르기로 해서 다수인 600 을 기본으로 두고 Bold 만 모디파이어로 뺐다.
+   어느 헤더가 Bold 인지는 NOTES.md "섹션 헤더 굵기" 표 참고. */
+.wd-head-title {
+  color: var(--pl2-neutral-90);
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 46px;
+  letter-spacing: -0.02em;
+}
+
+.wd-head-title--bold {
+  font-weight: 700;
+}
+
+.wd-head-desc {
+  color: var(--pl2-neutral-60);
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 34px;
+}
+
+/* 가운데 정렬 헤더 (피그마 x=592, w=736, gap 40, desc lh 32) */
+.wd-head--center {
+  align-items: center;
+  gap: 40px;
+  text-align: center;
+}
+
+.wd-head--center .wd-head-title,
+.wd-head--center .wd-head-desc {
+  width: 38.333%; /* 736 / 1920 */
+}
+
+.wd-head--center .wd-head-title {
+  color: var(--pl2-neutral-80);
+}
+
+.wd-head--center .wd-head-desc {
+  line-height: 32px;
+}
+
+/* 왼쪽 정렬 헤더 (피그마 x=60, gap 24) */
+.wd-head--left {
+  gap: 24px;
+  padding: 0 3.125%;
+}
+
+/* 주의: 부모(.wd-head--left)에 좌우 패딩 3.125% 가 있어서 % 는 1800 기준으로 계산된다.
+   피그마 736px 을 맞추려면 736/1800 = 40.889% (전체 폭 기준으로는 여전히 38.333%). */
+.wd-head--left .wd-head-desc {
+  width: 40.889%;
+}
+
+/* 오른쪽(x=1124) 정렬 헤더 — 스티커 섹션 */
+.wd-head--right {
+  gap: 24px;
+  padding-left: 58.542%; /* 1124 / 1920 */
+  padding-right: 3.125%;
+}
+
+/* ══ 7. 크레딧 ═════════════════════════════════════════ */
+.wd-credit {
+  padding: 60px 3.125% 200px 58.542%; /* 피그마 x=1124, 위 60 / 아래 200 */
+  background: var(--pl2-black);
+}
+
+.wd-credit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wd-credit-row {
+  display: flex;
+  gap: 10px;
+}
+
+.wd-credit-row dt {
+  flex: none;
+  width: 252px;
+  color: var(--pl2-neutral-60);
+  font-size: 20.184px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.wd-credit-row dd {
+  color: var(--pl2-neutral-40);
+  font-size: 20.184px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+/* ══ 라이트 테마 상세 (예: 상세 03) ═══════════════════════
+   피그마에서 Content fill 이 #FFFFFF 이고 GNB Type=T/B 인 상세 페이지용.
+   구조는 그대로 쓰고 색만 뒤집는다. */
+.wd-body--light {
+  background: var(--pl2-white);
+  color: var(--pl2-neutral-10);
+}
+
+.wd-body--light .wd-hero {
+  background: var(--pl2-white);
+}
+
+/* 라이트 히어로는 이미지를 잘라내지 않고 가운데 맞춤 (피그마 scaleMode FIT) */
+.wd-body--light .wd-hero-media {
+  object-fit: contain;
+}
+
+.wd-body--light .wd-hero-brand {
+  background: rgba(0, 0, 0, 0.12);
+  color: var(--pl2-neutral-20);
+}
+
+.wd-body--light .wd-hero-h1 {
+  color: var(--pl2-black);
+}
+
+.wd-body--light .wd-tag {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--pl2-neutral-30);
+}
+
+.wd-body--light .wd-intro-title,
+.wd-body--light .wd-head-title {
+  color: var(--pl2-neutral-10);
+}
+
+.wd-body--light .wd-intro-desc,
+.wd-body--light .wd-head-desc {
+  color: var(--pl2-neutral-40);
+}
+
+.wd-body--light .wd-credit {
+  background: var(--pl2-white);
+}
+
+.wd-body--light .wd-credit-row dt {
+  color: var(--pl2-neutral-10);
+}
+
+.wd-body--light .wd-credit-row dd {
+  color: var(--pl2-neutral-50);
+}
+
+/* 라이트 테마 페이지인데 히어로만 어두운 경우 (예: 상세 05 — 영상 히어로) */
+.wd-body--light .wd-hero--dark {
+  background: var(--pl2-neutral-5);
+}
+
+.wd-body--light .wd-hero--dark .wd-hero-media {
+  object-fit: cover;
+}
+
+.wd-body--light .wd-hero--dark .wd-hero-brand {
+  background: rgba(255, 255, 255, 0.24);
+  color: var(--pl2-neutral-90);
+}
+
+.wd-body--light .wd-hero--dark .wd-hero-h1 {
+  color: var(--pl2-white);
+}
+
+.wd-body--light .wd-hero--dark .wd-tag {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--pl2-neutral-80);
+}

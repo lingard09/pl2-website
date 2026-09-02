@@ -1,0 +1,123 @@
+/* PL2 works detail 09 전용 (공통 구조는 works-detail.css)
+   피그마: Works_Detail (node 2345:67464, 콘텐츠 18500) — Matièr Product & Brand Film
+   다크 테마 + GNB Type=T/W. 섹션 리듬 320px, 내부 240 / 120 / 80. */
+
+.wd-head-desc {
+  line-height: 32px;
+}
+
+/* 섹션 5·6·7 헤더 설명만 행간 34 */
+.wd-head--lh34 .wd-head-desc {
+  line-height: 34px;
+}
+
+.wd-head--center {
+  gap: 24px;
+}
+
+.wd9-section {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+.wd9-stack120 {
+  display: flex;
+  flex-direction: column;
+  gap: 120px;
+}
+
+/* ══ 2. 질문 (세로 여백 240) ═══════════════════════════ */
+.wd9-question {
+  padding: 240px 0;
+}
+
+/* ══ 3·6. 스토리보드 스트립 (218x183 × 8열 × 4행을 한 장으로) ══ */
+.wd9-strip {
+  width: 100%;
+  aspect-ratio: 1920 / 756;
+  object-fit: cover;
+}
+
+/* ══ 4. 제품 라인 (캐러셀 컷을 한 장으로) ══════════════ */
+.wd9-carousel {
+  width: 100%;
+  aspect-ratio: 1920 / 860;
+  object-fit: cover;
+}
+
+/* ══ 5. 브랜드 무드 블록들 ═════════════════════════════ */
+.wd9-wide-1200 {
+  display: block;
+  width: 62.5%; /* 1200 / 1920 */
+  margin: 0 auto;
+  aspect-ratio: 1200 / 662;
+  object-fit: cover;
+}
+
+.wd9-wide-1558 {
+  display: block;
+  width: 81.146%; /* 1558 / 1920 */
+  margin: 0 auto;
+  aspect-ratio: 1558 / 860;
+  object-fit: cover;
+}
+
+.wd9-square {
+  display: block;
+  width: 64.792%; /* 1244 / 1920 */
+  margin: 0 auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+/* 954x1200 듀오 (오른쪽 120 아래) */
+.wd9-duo-tall {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625%; /* 12 / 1920 */
+}
+
+.wd9-duo-tall img {
+  width: 49.688%; /* 954 / 1920 */
+  aspect-ratio: 954 / 1200;
+  object-fit: cover;
+}
+
+.wd9-duo-tall img:last-child {
+  margin-top: 120px;
+}
+
+/* 954x513 한 장 (좌 / 우 교대) */
+.wd9-half {
+  width: 49.688%; /* 954 / 1920 */
+  aspect-ratio: 954 / 513;
+  object-fit: cover;
+}
+
+.wd9-half--right {
+  align-self: flex-end;
+}
+
+/* ══ 7. 모델 컷 ════════════════════════════════════════ */
+.wd9-duo-580 {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625%;
+}
+
+.wd9-duo-580 img {
+  width: 49.688%;
+  aspect-ratio: 954 / 580;
+  object-fit: cover;
+}
+
+.wd9-duo-580 img:last-child {
+  margin-top: 120px;
+}
+
+.wd9-model-last {
+  width: 50%; /* 960 / 1920 */
+  aspect-ratio: 960 / 1141;
+  object-fit: cover;
+}

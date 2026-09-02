@@ -1,0 +1,207 @@
+/* PL2 works detail 02 전용 (공통 구조는 works-detail.css)
+   피그마: Works_Detail (node 2345:60350) — Last Delivery / AI Film Project
+   섹션 리듬 320px. 3~6번 섹션은 "왼쪽 이미지 + 오른쪽 4단계 스테퍼"가 반복되고,
+   섹션마다 활성 단계(01~04)와 설명이 하나씩 열려 있다. */
+
+/* 이 페이지 헤더는 SemiBold(600) — 상세 01 은 Bold(700) */
+.wd-head-title {
+  font-weight: 600;
+}
+
+/* 섹션 2 헤더: 제목↔설명 간격 24 (상세 01 은 40) */
+.wd-head--center {
+  gap: 24px;
+}
+
+/* 이 페이지 헤더 설명은 전부 행간 32 (상세 01 의 왼쪽 헤더는 34) */
+.wd-head-desc {
+  line-height: 32px;
+}
+
+/* ══ 2. 가운데 질문 섹션 (646 높이에 헤더가 세로 중앙) ══ */
+.wd2-question {
+  padding: 240px 0;
+}
+
+/* ══ 3~6. 이미지 + 스테퍼 ══════════════════════════════ */
+.wd2-step-section {
+  display: flex;
+  align-items: center;
+  height: 960px;
+}
+
+.wd2-step-section--tall {
+  height: 1031px;
+}
+
+/* 왼쪽 이미지(콜라주) — 피그마 960x960 을 통째로 export */
+.wd2-collage {
+  flex: none;
+  width: 50%; /* 960 / 1920 */
+  aspect-ratio: 960 / 960;
+  object-fit: contain;
+}
+
+/* 파이프라인 다이어그램 자리 (피그마 710x960, 내용은 오른쪽에 붙는다) */
+.wd2-pipeline-wrap {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: flex-end;
+  width: 36.979%; /* 710 / 1920 */
+  height: 960px;
+}
+
+/* 스테퍼 (피그마 x=1240, w=680 / 내부 620) */
+.wd2-steps {
+  flex: none;
+  width: 35.417%; /* 680 / 1920 */
+  margin-left: 14.583%; /* 1240 - 960 = 280 → 280/1920 */
+}
+
+.wd2-steps--after-pipeline {
+  margin-left: 27.604%; /* 1240 - 710 = 530 → 530/1920 */
+}
+
+.wd2-step-list {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 91.176%; /* 620 / 680 */
+}
+
+.wd2-step {
+  display: flex;
+  flex-direction: column;
+}
+
+.wd2-step-head {
+  display: flex;
+  gap: 16px;
+  color: var(--pl2-neutral-30); /* 비활성 #555555 */
+  font-family: var(--pl2-font-display);
+  font-size: 52px;
+  font-weight: 400;
+  line-height: 62px; /* 120% */
+}
+
+.wd2-step[data-active="true"] .wd2-step-head {
+  color: var(--pl2-neutral-90); /* 활성 #F5F5F5 */
+}
+
+.wd2-step-desc {
+  margin-top: 24px;
+  color: var(--pl2-neutral-60);
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 34px;
+}
+
+/* ══ 파이프라인 다이어그램 ═════════════════════════════
+   점 6개(12px)를 100px 간격으로 세로 배치, 사이 60px 선.
+   레이블은 좌우 교대 (피그마 374x524). */
+.wd2-pipe {
+  display: grid;
+  grid-template-columns: 120px 24px 150px;
+  column-gap: 40px;
+  row-gap: 76px;
+  grid-auto-rows: 24px;
+}
+
+.wd2-pipe-label {
+  align-self: center;
+  color: var(--pl2-neutral-50);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 29px;
+  white-space: nowrap;
+}
+
+.wd2-pipe-label--left {
+  grid-column: 1;
+  text-align: right;
+}
+
+.wd2-pipe-label--right {
+  grid-column: 3;
+  text-align: left;
+}
+
+.wd2-pipe-dot {
+  position: relative;
+  grid-column: 2;
+  width: 24px;
+  height: 24px;
+}
+
+.wd2-pipe-dot::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--pl2-neutral-70);
+}
+
+/* 마지막 점 빼고 아래로 연결선 */
+.wd2-pipe-dot:not(:last-of-type)::after {
+  content: "";
+  position: absolute;
+  top: 32px;
+  left: 11px;
+  width: 2px;
+  height: 60px;
+  background: var(--pl2-neutral-70);
+}
+
+/* ══ 7. 시퀀스 그리드 (3x2) ════════════════════════════ */
+.wd2-sequence {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+.wd2-seq-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px 7.5px; /* 피그마 열 간격 8/7, 행 간격 8 */
+  padding: 80px 0;
+  background: var(--pl2-neutral-5); /* #111111 */
+}
+
+.wd2-seq-grid img {
+  width: 100%;
+  aspect-ratio: 635 / 357;
+  object-fit: cover;
+}
+
+/* ══ 8. 영상 섹션 ══════════════════════════════════════ */
+.wd2-video {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1920 / 1080;
+  overflow: hidden;
+}
+
+.wd2-video img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 재생 삼각형 (피그마 Polygon 3, 95x82 흰색 + 드롭섀도) */
+.wd2-video-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-top: 41px solid transparent;
+  border-bottom: 41px solid transparent;
+  border-left: 94.685px solid var(--pl2-white);
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 6.312px 31.562px rgba(0, 0, 0, 0.25));
+  pointer-events: none;
+}

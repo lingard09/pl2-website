@@ -1,0 +1,151 @@
+/* PL2 works detail 06 전용 (공통 구조는 works-detail.css)
+   피그마: Works_Detail (node 2345:61612) — Evercell Product Photography Campaign
+   프레임은 14555 지만 실제 콘텐츠는 17438 (프레임이 잘려 있음) → 콘텐츠 기준.
+   라이트 테마 + GNB Type=T/B, 히어로만 어둡다(`.wd-hero--dark`).
+   섹션 리듬 320px, 섹션 내부 160 / 120 / 80. */
+
+.wd-head-desc {
+  line-height: 32px; /* 이 페이지 헤더 설명은 전부 32 */
+}
+
+/* 가운데 헤더도 제목↔설명 간격 24 (공통 기본값은 40) */
+.wd-head--center {
+  gap: 24px;
+}
+
+/* 크레딧이 다른 상세보다 오른쪽으로 밀려 있다 (피그마 x=1202) */
+.wd-credit {
+  padding-left: 62.604%; /* 1202 / 1920 */
+}
+
+.wd6-section {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+.wd6-stack120 {
+  display: flex;
+  flex-direction: column;
+  gap: 120px;
+}
+
+/* ══ 2. 컬렉션 컷 (1558x835 가운데) ════════════════════ */
+.wd6-collection {
+  display: block;
+  width: 81.146%; /* 1558 / 1920 */
+  margin: 0 auto;
+  aspect-ratio: 1558 / 835;
+  object-fit: cover;
+}
+
+/* ══ 공통 이미지 크기들 ════════════════════════════════ */
+.wd6-half {
+  width: 50%; /* 960 / 1920 */
+  aspect-ratio: 960 / 1141;
+  object-fit: cover;
+}
+
+.wd6-half--right {
+  align-self: flex-end;
+}
+
+.wd6-wide {
+  display: block;
+  width: 64.792%; /* 1244 / 1920 */
+  margin: 0 auto;
+  aspect-ratio: 1244 / 686;
+  object-fit: cover;
+}
+
+.wd6-square {
+  display: block;
+  width: 64.792%; /* 1244 / 1244 */
+  margin: 0 auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+.wd6-tall {
+  width: 57.865%; /* 1111 / 1920 */
+  aspect-ratio: 1111 / 720;
+  object-fit: cover;
+}
+
+.wd6-small {
+  align-self: flex-end;
+  width: 37.292%; /* 716 / 1920 */
+  aspect-ratio: 716 / 520;
+  object-fit: cover;
+}
+
+/* ══ 7. 954 듀오 (오른쪽이 120 아래) ═══════════════════ */
+.wd6-duo {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625%; /* 12 / 1920 */
+}
+
+.wd6-duo img {
+  width: 49.688%; /* 954 / 1920 */
+  aspect-ratio: 954 / 1200;
+  object-fit: cover;
+}
+
+.wd6-duo img:last-child {
+  margin-top: 120px;
+}
+
+/* ══ 8. 캠페인 포트레이트 2x2 (오른쪽 열이 151 아래) ═══ */
+.wd6-quad {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.521%; /* 10 / 1920 */
+}
+
+.wd6-quad-col {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 9.5px; /* 피그마 9 / 10 이 섞여 나온다 */
+  width: 49.792%; /* 956 / 1920 */
+}
+
+.wd6-quad-col:last-child {
+  margin-top: 151px;
+}
+
+.wd6-quad-col img {
+  width: 100%;
+  aspect-ratio: 956 / 514;
+  object-fit: cover;
+}
+
+/* ══ 9. 영상 ═══════════════════════════════════════════ */
+.wd6-video {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1920 / 1080;
+  overflow: hidden;
+}
+
+.wd6-video img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 이 페이지 재생 삼각형은 76x66 (상세 02·05 는 95x82) */
+.wd6-video-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-top: 33px solid transparent;
+  border-bottom: 33px solid transparent;
+  border-left: 76px solid var(--pl2-white);
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 6.312px 31.562px rgba(0, 0, 0, 0.25));
+  pointer-events: none;
+}

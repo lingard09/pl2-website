@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About | PL2 Creative Studio</title>
+    <meta name="description" content="PL2 Creative Studio 소개" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="About | PL2 Creative Studio" />
+    <meta property="og:description" content="PL2 Creative Studio 소개" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="assets/base.css" />
+    <link rel="stylesheet" href="assets/about.css" />
+  </head>
+  <body class="ab-body">
+    <nav class="gnb" data-dropdown="off">
+      <div class="gnb-bar">
+        <span class="gnb-brand">PL2 Creative Studio</span>
+        <button
+          type="button"
+          class="gnb-toggle"
+          aria-label="메뉴 열기"
+          aria-expanded="false"
+          aria-controls="gnb-panel"
+        ></button>
+      </div>
+      <div class="gnb-panel" id="gnb-panel">
+        <a class="gnb-item" href="index.html">Home</a>
+        <a class="gnb-item" href="works.html">Works</a>
+        <a class="gnb-item" href="about.html" aria-current="page">About</a>
+        <a class="gnb-item" href="contact.html">Contact</a>
+      </div>
+    </nav>
+
+    <main class="ab-main">
+      <div class="ab-container">
+        <!-- ── Top: 히어로 + 인트로 ─────────────────────── -->
+        <section class="ab-top">
+          <div class="ab-hero">
+            <!-- 피그마 히어로는 영상. videoHash 7a2d0fe79949 가 Home 히어로와 같은
+                 파일이라 assets/home-hero.mp4 를 그대로 쓴다 (다운로드·캐시 공유).
+                 로딩 전에는 피그마의 이미지 fill(그라디언트)이 poster 로 보인다. -->
+            <video
+              class="ab-hero-media"
+              poster="assets/about-hero-poster.jpg"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+            >
+              <source src="assets/home-hero.mp4" type="video/mp4" />
+            </video>
+          </div>
+
+          <div class="ab-intro">
+            <p>
+              PL2의 시작은 사진이었습니다. 한 장의 이미지를 만들기 위해 조명을
+              세팅하고<br />
+              셔터를 누르던 그 정밀함이, 지금은 영상·모션·3D·AI까지 동일하게
+              작동하고 있습니다.<br />
+              표현 방법은 달라져도, 디테일을 다루는 규율은 같습니다.<br />
+              그리고 이러한 부분들을 ‘결합’ 이라는 키워드 아래 결과물을
+              만듭니다.
+            </p>
+          </div>
+        </section>
+
+        <!-- ── 통계 ─────────────────────────────────────── -->
+        <section class="ab-stats">
+          <div class="ab-stat">
+            <p class="ab-stat-num">1986</p>
+            <p class="ab-stat-label">Founded</p>
+          </div>
+          <div class="ab-stat">
+            <p class="ab-stat-num">10+</p>
+            <p class="ab-stat-label">Services</p>
+          </div>
+          <div class="ab-stat">
+            <p class="ab-stat-num">20+</p>
+            <p class="ab-stat-label">Partners</p>
+          </div>
+        </section>
+
+        <!-- ── 헤딩 + 2단 문단 ──────────────────────────── -->
+        <section class="ab-lead">
+          <h1 class="ab-lead-title">The Discipline of Detail.</h1>
+          <div class="ab-lead-cols">
+            <p>
+              PL2는 표현하고자 하는 인물·제품·아이디어를 어떤 매개체로든 담아낼
+              수 있는 회사입니다.<br />
+              사진에서 시작한 정밀함이 영상, 모션, 3D 애니메이션, AI 콘텐츠로
+              확장되었습니다.<br />
+              우리는 언제나 디테일에 대한 깊은 이해를 바탕으로 가장 효과적인
+              표현 방식을 고민합니다.
+            </p>
+            <p>
+              형태는 달라져도 디테일을 다루는 방식은 하나입니다. <br />
+              기획 단계부터 대상의 본질을 이해하고 구조를 설계하며, 가장 적합한
+              표현 방식을 찾아갑니다. <br />
+              그것이 PL2 Creative Studio가 모든 매체에서 일관된 완성도를
+              만들어내는 이유입니다.
+            </p>
+          </div>
+        </section>
+
+        <!-- ── 장식 그래픽 (PL2 로고 + 그리드) ──────────── -->
+        <section class="ab-graphic">
+          <img src="assets/about-grid.png" alt="" />
+        </section>
+
+        <!-- ── 서비스 4블록 ─────────────────────────────── -->
+        <section class="ab-services">
+          <div class="ab-service ab-service--h640">
+            <!-- 피그마 이미지 fill 이 애니메이션 GIF (77e134582c1f) 다.
+                 상세 3번 제품컷 1번과 같은 해시라 파일을 공유한다. -->
+            <video
+              class="ab-service-media"
+              poster="assets/about-production.jpg"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+            >
+              <source src="assets/about-production.mp4" type="video/mp4" />
+            </video>
+            <div class="ab-service-body">
+              <div class="ab-service-head">
+                <h2 class="ab-service-title">Production</h2>
+                <p class="ab-service-sub">
+                  아이디어가 화면이 되는 전 과정을 책임집니다.
+                </p>
+              </div>
+              <p class="ab-service-desc">
+                콘셉트 기획부터 현장 촬영, 아트 디렉팅, 편집까지 단순한 실행이
+                아닌 브랜드의 언어를 시각으로 번역합니다. 삼성, CJ, HIVE,
+                신세계, 나이키 등 국내외 주요 브랜드의 비전 필름과 캠페인을 함께
+                만들어온 프로덕션 역량이 PL2의 출발점입니다.
+              </p>
+            </div>
+          </div>
+
+          <div class="ab-service ab-service--h960">
+            <div class="ab-service-body">
+              <div class="ab-service-head">
+                <h2 class="ab-service-title">Motion</h2>
+                <p class="ab-service-sub">움직임은 메시지를 완성합니다.</p>
+              </div>
+              <p class="ab-service-desc">
+                2D 모션 그래픽부터 3D 애니메이션, 실사, CG
+                합성(Compositing)까지. PL2의 모션 작업은 단순한 시각적 효과가
+                아닌 정보의 흐름 분석하여 감각적 밀도를 기준으로 디자인하여
+                설계되어 움직입니다.
+              </p>
+            </div>
+            <!-- 피그마 이미지 fill 이 애니메이션 GIF (fffaef1ff09a) 다.
+                 상세 8번 히어로와 같은 해시라 assets/wd8-hero.mp4 를 공유한다. -->
+            <video
+              class="ab-service-media"
+              poster="assets/about-motion.jpg"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+            >
+              <source src="assets/wd8-hero.mp4" type="video/mp4" />
+            </video>
+          </div>
+
+          <div class="ab-service ab-service--h960">
+            <img class="ab-service-media" src="assets/about-uiux.jpg" alt="" />
+            <div class="ab-service-body">
+              <div class="ab-service-head">
+                <h2 class="ab-service-title">UI /UX</h2>
+                <p class="ab-service-sub">
+                  디테일이 쌓일 때, 브랜드는 신뢰가 됩니다.
+                </p>
+              </div>
+              <p class="ab-service-desc">
+                PL2는 보이는 것과 작동하는 것이 같은 기준으로 설계되어야 한다고
+                믿습니다. 사용자가 무엇을 느끼고, 어디서 멈추고, 무엇을
+                클릭하는지 — 그 흐름을 설계하는 것이 PL2의 UI/UX입니다.
+              </p>
+            </div>
+          </div>
+
+          <div class="ab-service ab-service--h640">
+            <div class="ab-service-body">
+              <div class="ab-service-head">
+                <h2 class="ab-service-title">AI</h2>
+                <!-- TODO(피그마 오류): AI 블록 소제목이 Motion 과 같다 (2345:61351).
+                     숨겨진 구버전 프레임에는 "PL2는 AI를 실험이 아닌 실전 도구로 씁니다." -->
+                <p class="ab-service-sub">움직임은 메시지를 완성합니다.</p>
+              </div>
+              <!-- TODO(피그마 오류): 본문 첫 글자 "2" 가 오타로 보인다 (2345:61352) -->
+              <p class="ab-service-desc">
+                2콘셉트 단계에서 이미 완성에 가까운 결과물을 보여주고,상상했던
+                장면을 현실로 만들어냅니다. 사진에서 시작한 PL2의 언어는 이제
+                AI를 통해 영상, 음악, 내레이션, 인터랙션으로 확장됩니다.
+              </p>
+            </div>
+            <img class="ab-service-media" src="assets/about-ai.jpg" alt="" />
+          </div>
+        </section>
+
+        <!-- ── 브랜드 마퀴 ──────────────────────────────── -->
+        <section class="ab-brands" aria-label="함께한 브랜드">
+          <div class="ab-brands-row">
+            <div class="ab-brand">
+              <img src="assets/about-brand-01.png" alt="Cafe24" />
+            </div>
+            <div class="ab-brand">
+              <img src="assets/about-brand-02.png" alt="h" />
+            </div>
+            <div class="ab-brand">
+              <img src="assets/about-brand-03.png" alt="CJ" />
+            </div>
+            <div class="ab-brand">
+              <img src="assets/about-brand-04.png" alt="SHINSEGAE" />
+            </div>
+            <div class="ab-brand">
+              <img src="assets/about-brand-05.png" alt="SAMSUNG" />
+            </div>
+            <div class="ab-brand">
+              <img src="assets/about-brand-06.png" alt="Matièr" />
+            </div>
+            <div class="ab-brand">
+              <img src="assets/about-brand-07.png" alt="evercell" />
+            </div>
+            <div class="ab-brand">
+              <img src="assets/about-brand-08.png" alt="BC카드" />
+            </div>
+            <div class="ab-brand">
+              <img src="assets/about-brand-09.png" alt="경기도농업기술원" />
+            </div>
+            <div class="ab-brand" aria-hidden="true">
+              <img src="assets/about-brand-01.png" alt="" />
+            </div>
+            <div class="ab-brand" aria-hidden="true">
+              <img src="assets/about-brand-02.png" alt="" />
+            </div>
+            <div class="ab-brand" aria-hidden="true">
+              <img src="assets/about-brand-03.png" alt="" />
+            </div>
+            <div class="ab-brand" aria-hidden="true">
+              <img src="assets/about-brand-04.png" alt="" />
+            </div>
+            <div class="ab-brand" aria-hidden="true">
+              <img src="assets/about-brand-05.png" alt="" />
+            </div>
+            <div class="ab-brand" aria-hidden="true">
+              <img src="assets/about-brand-06.png" alt="" />
+            </div>
+            <div class="ab-brand" aria-hidden="true">
+              <img src="assets/about-brand-07.png" alt="" />
+            </div>
+            <div class="ab-brand" aria-hidden="true">
+              <img src="assets/about-brand-08.png" alt="" />
+            </div>
+            <div class="ab-brand" aria-hidden="true">
+              <img src="assets/about-brand-09.png" alt="" />
+            </div>
+          </div>
+          <div class="ab-brands-row">
+            <div class="ab-brand">
+              <img src="assets/about-brand-07.png" alt="evercell" />
+            </div>
+            <div class="ab-brand">
+              <img src="assets/about-brand-08.png" alt="BC카드" />
+            </div>
+            <div class="ab-brand">
+              <img src="assets/about-brand-09.png" alt="경기도농업기술원" />
+            </div>
+            <div class="ab-brand">
+              <img src="assets/about-brand-01.png" alt="Cafe24" />
+            </div>
+            <div class="ab-brand">
+              <img src="assets/about-brand-02.png" alt="h" />
+            </div>
+            <div class="ab-brand">
+              <img src="assets/about-brand-03.png" alt="CJ" />
+            </div>
+            <div class="ab-brand">
+              <img src="assets/about-brand-04.png" alt="SHINSEGAE" />
+            </div>
+            <div class="ab-brand">
+              <img src="assets/about-brand-05.png" alt="SAMSUNG" />
+            </div>
+            <div class="ab-brand">
+              <img src="assets/about-brand-06.png" alt="Matièr" />
+            </div>
+            <div class="ab-brand" aria-hidden="true">
+              <img src="assets/about-brand-07.png" alt="" />
+            </div>
+            <div class="ab-brand" aria-hidden="true">
+              <img src="assets/about-brand-08.png" alt="" />
+            </div>
+            <div class="ab-brand" aria-hidden="true">
+              <img src="assets/about-brand-09.png" alt="" />
+            </div>
+            <div class="ab-brand" aria-hidden="true">
+              <img src="assets/about-brand-01.png" alt="" />
+            </div>
+            <div class="ab-brand" aria-hidden="true">
+              <img src="assets/about-brand-02.png" alt="" />
+            </div>
+            <div class="ab-brand" aria-hidden="true">
+              <img src="assets/about-brand-03.png" alt="" />
+            </div>
+            <div class="ab-brand" aria-hidden="true">
+              <img src="assets/about-brand-04.png" alt="" />
+            </div>
+            <div class="ab-brand" aria-hidden="true">
+              <img src="assets/about-brand-05.png" alt="" />
+            </div>
+            <div class="ab-brand" aria-hidden="true">
+              <img src="assets/about-brand-06.png" alt="" />
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="ft">
+      <div class="ft-hero">
+        <div class="ft-hero-content">
+          <p class="ft-wordmark">PL2 Creative Studio</p>
+        </div>
+      </div>
+      <div class="ft-bar">
+        <div class="ft-bar-left">
+          <img class="ft-logo" src="assets/logo-pl2.svg" alt="PL2" />
+          <p class="ft-copy">© 2026 PL2 All Rights Resrved.</p>
+        </div>
+        <nav class="ft-links">
+          <a href="privacy.html">Privacy Policy</a>
+          <span class="ft-divider" aria-hidden="true"></span>
+          <a href="terms.html">Terms of Use</a>
+          <span class="ft-divider" aria-hidden="true"></span>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script src="assets/gnb.js"></script>
+  </body>
+</html>

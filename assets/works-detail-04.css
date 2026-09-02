@@ -1,0 +1,97 @@
+/* PL2 works detail 04 전용 (공통 구조는 works-detail.css)
+   피그마: Works_Detail (node 2345:60737) — Samsung Internet Website Renewal
+   라이트 테마(`.wd-body--light`) + GNB Type=T/B. 섹션 리듬 320px. */
+
+/* 히어로 제목을 조금 더 두껍게.
+   Tannakone 은 Medium(500)이 가장 두꺼운 파일이라 더 굵은 페이스가 없어서
+   외곽선을 얹어 굵기를 흉내낸다. 글자 폭(advance)은 안 변해서 레이아웃은 그대로다.
+   히어로가 cqw 로 스케일되니 획 두께도 같이 스케일한다 (1.5 / 19.2 = 0.0781cqw).
+   currentColor 라 라이트/다크 테마 색을 그대로 따라간다. */
+.wd-hero-h1 {
+  -webkit-text-stroke: 0.0781cqw currentColor;
+}
+
+.wd-head-desc {
+  line-height: 34px;
+}
+
+.wd-head--center .wd-head-desc {
+  line-height: 32px;
+}
+
+/* 섹션 공통: 헤더 ↔ 본문 80 */
+.wd4-section {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+/* ══ 2. 디바이스 목업 (피그마 1522x479, 가운데) ═════════ */
+.wd4-mockups {
+  display: block;
+  width: 79.271%; /* 1522 / 1920 */
+  margin: 0 auto;
+  aspect-ratio: 1522 / 479;
+  object-fit: contain;
+}
+
+/* ══ 3. 서비스 페이지 전체 컷 ══════════════════════════
+   피그마: #EFEFEF 밴드(위아래 120) 안에 1800x2966 페이지 목업 */
+.wd4-band {
+  display: flex;
+  justify-content: center;
+  padding: 120px 0;
+  background: var(--pl2-neutral-80); /* #EFEFEF */
+}
+
+.wd4-band img {
+  width: 93.75%; /* 1800 / 1920 */
+  aspect-ratio: 1800 / 2966;
+  object-fit: contain;
+}
+
+/* ══ 4. 모바일 컷 3장 (엇갈린 배치, 피그마 좌표 그대로) ══ */
+.wd4-mobile {
+  position: relative;
+  height: 1240px;
+}
+
+.wd4-mobile img {
+  position: absolute;
+  object-fit: contain;
+}
+
+.wd4-mobile-01 {
+  top: 0;
+  left: 17.865%; /* 343 / 1920 */
+  width: 17.708%; /* 340 / 1920 */
+  aspect-ratio: 340 / 680;
+}
+
+.wd4-mobile-02 {
+  top: 560px;
+  left: 49.583%; /* 952 / 1920 */
+  width: 23.906%; /* 459 / 1920 */
+  aspect-ratio: 459 / 680;
+}
+
+.wd4-mobile-03 {
+  top: 560px;
+  left: 75.573%; /* 1451 / 1920 */
+  width: 23.906%;
+  aspect-ratio: 459 / 680;
+}
+
+/* ══ 5. 폰 컷 4장 나란히 (340 + 간격 40) ═══════════════ */
+.wd4-phones {
+  display: flex;
+  gap: 2.083%; /* 40 / 1920 */
+  justify-content: center;
+  height: 680px;
+}
+
+.wd4-phones img {
+  width: 17.708%; /* 340 / 1920 */
+  aspect-ratio: 340 / 680;
+  object-fit: contain;
+}

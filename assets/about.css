@@ -1,0 +1,314 @@
+/* PL2 about (about.html)
+   피그마: PL2 Production (전달) > About (node 2345:61131), 1920x8102
+   섹션 리듬: Top 924 / 320 / 통계 200 / 320 / 헤딩 219 / 320 / 그래픽 467 /
+             320 / 서비스 3680 / 320 / 브랜드 마퀴 212 / 240(하단 여백) / 푸터 570
+   1920 기준 가로 오프셋은 %로 환산해 폭이 줄어도 비율을 유지한다
+   (495→25.781%, 60→3.125%, 24→1.25%, 1190→61.979%, 730→38.021%). */
+
+.ab-body {
+  background: var(--pl2-white);
+}
+
+/* GNB: 스크롤해도 상단 중앙 고정 (피그마 좌표 760,12) */
+.ab-body .gnb {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+}
+
+.ab-main {
+  max-width: 1920px;
+  margin: 0 auto;
+}
+
+.ab-container {
+  display: flex;
+  flex-direction: column;
+  gap: 320px;
+  padding-bottom: 240px;
+}
+
+/* ── Top: 히어로 + 인트로 문단 ───────────────────────── */
+.ab-top {
+  display: flex;
+  flex-direction: column;
+  gap: 120px;
+}
+
+/* 피그마 Thumnail(2345:61136)은 이미지 fill 위에 영상 fill 이 얹힌 구조.
+   이미지를 poster 로 쓰고 영상은 assets/about-hero.mp4 로 넣는다. */
+.ab-hero {
+  width: 100%;
+  height: 620px;
+  background: var(--pl2-gray-placeholder);
+  overflow: hidden;
+}
+
+.ab-hero-media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ab-intro {
+  padding: 0 3.125%; /* 60 / 1920 */
+}
+
+.ab-intro p {
+  color: var(--pl2-neutral-30);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 46px;
+  letter-spacing: -0.02em;
+}
+
+/* ── 통계 3열 ───────────────────────────────────────── */
+.ab-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding-left: 25.781%; /* 495 / 1920 */
+  padding-right: 1.25%; /* 24 / 1920 */
+}
+
+.ab-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.ab-stat-num {
+  color: var(--pl2-neutral-5);
+  font-family: var(--pl2-font-display);
+  font-size: 120px;
+  font-weight: 500;
+  line-height: 144px; /* 120% */
+}
+
+.ab-stat-label {
+  padding: 0 7.569px;
+  color: var(--pl2-neutral-20);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 32px;
+  letter-spacing: -0.02em;
+}
+
+/* ── 헤딩 + 2단 문단 ─────────────────────────────────── */
+.ab-lead {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding-left: 25.781%;
+  padding-right: 1.25%;
+}
+
+.ab-lead-title {
+  color: var(--pl2-neutral-5);
+  font-family: var(--pl2-font-display);
+  font-size: 60px;
+  font-weight: 500;
+  line-height: 80px; /* 피그마 AUTO(=Tannakone 기본) 실측값 */
+}
+
+.ab-lead-cols {
+  container-type: inline-size;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+/* 두 문단은 피그마대로 <br> 로만 줄이 나뉘어야 한다 (각 3줄 고정).
+   자동 줄바꿈을 막으려면 nowrap 이 필요한데, 글자가 18px 고정이면 1920 보다
+   좁은 창에서 줄이 칸을 뚫고 나간다 (1920 에서 이미 칸 695px / 줄 최대 ~690px 로 꽉 찬다).
+   그래서 폭이 줄면 글자도 같이 줄도록 컨테이너 기준 cqw 로 잡는다.
+   컨테이너(.ab-lead-cols)는 1920 에서 1401px → 18 / 1401 x 100 = 1.2848cqw.
+   1920 에서는 18px / 32.799px 과 소수점까지 같다. */
+.ab-lead-cols p {
+  color: var(--pl2-neutral-40);
+  font-size: 1.2848cqw; /* 18 */
+  font-weight: 300;
+  line-height: 2.3411cqw; /* 32.799 */
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+/* ── 그리드 그래픽 (장식) ────────────────────────────── */
+.ab-graphic {
+  display: flex;
+  justify-content: center;
+}
+
+.ab-graphic img {
+  width: 65%; /* 1248 / 1920 */
+  aspect-ratio: 1248 / 467;
+  height: auto;
+}
+
+/* ── 서비스 4블록 ───────────────────────────────────── */
+.ab-services {
+  display: flex;
+  flex-direction: column;
+  gap: 160px;
+}
+
+.ab-service {
+  display: flex;
+  align-items: stretch; /* 이미지·텍스트 모두 블록 높이 전체 */
+}
+
+/* 텍스트가 왼쪽인 블록 (Motion, AI) */
+.ab-service--text-first {
+  flex-direction: row;
+}
+
+.ab-service-media {
+  flex: none;
+  width: 61.979%; /* 1190 / 1920 */
+  height: 100%;
+  object-fit: cover;
+}
+
+.ab-service-body {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 36px;
+  justify-content: flex-end;
+  width: 38.021%; /* 730 / 1920 */
+  height: 100%;
+  padding: 12px 40px;
+}
+
+/* 블록 높이 (피그마: Production 640, Motion 960, UI/UX 960, AI 640) */
+.ab-service--h640 {
+  height: 640px;
+}
+
+.ab-service--h960 {
+  height: 960px;
+}
+
+.ab-service-head {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.ab-service-title {
+  color: var(--pl2-neutral-5);
+  font-family: var(--pl2-font-display);
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 53px; /* 피그마 AUTO 실측값 */
+  letter-spacing: -0.02em;
+}
+
+.ab-service-sub {
+  color: var(--pl2-neutral-20);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: -0.04em;
+}
+
+.ab-service-desc {
+  color: var(--pl2-neutral-40);
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 32px;
+  letter-spacing: -0.02em;
+}
+
+/* ── 브랜드 마퀴 ─────────────────────────────────────
+   피그마는 정지 스냅샷(2행, 행마다 138px 엇갈림)이지만 로고 띠라
+   좌우 반대 방향으로 흐르게 했다. 한 행 = 로고 9개 × 2벌 → -50% 로 무한 루프. */
+.ab-brands {
+  position: relative;
+  overflow: hidden;
+}
+
+.ab-brands-row {
+  display: flex;
+  gap: 12px;
+  width: max-content;
+  animation: ab-brands-left 60s linear infinite;
+}
+
+.ab-brands-row + .ab-brands-row {
+  margin-top: 12px;
+  animation-name: ab-brands-right;
+}
+
+.ab-brand {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 264px;
+  height: 100px;
+}
+
+.ab-brand img {
+  width: 176.61px;
+  height: 75.69px;
+}
+
+@keyframes ab-brands-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-50% - 6px)); /* 복제분 1벌 + gap 절반 */
+  }
+}
+
+@keyframes ab-brands-right {
+  from {
+    transform: translateX(calc(-50% - 6px));
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ab-brands-row,
+  .ab-brands-row + .ab-brands-row {
+    animation: none;
+  }
+}
+
+/* 양끝 흰색 그라디언트 (피그마 +Gradient 303x212: 0~20% 흰색 → 100% 투명) */
+.ab-brands::before,
+.ab-brands::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 303px;
+  pointer-events: none;
+}
+
+.ab-brands::before {
+  left: 0;
+  background: linear-gradient(
+    to right,
+    var(--pl2-white) 0%,
+    var(--pl2-white) 20%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+.ab-brands::after {
+  right: 0;
+  background: linear-gradient(
+    to left,
+    var(--pl2-white) 0%,
+    var(--pl2-white) 20%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}

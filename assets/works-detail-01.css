@@ -1,0 +1,277 @@
+/* PL2 works detail 01 전용 (공통 구조는 works-detail.css)
+   피그마: Works_Detail (node 2345:59621) — Samsung Generative AI Image Sample Project */
+
+/* PL2 works detail 01 (works-detail-01.html)
+   피그마: PL2 Production (전달) > Works_Detail (node 2345:59621)
+   - 프레임은 11040 이지만 실제 콘텐츠는 14181 (피그마 프레임이 잘려 있음) → 콘텐츠 기준
+   - 페이지 전체가 검정(#000, Content fill) 다크 테마
+   - 섹션 사이 320px 리듬, 섹션 내부는 160/80/40
+   - 접두사 wd- : Works_Detail 공용 의도 (상세 2번부터 공통 부분 분리 예정)
+   1920 기준 가로 오프셋은 %로 환산, 이미지 박스는 aspect-ratio 로 비율 유지 */
+
+/* ══ 2. 스타일 전환 (이미지 + 프롬프트 카드) ═══════════ */
+.wd-style {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+.wd-style-body {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+}
+
+.wd-style-img {
+  width: 30.208%; /* 580 / 1920 */
+  aspect-ratio: 580 / 640;
+  object-fit: cover;
+}
+
+/* 프롬프트 카드 (피그마 2345:59638) */
+.wd-prompt {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 55.208%; /* 1060 / 1920 */
+  padding: 30px 36px 24px;
+  border-radius: 15.138px;
+  background: var(--pl2-neutral-20);
+}
+
+.wd-prompt-label {
+  color: var(--pl2-neutral-80);
+  font-family: var(--pl2-font-mono);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 32px;
+  letter-spacing: -0.02em;
+}
+
+.wd-prompt-text {
+  color: var(--pl2-white);
+  font-family: var(--pl2-font-mono);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 30px;
+  letter-spacing: -0.02em;
+}
+
+.wd-prompt-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wd-prompt-plus {
+  width: 30px;
+  height: 30px;
+}
+
+.wd-prompt-send {
+  width: 48px;
+  height: 48px;
+}
+
+/* ══ 3. 필름스트립 ═════════════════════════════════════
+   피그마: 2638px 폭 스트립이 1920 프레임 좌우로 넘친다.
+   가운데 큰 이미지(518x740)가 화면 정중앙에 오도록 트랙을 중앙 정렬. */
+.wd-strip-section {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.wd-strip {
+  position: relative;
+  height: 740px;
+  overflow: hidden;
+}
+
+.wd-strip-track {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2638px;
+  height: 740px;
+  transform: translateX(-50%);
+}
+
+.wd-strip-track img {
+  position: absolute;
+  object-fit: cover;
+}
+
+.wd-strip-small {
+  top: 440px;
+  width: 202px;
+  height: 278px;
+}
+
+.wd-strip-big {
+  top: 0;
+  left: 1060px;
+  width: 518px;
+  height: 740px;
+}
+
+/* 양끝 검정 그라디언트 (피그마 245x360 @ x=-2 / x=1675, y=381) */
+.wd-strip::before,
+.wd-strip::after {
+  content: "";
+  position: absolute;
+  top: 381px;
+  z-index: 1;
+  width: 245px;
+  height: 360px;
+  pointer-events: none;
+}
+
+.wd-strip::before {
+  left: -2px;
+  background: linear-gradient(to right, #000 0%, rgba(0, 0, 0, 0) 100%);
+}
+
+.wd-strip::after {
+  right: 0;
+  background: linear-gradient(to left, #000 0%, rgba(0, 0, 0, 0) 100%);
+}
+
+.wd-strip-caption {
+  color: var(--pl2-neutral-60);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 32px;
+  text-align: center;
+}
+
+/* ══ 4. 레이어 분리 (밴드 + 일러스트) ══════════════════ */
+.wd-layer {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+.wd-band {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 960px;
+  padding: 100px 0;
+  background: #1e2123; /* 피그마 Frame 2116929241 */
+}
+
+.wd-band img {
+  width: 400px;
+  height: 760px;
+  object-fit: cover;
+}
+
+/* ══ 5. 일러스트 4장 (엇갈린 배치) ═════════════════════ */
+.wd-illust {
+  display: flex;
+  gap: 3.125%; /* 60 / 1920 */
+  height: 960px;
+}
+
+.wd-illust-half {
+  position: relative;
+  flex: 1 1 0;
+}
+
+.wd-illust-half img {
+  position: absolute;
+  object-fit: cover;
+}
+
+/* 왼쪽: 405x607 @ (0,0), 513x810 @ (417,0) — 930 기준 % */
+.wd-illust-1 {
+  top: 0;
+  left: 0;
+  width: 43.548%;
+  aspect-ratio: 405 / 607;
+}
+
+.wd-illust-2 {
+  top: 0;
+  left: 44.839%;
+  width: 55.161%;
+  aspect-ratio: 513 / 810;
+}
+
+/* 오른쪽: 358x576 @ (0,120), 560x840 @ (370,120) — 930 기준 % */
+.wd-illust-3 {
+  top: 120px;
+  left: 0;
+  width: 38.495%;
+  aspect-ratio: 358 / 576;
+}
+
+.wd-illust-4 {
+  top: 120px;
+  left: 39.785%;
+  width: 60.215%;
+  aspect-ratio: 560 / 840;
+}
+
+/* ══ 6. 스티커 5행 ═════════════════════════════════════ */
+.wd-stickers {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+.wd-sticker-rows {
+  display: flex;
+  flex-direction: column;
+  /* 피그마 행 간격이 80/81 로 번갈아 나오는데 실제 값은 80.5 (반올림 차이) */
+  gap: 80.5px;
+}
+
+.wd-sticker-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.25%; /* 24 / 1920 (행마다 8~14px 차이는 반올림) */
+  height: 763px;
+}
+
+.wd-sticker-row--reverse {
+  flex-direction: row-reverse;
+}
+
+.wd-sticker-grid {
+  flex: none;
+  width: 49.792%; /* 956 / 1920 */
+  aspect-ratio: 956 / 763;
+  object-fit: contain;
+}
+
+.wd-sticker-caption {
+  flex: 1 1 0;
+  padding: 24px 0;
+}
+
+.wd-sticker-caption h3 {
+  color: var(--pl2-neutral-60);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 17px;
+  letter-spacing: -0.02em;
+}
+
+.wd-sticker-caption p {
+  margin-top: 8px;
+  color: var(--pl2-neutral-50);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: -0.02em;
+}
+
+.wd-final {
+  width: 100%;
+  aspect-ratio: 1920 / 960;
+  object-fit: cover;
+}
+

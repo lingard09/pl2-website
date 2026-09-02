@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Developer Platform Renewal Project | PL2 Creative Studio</title>
+    <meta
+      name="description"
+      content="Samsung Developer Platform 정보 구조·디자인 시스템 리뉴얼 프로젝트"
+    />
+    <meta property="og:type" content="article" />
+    <meta
+      property="og:title"
+      content="Developer Platform Renewal Project | PL2 Creative Studio"
+    />
+    <meta
+      property="og:description"
+      content="Samsung Developer Platform 정보 구조·디자인 시스템 리뉴얼 프로젝트"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="assets/base.css" />
+    <link rel="stylesheet" href="assets/works-detail.css" />
+    <link rel="stylesheet" href="assets/works-detail-07.css" />
+  </head>
+  <body class="wd-body wd-body--light">
+    <!-- 피그마 GNB Type=T/B -->
+    <nav class="gnb gnb--tb" data-dropdown="off">
+      <div class="gnb-bar">
+        <span class="gnb-brand">PL2 Creative Studio</span>
+        <button
+          type="button"
+          class="gnb-toggle"
+          aria-label="메뉴 열기"
+          aria-expanded="false"
+          aria-controls="gnb-panel"
+        ></button>
+      </div>
+      <div class="gnb-panel" id="gnb-panel">
+        <a class="gnb-item" href="index.html">Home</a>
+        <a class="gnb-item" href="works.html" aria-current="page">Works</a>
+        <a class="gnb-item" href="about.html">About</a>
+        <a class="gnb-item" href="contact.html">Contact</a>
+      </div>
+    </nav>
+
+    <main class="wd-main">
+      <div class="wd-container">
+        <!-- ══ 1. 히어로 + 프로젝트 개요 ══ -->
+        <section class="wd-top">
+          <div class="wd-hero wd-hero--dark">
+            <!-- 피그마 히어로는 영상 전용(포스터 이미지 없음). 파일은 assets/wd7-hero.mp4.
+                 poster 로 쓴 그라디언트는 히어로에서 함께 받은 이미지라 임시 대체다. -->
+            <video
+              class="wd-hero-media"
+              poster="assets/wd7-hero-poster.jpg"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+            >
+              <source src="assets/wd7-hero.mp4" type="video/mp4" />
+            </video>
+            <div class="wd-hero-dim" aria-hidden="true"></div>
+
+            <div class="wd-hero-title">
+              <div class="wd-hero-head">
+                <span class="wd-hero-brand">Samsung</span>
+                <h1 class="wd-hero-h1">Developer Platform<br />Renewal Project</h1>
+              </div>
+              <!-- TODO: 피그마가 "Tag" placeholder 5개로 두고 있다 -->
+              <div class="wd-hero-tags">
+                <span class="wd-tag">Tag</span>
+                <span class="wd-tag">Tag</span>
+                <span class="wd-tag">Tag</span>
+                <span class="wd-tag">Tag</span>
+                <span class="wd-tag">Tag</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="wd-intro">
+            <p class="wd-intro-title">Designing a Better Developer Experience</p>
+            <p class="wd-intro-desc">
+              Samsung Developer Platform는 개발자를 위한 다양한 서비스와 리소스를
+              하나의 경험으로 연결하는<br />
+              플랫폼입니다. PL2는 플랫폼 전반의 정보 구조와 디자인 시스템을
+              재정비하여 서비스마다 다른 특성을<br />
+              유지하면서도 일관된 사용자 경험을 제공할 수 있도록 리뉴얼했습니다.
+            </p>
+          </div>
+        </section>
+
+        <!-- ══ 2. 하나의 플랫폼, 여러 서비스 ══ -->
+        <section class="wd7-section">
+          <div class="wd-head wd-head--right">
+            <h2 class="wd-head-title">One Platform, Multiple Services</h2>
+            <p class="wd-head-desc">
+              Main, Forum, Support는 서로 다른 목적을 가진 서비스지만, 하나의 플랫폼
+              안에서 자연스럽게 연결되어야 합니다. 각 서비스의 특성을 유지하면서도
+              공통된 시각 언어와 정보 구조를 적용하여 어디에서든 일관된 경험을
+              제공할 수 있는 플랫폼을 설계했습니다.
+            </p>
+          </div>
+
+          <div class="wd7-services">
+            <div class="wd7-services-col">
+              <img src="assets/wd7-service-01.jpg" alt="" />
+              <img src="assets/wd7-service-02.jpg" alt="" />
+            </div>
+            <div class="wd7-services-col wd7-services-col--center">
+              <img src="assets/wd7-service-03.jpg" alt="" />
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 3. 디자인 시스템 ══ -->
+        <section class="wd7-section">
+          <div class="wd-head wd-head--left">
+            <h2 class="wd-head-title">Creating a Scalable Design System</h2>
+            <p class="wd-head-desc">
+              플랫폼 전반에 동일한 기준을 적용할 수 있도록 디자인 시스템을
+              구축했습니다. 컴포넌트와 아이콘, 배지, 컬러 시스템을 체계적으로
+              정리하고 One UI를 기반으로 일관된 인터페이스를 설계하여 서비스가
+              확장되더라도 동일한 사용자 경험을 유지할 수 있도록 구성했습니다.
+            </p>
+          </div>
+
+          <div class="wd7-stack120">
+            <div class="wd7-band-blue">
+              <img src="assets/wd7-typography.jpg" alt="" />
+            </div>
+            <img class="wd7-components" src="assets/wd7-components.jpg" alt="" />
+            <img class="wd7-icons" src="assets/wd7-icons.jpg" alt="" />
+            <img class="wd7-badges" src="assets/wd7-badges.jpg" alt="" />
+          </div>
+        </section>
+
+        <!-- ══ 4. 개발 워크플로 ══ -->
+        <section class="wd7-section">
+          <div class="wd-head wd-head--right">
+            <h2 class="wd-head-title">Supporting the Development Workflow</h2>
+            <p class="wd-head-desc">
+              개발자가 필요한 기능을 보다 쉽고 효율적으로 사용할 수 있도록 주요 개발
+              도구의 사용 경험을 개선했습니다. Documentation의 정보 구조를 재정리하고
+              콘텐츠 흐름에 맞는 모션을 적용했으며, Remote Test Lab까지 일관된
+              인터페이스를 제공하여 개발 과정 전반의 사용성을 높였습니다.
+            </p>
+          </div>
+
+          <div class="wd7-stack120">
+            <img class="wd7-doc-01" src="assets/wd7-doc-01.jpg" alt="" />
+            <img class="wd7-doc-02" src="assets/wd7-doc-02.jpg" alt="" />
+            <img class="wd7-doc-03" src="assets/wd7-doc-03.jpg" alt="" />
+          </div>
+        </section>
+
+        <!-- ══ 5. 반응형 ══ -->
+        <section class="wd7-section">
+          <div class="wd-head wd-head--center">
+            <h2 class="wd-head-title">A Consistent Experience Across Every Screen</h2>
+            <p class="wd-head-desc">
+              플랫폼의 경험은 하나의 화면에서 끝나지 않습니다. 데스크톱과 모바일 환경
+              모두에서 동일한 디자인 원칙과 인터페이스를 적용하여 어떤
+              디바이스에서도 자연스럽고 일관된 사용자 경험을 제공할 수 있도록
+              완성했습니다.
+            </p>
+          </div>
+
+          <!-- 피그마에서 이 밴드 배경이 영상이다. 파일은 assets/wd7-band.mp4 (아직 없음).
+               poster 는 피그마 노드 렌더 = 영상 첫 프레임. 히어로와 videoHash 가 같다. -->
+          <div class="wd7-video-band">
+            <video
+              poster="assets/wd7-band-poster.jpg"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+            >
+              <source src="assets/wd7-band.mp4" type="video/mp4" />
+            </video>
+            <img src="assets/wd7-responsive.jpg" alt="" />
+          </div>
+        </section>
+
+        <!-- ══ 6. 화면 모음 ══ -->
+        <section class="wd7-stack120">
+          <div class="wd7-pair">
+            <img src="assets/wd7-pair-01.jpg" alt="" />
+            <img src="assets/wd7-pair-02.jpg" alt="" />
+          </div>
+
+          <div class="wd7-phones">
+            <img src="assets/wd7-phone-01.jpg" alt="" />
+            <img src="assets/wd7-phone-02.jpg" alt="" />
+            <img src="assets/wd7-phone-03.jpg" alt="" />
+            <img src="assets/wd7-phone-04.jpg" alt="" />
+          </div>
+
+          <div class="wd7-pair">
+            <img src="assets/wd7-pair-03.jpg" alt="" />
+            <img src="assets/wd7-pair-04.jpg" alt="" />
+          </div>
+        </section>
+
+        <!-- ══ 7. 크레딧 ══ -->
+        <section class="wd-credit">
+          <dl class="wd-credit-list">
+          <div class="wd-credit-row">
+            <dt>Creative Director</dt>
+            <dd>Ryan JW Kim</dd>
+          </div>
+          <div class="wd-credit-row">
+            <dt>Project Manager</dt>
+            <dd>Park Min Jun</dd>
+          </div>
+          <div class="wd-credit-row">
+            <dt>Art Direction</dt>
+            <dd>FoodBook 945</dd>
+          </div>
+          <div class="wd-credit-row">
+            <dt>Design / Compositing</dt>
+            <dd>Ahn Jeong Yeol</dd>
+          </div>
+          <div class="wd-credit-row">
+            <dt>3D Animation</dt>
+            <dd>PL2 Production</dd>
+          </div>
+          <div class="wd-credit-row">
+            <dt>Client</dt>
+            <dd>Samsung / SmartThings</dd>
+          </div>
+          </dl>
+        </section>
+      </div>
+    </main>
+
+    <footer class="ft">
+      <div class="ft-hero">
+        <div class="ft-hero-content">
+          <p class="ft-wordmark">PL2 Creative Studio</p>
+        </div>
+      </div>
+      <div class="ft-bar">
+        <div class="ft-bar-left">
+          <img class="ft-logo" src="assets/logo-pl2.svg" alt="PL2" />
+          <p class="ft-copy">© 2026 PL2 All Rights Resrved.</p>
+        </div>
+        <nav class="ft-links">
+          <a href="privacy.html">Privacy Policy</a>
+          <span class="ft-divider" aria-hidden="true"></span>
+          <a href="terms.html">Terms of Use</a>
+          <span class="ft-divider" aria-hidden="true"></span>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script src="assets/gnb.js"></script>
+  </body>
+</html>

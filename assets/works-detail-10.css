@@ -1,0 +1,149 @@
+/* ─────────────────────────────────────────────────────────
+   Works Detail 10 — CJ Milano Winter Olympics Campaign
+   피그마: Works_Detail 10 (2345:67673), Content fill #000000 / GNB Type=T/W
+   공통 레이아웃은 works-detail.css 를 그대로 쓰고 이 페이지 고유값만 둔다.
+   ───────────────────────────────────────────────────────── */
+
+/* 이 페이지 섹션 헤더 desc 는 lh 32 (공통 기본값은 34) */
+.wd-head--left .wd-head-desc,
+.wd-head--right .wd-head-desc {
+  line-height: 32px;
+}
+
+/* ══ 2. 캠페인 개요 (가운데 헤더, 위아래 240 패딩) ══════════
+   피그마 Frame 2116928607: y=1732 h=660, padding 240, gap 24.
+   공통 .wd-head--center 는 gap 40 이라 여기서만 24 로 줄인다. */
+.wd10-lead {
+  padding: 240px 0;
+}
+
+.wd10-lead .wd-head--center {
+  gap: 24px;
+}
+
+/* ══ 3·4. 콘텐츠 블록 ═════════════════════════════════════
+   피그마 Frame 2116929457 / 2116929490: 헤더 180 + gap 80 + 이미지 스택 4658 */
+.wd10-block {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+.wd10-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 120px;
+}
+
+.wd10-row {
+  display: flex;
+}
+
+.wd10-row--center {
+  justify-content: center;
+}
+
+.wd10-row--right {
+  justify-content: flex-end;
+}
+
+/* 1~4행은 애니메이션 GIF → mp4 (<video>), poster 로 정지 프레임을 깐다 */
+.wd10-row img,
+.wd10-row video {
+  display: block;
+  object-fit: cover;
+}
+
+/* 각 행 이미지 폭 = 피그마 px / 1920 */
+.wd10-w1244 {
+  width: 64.792%;
+  aspect-ratio: 1244 / 686;
+}
+
+.wd10-w1111 {
+  width: 57.865%;
+  aspect-ratio: 1111 / 595;
+}
+
+.wd10-w716 {
+  width: 37.292%;
+  aspect-ratio: 716 / 384;
+}
+
+.wd10-w954 {
+  width: 49.688%;
+  aspect-ratio: 954 / 513;
+}
+
+/* ══ 폰 목업 4장 ══════════════════════════════════════════
+   피그마 Frame 2116929443: 1920x800 안에 340x680 4장.
+   두 장은 행 맨 위, 나머지 두 장은 120px 내려서 엇갈리게 둔다. */
+.wd10-phones {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1920 / 800;
+}
+
+.wd10-phone {
+  position: absolute;
+  top: 0;
+  display: block;
+  width: 17.708%; /* 340 / 1920 */
+  aspect-ratio: 340 / 680;
+  border-radius: 24px;
+  object-fit: cover;
+}
+
+.wd10-phone--low {
+  top: 15%; /* 120 / 800 */
+}
+
+.wd10-phone--p1 {
+  left: 6.719%; /* 129 / 1920 */
+}
+
+.wd10-phone--p2 {
+  left: 26.51%; /* 509 / 1920 */
+}
+
+.wd10-phone--p3 {
+  left: 55.781%; /* 1071 / 1920 */
+}
+
+.wd10-phone--p4 {
+  left: 75.573%; /* 1451 / 1920 */
+}
+
+/* ══ 영상 ═════════════════════════════════════════════════
+   포스터에 피그마 Dim(검정 60%)이 이미 구워져 있어 별도 오버레이를 두지 않는다.
+   TODO: 실제 영상 파일이 오면 <video> 로 교체 */
+.wd10-video {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--pl2-neutral-5);
+}
+
+.wd10-video img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 재생 삼각형 (피그마 Polygon 3, 95x82 흰색 + 드롭섀도) */
+.wd10-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  width: 0;
+  height: 0;
+  border-top: 41px solid transparent;
+  border-bottom: 41px solid transparent;
+  border-left: 94.685px solid var(--pl2-white);
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 6.312px 31.562px rgba(0, 0, 0, 0.25));
+  pointer-events: none;
+}

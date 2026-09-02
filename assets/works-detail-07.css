@@ -1,0 +1,178 @@
+/* PL2 works detail 07 전용 (공통 구조는 works-detail.css)
+   피그마: Works_Detail (node 2345:61747, 콘텐츠 17478) — Samsung Developer Platform Renewal
+   라이트 테마 + GNB Type=T/B, 히어로만 어둡다(영상).
+   섹션 리듬 320px, 섹션 내부 160 / 120 / 80. */
+
+.wd-head-desc {
+  line-height: 32px;
+}
+
+.wd-head--center {
+  gap: 24px;
+}
+
+/* 히어로 제목이 한 문장(줄바꿈 문자 없음)인데 피그마에서는 883px 박스에서 2줄로 꺾인다.
+   폰트에 따라 3줄이 되지 않도록 <br> 로 고정하고 nowrap 은 그대로 둔다. */
+
+/* 크레딧이 오른쪽으로 밀려 있다 (피그마 x=1202) */
+.wd-credit {
+  padding-left: 62.604%;
+}
+
+.wd7-section {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+.wd7-stack120 {
+  display: flex;
+  flex-direction: column;
+  gap: 120px;
+}
+
+/* ══ 2. 서비스 3컷 (2열, 오른쪽 열은 세로 중앙) ════════ */
+.wd7-services {
+  display: flex;
+  /* 주의: 아래 % 는 패딩을 제외한 1800 기준이다 (부모 패딩 3.125% × 2) */
+  gap: 1.333%; /* 24 / 1800 */
+  padding: 0 3.125%; /* 60 / 1920 */
+}
+
+.wd7-services-col {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 120px;
+  width: 49.333%; /* 888 / 1800 */
+}
+
+.wd7-services-col--center {
+  justify-content: center;
+}
+
+.wd7-services-col img {
+  width: 100%;
+  aspect-ratio: 888 / 829;
+  object-fit: cover;
+}
+
+/* ══ 3. 디자인 시스템 ══════════════════════════════════ */
+/* 타이포 밴드: #EDF3FD 위에 흰 1240x833 카드 (위아래 80) */
+.wd7-band-blue {
+  display: flex;
+  justify-content: center;
+  padding: 80px 0;
+  background: #edf3fd;
+}
+
+.wd7-band-blue img {
+  width: 64.583%; /* 1240 / 1920 */
+  aspect-ratio: 1240 / 833;
+  object-fit: cover;
+}
+
+/* 컴포넌트 컷: 1244x723 (자체 배경 #EDF3FD 포함해 export) */
+.wd7-components {
+  display: block;
+  width: 64.792%; /* 1244 / 1920 */
+  margin: 0 auto;
+  aspect-ratio: 1244 / 723;
+  object-fit: cover;
+}
+
+.wd7-icons {
+  width: 100%;
+  aspect-ratio: 1920 / 954;
+  object-fit: cover;
+}
+
+.wd7-badges {
+  width: 100%;
+  aspect-ratio: 1920 / 827;
+  object-fit: cover;
+}
+
+/* ══ 4. 개발 도구 3컷 ══════════════════════════════════ */
+.wd7-doc-01 {
+  display: block;
+  width: 81.146%; /* 1558 / 1920 */
+  margin: 0 auto;
+  aspect-ratio: 1558 / 959;
+  object-fit: cover;
+}
+
+.wd7-doc-02 {
+  width: 62.917%; /* 1208 / 1920 */
+  margin-left: 3.125%; /* x=60 */
+  aspect-ratio: 1208 / 657;
+  object-fit: cover;
+}
+
+.wd7-doc-03 {
+  display: block;
+  width: 82.708%; /* 1588 / 1920 */
+  margin: 0 auto;
+  aspect-ratio: 1588 / 920;
+  object-fit: cover;
+}
+
+/* ══ 5. 반응형 (영상 밴드 안에 화면 컷) ════════════════ */
+.wd7-video-band {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 920px;
+  padding: 80px 0;
+  background: var(--pl2-neutral-90);
+  overflow: hidden;
+}
+
+.wd7-video-band video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wd7-video-band img {
+  position: relative;
+  width: 62.5%; /* 1200 / 1920 */
+  aspect-ratio: 1200 / 760;
+  object-fit: cover;
+}
+
+/* ══ 6. 화면 모음 ══════════════════════════════════════ */
+.wd7-pair {
+  display: flex;
+  align-items: flex-start;
+  /* % 는 왼쪽 패딩을 제외한 1896 기준 */
+  gap: 0.633%; /* 12 / 1896 */
+  padding-left: 1.25%; /* x=24 */
+}
+
+.wd7-pair img:first-child {
+  width: 49.051%; /* 930 / 1896 */
+  aspect-ratio: 930 / 680;
+  object-fit: cover;
+}
+
+.wd7-pair img:last-child {
+  width: 49.051%; /* 930 / 1896 */
+  aspect-ratio: 930 / 920;
+  object-fit: cover;
+}
+
+.wd7-phones {
+  display: flex;
+  gap: 2.083%; /* 40 / 1920 */
+  justify-content: center;
+}
+
+.wd7-phones img {
+  width: 17.708%; /* 340 / 1920 */
+  aspect-ratio: 340 / 680;
+  object-fit: cover;
+}

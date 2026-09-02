@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Works | PL2 Creative Studio</title>
+    <meta name="description" content="PL2 Creative Studio의 프로젝트" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Works | PL2 Creative Studio" />
+    <meta property="og:description" content="PL2 Creative Studio의 프로젝트" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="assets/base.css" />
+    <link rel="stylesheet" href="assets/works.css" />
+  </head>
+  <body class="wk-body">
+    <nav class="gnb" data-dropdown="off">
+      <div class="gnb-bar">
+        <span class="gnb-brand">PL2 Creative Studio</span>
+        <button
+          type="button"
+          class="gnb-toggle"
+          aria-label="메뉴 열기"
+          aria-expanded="false"
+          aria-controls="gnb-panel"
+        ></button>
+      </div>
+      <div class="gnb-panel" id="gnb-panel">
+        <a class="gnb-item" href="index.html">Home</a>
+        <a class="gnb-item" href="works.html" aria-current="page">Works</a>
+        <a class="gnb-item" href="about.html">About</a>
+        <a class="gnb-item" href="contact.html">Contact</a>
+      </div>
+    </nav>
+
+    <main class="wk-main">
+      <h1 class="sr-only">Works</h1>
+
+      <div class="wk-grid">
+        <!-- 왼쪽 열 (피그마 Section 2345:59587) -->
+        <div class="wk-col">
+          <!-- 상세 페이지가 있는 카드 (Works_Detail 4번, Samsung Internet 리뉴얼).
+               피그마 히어로 원본이 이 카드 이미지와 같은 2835x1590 파일이다. -->
+          <a class="wk-card wk-card--s" href="works-detail-04.html">
+            <img
+              class="wk-card-media"
+              src="assets/works-01.jpg"
+              alt="Samsung Internet"
+            />
+            <div class="wk-card-overlay">
+              <p class="wk-card-brand">Samsung</p>
+              <p class="wk-card-project">Samsung Internet</p>
+            </div>
+          </a>
+
+          <!-- 피그마에서 영상(VIDEO fill). videoHash 5a495963d65e 가 상세 1번 히어로와
+               같은 파일이라 assets/wd1-hero.mp4 를 그대로 쓴다 (다운로드·캐시 공유).
+               이 카드만 상세 페이지가 있다 (Works_Detail 1번). -->
+          <a class="wk-card wk-card--m" href="works-detail-01.html">
+            <video
+              class="wk-card-media"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+            >
+              <source src="assets/wd1-hero.mp4" type="video/mp4" />
+            </video>
+            <div class="wk-card-overlay">
+              <p class="wk-card-brand">Samsung</p>
+              <p class="wk-card-project">Generative AI Image Sample Project</p>
+            </div>
+          </a>
+
+          <!-- TODO: 아래 카드들의 브랜드/프로젝트명은 피그마 placeholder 값 -->
+          <!-- 상세 페이지가 있는 카드 (Works_Detail 8번, SmartThings 2D 모션).
+               피그마 히어로의 두 번째 이미지 해시 fffaef1ff09a 가 이 카드와 같다. -->
+          <a class="wk-card wk-card--m" href="works-detail-08.html">
+            <!-- 피그마 이미지 fill 이 애니메이션 GIF (fffaef1ff09a) 다. 상세 8번 히어로와
+                 같은 해시라 assets/wd8-hero.mp4 를 공유한다. -->
+            <video
+              class="wk-card-media"
+              poster="assets/works-03.jpg"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+            >
+              <source src="assets/wd8-hero.mp4" type="video/mp4" />
+            </video>
+            <div class="wk-card-overlay">
+              <p class="wk-card-brand">Samsung</p>
+              <p class="wk-card-project">Smartthings Project</p>
+            </div>
+          </a>
+
+          <article class="wk-card wk-card--l">
+            <img class="wk-card-media" src="assets/works-04.jpg" alt="" />
+            <div class="wk-card-overlay">
+              <p class="wk-card-brand">Samsung</p>
+              <p class="wk-card-project">Smartthings Project</p>
+            </div>
+          </article>
+
+          <article class="wk-card wk-card--s">
+            <img class="wk-card-media" src="assets/works-05.jpg" alt="" />
+            <div class="wk-card-overlay">
+              <p class="wk-card-brand">Samsung</p>
+              <p class="wk-card-project">Smartthings Project</p>
+            </div>
+          </article>
+
+          <!-- 피그마 Blur=true. 블러는 에셋에 구워져 있다 (CSS 블러 아님) -->
+          <article class="wk-card wk-card--m">
+            <img class="wk-card-media" src="assets/works-06.jpg" alt="" />
+            <div class="wk-card-overlay">
+              <p class="wk-card-brand">Samsung</p>
+              <p class="wk-card-project">Smartthings Project</p>
+            </div>
+          </article>
+
+          <article class="wk-card wk-card--s">
+            <img class="wk-card-media" src="assets/works-07.jpg" alt="" />
+            <div class="wk-card-overlay">
+              <p class="wk-card-brand">Samsung</p>
+              <p class="wk-card-project">Smartthings Project</p>
+            </div>
+          </article>
+        </div>
+
+        <!-- 오른쪽 열 (피그마 Section 2345:59598) -->
+        <div class="wk-col">
+          <!-- 피그마에서 영상(VIDEO fill). 파일은 assets/works-08.mp4 로 넣는다. -->
+          <article class="wk-card wk-card--l">
+            <video
+              class="wk-card-media"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+            >
+              <source src="assets/works-08.mp4" type="video/mp4" />
+            </video>
+            <div class="wk-card-overlay">
+              <p class="wk-card-brand">Samsung</p>
+              <p class="wk-card-project">Smartthings Project</p>
+            </div>
+          </article>
+
+          <!-- 상세 5번(신세계면세점)으로 연결. 다만 이 카드 이미지 해시는 상세 5번과
+               일치하지 않는다 — SHINSEGAE 쇼핑백/레드 수트로 같은 캠페인이라 판단한 것이니
+               매칭이 틀리면 알려줄 것. -->
+          <a class="wk-card wk-card--l" href="works-detail-05.html">
+            <img class="wk-card-media" src="assets/works-09.jpg" alt="" />
+            <div class="wk-card-overlay">
+              <p class="wk-card-brand">Samsung</p>
+              <p class="wk-card-project">Smartthings Project</p>
+            </div>
+          </a>
+
+          <!-- 상세 페이지가 있는 카드 (Works_Detail 2번). 피그마 이미지 해시가
+               상세 2번 히어로/영상과 같다. -->
+          <a class="wk-card wk-card--s" href="works-detail-02.html">
+            <img class="wk-card-media" src="assets/works-10.jpg" alt="" />
+            <div class="wk-card-overlay">
+              <p class="wk-card-brand">Samsung</p>
+              <p class="wk-card-project">Smartthings Project</p>
+            </div>
+          </a>
+
+          <!-- 상세 페이지가 있는 카드 (Works_Detail 3번, 하루하루) -->
+          <a class="wk-card wk-card--m" href="works-detail-03.html">
+            <!-- 피그마 이미지 fill 이 애니메이션 GIF (e358780883a0) 다. 상세 3번 히어로와
+                 같은 해시라 assets/wd3-hero.mp4 를 공유한다. -->
+            <video
+              class="wk-card-media"
+              poster="assets/works-11.jpg"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+            >
+              <source src="assets/wd3-hero.mp4" type="video/mp4" />
+            </video>
+            <div class="wk-card-overlay">
+              <p class="wk-card-brand">Samsung</p>
+              <p class="wk-card-project">Smartthings Project</p>
+            </div>
+          </a>
+
+          <!-- 상세 페이지가 있는 카드 (Works_Detail 6번, 에버셀).
+               피그마 히어로 이미지 해시 836e42628e52 가 이 카드와 같다. -->
+          <a class="wk-card wk-card--l" href="works-detail-06.html">
+            <img class="wk-card-media" src="assets/works-12.jpg" alt="" />
+            <div class="wk-card-overlay">
+              <p class="wk-card-brand">Samsung</p>
+              <p class="wk-card-project">Smartthings Project</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <button type="button" class="wk-top" aria-label="맨 위로"></button>
+
+    <script src="assets/gnb.js"></script>
+    <script src="assets/works.js"></script>
+  </body>
+</html>
