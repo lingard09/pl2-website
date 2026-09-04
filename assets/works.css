@@ -11,7 +11,7 @@
 /* GNB: 스크롤해도 상단에 붙어 있게 fixed (피그마는 프레임 최상단 y=12 에 배치) */
 .wk-body .gnb {
   position: fixed;
-  top: 12px;
+  top: min(0.625vw, 12px); /* 12 — GNB 가 vw 기준이라 위치도 같이 비례한다 */
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
@@ -24,20 +24,20 @@
   margin: 0 auto;
   /* 피그마: 섹션이 x=12, y=0 → 좌우 12px 만, 위아래 여백은 없다.
      첫 카드가 화면 최상단에 붙고 그 위로 GNB(top 12)가 겹친다. */
-  padding: 0 12px;
+  padding: 0 min(0.625vw, 12px);
 }
 
 .wk-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  gap: min(0.625vw, 12px);
   align-items: start;
 }
 
 .wk-col {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: min(0.625vw, 12px);
 }
 
 /* ── 카드 ───────────────────────────────────────────── */
@@ -131,14 +131,14 @@
 /* ── 맨 위로 버튼 (피그마 2345:59614, 64x64 @ 1816,972 → 우 40 / 하 44) ── */
 .wk-top {
   position: fixed;
-  right: 40px;
-  bottom: 44px;
+  right: min(2.0833vw, 40px);
+  bottom: min(2.2917vw, 44px);
   z-index: 100;
-  width: 64px;
-  height: 64px;
+  width: min(3.3333vw, 64px);
+  height: min(3.3333vw, 64px);
   border-radius: 50%;
   /* 원(#303030 = Neutral/20) + 노란 화살표를 피그마에서 4x PNG 로 그대로 받아 씀.
      SVG 로 export 하면 상위 섹션 배경(#F5F5F5)까지 끌려온다. */
-  background: url("icon-scroll-top.png") center / 64px 64px no-repeat;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  background: url("icon-scroll-top.png") center / min(3.3333vw, 64px) min(3.3333vw, 64px) no-repeat;
+  box-shadow: 0 min(0.2083vw, 4px) min(0.5208vw, 10px) rgba(0, 0, 0, 0.08);
 }

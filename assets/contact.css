@@ -10,7 +10,7 @@
 /* GNB: 상단 중앙 고정 (피그마 좌표 760,12) */
 .ct-body .gnb {
   position: fixed;
-  top: 12px;
+  top: min(0.625vw, 12px); /* 12 — GNB 가 vw 기준이라 위치도 같이 비례한다 */
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
@@ -24,12 +24,12 @@
 
 .ct-row {
   display: flex;
-  gap: 40px;
+  gap: min(2.0833vw, 40px);
   width: 100%;
   max-width: 1920px;
-  height: 680px;
+  height: min(35.4167vw, 680px);
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 min(1.25vw, 24px);
 }
 
 /* ── 지도 (피그마 벡터 일러스트를 2x PNG 로 export) ───── */
@@ -55,23 +55,23 @@
   min-width: 0;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 24px;
+  gap: min(1.25vw, 24px);
   height: 100%;
-  padding: 16px 24px 16px 0;
+  padding: min(0.8333vw, 16px) min(1.25vw, 24px) min(0.8333vw, 16px) 0;
 }
 
 /* 주소 블록 — 피그마는 빈 줄을 포함한 텍스트 한 덩어리(11줄 × 약 18.7px = 205).
    #2A2D30 / #697077 은 토큰에 없는 이 페이지 전용 값이다. */
 .ct-address {
   color: #697077;
-  font-size: 16px;
+  font-size: min(0.8333vw, 16px) /* 16 */;
   font-weight: 400;
   line-height: 1.17;
 }
 
 .ct-address-name {
   color: #2a2d30;
-  font-size: 20px;
+  font-size: min(1.0417vw, 20px) /* 20 */;
   font-weight: 700;
   letter-spacing: -0.04em;
 }
@@ -92,13 +92,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 28px;
-  border-radius: 120px;
+  padding: min(0.625vw, 12px) min(1.4583vw, 28px);
+  border-radius: min(6.25vw, 120px);
   background: var(--pl2-black);
   color: var(--pl2-yellow);
-  font-size: 36px;
+  font-size: min(1.875vw, 36px) /* 36 */;
   font-weight: 500;
-  line-height: 36px;
+  line-height: min(1.875vw, 36px) /* 36 */;
   letter-spacing: -0.02em;
   text-decoration: none;
   white-space: nowrap;

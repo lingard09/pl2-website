@@ -88,8 +88,8 @@
   --pl2-font-mono: "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* 형태 */
-  --pl2-radius: 12px;
-  --pl2-shadow-card: 0 4px 20px rgba(0, 0, 0, 0.04); /* DROP_SHADOW r20 y4 4% */
+  --pl2-radius: min(0.625vw, 12px);
+  --pl2-shadow-card: 0 min(0.2083vw, 4px) min(1.0417vw, 20px) rgba(0, 0, 0, 0.04); /* DROP_SHADOW r20 y4 4% */
 }
 
 *,
@@ -142,38 +142,46 @@ button {
                     / .gnb--tb (밝은 배경 위, 검은 텍스트) */
 .gnb {
   position: relative;
-  width: 400px;
+  /* 폭은 뷰포트 비례다 (2026-09-04). 피그마 px ÷ 19.2 = vw — 1920 에서 400px 로
+     피그마와 완전히 같고, 창이 좁아지면 히어로·Works 카드와 같은 비율로 줄어든다.
+     이 값이 GNB 안쪽 모든 치수의 기준이다. */
+  width: min(20.8333vw, 400px); /* 400 */
   max-width: calc(100% - 40px);
+  /* 드롭다운이 아래로 쓸 수 있는 높이. 기본값은 바를 화면 위(top 0.625vw)에 고정하는
+     페이지 기준이다 — 패널 위쪽 12+60+12=84 와 아래 여백 12 를 합쳐 96 = 5vw.
+     바를 화면 중앙에 두는 Home 은 index.css 가 이 값을 덮는다. */
+  --gnb-drop-space: calc(100dvh - min(5vw, 96px));
 }
 
 .gnb-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  height: 60px;
-  padding-left: 24px;
-  padding-right: 20px;
+  gap: min(0.625vw, 12px); /* 12 */
+  height: min(3.125vw, 60px); /* 60 */
+  padding-left: min(1.25vw, 24px); /* 24 */
+  padding-right: min(1.0417vw, 20px); /* 20 */
   background: var(--pl2-yellow);
-  border-radius: var(--pl2-radius);
+  border-radius: min(0.625vw, 12px); /* --pl2-radius 12 — 토큰은 공유라 여기서만 vw 로 쓴다 */
   box-shadow: var(--pl2-shadow-card);
 }
 
 .gnb-brand {
   color: var(--pl2-black);
   font-family: var(--pl2-font-display);
-  font-size: 25px;
+  font-size: min(1.3021vw, 25px); /* 25 */
   font-weight: 400;
   line-height: 1.2;
-  letter-spacing: 0.25px;
+  letter-spacing: min(0.013vw, 0.25px); /* 0.25 */
   white-space: nowrap;
 }
 
 .gnb-toggle {
   flex: none;
-  width: 32px;
-  height: 32px;
-  background: url("icon-hamburger.svg") center / 32px 32px no-repeat;
+  width: min(1.6667vw, 32px); /* 32 */
+  height: min(1.6667vw, 32px);
+  background: url("icon-hamburger.svg") center /
+    min(1.6667vw, 32px) min(1.6667vw, 32px) no-repeat;
 }
 
 .gnb[data-dropdown="on"] .gnb-toggle {
@@ -188,26 +196,33 @@ button {
    바 자체는 열려도 제자리에 있어야 하므로 흐름에서 빼서 absolute 로 매단다. */
 .gnb-panel {
   position: absolute;
-  top: calc(100% + 12px);
+  top: calc(100% + min(0.625vw, 12px)); /* 12 */
   left: 0;
   z-index: 1;
   display: none;
   flex-direction: column;
   width: 100%;
   background: rgba(255, 255, 255, 0.5);
-  border-radius: 4px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-  backdrop-filter: blur(4px); /* GLASS radius 4 근사 */
+  border-radius: min(0.2083vw, 4px); /* 4 */
+  box-shadow: 0 min(0.2083vw, 4px) min(1.0417vw, 20px) rgba(0, 0, 0, 0.04); /* 0 4 20 */
+  backdrop-filter: blur(4px); /* GLASS radius 4 근사. 블러는 스케일하지 않는다 */
   -webkit-backdrop-filter: blur(4px);
   overflow: hidden; /* 첫/마지막 행 배경을 라운드에 맞춰 잘라낸다 */
 }
 
 .gnb[data-dropdown="on"] .gnb-panel {
   display: flex;
-  /* 1080 미만 창에서 화면 밖으로 나가지 않게 (피그마 1080 기준으로는 항상 들어감).
-     바 중심이 화면 중앙이므로 남는 아래 높이는 50dvh - (바 절반 30 + gap 8). */
-  max-height: calc(50dvh - 38px);
-  overflow-y: auto;
+  /* 넣을 자리가 모자라면 스크롤 대신 행을 줄인다 (2026-09-04).
+     피그마 비율(행 120 / 글자 110 / 행간 100)을 그대로 유지한 채 같이 작아지므로
+     4개 항목이 어떤 창 높이에서도 전부 보인다.
+     6.25vw(폭 비례) / 120px(1920 상한) / 세로 여유 중 가장 작은 값을 고른다 —
+     폭 비례(vw)와 세로 잘림 방지(dvh)가 이 한 줄에서 만난다. */
+  --gnb-row: min(6.25vw, 120px, calc(var(--gnb-drop-space) / 4));
+  /* 화면 밖으로 나가지 않게 하는 마지막 안전장치.
+     ⚠ overflow-y: auto 를 여기 다시 넣으면 스크롤바가 항상 생긴다 —
+       행 높이 합(480)은 딱 맞지만 110px 글자의 라인박스가 8px 넘쳐서
+       scrollHeight 가 488 이 되기 때문이다. 위의 overflow: hidden 을 그대로 둔다. */
+  max-height: var(--gnb-drop-space);
 }
 
 .gnb-item {
@@ -217,14 +232,16 @@ button {
      실제 배치는 120 간격이고 패널 480 = 120 x 4 라 120 을 따른다.
      구분선이 그 120 안에 그려져야 하므로 높이를 고정한다 (auto 면 121 이 된다). */
   flex: none; /* 패널이 max-height 로 잘릴 때 행이 눌리지 않게 */
-  height: 120px;
-  padding: 0 24px;
-  border-bottom: 1px solid var(--pl2-white);
+  /* 행 높이는 --gnb-row 하나가 정하고 글자·행간이 같은 비율(110/120, 100/120)로 따라간다.
+     1920 에서 120 / 110 / 100 = 피그마 값. */
+  height: var(--gnb-row, min(6.25vw, 120px));
+  padding: 0 min(1.25vw, 24px); /* 24 */
+  border-bottom: 1px solid var(--pl2-white); /* 헤어라인은 스케일하지 않는다 */
   color: var(--pl2-neutral-10); /* #212121 */
   font-family: var(--pl2-font-display);
-  font-size: 110px;
+  font-size: calc(var(--gnb-row, min(6.25vw, 120px)) * 110 / 120);
   font-weight: 500;
-  line-height: 100px;
+  line-height: calc(var(--gnb-row, min(6.25vw, 120px)) * 100 / 120);
   text-decoration: none;
   white-space: nowrap;
 }
@@ -326,7 +343,7 @@ button {
 .ft-hero {
   display: flex;
   justify-content: center;
-  padding: 120px 0;
+  padding: min(6.25vw, 120px) 0;
   background: var(--pl2-yellow);
   overflow: hidden; /* 피그마 overflow-clip — 좁은 창에서는 잘린다 */
 }
@@ -336,15 +353,15 @@ button {
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 24px 40px 24px 64px;
+  padding: min(1.25vw, 24px) min(2.0833vw, 40px) min(1.25vw, 24px) min(3.3333vw, 64px);
 }
 
 .ft-wordmark {
   color: var(--pl2-black);
   font-family: var(--pl2-font-display);
-  font-size: 160px;
+  font-size: min(8.3333vw, 160px) /* 160 */;
   font-weight: 500;
-  line-height: 192px; /* 120% */
+  line-height: min(10vw, 192px) /* 192 */; /* 120% */
   white-space: nowrap;
 }
 
@@ -353,7 +370,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 30px 40px;
+  padding: min(1.5625vw, 30px) min(2.0833vw, 40px);
   background: var(--pl2-yellow);
   overflow: hidden;
 }
@@ -361,19 +378,19 @@ button {
 .ft-bar-left {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: min(1.0417vw, 20px);
 }
 
 .ft-logo {
-  width: 23.973px;
-  height: 30.276px;
+  width: min(1.2486vw, 23.973px);
+  height: min(1.5769vw, 30.276px);
 }
 
 .ft-copy {
   color: var(--pl2-neutral-10);
-  font-size: 16.399px;
+  font-size: min(0.8541vw, 16.399px) /* 16.399 */;
   font-weight: 400;
-  line-height: 20px;
+  line-height: min(1.0417vw, 20px) /* 20 */;
   letter-spacing: 0.04em; /* 4% */
   white-space: nowrap;
 }
@@ -381,14 +398,14 @@ button {
 .ft-links {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: min(1.0417vw, 20px);
 }
 
 .ft-links a {
   color: var(--pl2-neutral-10);
-  font-size: 18.922px;
+  font-size: min(0.9855vw, 18.922px) /* 18.922 */;
   font-weight: 500;
-  line-height: 23px;
+  line-height: min(1.1979vw, 23px) /* 23 */;
   text-decoration: none;
   white-space: nowrap;
 }
@@ -400,8 +417,8 @@ button {
 /* 구분선: 피그마 Line 49 (stroke #555555, 1.2615px, 길이 10.092px) */
 .ft-divider {
   flex: none;
-  width: 1.2615px;
-  height: 10.092px;
+  width: min(0.0657vw, 1.2615px);
+  height: min(0.5256vw, 10.092px);
   background: var(--pl2-neutral-30);
 }
 
@@ -410,7 +427,7 @@ button {
   position: absolute;
   width: 1px;
   height: 1px;
-  margin: -1px;
+  margin: min(-0.0521vw, -1px);
   padding: 0;
   overflow: hidden;
   clip-path: inset(50%);

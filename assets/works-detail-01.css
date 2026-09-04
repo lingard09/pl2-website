@@ -13,13 +13,13 @@
 .wd-style {
   display: flex;
   flex-direction: column;
-  gap: 80px;
+  gap: min(4.1667vw, 80px);
 }
 
 .wd-style-body {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: min(2.0833vw, 40px);
   align-items: center;
 }
 
@@ -33,28 +33,28 @@
 .wd-prompt {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: min(0.625vw, 12px);
   width: 55.208%; /* 1060 / 1920 */
-  padding: 30px 36px 24px;
-  border-radius: 15.138px;
+  padding: min(1.5625vw, 30px) min(1.875vw, 36px) min(1.25vw, 24px);
+  border-radius: min(0.7884vw, 15.138px);
   background: var(--pl2-neutral-20);
 }
 
 .wd-prompt-label {
   color: var(--pl2-neutral-80);
   font-family: var(--pl2-font-mono);
-  font-size: 20px;
+  font-size: min(1.0417vw, 20px) /* 20 */;
   font-weight: 500;
-  line-height: 32px;
+  line-height: min(1.6667vw, 32px) /* 32 */;
   letter-spacing: -0.02em;
 }
 
 .wd-prompt-text {
   color: var(--pl2-white);
   font-family: var(--pl2-font-mono);
-  font-size: 16px;
+  font-size: min(0.8333vw, 16px) /* 16 */;
   font-weight: 400;
-  line-height: 30px;
+  line-height: min(1.5625vw, 30px) /* 30 */;
   letter-spacing: -0.02em;
 }
 
@@ -65,13 +65,13 @@
 }
 
 .wd-prompt-plus {
-  width: 30px;
-  height: 30px;
+  width: min(1.5625vw, 30px);
+  height: min(1.5625vw, 30px);
 }
 
 .wd-prompt-send {
-  width: 48px;
-  height: 48px;
+  width: min(2.5vw, 48px);
+  height: min(2.5vw, 48px);
 }
 
 /* ══ 3. 필름스트립 ═════════════════════════════════════
@@ -80,12 +80,12 @@
 .wd-strip-section {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: min(1.6667vw, 32px);
 }
 
 .wd-strip {
   position: relative;
-  height: 740px;
+  height: min(38.5417vw, 740px);
   overflow: hidden;
 }
 
@@ -93,8 +93,8 @@
   position: absolute;
   top: 0;
   left: 50%;
-  width: 2638px;
-  height: 740px;
+  width: min(137.3958vw, 2638px);
+  height: min(38.5417vw, 740px);
   transform: translateX(-50%);
 }
 
@@ -104,16 +104,16 @@
 }
 
 .wd-strip-small {
-  top: 440px;
-  width: 202px;
-  height: 278px;
+  top: min(22.9167vw, 440px);
+  width: min(10.5208vw, 202px);
+  height: min(14.4792vw, 278px);
 }
 
 .wd-strip-big {
   top: 0;
-  left: 1060px;
-  width: 518px;
-  height: 740px;
+  left: min(55.2083vw, 1060px);
+  width: min(26.9792vw, 518px);
+  height: min(38.5417vw, 740px);
 }
 
 /* 양끝 검정 그라디언트 (피그마 245x360 @ x=-2 / x=1675, y=381) */
@@ -121,15 +121,15 @@
 .wd-strip::after {
   content: "";
   position: absolute;
-  top: 381px;
+  top: min(19.8438vw, 381px);
   z-index: 1;
-  width: 245px;
-  height: 360px;
+  width: min(12.7604vw, 245px);
+  height: min(18.75vw, 360px);
   pointer-events: none;
 }
 
 .wd-strip::before {
-  left: -2px;
+  left: min(-0.1042vw, -2px);
   background: linear-gradient(to right, #000 0%, rgba(0, 0, 0, 0) 100%);
 }
 
@@ -140,9 +140,9 @@
 
 .wd-strip-caption {
   color: var(--pl2-neutral-60);
-  font-size: 20px;
+  font-size: min(1.0417vw, 20px) /* 20 */;
   font-weight: 500;
-  line-height: 32px;
+  line-height: min(1.6667vw, 32px) /* 32 */;
   text-align: center;
 }
 
@@ -150,21 +150,21 @@
 .wd-layer {
   display: flex;
   flex-direction: column;
-  gap: 80px;
+  gap: min(4.1667vw, 80px);
 }
 
 .wd-band {
   display: flex;
   justify-content: center;
   width: 100%;
-  height: 960px;
-  padding: 100px 0;
+  height: min(50vw, 960px);
+  padding: min(5.2083vw, 100px) 0;
   background: #1e2123; /* 피그마 Frame 2116929241 */
 }
 
 .wd-band img {
-  width: 400px;
-  height: 760px;
+  width: min(20.8333vw, 400px);
+  height: min(39.5833vw, 760px);
   object-fit: cover;
 }
 
@@ -172,7 +172,7 @@
 .wd-illust {
   display: flex;
   gap: 3.125%; /* 60 / 1920 */
-  height: 960px;
+  height: min(50vw, 960px);
 }
 
 .wd-illust-half {
@@ -202,14 +202,14 @@
 
 /* 오른쪽: 358x576 @ (0,120), 560x840 @ (370,120) — 930 기준 % */
 .wd-illust-3 {
-  top: 120px;
+  top: min(6.25vw, 120px);
   left: 0;
   width: 38.495%;
   aspect-ratio: 358 / 576;
 }
 
 .wd-illust-4 {
-  top: 120px;
+  top: min(6.25vw, 120px);
   left: 39.785%;
   width: 60.215%;
   aspect-ratio: 560 / 840;
@@ -219,21 +219,21 @@
 .wd-stickers {
   display: flex;
   flex-direction: column;
-  gap: 80px;
+  gap: min(4.1667vw, 80px);
 }
 
 .wd-sticker-rows {
   display: flex;
   flex-direction: column;
   /* 피그마 행 간격이 80/81 로 번갈아 나오는데 실제 값은 80.5 (반올림 차이) */
-  gap: 80.5px;
+  gap: min(4.1927vw, 80.5px);
 }
 
 .wd-sticker-row {
   display: flex;
   align-items: flex-end;
   gap: 1.25%; /* 24 / 1920 (행마다 8~14px 차이는 반올림) */
-  height: 763px;
+  height: min(39.7396vw, 763px);
 }
 
 .wd-sticker-row--reverse {
@@ -249,23 +249,23 @@
 
 .wd-sticker-caption {
   flex: 1 1 0;
-  padding: 24px 0;
+  padding: min(1.25vw, 24px) 0;
 }
 
 .wd-sticker-caption h3 {
   color: var(--pl2-neutral-60);
-  font-size: 14px;
+  font-size: min(0.7292vw, 14px) /* 14 */;
   font-weight: 500;
-  line-height: 17px;
+  line-height: min(0.8854vw, 17px) /* 17 */;
   letter-spacing: -0.02em;
 }
 
 .wd-sticker-caption p {
-  margin-top: 8px;
+  margin-top: min(0.4167vw, 8px);
   color: var(--pl2-neutral-50);
-  font-size: 14px;
+  font-size: min(0.7292vw, 14px) /* 14 */;
   font-weight: 400;
-  line-height: 18px;
+  line-height: min(0.9375vw, 18px) /* 18 */;
   letter-spacing: -0.02em;
 }
 

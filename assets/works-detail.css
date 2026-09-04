@@ -12,7 +12,7 @@
 /* GNB: 피그마 Type=T/W (어두운 히어로 위) */
 .wd-body .gnb {
   position: fixed;
-  top: 12px;
+  top: min(0.625vw, 12px); /* 12 — GNB 가 vw 기준이라 위치도 같이 비례한다 */
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
@@ -27,14 +27,14 @@
 .wd-container {
   display: flex;
   flex-direction: column;
-  gap: 320px;
+  gap: min(16.6667vw, 320px);
 }
 
 /* ══ 1. 히어로 + 프로젝트 타이틀 ═══════════════════════ */
 .wd-top {
   display: flex;
   flex-direction: column;
-  gap: 160px;
+  gap: min(8.3333vw, 160px);
 }
 
 /* 히어로는 '배경 아트워크 + 그 위 텍스트' 가 한 덩어리라, 뷰포트가 좁아져도
@@ -137,23 +137,23 @@
 .wd-intro {
   display: flex;
   flex-direction: column;
-  gap: 36px;
+  gap: min(1.875vw, 36px);
   padding: 0 3.125%; /* 60 / 1920 */
 }
 
 .wd-intro-title {
   color: var(--pl2-neutral-95);
   font-family: var(--pl2-font-display);
-  font-size: 60px;
+  font-size: min(3.125vw, 60px) /* 60 */;
   font-weight: 500;
-  line-height: 64px;
+  line-height: min(3.3333vw, 64px) /* 64 */;
 }
 
 .wd-intro-desc {
   color: var(--pl2-neutral-70);
-  font-size: 20px;
+  font-size: min(1.0417vw, 20px) /* 20 */;
   font-weight: 300;
-  line-height: 36px;
+  line-height: min(1.875vw, 36px) /* 36 */;
   letter-spacing: -0.02em;
 }
 
@@ -169,9 +169,9 @@
    어느 헤더가 Bold 인지는 NOTES.md "섹션 헤더 굵기" 표 참고. */
 .wd-head-title {
   color: var(--pl2-neutral-90);
-  font-size: 32px;
+  font-size: min(1.6667vw, 32px) /* 32 */;
   font-weight: 600;
-  line-height: 46px;
+  line-height: min(2.3958vw, 46px) /* 46 */;
   letter-spacing: -0.02em;
 }
 
@@ -181,15 +181,15 @@
 
 .wd-head-desc {
   color: var(--pl2-neutral-60);
-  font-size: 18px;
+  font-size: min(0.9375vw, 18px) /* 18 */;
   font-weight: 300;
-  line-height: 34px;
+  line-height: min(1.7708vw, 34px) /* 34 */;
 }
 
 /* 가운데 정렬 헤더 (피그마 x=592, w=736, gap 40, desc lh 32) */
 .wd-head--center {
   align-items: center;
-  gap: 40px;
+  gap: min(2.0833vw, 40px);
   text-align: center;
 }
 
@@ -203,12 +203,12 @@
 }
 
 .wd-head--center .wd-head-desc {
-  line-height: 32px;
+  line-height: min(1.6667vw, 32px) /* 32 */;
 }
 
 /* 왼쪽 정렬 헤더 (피그마 x=60, gap 24) */
 .wd-head--left {
-  gap: 24px;
+  gap: min(1.25vw, 24px);
   padding: 0 3.125%;
 }
 
@@ -220,42 +220,42 @@
 
 /* 오른쪽(x=1124) 정렬 헤더 — 스티커 섹션 */
 .wd-head--right {
-  gap: 24px;
+  gap: min(1.25vw, 24px);
   padding-left: 58.542%; /* 1124 / 1920 */
   padding-right: 3.125%;
 }
 
 /* ══ 7. 크레딧 ═════════════════════════════════════════ */
 .wd-credit {
-  padding: 60px 3.125% 200px 58.542%; /* 피그마 x=1124, 위 60 / 아래 200 */
+  padding: min(3.125vw, 60px) 3.125% min(10.4167vw, 200px) 58.542%; /* 피그마 x=1124, 위 60 / 아래 200 */
   background: var(--pl2-black);
 }
 
 .wd-credit-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: min(0.625vw, 12px);
 }
 
 .wd-credit-row {
   display: flex;
-  gap: 10px;
+  gap: min(0.5208vw, 10px);
 }
 
 .wd-credit-row dt {
   flex: none;
-  width: 252px;
+  width: min(13.125vw, 252px);
   color: var(--pl2-neutral-60);
-  font-size: 20.184px;
+  font-size: min(1.0513vw, 20.184px) /* 20.184 */;
   font-weight: 600;
-  line-height: 24px;
+  line-height: min(1.25vw, 24px) /* 24 */;
 }
 
 .wd-credit-row dd {
   color: var(--pl2-neutral-40);
-  font-size: 20.184px;
+  font-size: min(1.0513vw, 20.184px) /* 20.184 */;
   font-weight: 400;
-  line-height: 24px;
+  line-height: min(1.25vw, 24px) /* 24 */;
 }
 
 /* ══ 라이트 테마 상세 (예: 상세 03) ═══════════════════════

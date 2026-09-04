@@ -4,11 +4,11 @@
    섹션 리듬 320px, 섹션 내부 160 / 120 / 80. */
 
 .wd-head-desc {
-  line-height: 32px;
+  line-height: min(1.6667vw, 32px) /* 32 */;
 }
 
 .wd-head--center {
-  gap: 24px;
+  gap: min(1.25vw, 24px);
 }
 
 /* 히어로 제목이 한 문장(줄바꿈 문자 없음)인데 피그마에서는 883px 박스에서 2줄로 꺾인다.
@@ -22,13 +22,13 @@
 .wd7-section {
   display: flex;
   flex-direction: column;
-  gap: 80px;
+  gap: min(4.1667vw, 80px);
 }
 
 .wd7-stack120 {
   display: flex;
   flex-direction: column;
-  gap: 120px;
+  gap: min(6.25vw, 120px);
 }
 
 /* ══ 2. 서비스 3컷 (2열, 오른쪽 열은 세로 중앙) ════════ */
@@ -43,7 +43,7 @@
   display: flex;
   flex: none;
   flex-direction: column;
-  gap: 120px;
+  gap: min(6.25vw, 120px);
   width: 49.333%; /* 888 / 1800 */
 }
 
@@ -62,7 +62,7 @@
 .wd7-band-blue {
   display: flex;
   justify-content: center;
-  padding: 80px 0;
+  padding: min(4.1667vw, 80px) 0;
   background: #edf3fd;
 }
 
@@ -123,8 +123,8 @@
   display: flex;
   justify-content: center;
   width: 100%;
-  height: 920px;
-  padding: 80px 0;
+  height: min(47.9167vw, 920px);
+  padding: min(4.1667vw, 80px) 0;
   background: var(--pl2-neutral-90);
   overflow: hidden;
 }

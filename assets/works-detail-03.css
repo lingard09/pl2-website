@@ -5,18 +5,18 @@
 
 /* 헤더 설명 행간: 섹션 3·5·6 은 34, 섹션 2(가운데)는 32 */
 .wd-head-desc {
-  line-height: 34px;
+  line-height: min(1.7708vw, 34px) /* 34 */;
 }
 
 .wd-head--center .wd-head-desc {
-  line-height: 32px;
+  line-height: min(1.6667vw, 32px) /* 32 */;
 }
 
 /* ══ 2. 브랜드 필름 ════════════════════════════════════ */
 .wd3-film {
   display: flex;
   flex-direction: column;
-  gap: 80px;
+  gap: min(4.1667vw, 80px);
 }
 
 /* 피그마: 1244x700 연회색 판 위에 892x596 이미지를 176/52 인셋으로 얹음 */
@@ -40,14 +40,14 @@
 .wd3-film-media {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: min(1.6667vw, 32px);
 }
 
 .wd3-film-caption {
   color: var(--pl2-neutral-40);
-  font-size: 20px;
+  font-size: min(1.0417vw, 20px) /* 20 */;
   font-weight: 500;
-  line-height: 32px;
+  line-height: min(1.6667vw, 32px) /* 32 */;
   text-align: center;
 }
 
@@ -55,7 +55,7 @@
 .wd3-pair {
   display: flex;
   flex-direction: column;
-  gap: 120px;
+  gap: min(6.25vw, 120px);
 }
 
 .wd3-pair-a {
@@ -75,12 +75,12 @@
 .wd3-section {
   display: flex;
   flex-direction: column;
-  gap: 80px;
+  gap: min(4.1667vw, 80px);
 }
 
 /* 섹션 4 는 헤더와 이미지 사이 120 */
 .wd3-section--gap120 {
-  gap: 120px;
+  gap: min(6.25vw, 120px);
 }
 
 /* ══ 4. 제품 컷 ════════════════════════════════════════ */
@@ -94,7 +94,7 @@
 .wd3-duo {
   display: flex;
   gap: 0.625%; /* 12 / 1920 */
-  height: 700px;
+  height: min(36.4583vw, 700px);
 }
 
 .wd3-duo img {
@@ -127,5 +127,5 @@
 .wd3-stack120 {
   display: flex;
   flex-direction: column;
-  gap: 120px;
+  gap: min(6.25vw, 120px);
 }

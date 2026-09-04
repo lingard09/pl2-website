@@ -10,28 +10,28 @@
 
 /* 섹션 2 헤더: 제목↔설명 간격 24 (상세 01 은 40) */
 .wd-head--center {
-  gap: 24px;
+  gap: min(1.25vw, 24px);
 }
 
 /* 이 페이지 헤더 설명은 전부 행간 32 (상세 01 의 왼쪽 헤더는 34) */
 .wd-head-desc {
-  line-height: 32px;
+  line-height: min(1.6667vw, 32px) /* 32 */;
 }
 
 /* ══ 2. 가운데 질문 섹션 (646 높이에 헤더가 세로 중앙) ══ */
 .wd2-question {
-  padding: 240px 0;
+  padding: min(12.5vw, 240px) 0;
 }
 
 /* ══ 3~6. 이미지 + 스테퍼 ══════════════════════════════ */
 .wd2-step-section {
   display: flex;
   align-items: center;
-  height: 960px;
+  height: min(50vw, 960px);
 }
 
 .wd2-step-section--tall {
-  height: 1031px;
+  height: min(53.6979vw, 1031px);
 }
 
 /* 왼쪽 이미지(콜라주) — 피그마 960x960 을 통째로 export */
@@ -49,7 +49,7 @@
   align-items: center;
   justify-content: flex-end;
   width: 36.979%; /* 710 / 1920 */
-  height: 960px;
+  height: min(50vw, 960px);
 }
 
 /* 스테퍼 (피그마 x=1240, w=680 / 내부 620) */
@@ -66,7 +66,7 @@
 .wd2-step-list {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: min(2.0833vw, 40px);
   width: 91.176%; /* 620 / 680 */
 }
 
@@ -77,12 +77,12 @@
 
 .wd2-step-head {
   display: flex;
-  gap: 16px;
+  gap: min(0.8333vw, 16px);
   color: var(--pl2-neutral-30); /* 비활성 #555555 */
   font-family: var(--pl2-font-display);
-  font-size: 52px;
+  font-size: min(2.7083vw, 52px) /* 52 */;
   font-weight: 400;
-  line-height: 62px; /* 120% */
+  line-height: min(3.2292vw, 62px) /* 62 */; /* 120% */
 }
 
 .wd2-step[data-active="true"] .wd2-step-head {
@@ -90,11 +90,11 @@
 }
 
 .wd2-step-desc {
-  margin-top: 24px;
+  margin-top: min(1.25vw, 24px);
   color: var(--pl2-neutral-60);
-  font-size: 18px;
+  font-size: min(0.9375vw, 18px) /* 18 */;
   font-weight: 300;
-  line-height: 34px;
+  line-height: min(1.7708vw, 34px) /* 34 */;
 }
 
 /* ══ 파이프라인 다이어그램 ═════════════════════════════
@@ -102,18 +102,18 @@
    레이블은 좌우 교대 (피그마 374x524). */
 .wd2-pipe {
   display: grid;
-  grid-template-columns: 120px 24px 150px;
-  column-gap: 40px;
-  row-gap: 76px;
-  grid-auto-rows: 24px;
+  grid-template-columns: min(6.25vw, 120px) min(1.25vw, 24px) min(7.8125vw, 150px);
+  column-gap: min(2.0833vw, 40px);
+  row-gap: min(3.9583vw, 76px);
+  grid-auto-rows: min(1.25vw, 24px);
 }
 
 .wd2-pipe-label {
   align-self: center;
   color: var(--pl2-neutral-50);
-  font-size: 20px;
+  font-size: min(1.0417vw, 20px) /* 20 */;
   font-weight: 500;
-  line-height: 29px;
+  line-height: min(1.5104vw, 29px) /* 29 */;
   white-space: nowrap;
 }
 
@@ -130,17 +130,17 @@
 .wd2-pipe-dot {
   position: relative;
   grid-column: 2;
-  width: 24px;
-  height: 24px;
+  width: min(1.25vw, 24px);
+  height: min(1.25vw, 24px);
 }
 
 .wd2-pipe-dot::before {
   content: "";
   position: absolute;
-  top: 6px;
-  left: 6px;
-  width: 12px;
-  height: 12px;
+  top: min(0.3125vw, 6px);
+  left: min(0.3125vw, 6px);
+  width: min(0.625vw, 12px);
+  height: min(0.625vw, 12px);
   border-radius: 50%;
   background: var(--pl2-neutral-70);
 }
@@ -149,10 +149,10 @@
 .wd2-pipe-dot:not(:last-of-type)::after {
   content: "";
   position: absolute;
-  top: 32px;
-  left: 11px;
-  width: 2px;
-  height: 60px;
+  top: min(1.6667vw, 32px);
+  left: min(0.5729vw, 11px);
+  width: min(0.1042vw, 2px);
+  height: min(3.125vw, 60px);
   background: var(--pl2-neutral-70);
 }
 
@@ -160,14 +160,14 @@
 .wd2-sequence {
   display: flex;
   flex-direction: column;
-  gap: 80px;
+  gap: min(4.1667vw, 80px);
 }
 
 .wd2-seq-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px 7.5px; /* 피그마 열 간격 8/7, 행 간격 8 */
-  padding: 80px 0;
+  gap: min(0.4167vw, 8px) min(0.3906vw, 7.5px); /* 피그마 열 간격 8/7, 행 간격 8 */
+  padding: min(4.1667vw, 80px) 0;
   background: var(--pl2-neutral-5); /* #111111 */
 }
 
@@ -198,10 +198,10 @@
   left: 50%;
   width: 0;
   height: 0;
-  border-top: 41px solid transparent;
-  border-bottom: 41px solid transparent;
-  border-left: 94.685px solid var(--pl2-white);
+  border-top: min(2.1354vw, 41px) solid transparent;
+  border-bottom: min(2.1354vw, 41px) solid transparent;
+  border-left: min(4.9315vw, 94.685px) solid var(--pl2-white);
   transform: translate(-50%, -50%);
-  filter: drop-shadow(0 6.312px 31.562px rgba(0, 0, 0, 0.25));
+  filter: drop-shadow(0 min(0.3288vw, 6.312px) min(1.6439vw, 31.562px) rgba(0, 0, 0, 0.25));
   pointer-events: none;
 }
