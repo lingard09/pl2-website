@@ -11,6 +11,7 @@
  *   3) JS 에러
  *   4) 폰트가 실제로 로드됐는가 (Tannakone / DM Mono)
  *   5) <video> 가 재생되는가 (화면에 띄운 채 currentTime 이 흐르는지)
+ *      — 재생 버튼이 달린 자리는 눌러 보고, 딤이 걷혔는지까지 본다
  *   6) 히어로 제목이 2줄인가 (883px 박스를 넘지 않는가)
  *
  * playwright 경로는 npx 캐시를 쓴다. 없으면 PLAYWRIGHT 환경변수로 넘겨라.
@@ -42,14 +43,8 @@ const PAGES = {
 };
 
 // 아직 원본을 못 받은 영상 — 404 가 나도 정상이다 (NOTES "남은 것" 참고)
-const MISSING_OK = new Set([
-  'wd5-hero.mp4',
-  'wd7-hero.mp4',
-  'wd7-band.mp4',
-  'wd8-intro.mp4',
-  'wd8-video.mp4',
-  'wd9-hero.mp4',
-]);
+// 2026-09-04: 대기 중이던 5개(슬롯 6개)를 전부 받아 넣어서 비었다.
+const MISSING_OK = new Set([]);
 
 const only = process.argv[2];
 const targets = Object.entries(PAGES).filter(
@@ -87,6 +82,7 @@ for (const [name, wantHeight] of targets) {
   });
 
   // 영상은 화면에 띄운 채로 재생 여부를 본다 (크롬은 화면 밖 영상을 멈춘다)
+  // autoplay 가 아니라 딤 + 재생 버튼이 달린 자리(상세 08 의 7번 영상)는 버튼을 눌러 본다.
   const videos = [];
   for (let i = 0; i < info.videoCount; i++) {
     videos.push(
@@ -94,11 +90,19 @@ for (const [name, wantHeight] of targets) {
         const v = document.querySelectorAll('video')[i];
         v.scrollIntoView({ block: 'center' });
         await new Promise((r) => setTimeout(r, 500));
+        const section = v.closest('[data-playing]');
+        const play = section && section.querySelector('.wd8-video-play');
+        if (play && v.paused) {
+          play.click();
+          await new Promise((r) => setTimeout(r, 500));
+        }
         const t0 = v.currentTime;
         await new Promise((r) => setTimeout(r, 900));
         return {
           src: (v.currentSrc || '').split('/').pop() || 'MISSING',
           playing: !v.paused || v.currentTime !== t0,
+          // 눌러서 재생되는 자리는 딤이 실제로 걷혔는지도 같이 본다
+          dimCleared: play ? section.getAttribute('data-playing') === 'true' : null,
         };
       }, i),
     );
@@ -119,6 +123,9 @@ for (const [name, wantHeight] of targets) {
     (v) => !v.playing && !MISSING_OK.has(v.src) && v.src !== 'MISSING',
   );
   if (stopped.length) problems.push(`영상 멈춤 ${stopped.map((v) => v.src).join(',')}`);
+  const dimStuck = videos.filter((v) => v.dimCleared === false);
+  if (dimStuck.length)
+    problems.push(`딤 안 걷힘 ${dimStuck.map((v) => v.src).join(',')}`);
 
   if (problems.length) fail++;
   const mark = problems.length ? '✗' : '✓';

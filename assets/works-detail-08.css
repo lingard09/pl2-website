@@ -3,24 +3,24 @@
    **다크 테마** (Content fill #000000) + GNB Type=T/W. 섹션 리듬 320px, 내부 160 / 120 / 80. */
 
 .wd-head-desc {
-  line-height: 32px;
+  line-height: min(1.6667vw, 32px) /* 32 */;
 }
 
 /* 가운데 헤더는 제목↔설명 24 */
 .wd-head--center {
-  gap: 24px;
+  gap: min(1.25vw, 24px);
 }
 
 .wd8-section {
   display: flex;
   flex-direction: column;
-  gap: 80px;
+  gap: min(4.1667vw, 80px);
 }
 
 .wd8-stack120 {
   display: flex;
   flex-direction: column;
-  gap: 120px;
+  gap: min(6.25vw, 120px);
 }
 
 /* ══ 1558x835 미디어 (가운데) — 2번은 영상, 6번은 이미지 ══ */
@@ -103,7 +103,7 @@
 }
 
 .wd8-duo img:last-child {
-  margin-top: 120px;
+  margin-top: min(6.25vw, 120px);
 }
 
 /* ══ 7. 영상 ═══════════════════════════════════════════ */
@@ -121,25 +121,52 @@
   object-fit: cover;
 }
 
-/* 피그마: 영상 위에 검정 60% */
+/* 피그마: 영상 위에 검정 60%. 재생을 누르면 걷힌다. */
 .wd8-video::after {
   content: "";
   position: absolute;
   inset: 0;
   background: var(--pl2-alpha-60);
+  transition: opacity 300ms ease;
+  pointer-events: none;
 }
 
+.wd8-video[data-playing="true"]::after {
+  opacity: 0;
+}
+
+/* 재생 버튼. 클릭 영역은 섹션 전체다 — 딤이 덮인 상태에서 어디를 눌러도 재생되고,
+   재생 중에 다시 누르면 멈춘다. 삼각형만 ::before 로 그린다. */
 .wd8-video-play {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  inset: 0;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+/* 피그마 재생 삼각형 95x82 (흰색 + drop-shadow 0 6.312 31.562 검정 25%) */
+.wd8-video-play::before {
+  content: "";
   width: 0;
   height: 0;
-  border-top: 41px solid transparent;
-  border-bottom: 41px solid transparent;
-  border-left: 94.685px solid var(--pl2-white);
-  transform: translate(-50%, -50%);
-  filter: drop-shadow(0 6.312px 31.562px rgba(0, 0, 0, 0.25));
-  pointer-events: none;
+  border-top: min(2.1354vw, 41px) solid transparent;
+  border-bottom: min(2.1354vw, 41px) solid transparent;
+  border-left: min(4.9315vw, 94.685px) solid var(--pl2-white);
+  filter: drop-shadow(0 min(0.3288vw, 6.312px) min(1.6439vw, 31.562px) rgba(0, 0, 0, 0.25));
+  transition: opacity 300ms ease;
+}
+
+.wd8-video[data-playing="true"] .wd8-video-play::before {
+  opacity: 0;
+}
+
+.wd8-video-play:focus-visible {
+  outline: min(0.1042vw, 2px) solid var(--pl2-white);
+  outline-offset: min(-0.2083vw, -4px);
 }
