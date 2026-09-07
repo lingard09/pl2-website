@@ -108,6 +108,15 @@
   font-size: 5.7292cqw; /* 110 */
   font-weight: 500;
   line-height: 5.2083cqw; /* 100 */
+  /* 굵기 보정 (2026-09-05, 상세 10개 전체).
+     Tannakone 은 받은 4종(Thin/Light/Regular/Medium) 중 Medium(500)이 제일 두껍고
+     이미 그걸 쓰고 있다 — 더 굵은 페이스가 없어서 외곽선으로 흉내낸다.
+     잉크량 기준 +17.1%. 글자 폭(advance)은 안 변해서 레이아웃·페이지 높이 영향이 없다.
+     히어로가 cqw 기반이라 획도 cqw 로 스케일한다 (1.5 / 19.2 = 0.0781cqw).
+     currentColor 라 라이트/다크 테마 색을 그대로 따라간다.
+     font-weight: 700 (합성 볼드)은 +39.4% 로 더 두껍지만 브라우저·OS 마다 결과가 달라
+     수치로 지정 가능한 text-stroke 를 택했다. 자세한 실측은 NOTES.md 참고. */
+  -webkit-text-stroke: 0.0781cqw currentColor;
   /* 피그마 그대로: 883px 박스(.wd-hero-title) 안에서 <br> 로 2줄.
      Tannakone 이 들어오기 전에는 폴백 폭 때문에 nowrap 으로 막아뒀었는데,
      실제 폰트가 붙은 뒤로는 전 페이지가 883 안에 들어와서 필요 없어졌다. */
@@ -184,6 +193,14 @@
   font-size: min(0.9375vw, 18px) /* 18 */;
   font-weight: 300;
   line-height: min(1.7708vw, 34px) /* 34 */;
+}
+
+/* 문단이 736px 2줄 용량을 거의 꽉 채워서(≈99%) 브라우저·폰트에 따라 한 줄 더 꺾이는
+   경우에만 붙인다. 피그마 본문 노드는 자간이 0 이지만, 이 프로젝트의 다른 한글 텍스트는
+   (.wd-head-title 포함) 전부 -0.02em 을 쓰므로 시각적으로도 이질감이 없다.
+   줄 위치 자체는 HTML 의 <br> 이 고정하고, 이 규칙은 여유 폭을 만드는 역할이다. */
+.wd-head-desc--tight {
+  letter-spacing: -0.02em;
 }
 
 /* 가운데 정렬 헤더 (피그마 x=592, w=736, gap 40, desc lh 32) */

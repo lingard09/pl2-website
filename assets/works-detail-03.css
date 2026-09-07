@@ -90,29 +90,38 @@
   object-fit: cover;
 }
 
-/* 954 두 장 (12px 간격), 한쪽은 아래/한쪽은 위로 120 엇갈림 */
+/* 954 두 장 (12px 간격), 한쪽은 아래/한쪽은 위로 120 엇갈림
+   ⚠ 2026-09-05: 아래 셀렉터들이 `img` 만 잡고 있어서 GIF→영상으로 바꾼 슬롯
+   (.wd3-duo--left-low 안의 <video> 2개)이 규칙을 하나도 못 받고 있었다.
+   1151x700 / object-fit: contain / align-self: auto 로 그려져 컨테이너를 넘쳤다.
+   NOTES "마크업" 절의 `.wd10-row img` 와 같은 종류의 누락이다. */
 .wd3-duo {
   display: flex;
   gap: 0.625%; /* 12 / 1920 */
   height: min(36.4583vw, 700px);
 }
 
-.wd3-duo img {
+.wd3-duo img,
+.wd3-duo video {
   width: 49.688%; /* 954 / 1920 */
   aspect-ratio: 954 / 580;
   object-fit: cover;
 }
 
-.wd3-duo--left-low img:first-child {
+.wd3-duo--left-low img:first-child,
+.wd3-duo--left-low video:first-child {
   align-self: flex-end;
 }
 
-.wd3-duo--right-low img:last-child {
+.wd3-duo--right-low img:last-child,
+.wd3-duo--right-low video:last-child {
   align-self: flex-end;
 }
 
 .wd3-duo--left-low img:last-child,
-.wd3-duo--right-low img:first-child {
+.wd3-duo--left-low video:last-child,
+.wd3-duo--right-low img:first-child,
+.wd3-duo--right-low video:first-child {
   align-self: flex-start;
 }
 

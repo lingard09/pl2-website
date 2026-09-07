@@ -2,15 +2,6 @@
    피그마: Works_Detail (node 2345:60737) — Samsung Internet Website Renewal
    라이트 테마(`.wd-body--light`) + GNB Type=T/B. 섹션 리듬 320px. */
 
-/* 히어로 제목을 조금 더 두껍게.
-   Tannakone 은 Medium(500)이 가장 두꺼운 파일이라 더 굵은 페이스가 없어서
-   외곽선을 얹어 굵기를 흉내낸다. 글자 폭(advance)은 안 변해서 레이아웃은 그대로다.
-   히어로가 cqw 로 스케일되니 획 두께도 같이 스케일한다 (1.5 / 19.2 = 0.0781cqw).
-   currentColor 라 라이트/다크 테마 색을 그대로 따라간다. */
-.wd-hero-h1 {
-  -webkit-text-stroke: 0.0781cqw currentColor;
-}
-
 .wd-head-desc {
   line-height: min(1.7708vw, 34px) /* 34 */;
 }
