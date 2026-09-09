@@ -145,7 +145,8 @@
   overflow: hidden;
 }
 
-.wd6-video img {
+.wd6-video img,
+.wd6-video video {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -154,14 +155,35 @@
 /* 이 페이지 재생 삼각형은 76x66 (상세 02·05 는 95x82) */
 .wd6-video-play {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.wd6-video-play::before {
+  content: "";
   width: 0;
   height: 0;
   border-top: min(1.7188vw, 33px) solid transparent;
   border-bottom: min(1.7188vw, 33px) solid transparent;
   border-left: min(3.9583vw, 76px) solid var(--pl2-white);
-  transform: translate(-50%, -50%);
   filter: drop-shadow(0 min(0.3288vw, 6.312px) min(1.6439vw, 31.562px) rgba(0, 0, 0, 0.25));
-  pointer-events: none;
+  transition: opacity 300ms ease;
+}
+
+/* poster jpg 에 딤(검정 60%)이 이미 구워져 있어서 재생 중에는
+   video 프레임이 그대로 밝아진다 — CSS 딤은 상세 08 에만 있다. */
+.wd6-video[data-playing="true"] .wd6-video-play::before {
+  opacity: 0;
+}
+
+.wd6-video-play:focus-visible {
+  outline: min(0.1042vw, 2px) solid var(--pl2-white);
+  outline-offset: min(-0.2083vw, -4px);
 }

@@ -212,9 +212,20 @@
         </section>
 
         <!-- ══ 9. 영상 ══ -->
-        <section class="wd6-video">
-          <img src="assets/wd6-video.jpg" alt="" />
-          <span class="wd6-video-play" aria-hidden="true"></span>
+        <section class="wd6-video" data-playing="false">
+          <video
+            poster="assets/wd6-video.jpg"
+            loop
+            playsinline
+            preload="none"
+          >
+            <source src="assets/wd6-video.mp4" type="video/mp4" />
+          </video>
+          <button
+            type="button"
+            class="wd6-video-play"
+            aria-label="영상 재생"
+          ></button>
         </section>
 
         <!-- ══ 10. 크레딧 ══ -->
@@ -271,5 +282,6 @@
     </footer>
 
     <script src="assets/gnb.js"></script>
+    <script src="assets/video-play.js"></script>
   </body>
 </html>

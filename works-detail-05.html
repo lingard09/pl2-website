@@ -179,9 +179,20 @@
         </section>
 
         <!-- ══ 7. 영상 ══ -->
-        <section class="wd5-video">
-          <img src="assets/wd5-video.jpg" alt="" />
-          <span class="wd5-video-play" aria-hidden="true"></span>
+        <section class="wd5-video" data-playing="false">
+          <video
+            poster="assets/wd5-video.jpg"
+            loop
+            playsinline
+            preload="none"
+          >
+            <source src="assets/wd5-video.mp4" type="video/mp4" />
+          </video>
+          <button
+            type="button"
+            class="wd5-video-play"
+            aria-label="영상 재생"
+          ></button>
         </section>
 
         <!-- ══ 8. 질문 2 ══ -->
@@ -280,5 +291,6 @@
     </footer>
 
     <script src="assets/gnb.js"></script>
+    <script src="assets/video-play.js"></script>
   </body>
 </html>

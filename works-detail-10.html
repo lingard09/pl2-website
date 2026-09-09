@@ -169,9 +169,20 @@
               <img class="wd10-phone wd10-phone--p4 wd10-phone--low" src="assets/wd10-a-05-4.jpg" alt="" />
             </div>
 
-            <div class="wd10-video">
-              <img src="assets/wd10-a-06.jpg" alt="" />
-              <span class="wd10-play" aria-hidden="true"></span>
+            <div class="wd10-video" data-playing="false">
+              <video
+                poster="assets/wd10-a-06.jpg"
+                loop
+                playsinline
+                preload="none"
+              >
+                <source src="assets/wd10-a-06.mp4" type="video/mp4" />
+              </video>
+              <button
+                type="button"
+                class="wd10-play"
+                aria-label="영상 재생"
+              ></button>
             </div>
           </div>
         </section>
@@ -253,9 +264,20 @@
               <img class="wd10-phone wd10-phone--p4" src="assets/wd10-b-05-4.jpg" alt="" />
             </div>
 
-            <div class="wd10-video">
-              <img src="assets/wd10-b-06.jpg" alt="" />
-              <span class="wd10-play" aria-hidden="true"></span>
+            <div class="wd10-video" data-playing="false">
+              <video
+                poster="assets/wd10-b-06.jpg"
+                loop
+                playsinline
+                preload="none"
+              >
+                <source src="assets/wd10-b-06.mp4" type="video/mp4" />
+              </video>
+              <button
+                type="button"
+                class="wd10-play"
+                aria-label="영상 재생"
+              ></button>
             </div>
           </div>
         </section>
@@ -314,5 +336,6 @@
     </footer>
 
     <script src="assets/gnb.js"></script>
+    <script src="assets/video-play.js"></script>
   </body>
 </html>

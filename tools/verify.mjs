@@ -82,7 +82,8 @@ for (const [name, wantHeight] of targets) {
   });
 
   // 영상은 화면에 띄운 채로 재생 여부를 본다 (크롬은 화면 밖 영상을 멈춘다)
-  // autoplay 가 아니라 딤 + 재생 버튼이 달린 자리(상세 08 의 7번 영상)는 버튼을 눌러 본다.
+  // autoplay 가 아니라 재생 버튼이 달린 자리([data-playing] 슬롯: 상세 05·06·08·10)는
+  // 버튼을 눌러 본다.
   const videos = [];
   for (let i = 0; i < info.videoCount; i++) {
     videos.push(
@@ -91,7 +92,7 @@ for (const [name, wantHeight] of targets) {
         v.scrollIntoView({ block: 'center' });
         await new Promise((r) => setTimeout(r, 500));
         const section = v.closest('[data-playing]');
-        const play = section && section.querySelector('.wd8-video-play');
+        const play = section && section.querySelector('button');
         if (play && v.paused) {
           play.click();
           await new Promise((r) => setTimeout(r, 500));
