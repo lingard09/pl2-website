@@ -17,3 +17,6 @@ Desktop.ini
 node_modules/
 npm-debug.log*
 NOTES.md
+
+# 배포용 산출물 (tools/build-dist.sh)
+dist/
