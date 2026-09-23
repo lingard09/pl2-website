@@ -128,17 +128,51 @@
   white-space: nowrap;
 }
 
-/* ── 맨 위로 버튼 (피그마 2345:59614, 64x64 @ 1816,972 → 우 40 / 하 44) ── */
+/* ── 맨 위로 버튼 — Liquid Glass (피그마 2802:12070, 60x60 @ 1810,976 → 우 50 / 하 44)
+   디자인피드백_0918 로 기존 #303030 원 + 노란 화살표(icon-scroll-top.png)에서 교체됐다.
+   피그마는 Blur(backdrop 33.7 + 검정 10% hard-light @67%) + Fill(#FFF4C4 위 흰 20%)
+   + Glass Effect 4겹인데, 블렌드 모드 스택은 CSS 로 그대로 못 쌓는다.
+   배경이 비쳐야 하는 버튼이라 PNG 로 굽지 않고 backdrop-filter 로 근사했다.
+   흰 배경 위 실측값이 피그마 렌더(250,239,191)와 맞도록 알파를 맞췄다. */
 .wk-top {
   position: fixed;
-  right: min(2.0833vw, 40px);
-  bottom: min(2.2917vw, 44px);
+  /* 콘텐츠(.wk-main)는 max-width 1920 으로 가운데 정렬되는데 버튼은 fixed 라
+     그냥 우측 50 을 주면 1920 초과 화면에서 카드를 떠나 화면 끝으로 달아난다
+     (실측: 2560 에서 콘텐츠 바깥 270px, 3440 에서 710px).
+     좌우 여백(50vw - 960px)을 더해 카드 오른쪽 끝 기준 50px 을 유지한다.
+     GNB 는 left:50% + translateX 라 이 문제가 없다. */
+  right: calc(max(0px, 50vw - 960px) + min(2.6042vw, 50px)); /* 50 */
+  /* 피그마는 하 44 인데 너무 붙어 보여 80 으로 올렸다 (2026-09-22 사용자 결정).
+     80 은 이 프로젝트 간격 리듬(320/160/80/40/24/12)에 있는 값이다. */
+  bottom: min(4.1667vw, 80px); /* 80 (피그마 44) */
   z-index: 100;
-  width: min(3.3333vw, 64px);
-  height: min(3.3333vw, 64px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(3.125vw, 60px);
+  height: min(3.125vw, 60px);
   border-radius: 50%;
-  /* 원(#303030 = Neutral/20) + 노란 화살표를 피그마에서 4x PNG 로 그대로 받아 씀.
-     SVG 로 export 하면 상위 섹션 배경(#F5F5F5)까지 끌려온다. */
-  background: url("icon-scroll-top.png") center / min(3.3333vw, 64px) min(3.3333vw, 64px) no-repeat;
-  box-shadow: 0 min(0.2083vw, 4px) min(0.5208vw, 10px) rgba(0, 0, 0, 0.08);
+  /* 색조는 피그마 렌더 실측(좌상단 251,240,192 → 우하단 254,247,199)의 135deg 그라디언트.
+     알파는 .5 다 — 피그마 단독 렌더는 사실상 불투명(.92 상당)이지만 리퀴드 글래스라
+     뒤가 비쳐야 한다. Works 카드 4곳(밝음·어두움·컬러) 위에서 실측해 정한 값이다:
+       알파 .92 → 배경 따라 15단계만 변함(= 불투명)   .5 → 99단계   .3 → 139단계
+       화살표 대비는 어두운 카드 위가 최악인데 .5 에서 5.7:1, .4 는 4.5:1, .3 은 3.9:1
+     비침과 가독성(WCAG AA 4.5:1)이 같이 서는 지점이 .5 라 여기로 맞췄다. */
+  background-image: linear-gradient(
+    135deg,
+    rgba(251, 239, 187, 0.5) 0%,
+    rgba(254, 246, 194, 0.5) 100%
+  );
+  /* 블러는 스케일하지 않는다 (GNB 패널과 같은 규칙) */
+  backdrop-filter: blur(34px);
+  -webkit-backdrop-filter: blur(34px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2),
+    0 min(0.2083vw, 4px) min(1.0417vw, 20px) rgba(0, 0, 0, 0.08);
+}
+
+/* 회전 전 23.708x14.858 → -90deg 돌려 60x60 정중앙에 온다 */
+.wk-top-arrow {
+  width: min(1.2348vw, 23.708px);
+  height: min(0.7738vw, 14.858px);
+  transform: rotate(-90deg);
 }

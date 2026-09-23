@@ -228,20 +228,20 @@ button {
 .gnb-item {
   display: flex;
   align-items: center;
-  /* 피그마: 위아래 패딩 24 + 텍스트 100(110px/행간 100) = 행 148 로 적혀 있지만
-     실제 배치는 120 간격이고 패널 480 = 120 x 4 라 120 을 따른다.
+  /* 행 120 = 위아래 패딩 24 + 텍스트 72. 패널 480 = 120 x 4 다.
      구분선이 그 120 안에 그려져야 하므로 높이를 고정한다 (auto 면 121 이 된다). */
   flex: none; /* 패널이 max-height 로 잘릴 때 행이 눌리지 않게 */
-  /* 행 높이는 --gnb-row 하나가 정하고 글자·행간이 같은 비율(110/120, 100/120)로 따라간다.
-     1920 에서 120 / 110 / 100 = 피그마 값. */
+  /* 행 높이는 --gnb-row 하나가 정하고 글자·행간이 같은 비율(60/120, 72/120)로 따라간다.
+     1920 에서 120 / 60 / 72 = 피그마 컴포넌트(GNB/Dropdown/Action) 값.
+     2026-08-29 에 숨은 안(110px/행간 100)을 쓰다가 디자인피드백_0918 로 되돌렸다. */
   height: var(--gnb-row, min(6.25vw, 120px));
   padding: 0 min(1.25vw, 24px); /* 24 */
   border-bottom: 1px solid var(--pl2-white); /* 헤어라인은 스케일하지 않는다 */
   color: var(--pl2-neutral-10); /* #212121 */
   font-family: var(--pl2-font-display);
-  font-size: calc(var(--gnb-row, min(6.25vw, 120px)) * 110 / 120);
+  font-size: calc(var(--gnb-row, min(6.25vw, 120px)) * 60 / 120); /* 60 */
   font-weight: 500;
-  line-height: calc(var(--gnb-row, min(6.25vw, 120px)) * 100 / 120);
+  line-height: calc(var(--gnb-row, min(6.25vw, 120px)) * 72 / 120); /* 72 */
   text-decoration: none;
   white-space: nowrap;
 }
