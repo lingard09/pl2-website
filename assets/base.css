@@ -199,19 +199,9 @@ button {
   top: calc(100% + min(0.625vw, 12px)); /* 12 */
   left: 0;
   z-index: 1;
-  display: none;
+  display: flex;
   flex-direction: column;
   width: 100%;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: min(0.2083vw, 4px); /* 4 */
-  box-shadow: 0 min(0.2083vw, 4px) min(1.0417vw, 20px) rgba(0, 0, 0, 0.04); /* 0 4 20 */
-  backdrop-filter: blur(4px); /* GLASS radius 4 근사. 블러는 스케일하지 않는다 */
-  -webkit-backdrop-filter: blur(4px);
-  overflow: hidden; /* 첫/마지막 행 배경을 라운드에 맞춰 잘라낸다 */
-}
-
-.gnb[data-dropdown="on"] .gnb-panel {
-  display: flex;
   /* 넣을 자리가 모자라면 스크롤 대신 행을 줄인다 (2026-09-04).
      피그마 비율(행 120 / 글자 110 / 행간 100)을 그대로 유지한 채 같이 작아지므로
      4개 항목이 어떤 창 높이에서도 전부 보인다.
@@ -221,8 +211,56 @@ button {
   /* 화면 밖으로 나가지 않게 하는 마지막 안전장치.
      ⚠ overflow-y: auto 를 여기 다시 넣으면 스크롤바가 항상 생긴다 —
        행 높이 합(480)은 딱 맞지만 110px 글자의 라인박스가 8px 넘쳐서
-       scrollHeight 가 488 이 되기 때문이다. 위의 overflow: hidden 을 그대로 둔다. */
+       scrollHeight 가 488 이 되기 때문이다. 아래 overflow: hidden 을 그대로 둔다. */
   max-height: var(--gnb-drop-space);
+  /* 닫힘: 위에서부터 접혀 있다가 열리면 "쓰윽" 내려온다 (모션피드백_0928, 참고 koto.com).
+     display 토글은 전환이 안 되므로 visibility + clip-path 로 숨긴다.
+     visibility 는 닫힐 때만 전환이 끝난 뒤에 꺼지도록 지연시킨다. */
+  visibility: hidden;
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 0.45s cubic-bezier(0.7, 0, 0.84, 0),
+    visibility 0s linear 0.45s;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: min(0.2083vw, 4px); /* 4 */
+  box-shadow: 0 min(0.2083vw, 4px) min(1.0417vw, 20px) rgba(0, 0, 0, 0.04); /* 0 4 20 */
+  backdrop-filter: blur(4px); /* GLASS radius 4 근사. 블러는 스케일하지 않는다 */
+  -webkit-backdrop-filter: blur(4px);
+  overflow: hidden; /* 첫/마지막 행 배경을 라운드에 맞춰 잘라낸다 */
+}
+
+.gnb[data-dropdown="on"] .gnb-panel {
+  visibility: visible;
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 0.7s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s;
+}
+
+/* 행은 패널보다 살짝 늦게, 위에서부터 차례로 내려앉는다 */
+.gnb[data-dropdown="on"] .gnb-item {
+  animation: gnb-item-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.gnb[data-dropdown="on"] .gnb-item:nth-child(1) { animation-delay: 0.08s; }
+.gnb[data-dropdown="on"] .gnb-item:nth-child(2) { animation-delay: 0.14s; }
+.gnb[data-dropdown="on"] .gnb-item:nth-child(3) { animation-delay: 0.2s; }
+.gnb[data-dropdown="on"] .gnb-item:nth-child(4) { animation-delay: 0.26s; }
+
+@keyframes gnb-item-in {
+  from {
+    opacity: 0;
+    translate: 0 -40%;
+  }
+}
+
+/* 고정 GNB: 아래로 스크롤하면 위로 빠지고, 위로 스크롤하면 다시 내려온다 (gnb.js).
+   페이지 CSS 가 transform 으로 중앙 정렬을 하므로 겹치지 않게 translate 를 쓴다. */
+.gnb {
+  transition: translate 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gnb.is-away {
+  translate: 0 calc(-100% - min(1.25vw, 24px));
+  transition-timing-function: cubic-bezier(0.7, 0, 0.84, 0);
+  transition-duration: 0.4s;
 }
 
 .gnb-item {
@@ -433,4 +471,64 @@ button {
   clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
+}
+
+
+/* ══ 공통 모션 (motion.js) ════════════════════════════════
+   피그마 PC 모션피드백_0928 (2836:11814).
+   JS 가 켜졌을 때(html.mo-on)만 숨기므로 JS 가 없으면 콘텐츠는 그냥 보인다.
+   transform 대신 translate 를 쓴다 — 페이지 CSS 의 transform 과 겹치지 않는다. */
+
+/* ── 스크롤 등장: 아래에서 위로 쓱 붙는다 ─────────────── */
+.mo-on .mo-reveal {
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    translate 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mo-on .mo-reveal:not(.is-in) {
+  opacity: 0;
+  translate: 0 min(4.1667vw, 80px); /* 80 — 참고 사이트보다 크게 잡아 텐션을 준다 */
+}
+
+/* 카운팅 중 자릿수 폭이 흔들리지 않게 */
+.ab-stat-num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 페이지 전환: 노란 패널이 아래에서 덮고 → 다음 페이지에서 위로 빠진다 ── */
+html::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: var(--pl2-yellow);
+  pointer-events: none;
+  translate: 0 100%;
+}
+
+html.pt-leave::after {
+  translate: 0 0;
+  pointer-events: auto; /* 덮는 동안 두 번 클릭되지 않게 */
+  transition: translate 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+html.pt-enter::after {
+  translate: 0 0;
+}
+
+html.pt-enter.pt-entering::after {
+  translate: 0 -100%;
+  transition: translate 0.8s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gnb-panel,
+  .gnb[data-dropdown="on"] .gnb-panel,
+  .gnb {
+    transition: none;
+  }
+
+  .gnb[data-dropdown="on"] .gnb-item {
+    animation: none;
+  }
 }
