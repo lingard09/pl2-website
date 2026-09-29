@@ -3,6 +3,7 @@
       그보다 조금 더 텐션 있게 → 이동 거리를 키우고 expo-out 이징)
    2) About 통계 숫자 카운팅
    3) 페이지 전환: 노란 패널이 아래에서 덮고 위로 빠진다 (참고: koto.com/work)
+      탭에서 사이트를 처음 열 때도 같은 패널이 덮인 채로 시작해 위로 걷히는 인트로를 보여준다.
 
    <head> 에서 동기로 불러온다. 첫 페인트 전에 html 클래스를 붙여야
    도착 페이지가 한 번 번쩍 보였다가 덮이는 일이 없다. 나머지는 DOMContentLoaded 뒤에 돈다.
@@ -15,6 +16,8 @@
   if (reduce) return;
 
   var PT_KEY = "pl2-pt";
+  var VISITED_KEY = "pl2-visited"; // 탭(세션)당 한 번만 인트로를 보여준다
+  var INTRO_HOLD_MS = 450; // 인트로는 덮인 채로 잠깐 머문 뒤 걷힌다
   var LEAVE_MS = 600; // base.css html.pt-leave::after 의 transition 과 맞춘다
 
   function readFlag() {
@@ -33,27 +36,43 @@
     } catch (e) {}
   }
 
+  // 이번 탭에서 처음 여는 페이지면 true. 저장소가 막혀 있으면 매번 인트로가
+  // 뜨지 않도록 "이미 봤다" 쪽으로 친다.
+  function firstVisit() {
+    try {
+      if (sessionStorage.getItem(VISITED_KEY)) return false;
+      sessionStorage.setItem(VISITED_KEY, "1");
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   // ── 첫 페인트 전 ─────────────────────────────────────
   root.classList.add("mo-on");
   var entering = readFlag();
-  if (entering) root.classList.add("pt-enter");
+  var intro = firstVisit() && !entering;
+  var hold = intro ? INTRO_HOLD_MS : 0;
+  if (entering || intro) root.classList.add("pt-enter");
 
   document.addEventListener("DOMContentLoaded", function () {
     initPageTransition();
     // 전환 패널이 걷히는 중이면 등장 모션을 그만큼 늦춘다
-    initReveal(entering ? 350 : 0);
+    initReveal(entering || intro ? hold + 350 : 0);
   });
 
   // ── 3) 페이지 전환 ───────────────────────────────────
   function initPageTransition() {
-    if (entering) {
-      // 덮인 상태로 한 프레임 그린 뒤 걷어낸다
+    if (entering || intro) {
+      // 덮인 상태로 한 프레임 그린 뒤 (인트로면 잠깐 머물렀다가) 걷어낸다
       requestAnimationFrame(function () {
         requestAnimationFrame(function () {
-          root.classList.add("pt-entering");
           setTimeout(function () {
-            root.classList.remove("pt-enter", "pt-entering");
-          }, 900);
+            root.classList.add("pt-entering");
+            setTimeout(function () {
+              root.classList.remove("pt-enter", "pt-entering");
+            }, 900);
+          }, hold);
         });
       });
     }
