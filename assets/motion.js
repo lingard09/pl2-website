@@ -108,6 +108,9 @@
   // ── 1) 스크롤 등장 + 2) 숫자 카운팅 ──────────────────
   // 섹션의 직계 자식을 한 덩어리로 본다. 같은 타이밍에 들어온 덩어리끼리는
   // 시차(STAGGER)를 두고 차례로 올라온다.
+  // 스크롤로 왔다갔다 할 때마다 다시 돈다: 화면 밖으로 완전히 나가면 조용히
+  // 숨김 상태로 되돌리고, 다시 들어오면 또 등장한다. 아래로 내려갈 땐 아래에서
+  // 올라오고, 위로 올라갈 땐 위에서 내려온다 (스크롤 방향을 거스르지 않게).
   var TARGETS = [
     "main section > *",
     ".wk-col > *",
@@ -117,7 +120,7 @@
     ".ft-hero-content",
   ].join(",");
   var STAGGER = 90;
-  var DURATION = 1100; // base.css .mo-reveal transition 과 맞춘다
+  var DURATION = 1100; // base.css .mo-anim transition 과 맞춘다
 
   function initReveal(startDelay) {
     if (!("IntersectionObserver" in window)) return;
@@ -132,8 +135,19 @@
       }
     );
 
+    // 화면 위쪽에 있으면 위에서, 아래쪽에 있으면 아래에서 들어오게 방향을 정한다
+    function hide(el) {
+      clearTimeout(el._moTimer);
+      el.classList.remove("mo-anim");
+      el.style.transitionDelay = "";
+      var above = el.getBoundingClientRect().bottom <= 0;
+      el.style.setProperty("--mo-dir", above ? "-1" : "1");
+      el.classList.add("mo-out");
+    }
+
     els.forEach(function (el) {
       el.classList.add("mo-reveal");
+      hide(el);
     });
 
     var queue = [];
@@ -141,32 +155,36 @@
 
     function flush() {
       flushing = false;
-      // 화면 위→아래, 왼→오 순서로 차례를 매긴다
+      // 들어오는 쪽 가장자리에 가까운 것부터 차례를 매긴다
+      // (아래에서 들어오면 위→아래, 위에서 들어오면 아래→위)
       queue.sort(function (a, b) {
         var ra = a.getBoundingClientRect();
         var rb = b.getBoundingClientRect();
-        return ra.top - rb.top || ra.left - rb.left;
+        var dir = a.style.getPropertyValue("--mo-dir") === "-1" ? -1 : 1;
+        return dir * (ra.top - rb.top) || ra.left - rb.left;
       });
       queue.forEach(function (el, i) {
         var delay = i * STAGGER;
         el.style.transitionDelay = delay + "ms";
-        el.classList.add("is-in");
+        el.classList.add("mo-anim");
+        el.classList.remove("mo-out");
         startCounters(el, delay);
-        // 끝나면 클래스를 걷어 원래 CSS(transition·opacity 등)로 돌려준다
-        setTimeout(function () {
-          el.classList.remove("mo-reveal", "is-in");
+        // 끝나면 transition 을 걷어 원래 CSS(호버 전환 등)로 돌려준다
+        el._moTimer = setTimeout(function () {
+          el.classList.remove("mo-anim");
           el.style.transitionDelay = "";
         }, delay + DURATION + 50);
       });
       queue = [];
     }
 
-    var io = new IntersectionObserver(
+    // 등장: 아래쪽 8% 는 빼서 화면 안으로 조금 들어온 뒤에 움직이게 한다
+    var enterIO = new IntersectionObserver(
       function (entries) {
         entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
-          io.unobserve(entry.target);
-          queue.push(entry.target);
+          var el = entry.target;
+          if (!entry.isIntersecting || !el.classList.contains("mo-out")) return;
+          if (queue.indexOf(el) === -1) queue.push(el);
         });
         if (queue.length && !flushing) {
           flushing = true;
@@ -176,38 +194,71 @@
       { rootMargin: "0px 0px -8% 0px", threshold: 0 }
     );
 
+    // 퇴장: 화면 밖으로 완전히 나갔을 때만 되돌린다 (보이는 채로 사라지지 않게)
+    var exitIO = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) return;
+          var el = entry.target;
+          if (el.classList.contains("mo-out")) {
+            // 아직 안 나타난 채 반대편으로 넘어갔으면 방향만 고친다
+            hide(el);
+            return;
+          }
+          hide(el);
+          stopCounters(el);
+        });
+      },
+      { rootMargin: "0px", threshold: 0 }
+    );
+
     setTimeout(function () {
       els.forEach(function (el) {
-        io.observe(el);
+        enterIO.observe(el);
+        exitIO.observe(el);
       });
     }, startDelay);
   }
 
-  // "1986" / "10+" 같은 텍스트를 숫자 + 접미사로 나눠 0 부터 센다
+  // "1986" / "10+" 같은 텍스트를 숫자 + 접미사로 나눠 0 부터 센다.
+  // 원래 값은 data-count 에 한 번만 보관해서 다시 셀 때도 같은 목표로 간다.
   var COUNT_MS = 1800;
 
-  function startCounters(scope, delay) {
-    var nums = scope.matches(".ab-stat-num")
+  function counterEls(scope) {
+    return scope.matches(".ab-stat-num")
       ? [scope]
-      : scope.querySelectorAll(".ab-stat-num");
-    Array.prototype.forEach.call(nums, function (el) {
-      var m = /^(\D*)(\d+)(.*)$/.exec(el.textContent.trim());
+      : Array.prototype.slice.call(scope.querySelectorAll(".ab-stat-num"));
+  }
+
+  function stopCounters(scope) {
+    counterEls(scope).forEach(function (el) {
+      clearTimeout(el._moCountTimer);
+      if (el._moCountRaf) cancelAnimationFrame(el._moCountRaf);
+      if (el.dataset.count) el.textContent = el.dataset.count;
+    });
+  }
+
+  function startCounters(scope, delay) {
+    counterEls(scope).forEach(function (el) {
+      if (!el.dataset.count) el.dataset.count = el.textContent.trim();
+      var m = /^(\D*)(\d+)(.*)$/.exec(el.dataset.count);
       if (!m) return;
       var prefix = m[1];
       var target = parseInt(m[2], 10);
       var suffix = m[3];
+      stopCounters(el);
       el.textContent = prefix + "0" + suffix;
 
-      setTimeout(function () {
+      el._moCountTimer = setTimeout(function () {
         var t0 = null;
         function tick(now) {
           if (t0 === null) t0 = now;
           var p = Math.min((now - t0) / COUNT_MS, 1);
           var eased = 1 - Math.pow(1 - p, 4); // quart-out: 빠르게 올라가다 끝에서 붙는다
           el.textContent = prefix + Math.round(target * eased) + suffix;
-          if (p < 1) requestAnimationFrame(tick);
+          if (p < 1) el._moCountRaf = requestAnimationFrame(tick);
         }
-        requestAnimationFrame(tick);
+        el._moCountRaf = requestAnimationFrame(tick);
       }, delay + 150);
     });
   }
