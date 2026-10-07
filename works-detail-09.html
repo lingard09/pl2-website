@@ -131,7 +131,25 @@
             </p>
           </div>
 
-          <img class="wd9-carousel" src="assets/wd9-product-line.webp" alt="" />
+          <!-- 제품 라인 캐러셀 (PC 피드백_0930, 피그마 Frame 2116929521).
+               배경(Back)은 고정, 박스 창 안 이미지 3장만 자동으로 밀려 바뀐다 (wd9-carousel.js).
+               트랙 마지막 장은 첫 장 복제본 — 끊김 없이 한 방향으로 돌기 위한 것 -->
+          <div class="wd9-carousel" data-wd9-carousel>
+            <img class="wd9-carousel-back" src="assets/wd9-product-back.webp" alt="" />
+            <div class="wd9-carousel-window">
+              <div class="wd9-carousel-track">
+                <img src="assets/wd9-product-slide-01.webp" alt="" />
+                <img src="assets/wd9-product-slide-02.webp" alt="" />
+                <img src="assets/wd9-product-slide-03.webp" alt="" />
+                <img src="assets/wd9-product-slide-01.webp" alt="" aria-hidden="true" />
+              </div>
+            </div>
+            <div class="wd9-carousel-dots" aria-hidden="true">
+              <span class="wd9-carousel-dot is-active"></span>
+              <span class="wd9-carousel-dot"></span>
+              <span class="wd9-carousel-dot"></span>
+            </div>
+          </div>
         </section>
 
         <!-- ══ 5. 브랜드 무드 ══ -->
@@ -147,30 +165,30 @@
             </p>
           </div>
 
+          <!-- 이 아래 이미지는 스크롤에 맞춰 한 장씩 등장 (PC 피드백_0930, Rectangle 4238 부터) -->
           <div class="wd9-stack120">
-            <img class="wd9-wide-1200" src="assets/wd9-mood-01.webp" alt="" />
+            <img class="wd9-wide-1200" src="assets/wd9-mood-01.webp" alt="" data-reveal />
 
             <div class="wd9-duo-tall">
-              <img src="assets/wd9-mood-02.webp" alt="" />
-              <img src="assets/wd9-mood-03.webp" alt="" />
+              <img src="assets/wd9-mood-02.webp" alt="" data-reveal />
+              <img src="assets/wd9-mood-03.webp" alt="" data-reveal />
             </div>
 
-            <img class="wd9-wide-1558" src="assets/wd9-mood-04.webp" alt="" />
+            <img class="wd9-wide-1558" src="assets/wd9-mood-04.webp" alt="" data-reveal />
 
-            <img class="wd9-half" src="assets/wd9-mood-05.webp" alt="" />
+            <img class="wd9-half" src="assets/wd9-mood-05.webp" alt="" data-reveal />
             <img
               class="wd9-half wd9-half--right"
               src="assets/wd9-mood-06.webp"
-              alt=""
-            />
-            <img class="wd9-half" src="assets/wd9-mood-07.webp" alt="" />
+              alt="" data-reveal />
+            <img class="wd9-half" src="assets/wd9-mood-07.webp" alt="" data-reveal />
 
             <div class="wd9-duo-tall">
-              <img src="assets/wd9-mood-08.webp" alt="" />
-              <img src="assets/wd9-mood-09.webp" alt="" />
+              <img src="assets/wd9-mood-08.webp" alt="" data-reveal />
+              <img src="assets/wd9-mood-09.webp" alt="" data-reveal />
             </div>
 
-            <img class="wd9-square" src="assets/wd9-mood-10.webp" alt="" />
+            <img class="wd9-square" src="assets/wd9-mood-10.webp" alt="" data-reveal />
           </div>
         </section>
 
@@ -205,10 +223,10 @@
 
           <div class="wd9-stack120">
             <div class="wd9-duo-580">
-              <img src="assets/wd9-model-01.webp" alt="" />
-              <img src="assets/wd9-model-02.webp" alt="" />
+              <img src="assets/wd9-model-01.webp" alt="" data-reveal />
+              <img src="assets/wd9-model-02.webp" alt="" data-reveal />
             </div>
-            <img class="wd9-model-last" src="assets/wd9-model-03.webp" alt="" />
+            <img class="wd9-model-last" src="assets/wd9-model-03.webp" alt="" data-reveal />
           </div>
         </section>
       </div>
@@ -242,5 +260,6 @@
 
     <script src="assets/gnb.js"></script>
     <script src="assets/top-btn.js"></script>
+    <script src="assets/wd9-carousel.js"></script>
   </body>
 </html>

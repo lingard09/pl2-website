@@ -39,11 +39,71 @@
   object-fit: cover;
 }
 
-/* ══ 4. 제품 라인 (캐러셀 컷을 한 장으로) ══════════════ */
+/* ══ 4. 제품 라인 캐러셀 (PC 피드백_0930, 피그마 Frame 2116929521) ══
+   1920x860 틀 안에 Back 1558x860 (x 181) 고정 + 박스 창 301x295 (x 1189, y 225, r 4)
+   + 점 3개 (8x8, 간격 8, 아래에서 16). 좌표는 모두 틀 기준 % 라 화면 폭에 비례한다. */
 .wd9-carousel {
+  position: relative;
   width: 100%;
   aspect-ratio: 1920 / 860;
+}
+
+.wd9-carousel-back {
+  position: absolute;
+  top: 0;
+  left: 9.427%; /* 181 / 1920 */
+  width: 81.146%; /* 1558 / 1920 */
+  height: 100%;
   object-fit: cover;
+}
+
+.wd9-carousel-window {
+  position: absolute;
+  top: 26.163%; /* 225 / 860 */
+  left: 61.927%; /* 1189 / 1920 */
+  width: 15.677%; /* 301 / 1920 */
+  height: 34.302%; /* 295 / 860 */
+  overflow: hidden;
+  border-radius: min(0.2083vw, 4px); /* 4 */
+}
+
+.wd9-carousel-track {
+  display: flex;
+  gap: 2px; /* wd9-carousel.js 의 이동 거리와 짝 — 다음 장이 1px 비치지 않게 */
+  height: 100%;
+  transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.wd9-carousel-track.is-wrapping {
+  transition: none;
+}
+
+.wd9-carousel-track img {
+  flex: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wd9-carousel-dots {
+  position: absolute;
+  top: 97.209%; /* 836 / 860 */
+  left: 50%;
+  display: flex;
+  gap: min(0.4167vw, 8px); /* 8 */
+  transform: translateX(-50%);
+}
+
+.wd9-carousel-dot {
+  width: min(0.4167vw, 8px); /* 8 */
+  height: min(0.4167vw, 8px);
+  border-radius: 50%;
+  background: #a6a6a6;
+  transition: background-color 0.4s ease;
+}
+
+.wd9-carousel-dot.is-active {
+  background: #eeeeee;
 }
 
 /* ══ 5. 브랜드 무드 블록들 ═════════════════════════════ */
