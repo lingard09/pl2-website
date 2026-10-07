@@ -1,6 +1,7 @@
 /* PL2 home (index.html)
    피그마: PL2 Production (전달) > Home (node 2345:59569), 1920x1080
-   - 전체 화면 히어로(피그마 레이어 이름 "Video" = 영상 fill)
+   - 전체 화면 히어로: 2026-10-07 부터 분야 티커 (피그마 Home 3109:33780, PC 피드백_1007).
+     예전 영상 히어로(home-hero.mp4 / home-main.mp4)는 더 쓰지 않는다
    - 화면 정중앙에 GNB 400x60 (공유 컴포넌트, base.css) */
 
 .hm-body {
@@ -8,18 +9,56 @@
   overflow: hidden;
 }
 
-/* ── 히어로 ─────────────────────────────────────────────
-   배경색은 영상이 없을 때 보이는 자리(피그마 Video 레이어의 solid fill #C9C9C9). */
+/* ── 히어로: 분야 티커 (PC 피드백_1007, 피그마 Home 3109:33780) ─────────
+   흰 바탕에 [썸네일 120][간격 30][단어 100][간격 30] = 280 짜리 칸 7개가 세로로 쌓여 있고,
+   0.84초마다 한 칸씩 위로 올라간다. 움직임은 피그마 프리뷰 키프레임 그대로:
+     0.70초 정지 → 0.095초 동안 320 올라감(cubic-bezier(.2,0,.12,1))
+     → 0.045초 동안 40 되돌아옴(cubic-bezier(.12,.8,.18,1))
+   7칸(5.88초) 뒤에는 복제한 두 번째 목록이 정확히 첫 자리에 와 있어 끊김 없이 반복된다.
+   --u = 피그마 1px (1920 에서 1px, 좁아지면 같은 비율로 줄어든다). */
 .hm-hero {
+  --u: min(0.052083vw, 1px);
   position: relative;
   width: 100%;
   height: 100dvh;
-  background-color: var(--pl2-gray-placeholder);
+  background-color: var(--pl2-white);
   overflow: hidden;
 }
 
-/* 영상 파일은 assets/home-hero.mp4 로 넣는다 (피그마에서 추출 불가 - NOTES 참고) */
-.hm-hero-media {
+.hm-ticker {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.hm-ticker-track {
+  position: absolute;
+  top: calc(var(--u) * 20); /* 피그마 첫 칸 y=20 */
+  left: 50%;
+  width: calc(var(--u) * 1920);
+  translate: -50% 0;
+  animation: hm-ticker 5.88s linear infinite;
+}
+
+.hm-ticker-group {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--u) * 30);
+  padding-bottom: calc(var(--u) * 30); /* 두 벌 사이도 같은 30 */
+}
+
+/* 썸네일 칸: 피그마 노란 바탕(#FADC38) + radius 12, 가로 위치·폭은 칸마다 다르다 */
+.hm-tile {
+  position: relative;
+  width: calc(var(--u) * var(--w));
+  height: calc(var(--u) * 120);
+  margin-left: calc(var(--u) * var(--x));
+  border-radius: calc(var(--u) * 12);
+  background: #fadc38;
+  overflow: hidden;
+}
+
+.hm-tile-media {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -27,17 +66,54 @@
   object-fit: cover;
 }
 
-/* 상단 그라디언트: 피그마 GRADIENT_LINEAR, 전체 opacity 0.4,
-   검정(a=1) → #666666(a=0), 축이 프레임 높이의 18.84% 에서 끝난다(1080 기준 203px). */
-.hm-hero-scrim {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.4) 0%,
-    rgba(102, 102, 102, 0) 18.84%
-  );
-  pointer-events: none;
+/* 영상 파일 위아래 검정 띠를 피그마처럼 1.1936 배 확대해 잘라낸다 (상세 01 히어로와 같은 영상) */
+.hm-tile--zoom .hm-tile-media {
+  transform: scale(1.1936);
+}
+
+/* 단어: Tannakone Medium 110 / 행간 100, 검정. 칸마다 가운데 x(--cx)가 다르다 */
+.hm-word {
+  height: calc(var(--u) * 100);
+  margin-left: calc(var(--u) * var(--cx));
+  translate: -50% 0;
+  width: max-content;
+  color: var(--pl2-black);
+  font-family: var(--pl2-font-display);
+  font-size: calc(var(--u) * 110);
+  font-weight: 500;
+  line-height: calc(var(--u) * 100);
+  white-space: nowrap;
+}
+
+@keyframes hm-ticker {
+  0% { translate: -50% 0; }
+  11.905% { translate: -50% 0; animation-timing-function: cubic-bezier(0.2, 0, 0.12, 1); }
+  13.52% { translate: -50% calc(var(--u) * -320); animation-timing-function: cubic-bezier(0.12, 0.8, 0.18, 1); }
+  14.286% { translate: -50% calc(var(--u) * -280); }
+  26.19% { translate: -50% calc(var(--u) * -280); animation-timing-function: cubic-bezier(0.2, 0, 0.12, 1); }
+  27.806% { translate: -50% calc(var(--u) * -600); animation-timing-function: cubic-bezier(0.12, 0.8, 0.18, 1); }
+  28.571% { translate: -50% calc(var(--u) * -560); }
+  40.476% { translate: -50% calc(var(--u) * -560); animation-timing-function: cubic-bezier(0.2, 0, 0.12, 1); }
+  42.092% { translate: -50% calc(var(--u) * -880); animation-timing-function: cubic-bezier(0.12, 0.8, 0.18, 1); }
+  42.857% { translate: -50% calc(var(--u) * -840); }
+  54.762% { translate: -50% calc(var(--u) * -840); animation-timing-function: cubic-bezier(0.2, 0, 0.12, 1); }
+  56.378% { translate: -50% calc(var(--u) * -1160); animation-timing-function: cubic-bezier(0.12, 0.8, 0.18, 1); }
+  57.143% { translate: -50% calc(var(--u) * -1120); }
+  69.048% { translate: -50% calc(var(--u) * -1120); animation-timing-function: cubic-bezier(0.2, 0, 0.12, 1); }
+  70.663% { translate: -50% calc(var(--u) * -1440); animation-timing-function: cubic-bezier(0.12, 0.8, 0.18, 1); }
+  71.429% { translate: -50% calc(var(--u) * -1400); }
+  83.333% { translate: -50% calc(var(--u) * -1400); animation-timing-function: cubic-bezier(0.2, 0, 0.12, 1); }
+  84.949% { translate: -50% calc(var(--u) * -1720); animation-timing-function: cubic-bezier(0.12, 0.8, 0.18, 1); }
+  85.714% { translate: -50% calc(var(--u) * -1680); }
+  97.619% { translate: -50% calc(var(--u) * -1680); animation-timing-function: cubic-bezier(0.2, 0, 0.12, 1); }
+  99.235% { translate: -50% calc(var(--u) * -2000); animation-timing-function: cubic-bezier(0.12, 0.8, 0.18, 1); }
+  100% { translate: -50% calc(var(--u) * -1960); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hm-ticker-track {
+    animation: none;
+  }
 }
 
 /* ── 화면 정중앙 GNB ─────────────────────────────────────
