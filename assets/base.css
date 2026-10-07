@@ -193,6 +193,7 @@ button {
    디자인시스템 컴포넌트(GNB/Dropdown, 노랑/60px, 타입별 3종)와는 다른 안이고,
    이쪽은 타입 구분 없이 흰 글라스 패널 하나로 통일돼 있다.
    fill #ffffff@50% / radius 4 / DROP_SHADOW 0 4 20 #000@4% / GLASS:4 / 바와 간격 12.
+   라운딩은 PC 피드백_0930 에서 바와 같은 12 로 바꿨다 (원래 4).
    바 자체는 열려도 제자리에 있어야 하므로 흐름에서 빼서 absolute 로 매단다. */
 .gnb-panel {
   position: absolute;
@@ -221,7 +222,7 @@ button {
   transition: clip-path 0.45s cubic-bezier(0.7, 0, 0.84, 0),
     visibility 0s linear 0.45s;
   background: rgba(255, 255, 255, 0.5);
-  border-radius: min(0.2083vw, 4px); /* 4 */
+  border-radius: min(0.625vw, 12px); /* 12 — 바와 같게 (PC 피드백_0930) */
   box-shadow: 0 min(0.2083vw, 4px) min(1.0417vw, 20px) rgba(0, 0, 0, 0.04); /* 0 4 20 */
   backdrop-filter: blur(4px); /* GLASS radius 4 근사. 블러는 스케일하지 않는다 */
   -webkit-backdrop-filter: blur(4px);
@@ -288,16 +289,19 @@ button {
   border-bottom: 0;
 }
 
-/* Hover=On / 현재 페이지: 검정 60% 배경 + 노란 글자 (#EEE021 — 토큰 노랑과 미세하게 다르다) */
+/* Hover=On: 검정 60% 배경 + 노란 글자 (#EEE021 — 토큰 노랑과 미세하게 다르다)
+   현재 페이지 강조는 뺐다 (PC 피드백_0930) — 메뉴를 열었을 때는 아무것도 강조되지 않고
+   마우스를 올린 행만 강조된다. aria-current 는 스크린리더용으로 HTML 에 그대로 둔다.
+   키보드 사용자를 위해 :focus-visible 도 같은 강조를 준다 (마우스 클릭엔 안 뜬다). */
 .gnb-item:hover,
-.gnb-item[aria-current="page"] {
+.gnb-item:focus-visible {
   background: rgba(0, 0, 0, 0.6);
   color: #eee021;
 }
 
 /* ── 타입별 패널 색 ──────────────────────────────────────
    숨은 110px 안은 T/B(밝은 배경) 페이지 5장에만 그려져 있다. 그래서
-   치수(110px / 행 120 / 간격 12 / radius 4)는 전 타입에 공용으로 쓰되,
+   치수(110px / 행 120 / 간격 12 / radius 12)는 전 타입에 공용으로 쓰되,
    패널·글자 색은 각 타입에 대해 피그마가 정의해 둔 값을 쓴다.
    흰 반투명 패널을 그대로 어두운 페이지에 얹으면 #212121 글자가 묻힌다
    (실측 대비 1.12:1 — WCAG AA 4.5:1 한참 미달). */
@@ -329,7 +333,7 @@ button {
 /* 노란 패널 위에서는 검정 60% 가 올리브색으로 떠서 탁하다.
    컴포넌트 GNB/Dropdown Select=<page> 가 정의한 대로 불투명 검정 + 노랑을 쓴다. */
 .gnb:not(.gnb--tw):not(.gnb--tb) .gnb-item:hover,
-.gnb:not(.gnb--tw):not(.gnb--tb) .gnb-item[aria-current="page"] {
+.gnb:not(.gnb--tw):not(.gnb--tb) .gnb-item:focus-visible {
   background: var(--pl2-black);
   color: var(--pl2-yellow);
 }
