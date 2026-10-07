@@ -126,9 +126,10 @@
   function initReveal(startDelay) {
     if (!("IntersectionObserver" in window)) return;
 
-    // HTML 에서 data-reveal 을 붙인 요소는 묶음이 아니라 하나씩 따로 등장한다
-    // (예: 상세 07 Main/Support/Forum 이미지 3장). 그걸 품은 상위 덩어리는
-    // 대상에서 빼야 이동이 겹치지 않는다.
+    // HTML 에서 data-reveal 을 붙인 요소는 그 요소 단위로 등장한다.
+    // - 묶음 안의 개별 요소에 붙이면 하나씩 따로 (상세 07 이미지 3장, 상세 01 스티커 5행)
+    // - 여러 덩어리를 감싼 요소에 붙이면 한 번에 같이 (상세 01 스트립 + 캡션)
+    // 그걸 품은 상위 덩어리와 그 안쪽 요소는 대상에서 빼야 이동이 겹치지 않는다.
     var singles = document.querySelectorAll("[data-reveal]");
     var els = Array.prototype.filter.call(
       document.querySelectorAll(TARGETS + ",[data-reveal]"),
@@ -141,6 +142,10 @@
             if (el.contains(singles[i])) return false;
           }
         }
+        // 반대로 data-reveal 덩어리 안쪽 요소는 그 덩어리와 같이 움직인다
+        // (예: 상세 01 스트립 + 캡션을 한 번에)
+        var host = el.parentElement && el.parentElement.closest("[data-reveal]");
+        if (host) return false;
         return el.offsetParent !== null || getComputedStyle(el).position === "fixed";
       }
     );

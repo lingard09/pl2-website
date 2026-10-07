@@ -74,9 +74,22 @@
   height: min(2.5vw, 48px);
 }
 
-/* ══ 3. 필름스트립 ═════════════════════════════════════
-   피그마: 2638px 폭 스트립이 1920 프레임 좌우로 넘친다.
-   가운데 큰 이미지(518x740)가 화면 정중앙에 오도록 트랙을 중앙 정렬. */
+/* ══ 1. 히어로 영상 확대 ═══════════════════════════════
+   영상 파일 위아래에 검정 레터박스가 구워져 있어서 그대로 깔면 영상이 메뉴바 아래부터
+   시작하는 것처럼 보인다 (PC 피드백_0930). 피그마도 VIDEO fill 을 CROP 0.8378 배율로
+   가운데 확대해 띠를 잘라낸다 → 1 / 0.8378 = 1.1936 배. poster 도 같은 프레임이라 같이 확대.
+   .wd-hero 가 overflow: hidden 이라 넘치는 부분은 잘린다. */
+.wd-hero-media {
+  transform: scale(1.1936);
+}
+
+/* ══ 3. 필름스트립 (무한 회전 캐러셀) ═════════════════════
+   피그마 Frame 2116929324: 2638x740 트랙에 작은 칸 200x300 (아래 정렬, 간격 12) 10개와
+   가운데 큰 칸 518x740 하나. 큰 칸이 화면 정중앙에 오도록 트랙을 중앙 정렬한다.
+   wd1-strip.js 가 주기적으로 모든 이미지의 data-slot 을 하나씩 줄여(왼쪽으로 한 칸)
+   가운데 칸에 들어온 이미지는 커지고 나간 이미지는 작아진다. -5 칸에서 밀려난 이미지는
+   화면 밖에서 +5 칸으로 순간 이동해 끝없이 이어진다.
+   --u = 피그마 1px (1920 에서 1px, 좁아지면 같은 비율로 줄어든다). */
 .wd-strip-section {
   display: flex;
   flex-direction: column;
@@ -84,8 +97,9 @@
 }
 
 .wd-strip {
+  --u: min(0.052083vw, 1px);
   position: relative;
-  height: min(38.5417vw, 740px);
+  height: calc(var(--u) * 740);
   overflow: hidden;
 }
 
@@ -93,28 +107,45 @@
   position: absolute;
   top: 0;
   left: 50%;
-  width: min(137.3958vw, 2638px);
-  height: min(38.5417vw, 740px);
+  width: calc(var(--u) * 2638);
+  height: calc(var(--u) * 740);
   transform: translateX(-50%);
 }
 
 .wd-strip-track img {
   position: absolute;
+  top: calc(var(--u) * 440);
+  width: calc(var(--u) * 200);
+  height: calc(var(--u) * 300);
   object-fit: cover;
+  transition: left 1s cubic-bezier(0.65, 0, 0.35, 1),
+    top 1s cubic-bezier(0.65, 0, 0.35, 1),
+    width 1s cubic-bezier(0.65, 0, 0.35, 1),
+    height 1s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-.wd-strip-small {
-  top: min(22.9167vw, 440px);
-  width: min(10.5208vw, 202px);
-  height: min(14.4792vw, 278px);
+/* 화면 밖에서 반대편 끝으로 옮길 때는 움직임 없이 */
+.wd-strip-track img.is-wrapping {
+  transition: none;
 }
 
-.wd-strip-big {
+/* 칸 위치 (트랙 기준 x). 작은 칸은 212 간격, 가운데 큰 칸 양옆은 12 간격 */
+.wd-strip-track img[data-slot="-5"] { left: 0; }
+.wd-strip-track img[data-slot="-4"] { left: calc(var(--u) * 212); }
+.wd-strip-track img[data-slot="-3"] { left: calc(var(--u) * 424); }
+.wd-strip-track img[data-slot="-2"] { left: calc(var(--u) * 636); }
+.wd-strip-track img[data-slot="-1"] { left: calc(var(--u) * 848); }
+.wd-strip-track img[data-slot="0"] {
   top: 0;
-  left: min(55.2083vw, 1060px);
-  width: min(26.9792vw, 518px);
-  height: min(38.5417vw, 740px);
+  left: calc(var(--u) * 1060);
+  width: calc(var(--u) * 518);
+  height: calc(var(--u) * 740);
 }
+.wd-strip-track img[data-slot="1"] { left: calc(var(--u) * 1590); }
+.wd-strip-track img[data-slot="2"] { left: calc(var(--u) * 1802); }
+.wd-strip-track img[data-slot="3"] { left: calc(var(--u) * 2014); }
+.wd-strip-track img[data-slot="4"] { left: calc(var(--u) * 2226); }
+.wd-strip-track img[data-slot="5"] { left: calc(var(--u) * 2438); }
 
 /* 양끝 검정 그라디언트 (피그마 245x360 @ x=-2 / x=1675, y=381) */
 .wd-strip::before,

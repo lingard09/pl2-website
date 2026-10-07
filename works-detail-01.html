@@ -132,21 +132,23 @@
           </div>
         </section>
 
-        <!-- ══ 3. 필름스트립 ══ -->
-        <section class="wd-strip-section">
+        <!-- ══ 3. 필름스트립 ══
+             이미지가 한 칸씩 왼쪽으로 넘어가며 가운데 칸에 온 것만 커지고, 무한 반복한다
+             (PC 피드백_0930, wd1-strip.js). 캡션은 스트립과 한 덩어리로 같이 등장한다. -->
+        <section class="wd-strip-section" data-reveal>
           <div class="wd-strip">
             <div class="wd-strip-track">
-            <img class="wd-strip-small" style="left: 0px" src="assets/wd1-strip-01.webp" alt="" />
-            <img class="wd-strip-small" style="left: 212px" src="assets/wd1-strip-02.webp" alt="" />
-            <img class="wd-strip-small" style="left: 424px" src="assets/wd1-strip-03.webp" alt="" />
-            <img class="wd-strip-small" style="left: 636px" src="assets/wd1-strip-04.webp" alt="" />
-            <img class="wd-strip-small" style="left: 848px" src="assets/wd1-strip-05.webp" alt="" />
-            <img class="wd-strip-big" src="assets/wd1-strip-06.webp" alt="" />
-            <img class="wd-strip-small" style="left: 1590px" src="assets/wd1-strip-07.webp" alt="" />
-            <img class="wd-strip-small" style="left: 1802px" src="assets/wd1-strip-08.webp" alt="" />
-            <img class="wd-strip-small" style="left: 2014px" src="assets/wd1-strip-09.webp" alt="" />
-            <img class="wd-strip-small" style="left: 2226px" src="assets/wd1-strip-10.webp" alt="" />
-            <img class="wd-strip-small" style="left: 2438px" src="assets/wd1-strip-11.webp" alt="" />
+              <img data-slot="-5" src="assets/wd1-strip-01.webp" alt="" />
+              <img data-slot="-4" src="assets/wd1-strip-02.webp" alt="" />
+              <img data-slot="-3" src="assets/wd1-strip-03.webp" alt="" />
+              <img data-slot="-2" src="assets/wd1-strip-04.webp" alt="" />
+              <img data-slot="-1" src="assets/wd1-strip-05.webp" alt="" />
+              <img data-slot="0" src="assets/wd1-strip-06.webp" alt="" />
+              <img data-slot="1" src="assets/wd1-strip-07.webp" alt="" />
+              <img data-slot="2" src="assets/wd1-strip-08.webp" alt="" />
+              <img data-slot="3" src="assets/wd1-strip-09.webp" alt="" />
+              <img data-slot="4" src="assets/wd1-strip-10.webp" alt="" />
+              <img data-slot="5" src="assets/wd1-strip-11.webp" alt="" />
             </div>
           </div>
           <p class="wd-strip-caption">
@@ -197,8 +199,9 @@
             </p>
           </div>
 
+          <!-- 스티커 5행은 동물 → 식물 → 음식 → 동화 → 다꾸 순서로 스크롤에 맞춰 하나씩 등장 -->
           <div class="wd-sticker-rows">
-          <div class="wd-sticker-row">
+          <div class="wd-sticker-row" data-reveal>
             <img
               class="wd-sticker-grid"
               src="assets/wd1-sticker-01.webp"
@@ -209,7 +212,7 @@
               <p>동화 속 동물들을 묘사한 스티커.<br />강아지, 고양이, 최근 유행하는 카피바라 등 여러 동물 이미지를 동화속 일러스트화 컨셉으로 디자인</p>
             </div>
           </div>
-          <div class="wd-sticker-row wd-sticker-row--reverse">
+          <div class="wd-sticker-row wd-sticker-row--reverse" data-reveal>
             <img
               class="wd-sticker-grid"
               src="assets/wd1-sticker-02.webp"
@@ -220,7 +223,7 @@
               <p>스티커에 활용되기 좋은 둥글고 귀여운 느낌의 비율로 디자인하고<br />채색은 파스텔, 색연필와 도화지 질감을 살린 스티커.</p>
             </div>
           </div>
-          <div class="wd-sticker-row">
+          <div class="wd-sticker-row" data-reveal>
             <img
               class="wd-sticker-grid"
               src="assets/wd1-sticker-03.webp"
@@ -231,7 +234,7 @@
               <p>일상에서 가장 많이 소비되고 다뤄지는 음식 콘텐츠.<br />빵, 디저트, 식재료, 조리도구 등을 스티커화하여 다양하게 활용할 수 있도록 디자인</p>
             </div>
           </div>
-          <div class="wd-sticker-row wd-sticker-row--reverse">
+          <div class="wd-sticker-row wd-sticker-row--reverse" data-reveal>
             <img
               class="wd-sticker-grid"
               src="assets/wd1-sticker-04.webp"
@@ -242,7 +245,7 @@
               <p>사람들의 동심과 순수한 감정을 자극할 수 있는 어린이 그림체로 구성된 스티커.<br />시계, 인형, 화분, 무지개 등의 요소들로 구성</p>
             </div>
           </div>
-          <div class="wd-sticker-row">
+          <div class="wd-sticker-row" data-reveal>
             <img
               class="wd-sticker-grid"
               src="assets/wd1-sticker-05.webp"
@@ -318,5 +321,6 @@
 
     <script src="assets/gnb.js"></script>
     <script src="assets/top-btn.js"></script>
+    <script src="assets/wd1-strip.js"></script>
   </body>
 </html>
