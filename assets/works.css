@@ -24,7 +24,8 @@
   margin: 0 auto;
   /* 피그마: 섹션이 x=12, y=0 → 좌우 12px 만, 위아래 여백은 없다.
      첫 카드가 화면 최상단에 붙고 그 위로 GNB(top 12)가 겹친다. */
-  padding: 0 min(0.625vw, 12px);
+  padding: 0 max(min(0.625vw, 12px), env(safe-area-inset-right, 0px)) 0
+    max(min(0.625vw, 12px), env(safe-area-inset-left, 0px));
   /* 푸터가 없어 마지막 카드가 곧 페이지 끝이다. 등장 모션(motion.js)으로 아래에
      내려가 있는 동안 문서 높이가 늘었다가 줄어들지 않게 세로 넘침만 자른다. */
   overflow-y: clip;
@@ -244,14 +245,17 @@
    CSS 폭 700 대로 잡혀 모바일로 떨어졌다. 폰은 넓어도 430 남짓이라 600 아래만 모바일. */
 @media (max-width: 599.98px) {
   /* 시안의 위 60 은 폰 상태바(배터리·시간) 자리를 포함한 값이었다 (박은비 님 피드백).
-     브라우저 화면은 상태바 아래에서 시작하므로 GNB 는 맨 위에서 20 만 띄운다. */
+     iOS Safari 는 페이지를 상태바 뒤까지 그리는데, 기본 설정에선 top 0 이 상태바 "아래"라
+     흰 띠가 상태바를 못 덮고 카드가 상태바 뒤로 비쳤다 (실기기 확인).
+     그래서 works.html 에 viewport-fit=cover 를 줘 top 0 을 화면 맨 위로 맞추고,
+     상태바 높이(env(safe-area-inset-top))를 더해 띠·GNB·첫 카드 위치를 잡는다.
+     상태바가 없는 기기·브라우저에선 env 값이 0 이라 20 / 100 그대로다. */
   .wk-body .gnb {
-    top: 20px;
-    --gnb-drop-space: calc(100dvh - 124px); /* 위 20+60+12 + 아래 12 + 여유 20 */
+    top: calc(20px + env(safe-area-inset-top, 0px));
+    --gnb-drop-space: calc(100dvh - 124px - env(safe-area-inset-top, 0px));
   }
 
-  /* GNB 위 20 띠는 흰색으로 덮는다 — 스크롤한 카드가 상태바 바로 아래로 비치지 않게.
-     (상태바 자체는 works.html 의 theme-color 흰색) */
+  /* 상태바 + GNB 위 20 을 흰색으로 덮는다 — 스크롤한 카드가 비치지 않게 */
   .wk-body::before {
     content: "";
     position: fixed;
@@ -259,13 +263,14 @@
     left: 0;
     right: 0;
     z-index: 99; /* GNB(100) 바로 아래 */
-    height: 20px;
+    height: calc(20px + env(safe-area-inset-top, 0px));
     background: var(--pl2-white);
   }
 
   /* 처음 화면에서 첫 카드가 GNB 에 가려지지 않게: 위 20 + GNB 60 + 간격 20 = 100 */
   .wk-main {
-    padding: 100px 20px 12px;
+    padding: calc(100px + env(safe-area-inset-top, 0px)) 20px
+      calc(12px + env(safe-area-inset-bottom, 0px));
   }
 
   .wk-grid {

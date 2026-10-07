@@ -449,7 +449,7 @@ button {
 @media (max-width: 599.98px) {
   .top-btn {
     right: 20px;
-    bottom: 20px;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px)); /* 홈 인디케이터 위 */
   }
 }
 
