@@ -126,12 +126,21 @@
   function initReveal(startDelay) {
     if (!("IntersectionObserver" in window)) return;
 
+    // HTML 에서 data-reveal 을 붙인 요소는 묶음이 아니라 하나씩 따로 등장한다
+    // (예: 상세 07 Main/Support/Forum 이미지 3장). 그걸 품은 상위 덩어리는
+    // 대상에서 빼야 이동이 겹치지 않는다.
+    var singles = document.querySelectorAll("[data-reveal]");
     var els = Array.prototype.filter.call(
-      document.querySelectorAll(TARGETS),
+      document.querySelectorAll(TARGETS + ",[data-reveal]"),
       function (el) {
         // 스크린리더 전용 · 장식 오버레이 · 숨은 요소는 건드리지 않는다
         if (el.classList.contains("sr-only")) return false;
         if (el.getAttribute("aria-hidden") === "true") return false;
+        if (!el.hasAttribute("data-reveal")) {
+          for (var i = 0; i < singles.length; i++) {
+            if (el.contains(singles[i])) return false;
+          }
+        }
         return el.offsetParent !== null || getComputedStyle(el).position === "fixed";
       }
     );
