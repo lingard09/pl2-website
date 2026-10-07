@@ -91,160 +91,169 @@
           </div>
         </section>
 
-        <!-- ══ 3. 01 Landscape ══ -->
-        <section class="wd2-step-section">
-          <img class="wd2-collage" src="assets/wd2-collage-01.webp" alt="" />
-          <div class="wd2-steps">
-            <div class="wd2-step-list">
-              <div class="wd2-step" data-active="true">
-                <p class="wd2-step-head">
-                  <span>01</span><span>Landscape</span>
-                </p>
-                <p class="wd2-step-desc">
-                  2035년 서울을 배경으로 현실과 미래가 자연스럽게 공존하는
-                  도시를 구현했습니다. <br /> 건축 구조와 공간의 분위기, 조명과
-                  디테일까지 설계하여 이야기의 흐름을 뒷받침하는 세계관을
-                  완성했습니다.
-                </p>
+        <!-- ══ 3~6. 01 Landscape → 02 Characters → 03 Elements → 04 Pipeline ══
+             (PC 피드백_0930, 피그마 Frame 2116928556 / 2116929520)
+             네 단계를 화면에 고정(sticky)해 두고, 스크롤에 따라 1 → 2 → 3 → 4 로 넘어간다.
+             단계마다 왼쪽 비주얼과 오른쪽 활성 항목·설명이 같이 바뀐다 (wd2-story.js).
+             JS 가 없으면 예전처럼 네 섹션이 차례로 쌓여 보인다. -->
+        <div class="wd2-story" data-reveal>
+          <div class="wd2-story-stage">
+            <!-- ══ 3. 01 Landscape ══ -->
+            <section class="wd2-step-section">
+              <img class="wd2-collage" src="assets/wd2-collage-01.webp" alt="" />
+              <div class="wd2-steps">
+                <div class="wd2-step-list">
+                  <div class="wd2-step" data-active="true">
+                    <p class="wd2-step-head">
+                      <span>01</span><span>Landscape</span>
+                    </p>
+                    <p class="wd2-step-desc">
+                      2035년 서울을 배경으로 현실과 미래가 자연스럽게 공존하는
+                      도시를 구현했습니다. <br /> 건축 구조와 공간의 분위기, 조명과
+                      디테일까지 설계하여 이야기의 흐름을 뒷받침하는 세계관을
+                      완성했습니다.
+                    </p>
+                  </div>
+                  <div class="wd2-step" data-active="false">
+                    <p class="wd2-step-head">
+                      <span>02</span><span>Characters</span>
+                    </p>
+                  </div>
+                  <div class="wd2-step" data-active="false">
+                    <p class="wd2-step-head">
+                      <span>03</span><span>Elements</span>
+                    </p>
+                  </div>
+                  <div class="wd2-step" data-active="false">
+                    <p class="wd2-step-head">
+                      <span>04</span><span>Pipeline</span>
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div class="wd2-step" data-active="false">
-                <p class="wd2-step-head">
-                  <span>02</span><span>Characters</span>
-                </p>
-              </div>
-              <div class="wd2-step" data-active="false">
-                <p class="wd2-step-head">
-                  <span>03</span><span>Elements</span>
-                </p>
-              </div>
-              <div class="wd2-step" data-active="false">
-                <p class="wd2-step-head">
-                  <span>04</span><span>Pipeline</span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+            </section>
 
-        <!-- ══ 4. 02 Characters ══ -->
-        <section class="wd2-step-section wd2-step-section--tall">
-          <img class="wd2-collage" src="assets/wd2-collage-02.webp" alt="" />
-          <div class="wd2-steps">
-            <div class="wd2-step-list">
-              <div class="wd2-step" data-active="false">
-                <p class="wd2-step-head">
-                  <span>01</span><span>Landscape</span>
-                </p>
+            <!-- ══ 4. 02 Characters ══ -->
+            <section class="wd2-step-section wd2-step-section--tall">
+              <img class="wd2-collage" src="assets/wd2-collage-02.webp" alt="" />
+              <div class="wd2-steps">
+                <div class="wd2-step-list">
+                  <div class="wd2-step" data-active="false">
+                    <p class="wd2-step-head">
+                      <span>01</span><span>Landscape</span>
+                    </p>
+                  </div>
+                  <div class="wd2-step" data-active="true">
+                    <p class="wd2-step-head">
+                      <span>02</span><span>Characters</span>
+                    </p>
+                    <p class="wd2-step-desc">
+                      영화의 중심이 되는 마지막 인간 배송원 순자와 최초의 휴머노이드
+                      배송원 H-01을 디자인했습니다. 각 캐릭터의 역할과 개성을 반영한
+                      외형과 스타일을 구축하여, 서로 다른 존재가 만들어내는 관계와
+                      감정이 자연스럽게 전달될 수 있도록 표현했습니다.
+                    </p>
+                  </div>
+                  <div class="wd2-step" data-active="false">
+                    <p class="wd2-step-head">
+                      <span>03</span><span>Elements</span>
+                    </p>
+                  </div>
+                  <div class="wd2-step" data-active="false">
+                    <p class="wd2-step-head">
+                      <span>04</span><span>Pipeline</span>
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div class="wd2-step" data-active="true">
-                <p class="wd2-step-head">
-                  <span>02</span><span>Characters</span>
-                </p>
-                <p class="wd2-step-desc">
-                  영화의 중심이 되는 마지막 인간 배송원 순자와 최초의 휴머노이드
-                  배송원 H-01을 디자인했습니다. 각 캐릭터의 역할과 개성을 반영한
-                  외형과 스타일을 구축하여, 서로 다른 존재가 만들어내는 관계와
-                  감정이 자연스럽게 전달될 수 있도록 표현했습니다.
-                </p>
-              </div>
-              <div class="wd2-step" data-active="false">
-                <p class="wd2-step-head">
-                  <span>03</span><span>Elements</span>
-                </p>
-              </div>
-              <div class="wd2-step" data-active="false">
-                <p class="wd2-step-head">
-                  <span>04</span><span>Pipeline</span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+            </section>
 
-        <!-- ══ 5. 03 Elements ══ -->
-        <section class="wd2-step-section wd2-step-section--tall">
-          <img class="wd2-collage" src="assets/wd2-collage-03.webp" alt="" />
-          <div class="wd2-steps">
-            <div class="wd2-step-list">
-              <div class="wd2-step" data-active="false">
-                <p class="wd2-step-head">
-                  <span>01</span><span>Landscape</span>
-                </p>
+            <!-- ══ 5. 03 Elements ══ -->
+            <section class="wd2-step-section wd2-step-section--tall">
+              <img class="wd2-collage" src="assets/wd2-collage-03.webp" alt="" />
+              <div class="wd2-steps">
+                <div class="wd2-step-list">
+                  <div class="wd2-step" data-active="false">
+                    <p class="wd2-step-head">
+                      <span>01</span><span>Landscape</span>
+                    </p>
+                  </div>
+                  <div class="wd2-step" data-active="false">
+                    <p class="wd2-step-head">
+                      <span>02</span><span>Characters</span>
+                    </p>
+                  </div>
+                  <div class="wd2-step" data-active="true">
+                    <p class="wd2-step-head">
+                      <span>03</span><span>Elements</span>
+                    </p>
+                    <p class="wd2-step-desc">
+                      미래 도시를 구성하는 드론, 배송 로봇, 물류 장비 등 다양한
+                      오브젝트를 제작했습니다. 각 요소는 세계관과 조화를 이루도록
+                      설계하여 영화의 분위기와 공간에 자연스럽게 녹아들 수 있도록
+                      구성했습니다.
+                    </p>
+                  </div>
+                  <div class="wd2-step" data-active="false">
+                    <p class="wd2-step-head">
+                      <span>04</span><span>Pipeline</span>
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div class="wd2-step" data-active="false">
-                <p class="wd2-step-head">
-                  <span>02</span><span>Characters</span>
-                </p>
-              </div>
-              <div class="wd2-step" data-active="true">
-                <p class="wd2-step-head">
-                  <span>03</span><span>Elements</span>
-                </p>
-                <p class="wd2-step-desc">
-                  미래 도시를 구성하는 드론, 배송 로봇, 물류 장비 등 다양한
-                  오브젝트를 제작했습니다. 각 요소는 세계관과 조화를 이루도록
-                  설계하여 영화의 분위기와 공간에 자연스럽게 녹아들 수 있도록
-                  구성했습니다.
-                </p>
-              </div>
-              <div class="wd2-step" data-active="false">
-                <p class="wd2-step-head">
-                  <span>04</span><span>Pipeline</span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+            </section>
 
-        <!-- ══ 6. 04 Pipeline ══ -->
-        <section class="wd2-step-section wd2-step-section--tall">
-          <div class="wd2-pipeline-wrap">
-            <div class="wd2-pipe">
-              <span class="wd2-pipe-dot"></span>
-              <p class="wd2-pipe-label wd2-pipe-label--right">Kling</p>
-              <p class="wd2-pipe-label wd2-pipe-label--left">Seedance</p>
-              <span class="wd2-pipe-dot"></span>
-              <span class="wd2-pipe-dot"></span>
-              <p class="wd2-pipe-label wd2-pipe-label--right">HailuoAI</p>
-              <p class="wd2-pipe-label wd2-pipe-label--left">ElevenLabs</p>
-              <span class="wd2-pipe-dot"></span>
-              <span class="wd2-pipe-dot"></span>
-              <p class="wd2-pipe-label wd2-pipe-label--right">Suno</p>
-              <p class="wd2-pipe-label wd2-pipe-label--left">Premiere</p>
-              <span class="wd2-pipe-dot"></span>
-            </div>
+            <!-- ══ 6. 04 Pipeline ══ -->
+            <section class="wd2-step-section wd2-step-section--tall">
+              <div class="wd2-pipeline-wrap">
+                <div class="wd2-pipe">
+                  <span class="wd2-pipe-dot"></span>
+                  <p class="wd2-pipe-label wd2-pipe-label--right">Kling</p>
+                  <p class="wd2-pipe-label wd2-pipe-label--left">Seedance</p>
+                  <span class="wd2-pipe-dot"></span>
+                  <span class="wd2-pipe-dot"></span>
+                  <p class="wd2-pipe-label wd2-pipe-label--right">HailuoAI</p>
+                  <p class="wd2-pipe-label wd2-pipe-label--left">ElevenLabs</p>
+                  <span class="wd2-pipe-dot"></span>
+                  <span class="wd2-pipe-dot"></span>
+                  <p class="wd2-pipe-label wd2-pipe-label--right">Suno</p>
+                  <p class="wd2-pipe-label wd2-pipe-label--left">Premiere</p>
+                  <span class="wd2-pipe-dot"></span>
+                </div>
+              </div>
+              <div class="wd2-steps wd2-steps--after-pipeline">
+                <div class="wd2-step-list">
+                  <div class="wd2-step" data-active="false">
+                    <p class="wd2-step-head">
+                      <span>01</span><span>Landscape</span>
+                    </p>
+                  </div>
+                  <div class="wd2-step" data-active="false">
+                    <p class="wd2-step-head">
+                      <span>02</span><span>Characters</span>
+                    </p>
+                  </div>
+                  <div class="wd2-step" data-active="false">
+                    <p class="wd2-step-head">
+                      <span>03</span><span>Elements</span>
+                    </p>
+                  </div>
+                  <div class="wd2-step" data-active="true">
+                    <p class="wd2-step-head">
+                      <span>04</span><span>Pipeline</span>
+                    </p>
+                    <p class="wd2-step-desc">
+                      기획부터 이미지 생성, 모델링, 영상 제작, 편집까지 각 단계에
+                      적합한 AI 도구를 활용하여 제작 과정을 구성했습니다. 다양한 AI
+                      툴을 유기적으로 연결해 효율적인 제작 파이프라인을 구축하고
+                      하나의 시네마틱 결과물로 완성했습니다.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
-          <div class="wd2-steps wd2-steps--after-pipeline">
-            <div class="wd2-step-list">
-              <div class="wd2-step" data-active="false">
-                <p class="wd2-step-head">
-                  <span>01</span><span>Landscape</span>
-                </p>
-              </div>
-              <div class="wd2-step" data-active="false">
-                <p class="wd2-step-head">
-                  <span>02</span><span>Characters</span>
-                </p>
-              </div>
-              <div class="wd2-step" data-active="false">
-                <p class="wd2-step-head">
-                  <span>03</span><span>Elements</span>
-                </p>
-              </div>
-              <div class="wd2-step" data-active="true">
-                <p class="wd2-step-head">
-                  <span>04</span><span>Pipeline</span>
-                </p>
-                <p class="wd2-step-desc">
-                  기획부터 이미지 생성, 모델링, 영상 제작, 편집까지 각 단계에
-                  적합한 AI 도구를 활용하여 제작 과정을 구성했습니다. 다양한 AI
-                  툴을 유기적으로 연결해 효율적인 제작 파이프라인을 구축하고
-                  하나의 시네마틱 결과물로 완성했습니다.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+        </div>
 
         <!-- ══ 7. 시퀀스 ══ -->
         <section class="wd2-sequence">
@@ -256,13 +265,14 @@
             </p>
           </div>
 
+          <!-- 제목이 먼저 나오고 시퀀스 6장이 이어서 하나씩 올라온다 (PC 피드백_0930) -->
           <div class="wd2-seq-grid">
-            <img src="assets/wd2-seq-01.webp" alt="" />
-            <img src="assets/wd2-seq-02.webp" alt="" />
-            <img src="assets/wd2-seq-03.webp" alt="" />
-            <img src="assets/wd2-seq-04.webp" alt="" />
-            <img src="assets/wd2-seq-05.webp" alt="" />
-            <img src="assets/wd2-seq-06.webp" alt="" />
+            <img src="assets/wd2-seq-01.webp" alt="" data-reveal />
+            <img src="assets/wd2-seq-02.webp" alt="" data-reveal />
+            <img src="assets/wd2-seq-03.webp" alt="" data-reveal />
+            <img src="assets/wd2-seq-04.webp" alt="" data-reveal />
+            <img src="assets/wd2-seq-05.webp" alt="" data-reveal />
+            <img src="assets/wd2-seq-06.webp" alt="" data-reveal />
           </div>
         </section>
 
@@ -302,5 +312,6 @@
 
     <script src="assets/gnb.js"></script>
     <script src="assets/top-btn.js"></script>
+    <script src="assets/wd2-story.js"></script>
   </body>
 </html>

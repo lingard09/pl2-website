@@ -21,7 +21,9 @@
 .wd-main {
   max-width: 1920px;
   margin: 0 auto;
-  overflow: hidden; /* 필름스트립이 좌우로 넘치므로 */
+  /* 필름스트립이 좌우로 넘치므로 자른다. hidden 은 스크롤 컨테이너를 만들어
+     안쪽 position: sticky(상세 02 단계 스크롤)가 동작하지 않아서 clip 을 쓴다. */
+  overflow: clip;
 }
 
 .wd-container {

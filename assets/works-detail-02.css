@@ -156,6 +156,107 @@
   background: var(--pl2-neutral-70);
 }
 
+/* ══ 3~6. 단계 스크롤 (wd2-story.js 가 .is-ready 와 data-step 을 붙인다) ══
+   스테이지는 가장 큰 단계(1031) 높이로 화면 세로 가운데에 고정되고,
+   바깥 .wd2-story 높이(스테이지 + 단계 수 x 화면 높이)만큼 스크롤하는 동안 단계가 바뀐다.
+   단계마다 화면 한 높이씩 스크롤하면 다음으로 넘어간다. */
+.wd2-story.is-ready {
+  --stage-h: min(53.6979vw, 1031px);
+  position: relative;
+  height: calc(var(--stage-h) + 3 * 100vh);
+}
+
+.wd2-story.is-ready .wd2-story-stage {
+  position: sticky;
+  top: max(0px, calc((100vh - var(--stage-h)) / 2));
+  height: var(--stage-h);
+}
+
+.wd2-story.is-ready .wd2-step-section {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.6s ease, visibility 0s linear 0.6s;
+}
+
+.wd2-story.is-ready .wd2-step-section.is-current {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.6s ease, visibility 0s;
+}
+
+/* 새 단계의 왼쪽 비주얼은 아래에서 살짝 올라오며 들어온다 */
+.wd2-story.is-ready .wd2-collage,
+.wd2-story.is-ready .wd2-pipeline-wrap {
+  translate: 0 min(2.0833vw, 40px);
+  transition: translate 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.wd2-story.is-ready .is-current .wd2-collage,
+.wd2-story.is-ready .is-current .wd2-pipeline-wrap {
+  translate: 0 0;
+}
+
+/* 단계별 목록은 숨기고 공용 목록(wd2-story.js 가 만든다)을 스테이지 오른쪽에 둔다.
+   피그마 x=1240, 폭 620, 세로 가운데. 활성 항목 설명은 높이가 0 → 자기 높이로 펼쳐진다. */
+.wd2-story.is-ready .wd2-step-section .wd2-steps {
+  visibility: hidden;
+}
+
+.wd2-story-list {
+  position: absolute;
+  top: 50%;
+  left: 64.583%; /* 1240 / 1920 */
+  z-index: 1;
+  width: 32.292%; /* 620 / 1920 */
+  translate: 0 -50%;
+}
+
+.wd2-story-list .wd2-step-head {
+  transition: color 0.5s ease;
+}
+
+.wd2-story-desc {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.4s ease;
+}
+
+/* 설명 위 간격(24)도 접히는 영역 안에 넣어야 비활성 항목 사이가 피그마대로 40 이 된다 */
+.wd2-story-desc > .wd2-step-desc {
+  overflow: hidden;
+  min-height: 0;
+  margin-top: 0;
+}
+
+/* 패딩·마진은 높이 0 으로 안 접히므로 안쪽 빈 블록으로 간격을 만든다 */
+.wd2-story-desc > .wd2-step-desc::before {
+  content: "";
+  display: block;
+  height: min(1.25vw, 24px);
+}
+
+.wd2-story-list .wd2-step[data-active="true"] .wd2-story-desc {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition: grid-template-rows 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.5s ease 0.15s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wd2-story-desc,
+  .wd2-story-list .wd2-step-head,
+  .wd2-story.is-ready .wd2-step-section,
+  .wd2-story.is-ready .wd2-collage,
+  .wd2-story.is-ready .wd2-pipeline-wrap {
+    transition: none;
+  }
+}
+
 /* ══ 7. 시퀀스 그리드 (3x2) ════════════════════════════ */
 .wd2-sequence {
   display: flex;
