@@ -144,7 +144,7 @@ button {
   position: relative;
   /* 크기는 화면 폭과 상관없이 고정이다 (PC 피드백_1007).
      원래 vw 로 비례 축소했지만, 태블릿에서도 PC 와 같은 400x60 을 유지하라는 코멘트로
-     GNB 안쪽 모든 치수를 px 로 되돌렸다. 모바일(767 이하)만 아래에서 따로 잡는다. */
+     GNB 안쪽 모든 치수를 px 로 되돌렸다. 모바일(599 이하)만 아래에서 따로 잡는다. */
   width: 400px; /* 400 */
   max-width: calc(100% - 40px);
   /* 드롭다운이 아래로 쓸 수 있는 높이. 기본값은 바를 화면 위(top 12)에 고정하는
@@ -377,7 +377,7 @@ button {
    피그마 Mo(390) 에서 바는 좌우 20 을 뺀 350x60. 안쪽 치수(높이 60 / 패딩 24·20 /
    글자 25 / 아이콘 32 / 라운드 12)는 PC 와 같고 폭만 화면에 맞춰 늘어난다.
    세로 위치는 페이지 CSS 가 잡는다 (Works 는 top 60). */
-@media (max-width: 767.98px) {
+@media (max-width: 599.98px) {
   .gnb {
     width: calc(100% - 40px);
     max-width: none;
@@ -446,7 +446,7 @@ button {
   }
 }
 
-@media (max-width: 767.98px) {
+@media (max-width: 599.98px) {
   .top-btn {
     right: 20px;
     bottom: 20px;
