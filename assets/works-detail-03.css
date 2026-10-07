@@ -101,28 +101,43 @@
   height: min(36.4583vw, 700px);
 }
 
-.wd3-duo img,
-.wd3-duo video {
+.wd3-duo > img,
+.wd3-duo > video,
+.wd3-duo > .wd3-crop {
   width: 49.688%; /* 954 / 1920 */
   aspect-ratio: 954 / 580;
   object-fit: cover;
 }
 
-.wd3-duo--left-low img:first-child,
-.wd3-duo--left-low video:first-child {
+.wd3-duo--left-low > :first-child {
   align-self: flex-end;
 }
 
-.wd3-duo--right-low img:last-child,
-.wd3-duo--right-low video:last-child {
+.wd3-duo--right-low > :last-child {
   align-self: flex-end;
 }
 
-.wd3-duo--left-low img:last-child,
-.wd3-duo--left-low video:last-child,
-.wd3-duo--right-low img:first-child,
-.wd3-duo--right-low video:first-child {
+.wd3-duo--left-low > :last-child,
+.wd3-duo--right-low > :first-child {
   align-self: flex-start;
+}
+
+/* 피그마 CROP 채우기 재현 (PC 피드백_1007, Rectangle 4238 GIF 2개).
+   --sx/--sy = 보이는 영역의 원본 대비 비율, --tx/--ty = 그 영역의 왼쪽/위 시작점.
+   영상을 1/sx · 1/sy 배로 키우고 시작점만큼 당겨 틀 밖은 잘라낸다. */
+.wd3-crop {
+  position: relative;
+  overflow: hidden;
+}
+
+.wd3-crop video {
+  position: absolute;
+  left: calc(-100% * var(--tx) / var(--sx));
+  top: calc(-100% * var(--ty) / var(--sy));
+  width: calc(100% / var(--sx));
+  height: calc(100% / var(--sy));
+  max-width: none;
+  object-fit: fill;
 }
 
 /* ══ 6. 모델 컷 ════════════════════════════════════════ */
