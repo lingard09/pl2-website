@@ -123,11 +123,19 @@
             </p>
           </div>
 
-          <!-- TODO(영상 대기): 피그마(2900:33105)에서 이 자리가 영상으로 바뀌었다 (PC 피드백_0930).
-               영상 파일(assets/wd5-route.mp4)을 받으면 아래 img 를
-               <video class="wd5-route" poster="assets/wd5-route.webp" autoplay muted loop playsinline preload="metadata">
-               로 바꾼다. 그 전에는 정지 이미지를 둔다 (없는 파일을 참조하면 build-dist 가 멈춘다). -->
-          <img class="wd5-route" src="assets/wd5-route.webp" alt="" />
+          <!-- 피그마(2900:33105)에서 정지 이미지 → 영상으로 바뀌었다 (PC 피드백_0930).
+               3840x1064 (= 1920x532 비율). 로딩 전에는 기존 정지 이미지가 poster 로 보인다. -->
+          <video
+            class="wd5-route"
+            poster="assets/wd5-route.webp"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          >
+            <source src="assets/wd5-route.mp4" type="video/mp4" />
+          </video>
         </section>
 
         <!-- ══ 4. 시퀀스 ══ -->
