@@ -27,7 +27,7 @@ const BASE = process.env.BASE || 'http://localhost:8765';
 // 피그마 프레임 높이 (NOTES.md "페이지 목록" 과 같은 값)
 const PAGES = {
   'index.html': 1080,
-  'works.html': 5242,
+  'works.html': 5137, // 2026-10-07 레이아웃 교체 (피그마 3024:13288)
   'about.html': 8112,
   'contact.html': null, // 100dvh 라 뷰포트에 따라 달라진다
   'works-detail-01.html': 14181,
@@ -40,6 +40,7 @@ const PAGES = {
   'works-detail-08.html': 12134,
   'works-detail-09.html': 18500,
   'works-detail-10.html': 14222,
+  'works-detail-11.html': 11248, // 2026-10-07 신규 (피그마 3032:14308)
 };
 
 // 아직 원본을 못 받은 영상 — 404 가 나도 정상이다 (NOTES "남은 것" 참고)
