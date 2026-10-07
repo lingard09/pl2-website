@@ -15,6 +15,10 @@
     <link rel="stylesheet" href="assets/works.css" />
   </head>
   <body class="wk-body">
+    <!-- 모바일 상태바(배터리·시간) 뒤를 흰색으로 덮는 띠. iOS Safari 26 은 화면 맨 위에 고정된
+         "실제 요소"의 background-color 로 상태바 색을 정한다 — ::before 같은 가상 요소와
+         theme-color 는 무시해서 별도 요소로 둔다 (works.css 모바일 블록) -->
+    <div class="wk-statusbar" aria-hidden="true"></div>
     <nav class="gnb" data-dropdown="off" data-pinned>
       <div class="gnb-bar">
         <span class="gnb-brand">PL2 Creative Studio</span>

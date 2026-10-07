@@ -8,6 +8,16 @@
   background: var(--pl2-white);
 }
 
+/* Safari 26 은 루트 배경색도 상단/하단 툴바 색 판단에 쓴다 — 투명으로 두지 않는다 */
+html:has(.wk-body) {
+  background-color: #ffffff;
+}
+
+/* 모바일 상태바 띠 (아래 모바일 블록에서만 보인다) */
+.wk-statusbar {
+  display: none;
+}
+
 /* GNB: 스크롤해도 상단에 붙어 있게 fixed (피그마는 프레임 최상단 y=12 에 배치) */
 .wk-body .gnb {
   position: fixed;
@@ -255,16 +265,18 @@
     --gnb-drop-space: calc(100dvh - 124px - env(safe-area-inset-top, 0px));
   }
 
-  /* 상태바 + GNB 위 20 을 흰색으로 덮는다 — 스크롤한 카드가 비치지 않게 */
-  .wk-body::before {
-    content: "";
+  /* 상태바 + GNB 위 20 을 흰색으로 덮는다 — 스크롤한 카드가 비치지 않게.
+     ⚠ 배경색을 이 fixed 요소 자신에 둬야 Safari 가 상태바 색으로 읽는다
+       (자식·가상 요소의 배경, pointer-events: none 은 인식 안 됨) */
+  .wk-statusbar {
+    display: block;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 99; /* GNB(100) 바로 아래 */
     height: calc(20px + env(safe-area-inset-top, 0px));
-    background: var(--pl2-white);
+    background-color: #ffffff;
   }
 
   /* 처음 화면에서 첫 카드가 GNB 에 가려지지 않게: 위 20 + GNB 60 + 간격 20 = 100 */
