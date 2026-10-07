@@ -21,7 +21,7 @@
   var PT_KEY = "pl2-pt";
   var VISITED_KEY = "pl2-visited"; // 탭(세션)당 한 번만 인트로를 보여준다
   var INTRO_HOLD_MS = 450; // 인트로는 덮인 채로 잠깐 머문 뒤 걷힌다
-  var LEAVE_MS = 600; // base.css html.pt-leave::after 의 transition 과 맞춘다
+  var LEAVE_MS = 500; // base.css html.pt-leave::after 의 transition 과 맞춘다
   var PUSH_LEAVE_MS = 650; // base.css html.pt-push-leave 와 맞춘다
   var PUSH_CARD_MS = 1000; // base.css .is-push transition 과 맞춘다
   var PUSH_CARD_STEP = 120; // 카드 사이 시차
@@ -66,6 +66,11 @@
   var hold = intro ? INTRO_HOLD_MS : 0;
   if (entering || intro) root.classList.add("pt-enter");
   if (pushing) root.classList.add("pt-push-enter");
+  // Home → Works: 카드가 다 붙기 전에 스크롤하면 아래에서 올라오던 카드들과 스크롤이
+  // 겹쳐 화면이 위아래로 흔들려 보였다. 페이지가 열리자마자(본문 파싱 전) 스크롤 입력을
+  // 막고, 카드가 모두 붙으면 initPageTransition 이 푼다.
+  // (overflow: hidden 은 스크롤바가 사라졌다 생기며 카드가 옆으로 튀어서 쓰지 않는다)
+  var unlockScroll = pushing ? lockScroll() : null;
 
   document.addEventListener("DOMContentLoaded", function () {
     initPageTransition();
@@ -101,6 +106,9 @@
       pushTotal = Math.max(0, cards.length - 1) * PUSH_CARD_STEP + PUSH_CARD_MS;
       // 슬라이드 9: 카드가 모두 자리 잡은 뒤 메뉴바가 떨어진다
       root.style.setProperty("--pt-gnb-delay", pushTotal - 150 + "ms");
+
+      // 스크롤 잠금(<head> 에서 걸었다)은 카드가 모두 붙으면 푼다
+      setTimeout(unlockScroll, pushTotal);
 
       requestAnimationFrame(function () {
         requestAnimationFrame(function () {
@@ -168,6 +176,24 @@
         );
       }
     });
+  }
+
+  // 휠·터치·키보드 스크롤을 막고, 푸는 함수를 돌려준다 (Home → Works 카드가 붙는 동안)
+  function lockScroll() {
+    var KEYS = { " ": 1, PageDown: 1, PageUp: 1, ArrowDown: 1, ArrowUp: 1, Home: 1, End: 1 };
+    var opts = { passive: false };
+    function block(e) {
+      if (e.type === "keydown" && !KEYS[e.key]) return;
+      e.preventDefault();
+    }
+    window.addEventListener("wheel", block, opts);
+    window.addEventListener("touchmove", block, opts);
+    window.addEventListener("keydown", block, opts);
+    return function () {
+      window.removeEventListener("wheel", block, opts);
+      window.removeEventListener("touchmove", block, opts);
+      window.removeEventListener("keydown", block, opts);
+    };
   }
 
   // ── 1) 스크롤 등장 + 2) 숫자 카운팅 ──────────────────

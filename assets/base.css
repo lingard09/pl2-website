@@ -611,7 +611,11 @@ html.pt-push-leave .hm-hero {
   transition: translate 0.65s cubic-bezier(0.76, 0, 0.24, 1);
 }
 
-html.pt-push-enter .wk-card,
+/* 첫 페인트(JS 전)에는 모든 카드를 아래에 둔다. JS 가 돈 뒤(.mo-reveal 이 붙은 뒤)에는
+   첫 화면 카드(.is-push)만 이 규칙을 받는다 — 나머지 카드까지 100vh 아래에 붙잡아 두면
+   전환이 끝나기 전 스크롤로 등장할 때 엉뚱한 위치에서 날아와 위아래로 흔들렸다. */
+html.pt-push-enter .wk-card:not(.mo-reveal),
+html.pt-push-enter .wk-card.is-push,
 html.pt-push-enter .top-btn {
   translate: 0 100vh;
 }
@@ -648,10 +652,13 @@ html::after {
   translate: 0 100%;
 }
 
+/* 덮을 때는 빠르게 출발해서 감속한다 (ease-out-quart).
+   원래 들어올 때와 같은 ease-in-out(0.76, 0, 0.24, 1)이었는데, 처음 0.2초 남짓 거의
+   안 움직여서 누른 카드 썸네일이 0.5초쯤 그대로 보였다 (Works → 상세 피드백). */
 html.pt-leave::after {
   translate: 0 0;
   pointer-events: auto; /* 덮는 동안 두 번 클릭되지 않게 */
-  transition: translate 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+  transition: translate 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 html.pt-enter::after {
