@@ -40,7 +40,9 @@ ATTR = re.compile(r'\b(href|src|poster)="([^"]*)"')
 
 # 공유 미리보기(og:image 등)는 절대 주소여야 카톡·슬랙·페이스북이 읽는다.
 # 사이트 위치가 바뀌면(예: /new/ → 루트) SITE_URL 만 바꿔 빌드한다.
-SITE_URL = os.environ.get("SITE_URL", "https://pl2std.com/new/").rstrip("/") + "/"
+# pl2std.com 은 SSL 인증서가 없어(호스팅 기본 자체서명) https 로 쓰면 이미지를 못 가져간다
+# (2026-10-07 실서버 확인). 인증서를 달면 https 로 바꾼다.
+SITE_URL = os.environ.get("SITE_URL", "http://pl2std.com/new/").rstrip("/") + "/"
 OG_IMAGE = re.compile(r'(<meta (?:property="og:image"|name="twitter:image") content=")assets/')
 
 
