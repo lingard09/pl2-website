@@ -38,6 +38,11 @@ ROUTES = {
 
 ATTR = re.compile(r'\b(href|src|poster)="([^"]*)"')
 
+# 공유 미리보기(og:image 등)는 절대 주소여야 카톡·슬랙·페이스북이 읽는다.
+# 사이트 위치가 바뀌면(예: /new/ → 루트) SITE_URL 만 바꿔 빌드한다.
+SITE_URL = os.environ.get("SITE_URL", "https://pl2std.com/new/").rstrip("/") + "/"
+OG_IMAGE = re.compile(r'(<meta (?:property="og:image"|name="twitter:image") content=")assets/')
+
 
 def link_to(from_dir, target_dir):
     """from_dir 페이지에서 target_dir 페이지로 가는 상대 주소 (항상 / 로 끝난다)"""
@@ -59,7 +64,11 @@ def rewrite(html, page_dir):
             return f'{attr}="{up}{url}"'
         return m.group(0)
 
-    return ATTR.sub(fix, html)
+    html = ATTR.sub(fix, html)
+    html = OG_IMAGE.sub(lambda m: m.group(1) + SITE_URL + "assets/", html)
+    # 이 페이지의 정식 주소
+    og_url = f'    <meta property="og:url" content="{SITE_URL}{page_dir}" />\n'
+    return html.replace('    <meta name="twitter:card"', og_url + '    <meta name="twitter:card"', 1)
 
 
 def redirect_page(target):

@@ -50,6 +50,7 @@ mkdir -p dist/assets dist/fonts
 cp *.html dist/
 cp assets/*.css assets/*.js dist/assets/
 cp assets/*.webp assets/*.png assets/*.svg dist/assets/
+cp -r assets/og dist/assets/ # 공유 미리보기 이미지 (jpg — 메신저 호환 때문에 webp 가 아니다)
 cp assets/*.mp4 dist/assets/
 cp fonts/* dist/fonts/
 
