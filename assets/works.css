@@ -265,7 +265,7 @@ html:has(.wk-body) {
     --gnb-drop-space: calc(100dvh - 124px - env(safe-area-inset-top, 0px));
   }
 
-  /* 상태바 + GNB 위 20 을 흰색으로 덮는다 — 스크롤한 카드가 비치지 않게.
+  /* 상태바부터 GNB 아래 끝까지 흰색으로 덮는다 — 스크롤한 카드가 비치지 않게.
      ⚠ 배경색을 이 fixed 요소 자신에 둬야 Safari 가 상태바 색으로 읽는다
        (자식·가상 요소의 배경, pointer-events: none 은 인식 안 됨) */
   .wk-statusbar {
@@ -275,7 +275,9 @@ html:has(.wk-body) {
     left: 0;
     right: 0;
     z-index: 99; /* GNB(100) 바로 아래 */
-    height: calc(20px + env(safe-area-inset-top, 0px));
+    /* GNB 아래 끝(위 20 + 바 60)까지 덮는다. 위 20 에서 끊으면 바의 라운드 모서리 바깥과
+       좌우 20 여백으로 스크롤한 카드가 비쳐 보였다 (박은비 님 피드백) */
+    height: calc(80px + env(safe-area-inset-top, 0px));
     background-color: #ffffff;
   }
 
