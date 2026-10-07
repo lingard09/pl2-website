@@ -26,6 +26,19 @@
   overflow: clip;
 }
 
+/* 모바일: GNB 를 위에서 20 띄우고, 처음 화면에서 히어로가 GNB 에 가려지지 않게
+   그만큼(20 + 60 + 20 = 100) 본문을 내린다 (박은비 님 모바일 피드백, Works 와 같은 간격) */
+@media (max-width: 599.98px) {
+  .wd-body .gnb {
+    top: 20px;
+    --gnb-drop-space: calc(100dvh - 124px);
+  }
+
+  .wd-main {
+    padding-top: 100px;
+  }
+}
+
 .wd-container {
   display: flex;
   flex-direction: column;
