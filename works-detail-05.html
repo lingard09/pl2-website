@@ -123,6 +123,10 @@
             </p>
           </div>
 
+          <!-- TODO(영상 대기): 피그마(2900:33105)에서 이 자리가 영상으로 바뀌었다 (PC 피드백_0930).
+               영상 파일(assets/wd5-route.mp4)을 받으면 아래 img 를
+               <video class="wd5-route" poster="assets/wd5-route.webp" autoplay muted loop playsinline preload="metadata">
+               로 바꾼다. 그 전에는 정지 이미지를 둔다 (없는 파일을 참조하면 build-dist 가 멈춘다). -->
           <img class="wd5-route" src="assets/wd5-route.webp" alt="" />
         </section>
 
@@ -137,26 +141,30 @@
             </p>
           </div>
 
-          <div class="wd5-still-block">
-            <!-- 피그마에서 애니메이션 GIF (1920x1080). mp4 로 변환해 넣고
-                 정지 프레임은 poster 로 남겼다. -->
-            <video
-              class="wd5-still"
-              poster="assets/wd5-still.webp"
-              autoplay
-              muted
-              loop
-              playsinline
-              preload="metadata"
-            >
-              <source src="assets/wd5-still.mp4" type="video/mp4" />
-            </video>
-            <div class="wd-head wd-head--center">
-              <h3 class="wd-head-title">
-                여행의 격을 높이는 신세계면세점을<br />우아하고 당당한 두 모델의
-                모습을 통해 보여줍니다.
-              </h3>
-            </div>
+          <!-- 피그마에서 애니메이션 GIF (1920x1080). mp4 로 변환해 넣고
+               정지 프레임은 poster 로 남겼다. -->
+          <video
+            class="wd5-still"
+            poster="assets/wd5-still.webp"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          >
+            <source src="assets/wd5-still.mp4" type="video/mp4" />
+          </video>
+        </section>
+
+        <!-- ══ 4-1. 스틸 아래 문구 ══
+             피그마(PC 피드백_0930)에서 스틸과 이 문구 사이가 80 → 320 으로 벌어져
+             독립 섹션이 됐다 (섹션 간격 320). -->
+        <section>
+          <div class="wd-head wd-head--center">
+            <h3 class="wd-head-title">
+              여행의 격을 높이는 신세계면세점을<br />우아하고 당당한 두 모델의
+              모습을 통해 보여줍니다.
+            </h3>
           </div>
         </section>
 
@@ -221,18 +229,44 @@
           </div>
 
           <div class="wd5-retouch-block">
-            <img class="wd5-retouch" src="assets/wd5-retouch.webp" alt="" />
+            <!-- 보정 전/후 비교 (PC 피드백_0930, 피그마 Frame 2116928760).
+                 기본은 가운데 고정, 드래그(또는 키보드 ←/→)로 경계를 옮긴다 (compare.js).
+                 왼쪽이 보정 전, 오른쪽이 보정 후.
+                 TODO(원본 대기): 피그마도 보정 전 사진이 따로 없어서 같은 사진에
+                 검정 20% 를 덮어 '전'을 흉내 내고 있다. 실제 보정 전 원본을 받으면
+                 .wd5-compare-before 의 img 만 바꾸고 딤(::after)을 지운다. -->
+            <div class="wd5-compare" data-reveal style="--pos: 50%">
+              <img
+                class="wd5-compare-after"
+                src="assets/wd5-compare.webp"
+                alt="KYOKA 캠페인 이미지 보정 후"
+                draggable="false"
+              />
+              <div class="wd5-compare-before" aria-hidden="true">
+                <img src="assets/wd5-compare.webp" alt="" draggable="false" />
+              </div>
+              <div
+                class="wd5-compare-handle"
+                role="slider"
+                tabindex="0"
+                aria-label="보정 전후 비교 경계"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="50"
+              ></div>
+            </div>
 
+            <!-- 아래 6장은 data-reveal 로 하나씩 등장한다 (PC 피드백_0930) -->
             <div class="wd5-kyoka-stack">
               <div class="wd5-kyoka-row wd5-kyoka-row--first">
-                <img src="assets/wd5-kyoka-01.webp" alt="" />
-                <img src="assets/wd5-kyoka-02.webp" alt="" />
-                <img src="assets/wd5-kyoka-03.webp" alt="" />
+                <img src="assets/wd5-kyoka-01.webp" alt="" data-reveal />
+                <img src="assets/wd5-kyoka-02.webp" alt="" data-reveal />
+                <img src="assets/wd5-kyoka-03.webp" alt="" data-reveal />
               </div>
               <div class="wd5-kyoka-row wd5-kyoka-row--second">
-                <img src="assets/wd5-kyoka-04.webp" alt="" />
-                <img src="assets/wd5-kyoka-05.webp" alt="" />
-                <img src="assets/wd5-kyoka-06.webp" alt="" />
+                <img src="assets/wd5-kyoka-04.webp" alt="" data-reveal />
+                <img src="assets/wd5-kyoka-05.webp" alt="" data-reveal />
+                <img src="assets/wd5-kyoka-06.webp" alt="" data-reveal />
               </div>
             </div>
           </div>
@@ -298,6 +332,7 @@
 
     <script src="assets/gnb.js"></script>
     <script src="assets/top-btn.js"></script>
+    <script src="assets/compare.js"></script>
     <script src="assets/video-play.js"></script>
   </body>
 </html>

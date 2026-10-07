@@ -39,13 +39,7 @@
   object-fit: cover;
 }
 
-/* ══ 4. 스틸 + 캡션 ════════════════════════════════════ */
-.wd5-still-block {
-  display: flex;
-  flex-direction: column;
-  gap: min(4.1667vw, 80px);
-}
-
+/* ══ 4. 스틸 (아래 문구는 PC 피드백_0930 부터 독립 섹션) ═══ */
 .wd5-still {
   display: block;
   width: 64.792%; /* 1244 / 1920 */
@@ -137,12 +131,12 @@
 
 .wd5-video-play::before {
   content: "";
-  width: 0;
-  height: 0;
-  border-top: min(2.1354vw, 41px) solid transparent;
-  border-bottom: min(2.1354vw, 41px) solid transparent;
-  border-left: min(4.9315vw, 94.685px) solid var(--pl2-white);
-  filter: drop-shadow(0 min(0.3288vw, 6.312px) min(1.6439vw, 31.562px) rgba(0, 0, 0, 0.25));
+  /* PlayBTN (PC 피드백_0930, 피그마 2930:35707): 흰 삼각형 30x54, 모서리 1.5,
+     그림자 0 0 50 #000@30%. 상세 02·05·06·08·10 공통 아이콘 */
+  width: min(1.5625vw, 30px);
+  height: min(2.8125vw, 54px);
+  background: url("icon-play.svg") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 0 min(1.3021vw, 25px) rgba(0, 0, 0, 0.3));
   transition: opacity 300ms ease;
 }
 
@@ -164,14 +158,71 @@
   gap: min(6.25vw, 120px);
 }
 
-.wd5-retouch {
-  width: 100%;
-  aspect-ratio: 1920 / 835;
-  object-fit: cover;
+/* 보정 전/후 비교 슬라이더 (compare.js 가 --pos 를 바꾼다)
+   피그마 Frame 2116928760: 1558x835 를 가운데에 (좌우 181). 경계선은 흰 1px +
+   그림자 -2 0 6 #000@40%, 왼쪽(보정 전)에는 검정 20% 가 덮인다. */
+.wd5-compare {
+  position: relative;
+  width: 81.135%; /* 1558 / 1920 */
+  margin: 0 auto;
+  aspect-ratio: 1558 / 835;
+  overflow: hidden;
+  cursor: ew-resize;
+  touch-action: pan-y; /* 세로 스크롤은 그대로, 가로 드래그만 가져온다 */
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-/* 381x571 3장이 붙은 띠. 첫 줄은 x=199, 둘째 줄은 x=580.
-   피그마 첫 줄 프레임이 720 높이(이미지 571 + 아래 여백 149)라 그만큼 아래 간격이 생긴다. */
+.wd5-compare img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.wd5-compare-before {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+}
+
+.wd5-compare-before::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* 경계선. 잡기 쉽게 투명한 폭(44)을 주고 가운데에 1px 선을 그린다 */
+.wd5-compare-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--pos);
+  width: 44px;
+  transform: translateX(-50%);
+  outline: none;
+}
+
+.wd5-compare-handle::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: var(--pl2-white);
+  box-shadow: -2px 0 6px rgba(0, 0, 0, 0.4);
+}
+
+.wd5-compare-handle:focus-visible::before {
+  width: 3px;
+  margin-left: -1px;
+}
+
+/* 381x571 3장이 붙은 띠. 첫 줄은 x=199, 둘째 줄은 x=580. */
 .wd5-kyoka-row {
   display: flex;
   width: 59.479%; /* 1142 / 1920 */
@@ -185,16 +236,15 @@
 
 .wd5-kyoka-row--first {
   margin-left: 10.365%; /* 199 / 1920 */
-  /* 피그마 첫 줄 프레임(720)의 아래 여백 149 — stack gap 60 과 합쳐 209 */
-  margin-bottom: min(7.7604vw, 149px);
 }
 
 .wd5-kyoka-row--second {
   margin-left: 30.208%; /* 580 / 1920 */
 }
 
+/* 두 줄 사이 120 (PC 피드백_0930 에서 209 → 120 으로 재조정) */
 .wd5-kyoka-stack {
   display: flex;
   flex-direction: column;
-  gap: min(3.125vw, 60px);
+  gap: min(6.25vw, 120px);
 }

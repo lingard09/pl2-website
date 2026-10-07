@@ -153,12 +153,12 @@
 /* 피그마 재생 삼각형 95x82 (흰색 + drop-shadow 0 6.312 31.562 검정 25%) */
 .wd8-video-play::before {
   content: "";
-  width: 0;
-  height: 0;
-  border-top: min(2.1354vw, 41px) solid transparent;
-  border-bottom: min(2.1354vw, 41px) solid transparent;
-  border-left: min(4.9315vw, 94.685px) solid var(--pl2-white);
-  filter: drop-shadow(0 min(0.3288vw, 6.312px) min(1.6439vw, 31.562px) rgba(0, 0, 0, 0.25));
+  /* PlayBTN (PC 피드백_0930, 피그마 2930:35707): 흰 삼각형 30x54, 모서리 1.5,
+     그림자 0 0 50 #000@30%. 상세 02·05·06·08·10 공통 아이콘 */
+  width: min(1.5625vw, 30px);
+  height: min(2.8125vw, 54px);
+  background: url("icon-play.svg") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 0 min(1.3021vw, 25px) rgba(0, 0, 0, 0.3));
   transition: opacity 300ms ease;
 }
 
