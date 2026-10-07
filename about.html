@@ -112,11 +112,13 @@
 
         <!-- ── 서비스 4블록 ─────────────────────────────── -->
         <section class="ab-services">
+          <!-- 블록마다 이미지·텍스트가 왼쪽 → 오른쪽 순서로 하나씩 등장한다 (data-reveal).
+               둘의 top 이 같아서 motion.js 가 왼쪽부터 시차를 준다 -->
           <div class="ab-service ab-service--h640">
             <!-- 피그마 이미지 fill 이 애니메이션 GIF (77e134582c1f) 다.
                  상세 3번 제품컷 1번과 같은 해시라 파일을 공유한다. -->
             <video
-              class="ab-service-media"
+              class="ab-service-media" data-reveal
               poster="assets/about-production.webp"
               autoplay
               muted
@@ -126,7 +128,7 @@
             >
               <source src="assets/about-production.mp4" type="video/mp4" />
             </video>
-            <div class="ab-service-body">
+            <div class="ab-service-body" data-reveal>
               <div class="ab-service-head">
                 <h2 class="ab-service-title">Production</h2>
                 <p class="ab-service-sub">
@@ -143,7 +145,7 @@
           </div>
 
           <div class="ab-service ab-service--h960">
-            <div class="ab-service-body">
+            <div class="ab-service-body" data-reveal>
               <div class="ab-service-head">
                 <h2 class="ab-service-title">Motion</h2>
                 <p class="ab-service-sub">움직임은 메시지를 완성합니다.</p>
@@ -158,7 +160,7 @@
             <!-- 피그마 이미지 fill 이 애니메이션 GIF (fffaef1ff09a) 다.
                  상세 8번 히어로와 같은 해시라 assets/wd8-hero.mp4 를 공유한다. -->
             <video
-              class="ab-service-media"
+              class="ab-service-media" data-reveal
               poster="assets/about-motion.webp"
               autoplay
               muted
@@ -171,8 +173,8 @@
           </div>
 
           <div class="ab-service ab-service--h960">
-            <img class="ab-service-media" src="assets/about-uiux.webp" alt="" />
-            <div class="ab-service-body">
+            <img class="ab-service-media" data-reveal src="assets/about-uiux.webp" alt="" />
+            <div class="ab-service-body" data-reveal>
               <div class="ab-service-head">
                 <h2 class="ab-service-title">UI /UX</h2>
                 <p class="ab-service-sub">
@@ -188,7 +190,7 @@
           </div>
 
           <div class="ab-service ab-service--h640">
-            <div class="ab-service-body">
+            <div class="ab-service-body" data-reveal>
               <div class="ab-service-head">
                 <h2 class="ab-service-title">AI</h2>
                 <!-- TODO(피그마 오류): AI 블록 소제목이 Motion 과 같다 (2345:61351).
@@ -202,7 +204,7 @@
                 AI를 통해 영상, 음악, 내레이션, 인터랙션으로 확장됩니다.
               </p>
             </div>
-            <img class="ab-service-media" src="assets/about-ai.webp" alt="" />
+            <img class="ab-service-media" data-reveal src="assets/about-ai.webp" alt="" />
           </div>
         </section>
 
