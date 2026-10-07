@@ -1,0 +1,128 @@
+/* PL2 works detail 11 전용 (공통 구조는 works-detail.css)
+   피그마: Works_Detail (node 3032:14308) — Hanwha E-sports 2026 Asian Games
+   다크 테마. 섹션 간격 320, 섹션 안 헤더 → 본문 80.
+   1920 기준 가로 값은 % 로, 세로·간격은 min(vw, px) 로 비율 유지. */
+
+/* 크레딧이 없어 마지막 섹션과 푸터 사이 320 을 컨테이너가 직접 갖는다
+   (피그마 Frame 1428752813 의 위쪽 패딩 320) */
+.wd11-container {
+  padding-bottom: min(16.6667vw, 320px);
+}
+
+.wd11-section {
+  display: flex;
+  flex-direction: column;
+  gap: min(4.1667vw, 80px);
+}
+
+/* 이 페이지 가운데 헤더 설명은 745 폭 (피그마 3032:15051) */
+.wd-head--center .wd-head-desc {
+  width: 38.802%; /* 745 / 1920 */
+}
+
+/* 가운데 헤더도 제목-설명 간격 24 (피그마 Frame 2116928607 V24, 공통은 40) */
+.wd-head--center {
+  gap: min(1.25vw, 24px);
+}
+
+/* 헤더 설명은 피그마 박스(736·745) 안에서 <br> 줄바꿈 그대로 2~3줄이다.
+   글꼴 폭이 조금만 달라도(Apple SD Gothic Neo 가 없는 환경) 긴 줄이 한 번 더 꺾여
+   섹션이 34px 씩 길어지므로, 줄 위치는 <br> 에 맡기고 자동 줄바꿈을 막는다.
+   글자가 vw 로 같이 줄어들어 좁은 창에서도 비율은 유지된다. */
+.wd-head-desc {
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+/* ══ 2. 63빌딩 야립: 이미지 + 캡션 2벌 (사이 120) ════════ */
+.wd11-figures {
+  display: flex;
+  flex-direction: column;
+  gap: min(6.25vw, 120px);
+}
+
+.wd11-figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: min(1.6667vw, 32px);
+  margin: 0;
+}
+
+.wd11-figure img {
+  width: 81.094%; /* 1557 / 1920 */
+  aspect-ratio: 1557 / 835;
+  object-fit: cover;
+}
+
+.wd11-figure figcaption {
+  color: var(--pl2-neutral-60);
+  font-size: min(1.0417vw, 20px) /* 20 */;
+  font-weight: 500;
+  line-height: min(1.6667vw, 32px) /* 32 */;
+  text-align: center;
+}
+
+/* ══ 3. 고가도로 전광판 (1558x835 가운데) ═══════════════ */
+.wd11-highway {
+  width: 81.146%; /* 1558 / 1920 */
+  margin: 0 auto;
+  aspect-ratio: 1558 / 835;
+  object-fit: cover;
+}
+
+/* ══ 4. 선수 6인 ════════════════════════════════════════ */
+/* 패딩 120 을 뺀 1800 이 % 기준이다 */
+.wd11-players {
+  display: flex;
+  align-items: flex-start;
+  gap: 13.333%; /* 240 / 1800 */
+  padding-left: 6.25%; /* 120 / 1920 */
+}
+
+.wd11-players-left {
+  display: flex;
+  flex-direction: column;
+  gap: min(12.5vw, 240px);
+  width: 40%; /* 720 / 1800 */
+}
+
+.wd11-pair {
+  display: flex;
+  gap: 5.556%; /* 40 / 720 */
+}
+
+.wd11-pair img {
+  width: 47.222%; /* 340 / 720 */
+  aspect-ratio: 340 / 460;
+  object-fit: cover;
+}
+
+.wd11-pair--right {
+  width: 40%; /* 720 / 1800 */
+  margin-top: min(18.2292vw, 350px); /* 5977 - 5627 */
+}
+
+/* ══ 5. 신문 지면 (960x1141, 왼쪽 붙음) ═════════════════ */
+.wd11-paper {
+  width: 50%; /* 960 / 1920 */
+  aspect-ratio: 960 / 1141;
+  object-fit: cover;
+}
+
+/* ══ 6. 버스정류장 2장 (954x1200, 사이 12, 오른쪽 120 내려감) ══ */
+.wd11-duo {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625%; /* 12 / 1920 */
+}
+
+.wd11-duo img {
+  width: 49.688%; /* 954 / 1920 */
+  aspect-ratio: 954 / 1200;
+  object-fit: cover;
+}
+
+.wd11-duo img + img {
+  margin-top: min(6.25vw, 120px);
+}
