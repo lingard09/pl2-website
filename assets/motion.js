@@ -3,6 +3,8 @@
       그보다 조금 더 텐션 있게 → 이동 거리를 키우고 expo-out 이징)
    2) About 통계 숫자 카운팅
    3) 페이지 전환: 노란 패널이 아래에서 덮고 위로 빠진다 (참고: koto.com/work)
+      Home → Works 만 다르다 (PC 피드백_0930): Home 화면이 위로 밀려 올라가고,
+      Works 는 아래에서 밀려 올라오며 메뉴바가 위에서 툭 떨어진다.
       탭에서 사이트를 처음 열 때도 같은 패널이 덮인 채로 시작해 위로 걷히는 인트로를 보여준다.
 
    <head> 에서 동기로 불러온다. 첫 페인트 전에 html 클래스를 붙여야
@@ -19,20 +21,23 @@
   var VISITED_KEY = "pl2-visited"; // 탭(세션)당 한 번만 인트로를 보여준다
   var INTRO_HOLD_MS = 450; // 인트로는 덮인 채로 잠깐 머문 뒤 걷힌다
   var LEAVE_MS = 600; // base.css html.pt-leave::after 의 transition 과 맞춘다
+  var PUSH_LEAVE_MS = 650; // base.css html.pt-push-leave 와 맞춘다
+  var PUSH_IN_MS = 1500; // base.css html.pt-push-in (본문 0.9s + 메뉴바 지연 0.35s + 0.7s 언저리)
 
+  // "1" = 노란 패널 전환, "push" = Home → Works 밀어 올리기 전환
   function readFlag() {
     try {
       var v = sessionStorage.getItem(PT_KEY);
       sessionStorage.removeItem(PT_KEY);
-      return v === "1";
+      return v;
     } catch (e) {
-      return false;
+      return null;
     }
   }
 
-  function writeFlag() {
+  function writeFlag(v) {
     try {
-      sessionStorage.setItem(PT_KEY, "1");
+      sessionStorage.setItem(PT_KEY, v || "1");
     } catch (e) {}
   }
 
@@ -50,19 +55,37 @@
 
   // ── 첫 페인트 전 ─────────────────────────────────────
   root.classList.add("mo-on");
-  var entering = readFlag();
-  var intro = firstVisit() && !entering;
+  var flag = readFlag();
+  var pushing = flag === "push";
+  var entering = flag === "1";
+  var intro = firstVisit() && !flag;
   var hold = intro ? INTRO_HOLD_MS : 0;
   if (entering || intro) root.classList.add("pt-enter");
+  if (pushing) root.classList.add("pt-push-enter");
 
   document.addEventListener("DOMContentLoaded", function () {
     initPageTransition();
-    // 전환 패널이 걷히는 중이면 등장 모션을 그만큼 늦춘다
-    initReveal(entering || intro ? hold + 350 : 0);
+    // 전환 패널이 걷히는 중이면 등장 모션을 그만큼 늦춘다.
+    // 밀어 올리기로 들어올 때는 첫 화면 콘텐츠가 페이지와 함께 올라오므로
+    // 첫 화면 안의 요소는 따로 등장시키지 않는다.
+    // 밀어 올리기 중에는 본문이 화면 밖에 있어서, 관찰을 바로 시작하면 첫 화면 요소까지
+    // "화면 밖"으로 판정돼 숨겨진다. 본문이 다 올라온 뒤(1s)부터 관찰한다.
+    initReveal(pushing ? 1000 : entering || intro ? hold + 350 : 0, pushing);
   });
 
   // ── 3) 페이지 전환 ───────────────────────────────────
   function initPageTransition() {
+    if (pushing) {
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          root.classList.add("pt-push-in");
+          setTimeout(function () {
+            root.classList.remove("pt-push-enter", "pt-push-in");
+          }, PUSH_IN_MS);
+        });
+      });
+    }
+
     if (entering || intro) {
       // 덮인 상태로 한 프레임 그린 뒤 (인트로면 잠깐 머물렀다가) 걷어낸다
       requestAnimationFrame(function () {
@@ -90,17 +113,28 @@
 
       e.preventDefault();
       var href = a.href;
-      writeFlag();
-      root.classList.add("pt-leave");
+      // Home → Works 는 밀어 올리기 전환
+      var push =
+        document.body.classList.contains("hm-body") &&
+        /(^|\/)works\.html$/.test(a.pathname);
+      writeFlag(push ? "push" : "1");
+      root.classList.add(push ? "pt-push-leave" : "pt-leave");
       setTimeout(function () {
         location.href = href;
-      }, LEAVE_MS);
+      }, push ? PUSH_LEAVE_MS : LEAVE_MS);
     });
 
     // 뒤로가기(bfcache)로 돌아오면 덮인 채로 멈춰 있지 않게 푼다
     window.addEventListener("pageshow", function (e) {
       if (e.persisted) {
-        root.classList.remove("pt-leave", "pt-enter", "pt-entering");
+        root.classList.remove(
+          "pt-leave",
+          "pt-enter",
+          "pt-entering",
+          "pt-push-leave",
+          "pt-push-enter",
+          "pt-push-in"
+        );
       }
     });
   }
@@ -123,7 +157,7 @@
   var STAGGER = 90;
   var DURATION = 1100; // base.css .mo-anim transition 과 맞춘다
 
-  function initReveal(startDelay) {
+  function initReveal(startDelay, skipFirstScreen) {
     if (!("IntersectionObserver" in window)) return;
 
     // HTML 에서 data-reveal 을 붙인 요소는 그 요소 단위로 등장한다.
@@ -160,8 +194,11 @@
       el.classList.add("mo-out");
     }
 
+    // 밀어 올리기 진입 중에는 본문이 화면 한 높이만큼 내려가 있다
+    var shift = skipFirstScreen ? window.innerHeight : 0;
     els.forEach(function (el) {
       el.classList.add("mo-reveal");
+      if (skipFirstScreen && el.getBoundingClientRect().top - shift < window.innerHeight) return;
       hide(el);
     });
 

@@ -62,12 +62,13 @@
   aspect-ratio: 942 / 530;
 }
 
+/* 크기 3종 (PC 피드백_0930, 피그마 2869:12801): M 800 → 707, L 1180 → 942 */
 .wk-card--m {
-  aspect-ratio: 942 / 800;
+  aspect-ratio: 942 / 707;
 }
 
 .wk-card--l {
-  aspect-ratio: 942 / 1180;
+  aspect-ratio: 942 / 942;
 }
 
 .wk-card-media {
@@ -112,23 +113,39 @@
   opacity: 1;
 }
 
-/* Subtitle/Neo/Pc.M — 30px, Medium, Color/Neutral/90 */
+/* Brand Name — 28px Regular, #F5F5F5 (PC 피드백_0930 에서 30 Medium → 28 Regular) */
 .wk-card-brand {
   padding-left: 0.212cqw; /* 2 / 942 */
   color: var(--pl2-neutral-90);
-  font-size: 3.185cqw; /* 30 / 942 */
-  font-weight: 500;
+  font-size: 2.972cqw; /* 28 / 942 */
+  font-weight: 400;
   line-height: 1.2;
 }
 
-/* Headline/Title/Neo/Pc.B — 44px/54px, Bold, letter-spacing -2% */
+/* Project Name — 40px/50px SemiBold, 자간 -4% (PC 피드백_0930 에서 44/54 Bold -2% → 40/50 SemiBold -4%) */
 .wk-card-project {
   color: var(--pl2-white);
-  font-size: 4.671cqw; /* 44 / 942 */
-  font-weight: 700;
-  line-height: 1.227; /* 54 / 44 */
-  letter-spacing: -0.02em;
+  font-size: 4.246cqw; /* 40 / 942 */
+  font-weight: 600;
+  line-height: 1.25; /* 50 / 40 */
+  letter-spacing: -0.04em;
   white-space: nowrap;
+}
+
+/* Blur=true 카드 (Fluidic Project). 피그마 Blur 레이어 = 검정 20% + 배경 블러 29.
+   에셋(works-06)에도 블러가 구워져 있지만, 이미지가 바뀌어도 블러가 유지되도록
+   CSS 로도 한 번 더 건다. 확대해 가장자리가 비치지 않게 scale 을 준다. */
+.wk-card--blur .wk-card-media {
+  filter: blur(min(1.5313vw, 29.4px));
+  transform: scale(1.08);
+}
+
+.wk-card--blur::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.2);
 }
 
 /* ── 맨 위로 버튼 — Liquid Glass (피그마 2802:12070, 60x60 @ 1810,976 → 우 50 / 하 44)

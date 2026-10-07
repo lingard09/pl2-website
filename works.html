@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="assets/works.css" />
   </head>
   <body class="wk-body">
-    <nav class="gnb" data-dropdown="off">
+    <nav class="gnb" data-dropdown="off" data-pinned>
       <div class="gnb-bar">
         <span class="gnb-brand">PL2 Creative Studio</span>
         <button
@@ -36,102 +36,28 @@
     <main class="wk-main">
       <h1 class="sr-only">Works</h1>
 
+      <!-- 카드 배치·크기: 피그마 Works 3024:13288 (PC 피드백_0930)
+           크기 3종 = S 942x530 / M 942x707 / L 942x942 (피그마 2869:12801) -->
       <div class="wk-grid">
-        <!-- 왼쪽 열 (피그마 Section 2345:59587) -->
+        <!-- 왼쪽 열 (피그마 Section 3024:13290) -->
         <div class="wk-col">
-          <!-- 상세 페이지가 있는 카드 (Works_Detail 4번, Samsung Internet 리뉴얼).
-               피그마 히어로 원본이 이 카드 이미지와 같은 2835x1590 파일이다. -->
-          <a class="wk-card wk-card--s" href="works-detail-04.html">
-            <img
-              class="wk-card-media"
-              src="assets/works-01.webp"
-              alt="Samsung Internet"
-            />
+          <!-- 신규 (피그마 3025:13625). 상세 페이지가 없어 링크 없이 둔다 -->
+          <article class="wk-card wk-card--l">
+            <img class="wk-card-media" src="assets/works-13.webp" alt="" />
             <div class="wk-card-overlay">
-              <p class="wk-card-brand">Samsung</p>
-              <p class="wk-card-project">Samsung Internet Website Renewal</p>
+              <p class="wk-card-brand">Hanwha Life</p>
+              <p class="wk-card-project">Hanwha E-sports 2026 Asian Games</p>
             </div>
-          </a>
-
-          <!-- 피그마에서 영상(VIDEO fill). videoHash 5a495963d65e 가 상세 1번 히어로와
-               같은 파일이라 assets/wd1-hero.mp4 를 그대로 쓴다 (다운로드·캐시 공유).
-               이 카드만 상세 페이지가 있다 (Works_Detail 1번). -->
-          <a class="wk-card wk-card--m" href="works-detail-01.html">
-            <video
-              class="wk-card-media"
-              autoplay
-              muted
-              loop
-              playsinline
-              preload="metadata"
-            >
-              <source src="assets/wd1-hero.mp4" type="video/mp4" />
-            </video>
-            <div class="wk-card-overlay">
-              <p class="wk-card-brand">Samsung</p>
-              <p class="wk-card-project">Generative AI Image Sample Project</p>
-            </div>
-          </a>
-
-          <!-- 상세 페이지가 있는 카드 (Works_Detail 8번, SmartThings 2D 모션).
-               피그마 히어로의 두 번째 이미지 해시 fffaef1ff09a 가 이 카드와 같다.
-               문구는 상세 8번 히어로(works-detail-08.html)와 동일하게 맞췄다. -->
-          <a class="wk-card wk-card--m" href="works-detail-08.html">
-            <!-- 피그마 이미지 fill 이 애니메이션 GIF (fffaef1ff09a) 다. 상세 8번 히어로와
-                 같은 해시라 assets/wd8-hero.mp4 를 공유한다. -->
-            <video
-              class="wk-card-media"
-              poster="assets/works-03.webp"
-              autoplay
-              muted
-              loop
-              playsinline
-              preload="metadata"
-            >
-              <source src="assets/wd8-hero.mp4" type="video/mp4" />
-            </video>
-            <div class="wk-card-overlay">
-              <p class="wk-card-brand">Samsung</p>
-              <p class="wk-card-project">Smart things 2D Motion Project</p>
-            </div>
-          </a>
-
-          <!-- 상세 페이지가 있는 카드 (Works_Detail 10번, CJ 밀라노 동계올림픽).
-               이 카드 이미지가 상세 10번 히어로(wd10-hero.jpg)와 동일한 파일이다. -->
-          <a class="wk-card wk-card--l" href="works-detail-10.html">
-            <img class="wk-card-media" src="assets/works-04.webp" alt="" />
-            <div class="wk-card-overlay">
-              <p class="wk-card-brand">CJ</p>
-              <p class="wk-card-project">CJ Milano Winter Olympics Campaign</p>
-            </div>
-          </a>
-
-          <!-- 상세 페이지가 있는 카드 (Works_Detail 9번, Matièr).
-               카드 이미지의 패키지에 Matièr 로고가 찍혀 있고 상세 9번 제품컷과 같은 제품이다. -->
-          <a class="wk-card wk-card--s" href="works-detail-09.html">
-            <img class="wk-card-media" src="assets/works-05.webp" alt="" />
-            <div class="wk-card-overlay">
-              <p class="wk-card-brand">Matièr</p>
-              <p class="wk-card-project">Product &amp; Brand Film Production</p>
-            </div>
-          </a>
-
-          <!-- 피그마 Blur=true. 블러는 에셋에 구워져 있다 (CSS 블러 아님).
-               블러 카드 2장(works-06·07)은 대응하는 상세 페이지가 없어 제목·링크 없이 둔다. -->
-          <article class="wk-card wk-card--m">
-            <img class="wk-card-media" src="assets/works-06.webp" alt="" />
           </article>
-
+          <!-- 신규 (3024:13300). 상세 페이지 없음 -->
           <article class="wk-card wk-card--s">
-            <img class="wk-card-media" src="assets/works-07.webp" alt="" />
+            <img class="wk-card-media" src="assets/works-14.webp" alt="" />
+            <div class="wk-card-overlay">
+              <p class="wk-card-brand">경기도농업기술원</p>
+              <p class="wk-card-project">Gyeong-gi 4-H Club Project</p>
+            </div>
           </article>
-        </div>
-
-        <!-- 오른쪽 열 (피그마 Section 2345:59598) -->
-        <div class="wk-col">
-          <!-- 상세 페이지가 있는 카드 (Works_Detail 7번, 삼성 개발자 포털 리뉴얼).
-               피그마에서 영상(VIDEO fill). 영상 후반부가 Samsung Developer 포털 화면이라
-               상세 7번과 같은 프로젝트다. -->
+          <!-- 상세 07. 피그마 VIDEO fill(a68b97baec) -->
           <a class="wk-card wk-card--l" href="works-detail-07.html">
             <video
               class="wk-card-media"
@@ -148,22 +74,86 @@
               <p class="wk-card-project">Developer Platform Renewal Project</p>
             </div>
           </a>
+          <!-- 상세 10. 피그마 카드 이미지가 Cross the Line 비주얼(5672b19c67)로 바뀌었다 -->
+          <a class="wk-card wk-card--s" href="works-detail-10.html">
+            <img class="wk-card-media" src="assets/works-15.webp" alt="" />
+            <div class="wk-card-overlay">
+              <p class="wk-card-brand">CJ</p>
+              <p class="wk-card-project">CJ Milano Winter Olympics Campaign</p>
+            </div>
+          </a>
+          <!-- 상세 09. S → M 으로 커져 원본(bef869db9d)에서 다시 잘랐다 -->
+          <a class="wk-card wk-card--m" href="works-detail-09.html">
+            <img class="wk-card-media" src="assets/works-05.webp" alt="" />
+            <div class="wk-card-overlay">
+              <p class="wk-card-brand">Matièr</p>
+              <p class="wk-card-project">Product &amp; Brand Film Production</p>
+            </div>
+          </a>
+          <!-- 상세 04 -->
+          <a class="wk-card wk-card--s" href="works-detail-04.html">
+            <img class="wk-card-media" src="assets/works-01.webp" alt="Samsung Internet" />
+            <div class="wk-card-overlay">
+              <p class="wk-card-brand">Samsung</p>
+              <p class="wk-card-project">Samsung Internet Website Renewal</p>
+            </div>
+          </a>
+          <!-- 상세 08. 애니메이션 GIF(fffaef1ff0) → 상세 08 히어로 mp4 공유 -->
+          <a class="wk-card wk-card--m" href="works-detail-08.html">
+            <video
+              class="wk-card-media"
+              poster="assets/works-03.webp"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+            >
+              <source src="assets/wd8-hero.mp4" type="video/mp4" />
+            </video>
+            <div class="wk-card-overlay">
+              <p class="wk-card-brand">Samsung</p>
+              <p class="wk-card-project">Smart things 2D Motion Project</p>
+            </div>
+          </a>
+        </div>
 
-          <!-- 상세 5번(신세계면세점)으로 연결. 다만 이 카드 이미지 해시는 상세 5번과
-               일치하지 않는다 — SHINSEGAE 쇼핑백/레드 수트로 같은 캠페인이라 판단한 것이니
-               매칭이 틀리면 알려줄 것. -->
+        <!-- 오른쪽 열 (피그마 Section 3024:13301) -->
+        <div class="wk-col">
+          <!-- 신규 (3025:13661, 예전 블러 카드 dbb50cea74 가 공개로 바뀜). 상세 페이지 없음 -->
+          <article class="wk-card wk-card--s">
+            <img class="wk-card-media" src="assets/works-16.webp" alt="" />
+            <div class="wk-card-overlay">
+              <p class="wk-card-brand">JYP Entertainment</p>
+              <p class="wk-card-project">Stray Kids Pop-up Promotion Video</p>
+            </div>
+          </article>
+          <!-- 상세 01. VIDEO fill(5a495963d6) = 상세 01 히어로 -->
+          <a class="wk-card wk-card--m" href="works-detail-01.html">
+            <video
+              class="wk-card-media"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+            >
+              <source src="assets/wd1-hero.mp4" type="video/mp4" />
+            </video>
+            <div class="wk-card-overlay">
+              <p class="wk-card-brand">Samsung</p>
+              <p class="wk-card-project">Generative AI Image Sample Project</p>
+            </div>
+          </a>
+          <!-- 상세 05 -->
           <a class="wk-card wk-card--l" href="works-detail-05.html">
             <img class="wk-card-media" src="assets/works-09.webp" alt="" />
             <div class="wk-card-overlay">
               <p class="wk-card-brand">SHINSEGAE</p>
-              <p class="wk-card-project">
-                Shinsegae Duty Free Content Production
-              </p>
+              <p class="wk-card-project">Shinsegae Duty Free Content Production</p>
             </div>
           </a>
-
-          <!-- 상세 페이지가 있는 카드 (Works_Detail 2번). 피그마 이미지 해시가
-               상세 2번 히어로/영상과 같다. -->
+          <!-- 상세 02 -->
           <a class="wk-card wk-card--s" href="works-detail-02.html">
             <img class="wk-card-media" src="assets/works-10.webp" alt="" />
             <div class="wk-card-overlay">
@@ -171,11 +161,8 @@
               <p class="wk-card-project">Last Delivery AI Film Project</p>
             </div>
           </a>
-
-          <!-- 상세 페이지가 있는 카드 (Works_Detail 3번, 하루하루) -->
+          <!-- 상세 03. 애니메이션 GIF(e358780883) → 상세 03 히어로 mp4 공유 -->
           <a class="wk-card wk-card--m" href="works-detail-03.html">
-            <!-- 피그마 이미지 fill 이 애니메이션 GIF (e358780883a0) 다. 상세 3번 히어로와
-                 같은 해시라 assets/wd3-hero.mp4 를 공유한다. -->
             <video
               class="wk-card-media"
               poster="assets/works-11.webp"
@@ -192,18 +179,22 @@
               <p class="wk-card-project">Haruharu Product Production</p>
             </div>
           </a>
-
-          <!-- 상세 페이지가 있는 카드 (Works_Detail 6번, 에버셀).
-               피그마 히어로 이미지 해시 836e42628e52 가 이 카드와 같다. -->
+          <!-- 상세 06 -->
           <a class="wk-card wk-card--l" href="works-detail-06.html">
             <img class="wk-card-media" src="assets/works-12.webp" alt="" />
             <div class="wk-card-overlay">
               <p class="wk-card-brand">Evercell</p>
-              <p class="wk-card-project">
-                Evercell Product Photography Campaign
-              </p>
+              <p class="wk-card-project">Evercell Product Photography Campaign</p>
             </div>
           </a>
+          <!-- Blur=true (PC 피드백_0930). 공개 전 프로젝트라 블러 처리하고 링크 없이 둔다 -->
+          <article class="wk-card wk-card--m wk-card--blur">
+            <img class="wk-card-media" src="assets/works-06.webp" alt="" />
+            <div class="wk-card-overlay">
+              <p class="wk-card-brand">Samsung</p>
+              <p class="wk-card-project">Fluidic Project</p>
+            </div>
+          </article>
         </div>
       </div>
     </main>

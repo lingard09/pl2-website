@@ -30,6 +30,8 @@
   // 화면에 고정된 GNB 만: 아래로 스크롤하면 위로 빠지고, 위로 올리면 쓰윽 내려온다
   // (모션피드백_0928, 참고 koto.com). Home 처럼 히어로 안에 박힌 GNB 는 그대로 둔다.
   if (getComputedStyle(gnb).position !== "fixed") return;
+  // data-pinned 가 붙은 페이지(Works)는 스크롤해도 숨기지 않고 늘 고정 (PC 피드백_0930)
+  if (gnb.hasAttribute("data-pinned")) return;
 
   var TOP_ZONE = 120; // 이 위에서는 항상 보인다
   var DELTA = 6; // 트랙패드 잔떨림 무시
