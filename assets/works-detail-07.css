@@ -14,11 +14,6 @@
 /* 히어로 제목이 한 문장(줄바꿈 문자 없음)인데 피그마에서는 883px 박스에서 2줄로 꺾인다.
    폰트에 따라 3줄이 되지 않도록 <br> 로 고정하고 nowrap 은 그대로 둔다. */
 
-/* 크레딧이 오른쪽으로 밀려 있다 (피그마 x=1202) */
-.wd-credit {
-  padding-left: 62.604%;
-}
-
 .wd7-section {
   display: flex;
   flex-direction: column;

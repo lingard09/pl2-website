@@ -29,11 +29,6 @@
   gap: min(1.25vw, 24px);
 }
 
-/* 크레딧이 다른 상세보다 오른쪽으로 밀려 있다 (피그마 x=1202) */
-.wd-credit {
-  padding-left: 62.604%; /* 1202 / 1920 */
-}
-
 .wd6-section {
   display: flex;
   flex-direction: column;

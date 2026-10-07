@@ -3,12 +3,6 @@
    다크 테마. 섹션 간격 320, 섹션 안 헤더 → 본문 80.
    1920 기준 가로 값은 % 로, 세로·간격은 min(vw, px) 로 비율 유지. */
 
-/* 크레딧이 없어 마지막 섹션과 푸터 사이 320 을 컨테이너가 직접 갖는다
-   (피그마 Frame 1428752813 의 위쪽 패딩 320) */
-.wd11-container {
-  padding-bottom: min(16.6667vw, 320px);
-}
-
 .wd11-section {
   display: flex;
   flex-direction: column;

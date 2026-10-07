@@ -28,6 +28,9 @@
   display: flex;
   flex-direction: column;
   gap: min(16.6667vw, 320px);
+  /* 마지막 섹션과 푸터 사이 320 (피그마 Frame 1428752813 의 위쪽 패딩).
+     2026-10-07 상세 페이지 크레딧을 전부 뺐다 — 예전엔 크레딧(위 60 / 아래 200)이 이 자리였다. */
+  padding-bottom: min(16.6667vw, 320px);
 }
 
 /* ══ 1. 히어로 + 프로젝트 타이틀 ═══════════════════════ */
@@ -254,39 +257,6 @@
   padding-right: 3.125%;
 }
 
-/* ══ 7. 크레딧 ═════════════════════════════════════════ */
-.wd-credit {
-  padding: min(3.125vw, 60px) 3.125% min(10.4167vw, 200px) 58.542%; /* 피그마 x=1124, 위 60 / 아래 200 */
-  background: var(--pl2-black);
-}
-
-.wd-credit-list {
-  display: flex;
-  flex-direction: column;
-  gap: min(0.625vw, 12px);
-}
-
-.wd-credit-row {
-  display: flex;
-  gap: min(0.5208vw, 10px);
-}
-
-.wd-credit-row dt {
-  flex: none;
-  width: min(13.125vw, 252px);
-  color: var(--pl2-neutral-60);
-  font-size: min(1.0513vw, 20.184px) /* 20.184 */;
-  font-weight: 600;
-  line-height: min(1.25vw, 24px) /* 24 */;
-}
-
-.wd-credit-row dd {
-  color: var(--pl2-neutral-40);
-  font-size: min(1.0513vw, 20.184px) /* 20.184 */;
-  font-weight: 400;
-  line-height: min(1.25vw, 24px) /* 24 */;
-}
-
 /* ══ 라이트 테마 상세 (예: 상세 03) ═══════════════════════
    피그마에서 Content fill 이 #FFFFFF 이고 GNB Type=T/B 인 상세 페이지용.
    구조는 그대로 쓰고 색만 뒤집는다. */
@@ -326,18 +296,6 @@
 .wd-body--light .wd-intro-desc,
 .wd-body--light .wd-head-desc {
   color: var(--pl2-neutral-40);
-}
-
-.wd-body--light .wd-credit {
-  background: var(--pl2-white);
-}
-
-.wd-body--light .wd-credit-row dt {
-  color: var(--pl2-neutral-10);
-}
-
-.wd-body--light .wd-credit-row dd {
-  color: var(--pl2-neutral-50);
 }
 
 /* 라이트 테마 페이지인데 히어로만 어두운 경우 (예: 상세 05 — 영상 히어로) */
