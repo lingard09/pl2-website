@@ -12,7 +12,7 @@
 /* GNB: 피그마 Type=T/W (어두운 히어로 위) */
 .wd-body .gnb {
   position: fixed;
-  top: min(0.625vw, 12px); /* 12 — GNB 가 vw 기준이라 위치도 같이 비례한다 */
+  top: 12px; /* 12 — GNB 는 화면 폭과 상관없이 고정 크기 (PC 피드백_1007) */
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;

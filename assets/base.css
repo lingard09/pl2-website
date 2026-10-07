@@ -142,46 +142,46 @@ button {
                     / .gnb--tb (밝은 배경 위, 검은 텍스트) */
 .gnb {
   position: relative;
-  /* 폭은 뷰포트 비례다 (2026-09-04). 피그마 px ÷ 19.2 = vw — 1920 에서 400px 로
-     피그마와 완전히 같고, 창이 좁아지면 히어로·Works 카드와 같은 비율로 줄어든다.
-     이 값이 GNB 안쪽 모든 치수의 기준이다. */
-  width: min(20.8333vw, 400px); /* 400 */
+  /* 크기는 화면 폭과 상관없이 고정이다 (PC 피드백_1007).
+     원래 vw 로 비례 축소했지만, 태블릿에서도 PC 와 같은 400x60 을 유지하라는 코멘트로
+     GNB 안쪽 모든 치수를 px 로 되돌렸다. 모바일(767 이하)만 아래에서 따로 잡는다. */
+  width: 400px; /* 400 */
   max-width: calc(100% - 40px);
-  /* 드롭다운이 아래로 쓸 수 있는 높이. 기본값은 바를 화면 위(top 0.625vw)에 고정하는
-     페이지 기준이다 — 패널 위쪽 12+60+12=84 와 아래 여백 12 를 합쳐 96 = 5vw.
+  /* 드롭다운이 아래로 쓸 수 있는 높이. 기본값은 바를 화면 위(top 12)에 고정하는
+     페이지 기준이다 — 패널 위쪽 12+60+12=84 와 아래 여백 12 를 합쳐 96.
      바를 화면 중앙에 두는 Home 은 index.css 가 이 값을 덮는다. */
-  --gnb-drop-space: calc(100dvh - min(5vw, 96px));
+  --gnb-drop-space: calc(100dvh - 96px);
 }
 
 .gnb-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: min(0.625vw, 12px); /* 12 */
-  height: min(3.125vw, 60px); /* 60 */
-  padding-left: min(1.25vw, 24px); /* 24 */
-  padding-right: min(1.0417vw, 20px); /* 20 */
+  gap: 12px; /* 12 */
+  height: 60px; /* 60 */
+  padding-left: 24px; /* 24 */
+  padding-right: 20px; /* 20 */
   background: var(--pl2-yellow);
-  border-radius: min(0.625vw, 12px); /* --pl2-radius 12 — 토큰은 공유라 여기서만 vw 로 쓴다 */
+  border-radius: 12px; /* --pl2-radius 12 */
   box-shadow: var(--pl2-shadow-card);
 }
 
 .gnb-brand {
   color: var(--pl2-black);
   font-family: var(--pl2-font-display);
-  font-size: min(1.3021vw, 25px); /* 25 */
+  font-size: 25px; /* 25 */
   font-weight: 400;
   line-height: 1.2;
-  letter-spacing: min(0.013vw, 0.25px); /* 0.25 */
+  letter-spacing: 0.25px; /* 0.25 */
   white-space: nowrap;
 }
 
 .gnb-toggle {
   flex: none;
-  width: min(1.6667vw, 32px); /* 32 */
-  height: min(1.6667vw, 32px);
+  width: 32px; /* 32 */
+  height: 32px;
   background: url("icon-hamburger.svg") center /
-    min(1.6667vw, 32px) min(1.6667vw, 32px) no-repeat;
+    32px 32px no-repeat;
 }
 
 .gnb[data-dropdown="on"] .gnb-toggle {
@@ -197,7 +197,7 @@ button {
    바 자체는 열려도 제자리에 있어야 하므로 흐름에서 빼서 absolute 로 매단다. */
 .gnb-panel {
   position: absolute;
-  top: calc(100% + min(0.625vw, 12px)); /* 12 */
+  top: calc(100% + 12px); /* 12 */
   left: 0;
   z-index: 1;
   display: flex;
@@ -206,9 +206,9 @@ button {
   /* 넣을 자리가 모자라면 스크롤 대신 행을 줄인다 (2026-09-04).
      피그마 비율(행 120 / 글자 110 / 행간 100)을 그대로 유지한 채 같이 작아지므로
      4개 항목이 어떤 창 높이에서도 전부 보인다.
-     6.25vw(폭 비례) / 120px(1920 상한) / 세로 여유 중 가장 작은 값을 고른다 —
-     폭 비례(vw)와 세로 잘림 방지(dvh)가 이 한 줄에서 만난다. */
-  --gnb-row: min(6.25vw, 120px, calc(var(--gnb-drop-space) / 4));
+     120px(피그마 값) / 세로 여유 중 작은 값을 고른다 — 폭으로는 줄지 않고
+     창 높이가 모자랄 때만 줄어든다 (PC 피드백_1007). */
+  --gnb-row: min(120px, calc(var(--gnb-drop-space) / 4));
   /* 화면 밖으로 나가지 않게 하는 마지막 안전장치.
      ⚠ overflow-y: auto 를 여기 다시 넣으면 스크롤바가 항상 생긴다 —
        행 높이 합(480)은 딱 맞지만 110px 글자의 라인박스가 8px 넘쳐서
@@ -222,8 +222,8 @@ button {
   transition: clip-path 0.45s cubic-bezier(0.7, 0, 0.84, 0),
     visibility 0s linear 0.45s;
   background: rgba(255, 255, 255, 0.5);
-  border-radius: min(0.625vw, 12px); /* 12 — 바와 같게 (PC 피드백_0930) */
-  box-shadow: 0 min(0.2083vw, 4px) min(1.0417vw, 20px) rgba(0, 0, 0, 0.04); /* 0 4 20 */
+  border-radius: 12px; /* 12 — 바와 같게 (PC 피드백_0930) */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); /* 0 4 20 */
   backdrop-filter: blur(4px); /* GLASS radius 4 근사. 블러는 스케일하지 않는다 */
   -webkit-backdrop-filter: blur(4px);
   overflow: hidden; /* 첫/마지막 행 배경을 라운드에 맞춰 잘라낸다 */
@@ -259,7 +259,7 @@ button {
 }
 
 .gnb.is-away {
-  translate: 0 calc(-100% - min(1.25vw, 24px));
+  translate: 0 calc(-100% - 24px);
   transition-timing-function: cubic-bezier(0.7, 0, 0.84, 0);
   transition-duration: 0.4s;
 }
@@ -273,14 +273,14 @@ button {
   /* 행 높이는 --gnb-row 하나가 정하고 글자·행간이 같은 비율(60/120, 72/120)로 따라간다.
      1920 에서 120 / 60 / 72 = 피그마 컴포넌트(GNB/Dropdown/Action) 값.
      2026-08-29 에 숨은 안(110px/행간 100)을 쓰다가 디자인피드백_0918 로 되돌렸다. */
-  height: var(--gnb-row, min(6.25vw, 120px));
-  padding: 0 min(1.25vw, 24px); /* 24 */
+  height: var(--gnb-row, 120px);
+  padding: 0 24px; /* 24 */
   border-bottom: 1px solid var(--pl2-white); /* 헤어라인은 스케일하지 않는다 */
   color: var(--pl2-neutral-10); /* #212121 */
   font-family: var(--pl2-font-display);
-  font-size: calc(var(--gnb-row, min(6.25vw, 120px)) * 60 / 120); /* 60 */
+  font-size: calc(var(--gnb-row, 120px) * 60 / 120); /* 60 */
   font-weight: 500;
-  line-height: calc(var(--gnb-row, min(6.25vw, 120px)) * 72 / 120); /* 72 */
+  line-height: calc(var(--gnb-row, 120px) * 72 / 120); /* 72 */
   text-decoration: none;
   white-space: nowrap;
 }
@@ -373,6 +373,17 @@ button {
 
 
 
+/* ── 모바일 GNB (PC 피드백_1007, 피그마 Mo 3108:15815) ──────────
+   피그마 Mo(390) 에서 바는 좌우 20 을 뺀 350x60. 안쪽 치수(높이 60 / 패딩 24·20 /
+   글자 25 / 아이콘 32 / 라운드 12)는 PC 와 같고 폭만 화면에 맞춰 늘어난다.
+   세로 위치는 페이지 CSS 가 잡는다 (Works 는 top 60). */
+@media (max-width: 767.98px) {
+  .gnb {
+    width: calc(100% - 40px);
+    max-width: none;
+  }
+}
+
 /* ══ 맨 위로 버튼 (Works · 상세 공유, top-btn.js) ══════════════════ */
 .top-btn {
   position: fixed;
@@ -417,6 +428,29 @@ button {
   opacity: 0;
   visibility: hidden; /* 사라진 동안 클릭·포커스되지 않게. 페이드가 끝난 뒤 꺼진다 */
   transition: opacity 0.4s ease, visibility 0s linear 0.4s;
+}
+
+/* 1280 미만(태블릿·모바일)에서는 vw 로 줄이면 버튼이 손가락보다 작아진다
+   (834 에서 26px). GNB 와 같이 PC 크기 60 을 그대로 쓴다 (PC 피드백_1007). */
+@media (max-width: 1279.98px) {
+  .top-btn {
+    right: 40px;
+    bottom: 40px;
+    width: 60px;
+    height: 60px;
+  }
+
+  .top-btn-arrow {
+    width: 23.708px;
+    height: 14.858px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .top-btn {
+    right: 20px;
+    bottom: 20px;
+  }
 }
 
 /* ══ 푸터 (여러 페이지 공유) ═══════════════════════════════

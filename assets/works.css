@@ -11,7 +11,7 @@
 /* GNB: 스크롤해도 상단에 붙어 있게 fixed (피그마는 프레임 최상단 y=12 에 배치) */
 .wk-body .gnb {
   position: fixed;
-  top: min(0.625vw, 12px); /* 12 — GNB 가 vw 기준이라 위치도 같이 비례한다 */
+  top: 12px; /* 12 — GNB 는 화면 폭과 상관없이 고정 크기 (PC 피드백_1007) */
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
@@ -148,10 +148,123 @@
   background: rgba(0, 0, 0, 0.2);
 }
 
-/* ── 맨 위로 버튼 — Liquid Glass (피그마 2802:12070, 60x60 @ 1810,976 → 우 50 / 하 44)
-   디자인피드백_0918 로 기존 #303030 원 + 노란 화살표(icon-scroll-top.png)에서 교체됐다.
-   피그마는 Blur(backdrop 33.7 + 검정 10% hard-light @67%) + Fill(#FFF4C4 위 흰 20%)
-   + Glass Effect 4겹인데, 블렌드 모드 스택은 CSS 로 그대로 못 쌓는다.
-   배경이 비쳐야 하는 버튼이라 PNG 로 굽지 않고 backdrop-filter 로 근사했다.
-   흰 배경 위 실측값이 피그마 렌더(250,239,191)와 맞도록 알파를 맞췄다. */
+/* ══ 모바일 (PC 피드백_1007, 피그마 Mo 3108:15815, 390 폭) ═══════════
+   태블릿(피그마 Tablet 3108:15810)은 PC 그리드를 그대로 비율 축소한 안이라
+   위 vw/cqw 규칙이 그대로 맞는다. 모바일만 따로 바뀐다:
+   - 1열, 좌우 20 / 위 140 (GNB 60 + 바 60 + 20) / 아래 12, 카드 간격 12
+   - 카드 = 이미지(라운드 12) + 그 아래 텍스트. 호버가 없으니 텍스트·이미지가 늘 보인다
+   - 이미지 비율: L 350x525 / M 350x350 / S 350x197
+   - 순서는 PC 두 열을 섞은 피그마 Mo 순서 (아래 order) */
+@media (max-width: 767.98px) {
+  .wk-body .gnb {
+    top: 60px;
+    --gnb-drop-space: calc(100dvh - 144px); /* 위 60+60+12 + 아래 12 */
+  }
 
+  .wk-main {
+    padding: 140px 20px 12px;
+  }
+
+  .wk-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  /* 두 열 껍데기를 풀어 카드 14장을 한 줄로 세운다 */
+  .wk-col {
+    display: contents;
+  }
+
+  .wk-card,
+  .wk-card--s,
+  .wk-card--m,
+  .wk-card--l {
+    aspect-ratio: auto;
+    border-radius: 0;
+    background: none;
+    overflow: visible;
+  }
+
+  .wk-card-media {
+    position: relative;
+    inset: auto;
+    display: block;
+    height: auto;
+    border-radius: 12px;
+    background: var(--pl2-gray-placeholder);
+  }
+
+  .wk-card--s .wk-card-media {
+    aspect-ratio: 350 / 197;
+  }
+
+  .wk-card--m .wk-card-media {
+    aspect-ratio: 350 / 350;
+  }
+
+  .wk-card--l .wk-card-media {
+    aspect-ratio: 350 / 525;
+  }
+
+  /* 호버 Dim 은 없다 */
+  .wk-card::after {
+    content: none;
+  }
+
+  /* Fluidic: 모바일 시안엔 블러 레이어가 꺼져 있고 에셋에 구운 블러만 보인다 */
+  .wk-card--blur .wk-card-media {
+    filter: none;
+    transform: none;
+  }
+
+  .wk-card--blur::before {
+    content: none;
+  }
+
+  /* Overlay: 이미지 아래 텍스트. padding 16 8, gap 8 (L 은 4) */
+  .wk-card-overlay {
+    position: static;
+    gap: 8px;
+    padding: 16px 8px;
+    opacity: 1;
+  }
+
+  .wk-card--l .wk-card-overlay {
+    gap: 4px;
+  }
+
+  /* Brand 16 Regular #303030 */
+  .wk-card-brand {
+    padding-left: 2px;
+    color: #303030;
+    font-size: 16px;
+    line-height: 1.2;
+  }
+
+  /* Project 20/28 SemiBold -4% #000. 폭 334 라 긴 제목은 두 줄로 꺾인다 */
+  .wk-card-project {
+    color: var(--pl2-black);
+    font-size: 20px;
+    line-height: 28px;
+    white-space: normal;
+  }
+
+  /* 피그마 Mo 순서: 한화 · JYP · 경기도 · GenAI · 신세계 · Dev Platform · AI Film ·
+     CJ · 하루하루 · Matièr · Evercell · Samsung Internet · SmartThings · Fluidic */
+  .wk-col:first-child > :nth-child(1) { order: 1; }
+  .wk-col:last-child > :nth-child(1) { order: 2; }
+  .wk-col:first-child > :nth-child(2) { order: 3; }
+  .wk-col:last-child > :nth-child(2) { order: 4; }
+  .wk-col:last-child > :nth-child(3) { order: 5; }
+  .wk-col:first-child > :nth-child(3) { order: 6; }
+  .wk-col:last-child > :nth-child(4) { order: 7; }
+  .wk-col:first-child > :nth-child(4) { order: 8; }
+  .wk-col:last-child > :nth-child(5) { order: 9; }
+  .wk-col:first-child > :nth-child(5) { order: 10; }
+  .wk-col:last-child > :nth-child(6) { order: 11; }
+  .wk-col:first-child > :nth-child(6) { order: 12; }
+  .wk-col:first-child > :nth-child(7) { order: 13; }
+  .wk-col:last-child > :nth-child(7) { order: 14; }
+}
