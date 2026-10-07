@@ -67,7 +67,8 @@
   object-fit: cover;
 }
 
-/* 컴포넌트 컷: 1244x723 (자체 배경 #EDF3FD 포함해 export) */
+/* 배지 컷: 1244x723 (자체 배경 #EDF3FD 포함해 export).
+   PC 피드백_1007 (Frame 2116929510) 에서 흐릿하던 기존 이미지를 피그마 벡터 배지 19종 그대로 선명한 색으로 다시 export (2x) */
 .wd7-components {
   display: block;
   width: 64.792%; /* 1244 / 1920 */
