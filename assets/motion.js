@@ -155,7 +155,7 @@
       // Home → Works 는 밀어 올리기 전환
       var push =
         document.body.classList.contains("hm-body") &&
-        /(^|\/)works\.html$/.test(a.pathname);
+        /(^|\/)works(\.html|\/)?$/.test(a.pathname); // 배포본은 works/ (tools/pretty-urls.py)
       writeFlag(push ? "push" : "1");
       root.classList.add(push ? "pt-push-leave" : "pt-leave");
       setTimeout(function () {

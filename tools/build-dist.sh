@@ -58,21 +58,31 @@ if ls dist/assets/*.jpg >/dev/null 2>&1; then
   echo "경고: dist 에 jpg 가 들어갔다"; exit 1
 fi
 
-# HTML 이 참조하는 파일이 전부 있는지 확인
+# 주소에서 .html 을 없앤다: works-detail-01.html → works/generative-ai-image/ (2026-10-07)
+# 페이지를 폴더/index.html 로 옮기고 경로·링크를 고친다. 주소 목록은 tools/pretty-urls.py.
+# 미리보기용으로 평평한 구조가 필요하면:  PRETTY_URLS=0 ./tools/build-dist.sh
+if [ "${PRETTY_URLS:-1}" != "0" ]; then
+  python3 tools/pretty-urls.py dist
+fi
+
+# HTML 이 참조하는 파일·페이지가 전부 있는지 확인 (각 html 위치 기준 상대 경로)
 missing=0
-for f in dist/*.html; do
+while read -r f; do
+  dir=$(dirname "$f")
   while read -r ref; do
-    [ -e "dist/$ref" ] || { echo "빠짐: $ref ($(basename $f))"; missing=$((missing + 1)); }
-  done < <(grep -ohE '(src|href|poster)="(assets|fonts)/[^"]*"' "$f" |
-    sed -E 's/^[a-z]*="//; s/"$//' | sort -u)
-done
+    case "$ref" in */) ref="${ref}index.html" ;; esac
+    case "$ref" in privacy.html|terms.html|*/privacy.html|*/terms.html) continue ;; esac # 아직 없는 페이지
+    [ -e "$dir/$ref" ] || { echo "빠짐: $ref (${f#dist/})"; missing=$((missing + 1)); }
+  done < <(grep -ohE '(src|href|poster)="[^"#:]*"' "$f" |
+    sed -E 's/^[a-z]*="//; s/"$//' | grep -v '^$' | sort -u)
+done < <(find dist -name '*.html')
 [ "$missing" -gt 0 ] && { echo "참조 누락 ${missing}건"; exit 1; }
 
 echo "dist/ 준비 완료 — 참조 누락 0건"
 echo
 du -sh dist
 echo
-printf "%-10s %s\n" "html" "$(ls dist/*.html | wc -l | tr -d ' ')개"
+printf "%-10s %s\n" "html" "$(find dist -name '*.html' | wc -l | tr -d ' ')개"
 for e in css js webp png svg mp4; do
   n=$(ls dist/assets/*.$e 2>/dev/null | wc -l | tr -d ' ')
   s=$(du -ch dist/assets/*.$e 2>/dev/null | tail -1 | cut -f1)
