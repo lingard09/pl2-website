@@ -2,7 +2,7 @@
    피그마: PL2 Production (전달) > Home (node 2345:59569), 1920x1080
    - 전체 화면 히어로: 2026-10-07 부터 분야 티커 (피그마 Home 3109:33780, PC 피드백_1007).
      예전 영상 히어로(home-hero.mp4 / home-main.mp4)는 더 쓰지 않는다
-   - 화면 정중앙에 GNB 400x60 (공유 컴포넌트, base.css) */
+   - 메뉴바(GNB) 없음. 화면 전체가 Works 링크 (PC 피드백_1007) */
 
 .hm-body {
   min-height: 100dvh;
@@ -19,6 +19,10 @@
 .hm-hero {
   --u: min(0.052083vw, 1px);
   position: relative;
+  display: block; /* 홈 전체가 Works 로 가는 링크(<a>)다 */
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
   width: 100%;
   height: 100dvh;
   background-color: var(--pl2-white);
@@ -114,18 +118,4 @@
   .hm-ticker-track {
     animation: none;
   }
-}
-
-/* ── 화면 정중앙 GNB ─────────────────────────────────────
-   피그마: left calc(37.5% + 40px)=760, top 510 → 1920x1080 의 정중앙. */
-.hm-hero .gnb {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 10;
-  /* 이 페이지만 바가 화면 중앙이다. 패널 위쪽이 50dvh + 바 절반 30 + gap 12 이므로
-     아래로 남는 높이는 50dvh - 42, 여기서 아래 여백 12 를 더 뺀다.
-     1044px 이상 높이에서는 480 을 넘어 패널이 온전히 들어간다. */
-  --gnb-drop-space: calc(50dvh - min(2.8125vw, 54px)); /* 54 = 바 절반 30 + gap 12 + 아래 여백 12 */
 }
