@@ -148,35 +148,14 @@
   background: rgba(0, 0, 0, 0.2);
 }
 
-/* ══ 모바일 (PC 피드백_1007, 피그마 Mo 3108:15815, 390 폭) ═══════════
-   태블릿(피그마 Tablet 3108:15810)은 PC 그리드를 그대로 비율 축소한 안이라
-   위 vw/cqw 규칙이 그대로 맞는다. 모바일만 따로 바뀐다:
-   - 1열, 좌우 20 / 위 140 (GNB 60 + 바 60 + 20) / 아래 12, 카드 간격 12
-   - 카드 = 이미지(라운드 12) + 그 아래 텍스트. 호버가 없으니 텍스트·이미지가 늘 보인다
-   - 이미지 비율: L 350x525 / M 350x350 / S 350x197
-   - 순서는 PC 두 열을 섞은 피그마 Mo 순서 (아래 order) */
-@media (max-width: 767.98px) {
-  .wk-body .gnb {
-    top: 60px;
-    --gnb-drop-space: calc(100dvh - 144px); /* 위 60+60+12 + 아래 12 */
-  }
 
-  .wk-main {
-    padding: 140px 20px 12px;
-  }
-
-  .wk-grid {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-  }
-
-  /* 두 열 껍데기를 풀어 카드 14장을 한 줄로 세운다 */
-  .wk-col {
-    display: contents;
-  }
-
+/* ══ 태블릿·모바일 카드: 이미지 아래 텍스트 ═══════════════════
+   호버가 없는 기기에서는 PC 처럼 마우스를 올려야 보이는 텍스트를 볼 수 없다.
+   그래서 모바일 시안(피그마 Mo)의 카드 — 이미지(라운드 12) + 그 아래 늘 보이는
+   브랜드/프로젝트명 — 를 태블릿에도 쓴다 (대표님 iPad 시연, 2026-10-07).
+   1280 미만 창과 호버가 없는 터치 기기(13인치 iPad 가로 1366 포함)에 적용된다.
+   태블릿은 2열 배치·PC 이미지 비율을 그대로 두고 카드 모양만 바뀐다. */
+@media (max-width: 1279.98px), (hover: none) {
   .wk-card,
   .wk-card--s,
   .wk-card--m,
@@ -196,16 +175,17 @@
     background: var(--pl2-gray-placeholder);
   }
 
+  /* 태블릿은 PC 와 같은 비율 (S 942x530 / M 942x707 / L 942x942) */
   .wk-card--s .wk-card-media {
-    aspect-ratio: 350 / 197;
+    aspect-ratio: 942 / 530;
   }
 
   .wk-card--m .wk-card-media {
-    aspect-ratio: 350 / 350;
+    aspect-ratio: 942 / 707;
   }
 
   .wk-card--l .wk-card-media {
-    aspect-ratio: 350 / 525;
+    aspect-ratio: 942 / 942;
   }
 
   /* 호버 Dim 은 없다 */
@@ -243,12 +223,55 @@
     line-height: 1.2;
   }
 
-  /* Project 20/28 SemiBold -4% #000. 폭 334 라 긴 제목은 두 줄로 꺾인다 */
+  /* Project 20/28 SemiBold -4% #000. 좁은 카드에서 긴 제목은 두 줄로 꺾인다 */
   .wk-card-project {
     color: var(--pl2-black);
     font-size: 20px;
     line-height: 28px;
     white-space: normal;
+  }
+}
+
+/* ══ 모바일 (PC 피드백_1007, 피그마 Mo 3108:15815, 390 폭) ═══════════
+   태블릿(피그마 Tablet 3108:15810)은 PC 2열 그리드를 그대로 비율 축소한 안이라
+   배치는 위 vw 규칙 그대로다. 모바일은 배치도 바뀐다:
+   - 1열, 좌우 20 / 위 140 (GNB 60 + 바 60 + 20) / 아래 12, 카드 간격 12
+   - 카드 = 이미지 + 아래 텍스트 (태블릿과 공유, 위 카드 블록)
+   - 이미지 비율: L 350x525 / M 350x350 / S 350x197
+   - 순서는 PC 두 열을 섞은 피그마 Mo 순서 (아래 order) */
+@media (max-width: 767.98px) {
+  .wk-body .gnb {
+    top: 60px;
+    --gnb-drop-space: calc(100dvh - 144px); /* 위 60+60+12 + 아래 12 */
+  }
+
+  .wk-main {
+    padding: 140px 20px 12px;
+  }
+
+  .wk-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  /* 모바일 이미지 비율: L 350x525 / M 350x350 / S 350x197 */
+  .wk-card--s .wk-card-media {
+    aspect-ratio: 350 / 197;
+  }
+
+  .wk-card--m .wk-card-media {
+    aspect-ratio: 350 / 350;
+  }
+
+  .wk-card--l .wk-card-media {
+    aspect-ratio: 350 / 525;
+  }
+
+  /* 두 열 껍데기를 풀어 카드 14장을 한 줄로 세운다 */
+  .wk-col {
+    display: contents;
   }
 
   /* 피그마 Mo 순서: 한화 · JYP · 경기도 · GenAI · 신세계 · Dev Platform · AI Film ·
