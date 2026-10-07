@@ -71,16 +71,28 @@
   );
 }
 
-/* 피그마 Hero Title: x=77, y=389, w=883 (세로 중앙 기준 +14) */
+/* 피그마 Hero Title: x=77, y=389, w=883 (세로 중앙 기준 +14)
+   세로 위치 (PC 피드백_0930, 참고 neonrated.com):
+   - 1280 이상: 히어로가 화면보다 길면(가로로 넓고 세로가 짧은 창) 타이틀이 화면 밖
+     아래쪽으로 밀리므로, "보이는 화면"의 세로 중앙에 둔다 = min(히어로 50%, 화면 50%).
+     히어로가 화면 안에 다 들어오면 둘이 같아서 1920x1080 구도 그대로다.
+   - 1280 미만: 화면 기준을 버리고 1920x1080 히어로 안의 원래 위치(히어로 50%)를
+     기준으로 이미지와 함께 비율대로 줄어든다. */
 .wd-hero-title {
   position: absolute;
-  top: 50%;
+  top: min(50%, 50svh);
   left: 4.01%; /* 77 / 1920 */
   display: flex;
   flex-direction: column;
   gap: 2.0833cqw; /* 40 */
   width: 46.0%; /* 883 / 1920 */
   transform: translateY(calc(-50% + 0.7292cqw)); /* +14 */
+}
+
+@media (max-width: 1279.98px) {
+  .wd-hero-title {
+    top: 50%;
+  }
 }
 
 .wd-hero-head {

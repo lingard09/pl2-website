@@ -137,38 +137,4 @@
    + Glass Effect 4겹인데, 블렌드 모드 스택은 CSS 로 그대로 못 쌓는다.
    배경이 비쳐야 하는 버튼이라 PNG 로 굽지 않고 backdrop-filter 로 근사했다.
    흰 배경 위 실측값이 피그마 렌더(250,239,191)와 맞도록 알파를 맞췄다. */
-.wk-top {
-  position: fixed;
-  /* 화면 우측 하단에서 40, 40 (PC 피드백_0930, 피그마 Works 2869:12833 의 Liquid Glass).
-     콘텐츠(.wk-main)는 max-width 1920 으로 가운데 정렬되는데 버튼은 fixed 라
-     1920 초과 화면에서는 화면 끝으로 달아난다 (실측: 2560 에서 콘텐츠 바깥 270px).
-     그래서 좌우 여백(50vw - 960px)을 더해 카드 오른쪽 끝 기준 40 을 유지한다.
-     1920 이하에서는 그 값이 0 이라 그냥 화면 우측 40 이다. */
-  right: calc(max(0px, 50vw - 960px) + min(2.0833vw, 40px)); /* 40 */
-  bottom: min(2.0833vw, 40px); /* 40 */
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: min(3.125vw, 60px);
-  height: min(3.125vw, 60px);
-  border-radius: 50%;
-  /* 노란 기가 튄다는 피드백으로 중성 화이트 글래스로 바꿨다 (PC 피드백_0930).
-     피그마 렌더 실측: 흰 바탕 위에서 #F5~#FA 의 무채색 원 + 그림자.
-     알파 .6 은 뒤가 비치면서도 어두운 카드 위에서 검정 화살표 대비가 AA(4.5:1)를
-     넘는 값이다 (이전 노란 글래스 때 .5 에서 실측한 기준과 같은 방식). */
-  background: rgba(245, 245, 245, 0.6);
-  /* 블러는 스케일하지 않는다 (GNB 패널과 같은 규칙) */
-  backdrop-filter: blur(34px);
-  -webkit-backdrop-filter: blur(34px);
-  /* 피그마 DROP_SHADOW 0 4 20 #000@12% + 유리 가장자리 하이라이트 */
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4),
-    0 min(0.2083vw, 4px) min(1.0417vw, 20px) rgba(0, 0, 0, 0.12);
-}
 
-/* 회전 전 23.708x14.858 → -90deg 돌려 60x60 정중앙에 온다 */
-.wk-top-arrow {
-  width: min(1.2348vw, 23.708px);
-  height: min(0.7738vw, 14.858px);
-  transform: rotate(-90deg);
-}

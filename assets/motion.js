@@ -115,9 +115,10 @@
     "main section > *",
     ".wk-col > *",
     ".ct-row > *",
-    // 푸터 워드마크는 .ft-hero 가 overflow: hidden 이라 마스크 안에서 올라온다.
-    // .ft-bar 는 페이지 맨 끝이라 내려가 있는 동안 문서 높이를 늘리므로 뺀다.
-    ".ft-hero-content",
+    // 푸터는 글자만이 아니라 노란 블록 전체가 한 덩어리로 올라온다 (PC 피드백_0930).
+    // 움직이는 건 .ft 의 자식들이고 .ft 가 overflow: clip 이라, 내려가 있는 동안에도
+    // 문서 높이가 늘지 않는다 (base.css 의 .ft 등장 규칙).
+    ".ft",
   ].join(",");
   var STAGGER = 90;
   var DURATION = 1100; // base.css .mo-anim transition 과 맞춘다
