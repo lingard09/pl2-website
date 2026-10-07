@@ -565,16 +565,19 @@ button {
   translate: 0 min(6.25vw, 120px); /* 120 — 블록이 커서 일반 콘텐츠(80)보다 길게 */
 }
 
-/* ── Home → Works 밀어 올리기 전환 (PC 피드백_0930) ───────────
+/* ── Home → Works 밀어 올리기 전환 (PC 피드백_0930, 피그마 슬라이드 8·9) ───────────
    떠날 때: Home 화면 전체가 위로 밀려 올라간다.
-   들어올 때: Works 본문이 아래에서 밀려 올라오고, 메뉴바는 위에서 툭 떨어진다
-   (살짝 튕기는 back-out 이징). 둘 다 translate 를 쓴다 — 페이지 CSS 의 transform 과 겹치지 않는다. */
+   들어올 때 (8): Works 카드가 화면 아래에서 출발해 하나씩 쏙쏙 붙는다.
+     첫 화면 밖의 카드는 평소 스크롤 등장(.mo-out)이 이 규칙보다 우선한다.
+   정착 (9): 카드가 모두 붙으면 메뉴바가 위에서 툭 떨어져 자리 잡는다 (back-out 이징).
+     시작 시각은 motion.js 가 카드 수로 계산해 --pt-gnb-delay 로 넘긴다.
+   전부 translate 를 쓴다 — 페이지 CSS 의 transform 과 겹치지 않는다. */
 html.pt-push-leave .hm-hero {
   translate: 0 -100vh;
   transition: translate 0.65s cubic-bezier(0.76, 0, 0.24, 1);
 }
 
-html.pt-push-enter main,
+html.pt-push-enter .wk-card,
 html.pt-push-enter .top-btn {
   translate: 0 100vh;
 }
@@ -583,15 +586,16 @@ html.pt-push-enter .gnb {
   translate: 0 calc(-100% - min(3.125vw, 60px));
 }
 
-html.pt-push-enter.pt-push-in main,
-html.pt-push-enter.pt-push-in .top-btn {
+html.pt-push-enter.pt-push-in .wk-card.is-push {
   translate: 0 0;
-  transition: translate 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: translate 1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-html.pt-push-enter.pt-push-in .gnb {
+html.pt-push-enter.pt-push-in .gnb,
+html.pt-push-enter.pt-push-in .top-btn {
   translate: 0 0;
-  transition: translate 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.35s;
+  transition: translate 0.7s cubic-bezier(0.34, 1.56, 0.64, 1)
+    var(--pt-gnb-delay, 0.6s);
 }
 
 /* 카운팅 중 자릿수 폭이 흔들리지 않게 */

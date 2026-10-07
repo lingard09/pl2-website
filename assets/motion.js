@@ -3,8 +3,9 @@
       그보다 조금 더 텐션 있게 → 이동 거리를 키우고 expo-out 이징)
    2) About 통계 숫자 카운팅
    3) 페이지 전환: 노란 패널이 아래에서 덮고 위로 빠진다 (참고: koto.com/work)
-      Home → Works 만 다르다 (PC 피드백_0930): Home 화면이 위로 밀려 올라가고,
-      Works 는 아래에서 밀려 올라오며 메뉴바가 위에서 툭 떨어진다.
+      Home → Works 만 다르다 (PC 피드백_0930, 피그마 슬라이드 8·9): Home 화면이 위로 밀려
+      올라가고, Works 는 첫 화면 카드가 아래에서 하나씩 쏙쏙 붙은 뒤(8), 카드가 모두
+      자리 잡으면 메뉴바가 위에서 툭 떨어진다(9).
       탭에서 사이트를 처음 열 때도 같은 패널이 덮인 채로 시작해 위로 걷히는 인트로를 보여준다.
 
    <head> 에서 동기로 불러온다. 첫 페인트 전에 html 클래스를 붙여야
@@ -22,7 +23,10 @@
   var INTRO_HOLD_MS = 450; // 인트로는 덮인 채로 잠깐 머문 뒤 걷힌다
   var LEAVE_MS = 600; // base.css html.pt-leave::after 의 transition 과 맞춘다
   var PUSH_LEAVE_MS = 650; // base.css html.pt-push-leave 와 맞춘다
-  var PUSH_IN_MS = 1500; // base.css html.pt-push-in (본문 0.9s + 메뉴바 지연 0.35s + 0.7s 언저리)
+  var PUSH_CARD_MS = 1000; // base.css .is-push transition 과 맞춘다
+  var PUSH_CARD_STEP = 120; // 카드 사이 시차
+  var PUSH_GNB_MS = 700; // base.css 메뉴바 떨어지는 시간
+  var pushTotal = 0; // 첫 화면 카드가 모두 붙는 데 걸리는 시간 (initPageTransition 이 계산)
 
   // "1" = 노란 패널 전환, "push" = Home → Works 밀어 올리기 전환
   function readFlag() {
@@ -68,20 +72,47 @@
     // 전환 패널이 걷히는 중이면 등장 모션을 그만큼 늦춘다.
     // 밀어 올리기로 들어올 때는 첫 화면 콘텐츠가 페이지와 함께 올라오므로
     // 첫 화면 안의 요소는 따로 등장시키지 않는다.
-    // 밀어 올리기 중에는 본문이 화면 밖에 있어서, 관찰을 바로 시작하면 첫 화면 요소까지
-    // "화면 밖"으로 판정돼 숨겨진다. 본문이 다 올라온 뒤(1s)부터 관찰한다.
-    initReveal(pushing ? 1000 : entering || intro ? hold + 350 : 0, pushing);
+    // 밀어 올리기 중에는 첫 화면 카드가 화면 밖에서 출발해서, 관찰을 바로 시작하면
+    // "화면 밖"으로 판정돼 숨겨진다. 카드가 모두 붙은 뒤부터 관찰한다.
+    initReveal(pushing ? pushTotal + 100 : entering || intro ? hold + 350 : 0, pushing);
   });
 
   // ── 3) 페이지 전환 ───────────────────────────────────
   function initPageTransition() {
     if (pushing) {
+      // 슬라이드 8: 첫 화면에 걸리는 카드만 위→아래, 왼→오 순서로 하나씩 붙인다.
+      // (CSS 가 모든 카드를 화면 한 높이 아래에 두고 시작하므로 그만큼 빼서 판정)
+      var vh = window.innerHeight;
+      var cards = Array.prototype.filter.call(
+        document.querySelectorAll(".wk-card"),
+        function (el) {
+          return el.getBoundingClientRect().top - vh < vh;
+        }
+      );
+      cards.sort(function (a, b) {
+        var ra = a.getBoundingClientRect();
+        var rb = b.getBoundingClientRect();
+        return ra.top - rb.top || ra.left - rb.left;
+      });
+      cards.forEach(function (el, i) {
+        el.classList.add("is-push");
+        el.style.transitionDelay = i * PUSH_CARD_STEP + "ms";
+      });
+      pushTotal = Math.max(0, cards.length - 1) * PUSH_CARD_STEP + PUSH_CARD_MS;
+      // 슬라이드 9: 카드가 모두 자리 잡은 뒤 메뉴바가 떨어진다
+      root.style.setProperty("--pt-gnb-delay", pushTotal - 150 + "ms");
+
       requestAnimationFrame(function () {
         requestAnimationFrame(function () {
           root.classList.add("pt-push-in");
           setTimeout(function () {
             root.classList.remove("pt-push-enter", "pt-push-in");
-          }, PUSH_IN_MS);
+            root.style.removeProperty("--pt-gnb-delay");
+            cards.forEach(function (el) {
+              el.classList.remove("is-push");
+              el.style.transitionDelay = "";
+            });
+          }, pushTotal + PUSH_GNB_MS);
         });
       });
     }
