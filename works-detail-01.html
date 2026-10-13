@@ -113,28 +113,20 @@
             </p>
           </div>
 
-          <div class="wd-style-body">
-            <img class="wd-style-img" src="assets/wd1-style.webp" alt="" />
-
-            <div class="wd-prompt">
-              <p class="wd-prompt-label">[Prompt]</p>
-              <p class="wd-prompt-text">
-                A vibrant street art style. Bold outlines, simplified cartoon-like
-                forms, bright neon and primary colors, spray paint textures with
-                visible drips, layered tags and doodles. Urban, playful, and
-                rebellious mood with a clean or abstract background, keeping focus
-                on the artwork.
-              </p>
-              <div class="wd-prompt-actions" aria-hidden="true">
-                <img class="wd-prompt-plus" src="assets/icon-plus.svg" alt="" />
-                <img
-                  class="wd-prompt-send"
-                  src="assets/icon-arrow-up.svg"
-                  alt=""
-                />
-              </div>
-            </div>
-          </div>
+          <!-- 스타일 전환 영상 (2026-10-13 피드백, 피그마 Rectangle 34628191 1920x928).
+               이미지 + 프롬프트 카드였던 자리를 영상 하나로 바꿨다 — 프롬프트 입력부터
+               스타일이 바뀌는 과정이 영상 안에 들어 있다. -->
+          <video
+            class="wd-style-video"
+            poster="assets/wd1-prompt-poster.webp"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          >
+            <source src="assets/wd1-prompt.mp4" type="video/mp4" />
+          </video>
         </section>
 
         <!-- ══ 3. 필름스트립 ══
@@ -174,9 +166,19 @@
             </p>
           </div>
 
-          <div class="wd-band">
-            <img src="assets/wd1-layer.webp" alt="" />
-          </div>
+          <!-- 레이어 분리 영상 (2026-10-13 피드백, 피그마 Frame 2116929241 1920x960 VIDEO).
+               어두운 띠 배경(#1E2123)까지 영상에 들어 있다 -->
+          <video
+            class="wd-band-video"
+            poster="assets/wd1-layer-poster.webp"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          >
+            <source src="assets/wd1-layer.mp4" type="video/mp4" />
+          </video>
         </section>
 
         <!-- ══ 5. 일러스트 4장 ══ -->
@@ -264,10 +266,10 @@
           </div>
 
           <!-- 마무리 영상 (PC 피드백_1007, 피그마 3109:16233 VIDEO fill 1920x960).
-               기존 정지 이미지 wd1-final.webp 는 영상이 뜨기 전 poster 로 남겼다. -->
+               2026-10-13 스티커가 다 붙는 5초 버전으로 교체. poster 는 영상 첫 프레임 -->
           <video
             class="wd-final"
-            poster="assets/wd1-final.webp"
+            poster="assets/wd1-final-poster.webp"
             autoplay
             muted
             loop

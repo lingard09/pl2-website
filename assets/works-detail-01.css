@@ -16,6 +16,14 @@
   gap: min(4.1667vw, 80px);
 }
 
+/* 스타일 전환 영상 1920x928 (2026-10-13, 이미지 + 프롬프트 카드를 대체) */
+.wd-style-video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1920 / 928;
+  object-fit: cover;
+}
+
 .wd-style-body {
   display: flex;
   flex-direction: column;
@@ -182,6 +190,14 @@
   display: flex;
   flex-direction: column;
   gap: min(4.1667vw, 80px);
+}
+
+/* 레이어 분리 영상 1920x960 (2026-10-13, 띠 배경 + 이미지를 대체) */
+.wd-band-video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1920 / 960;
+  object-fit: cover;
 }
 
 .wd-band {
