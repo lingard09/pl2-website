@@ -11,7 +11,7 @@
 
   var MIN = -5;
   var MAX = 5;
-  var INTERVAL = 2600; // 한 칸 이동(1s) + 머무는 시간
+  var INTERVAL = 2000; // 한 칸 이동(0.8s) + 머무는 시간. 2026-10-13 조금 빠르게 (2600 → 2000)
   var imgs = Array.prototype.slice.call(track.querySelectorAll("img[data-slot]"));
   if (!imgs.length) return;
 
