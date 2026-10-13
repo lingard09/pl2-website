@@ -141,22 +141,41 @@
             </p>
           </div>
 
+          <!-- 세 컷 모두 영상 (2026-10-13 피드백, 피그마 PC 피드백_1007 Rectangle 4236/4236/4235) -->
           <div class="wd8-stack120">
-            <img
+            <video
               class="wd8-connect-01"
-              src="assets/wd8-connect-01.webp"
-              alt=""
-            />
-            <img
+              poster="assets/wd8-connect-01-poster.webp"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+            >
+              <source src="assets/wd8-connect-01.mp4" type="video/mp4" />
+            </video>
+            <video
               class="wd8-connect-02"
-              src="assets/wd8-connect-02.webp"
-              alt=""
-            />
-            <img
+              poster="assets/wd8-connect-02-poster.webp"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+            >
+              <source src="assets/wd8-connect-02.mp4" type="video/mp4" />
+            </video>
+            <video
               class="wd8-connect-03"
-              src="assets/wd8-connect-03.webp"
-              alt=""
-            />
+              poster="assets/wd8-connect-03-poster.webp"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+            >
+              <source src="assets/wd8-connect-03.mp4" type="video/mp4" />
+            </video>
           </div>
         </section>
 
@@ -172,34 +191,19 @@
             </p>
           </div>
 
-          <!-- 그리드는 셀이 수십 개라 평면 이미지 한 장으로 export 했는데,
-               그중 두 셀이 애니메이션 GIF (aa9ceec4f7b2 / 969102dee556) 다.
-               평면 이미지를 그대로 깔고 그 두 칸 위에만 영상을 덮는다. -->
-          <div class="wd8-grid-wrap">
-            <img class="wd8-grid" src="assets/wd8-assets-grid.webp" alt="" />
-            <video
-              class="wd8-grid-cell wd8-grid-cell--icon"
-              autoplay
-              muted
-              loop
-              playsinline
-              preload="metadata"
-              aria-hidden="true"
-            >
-              <source src="assets/wd8-grid-icon.mp4" type="video/mp4" />
-            </video>
-            <video
-              class="wd8-grid-cell wd8-grid-cell--card"
-              autoplay
-              muted
-              loop
-              playsinline
-              preload="metadata"
-              aria-hidden="true"
-            >
-              <source src="assets/wd8-grid-card.mp4" type="video/mp4" />
-            </video>
-          </div>
+          <!-- 모션 에셋 그리드 전체를 영상 하나로 (2026-10-13 피드백, 피그마 Rectangle 34628187 1920x954).
+               예전엔 평면 이미지 위 두 칸에만 GIF 영상을 덮었다 -->
+          <video
+            class="wd8-grid"
+            poster="assets/wd8-grid-poster.webp"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          >
+            <source src="assets/wd8-grid.mp4" type="video/mp4" />
+          </video>
         </section>
 
         <!-- ══ 5. 일상 속 모션 ══ -->

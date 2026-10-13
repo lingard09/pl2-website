@@ -56,37 +56,11 @@
 }
 
 /* ══ 4. 모션 에셋 그리드 ═══════════════════════════════ */
-.wd8-grid-wrap {
-  position: relative;
-  width: 100%;
-}
-
 .wd8-grid {
   display: block;
   width: 100%;
   aspect-ratio: 1920 / 954;
   object-fit: cover;
-}
-
-/* 그리드 안에서 애니메이션 GIF 였던 두 칸만 영상으로 덮는다.
-   좌표는 피그마 기준 (그리드 좌상단 0,5759 / 1920x954). */
-.wd8-grid-cell {
-  position: absolute;
-  object-fit: cover;
-}
-
-.wd8-grid-cell--icon {
-  top: 0;
-  left: 80.469%; /* 1545 / 1920 */
-  width: 15.365%; /* 295 / 1920 */
-  aspect-ratio: 1 / 1;
-}
-
-.wd8-grid-cell--card {
-  top: 43.082%; /* (6170 - 5759) / 954 */
-  left: 49.948%; /* 959 / 1920 */
-  width: 29.948%; /* 575 / 1920 */
-  aspect-ratio: 575 / 543;
 }
 
 /* ══ 5. 954 듀오 (오른쪽이 120 아래) ═══════════════════ */
