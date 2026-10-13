@@ -78,6 +78,7 @@
 }
 
 .wd7-icons {
+  display: block;
   width: 100%;
   aspect-ratio: 1920 / 954;
   object-fit: cover;
@@ -102,6 +103,28 @@
   width: 62.917%; /* 1208 / 1920 */
   margin-left: 3.125%; /* x=60 */
   aspect-ratio: 1208 / 657;
+  object-fit: cover;
+}
+
+/* 창 = 제목 바 이미지(1208x44) + 영상(1208x613). 피그마 Frame 1428752994 radius 12 */
+.wd7-window {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: min(0.625vw, 12px);
+}
+
+.wd7-window-bar {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1208 / 44;
+  object-fit: cover;
+}
+
+.wd7-window video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1208 / 613;
   object-fit: cover;
 }
 
