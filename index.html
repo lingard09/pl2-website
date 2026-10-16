@@ -24,48 +24,32 @@
     <!-- 홈에는 메뉴바가 없다. 화면 어디를 눌러도 Works 로 넘어간다
          (Home → Works 밀어 올리기 전환은 motion.js 가 처리, PC 피드백_1007) -->
     <a class="hm-hero" href="works.html" aria-label="Works 보러 가기">
-      <!-- 피그마 Home (PC 피드백_1007, node 3109:33780) — 프리뷰(키프레임) 그대로.
-           분야 단어(PRODUCTION … CAMPAIGN)와 작업 썸네일이 번갈아 쌓인 목록이 0.84초마다
-           한 칸(썸네일 120 + 단어 100 + 간격 30x2 = 280)씩 위로 툭 올라간다 (살짝 넘쳤다 돌아옴).
-           7칸이 한 바퀴(5.88초)이고 무한 반복. 영상 썸네일은 각 상세 페이지의 영상을 쓴다. -->
-      <div class="hm-ticker" aria-hidden="true">
-        <div class="hm-ticker-track">
-          <div class="hm-ticker-group">
-            <div class="hm-tile hm-tile--zoom" style="--x: 680; --w: 540"><video class="hm-tile-media" poster="assets/wd1-hero-poster.webp" autoplay muted loop playsinline preload="metadata"><source src="assets/wd1-hero.mp4" type="video/mp4" /></video></div>
-            <p class="hm-word" style="--cx: 1060">PRODUCTION</p>
-            <div class="hm-tile" style="--x: 740; --w: 320"></div>
-            <p class="hm-word" style="--cx: 960">UI/UX</p>
-            <div class="hm-tile" style="--x: 910; --w: 350"><img class="hm-tile-media" src="assets/home-row-field.webp" alt="" /></div>
-            <p class="hm-word" style="--cx: 895">PHOTOGRAPHY</p>
-            <div class="hm-tile" style="--x: 740; --w: 440"><video class="hm-tile-media" poster="assets/home-row-smartthings-poster.webp" autoplay muted loop playsinline preload="metadata"><source src="assets/home-row-smartthings.mp4" type="video/mp4" /></video></div>
-            <p class="hm-word" style="--cx: 992.5">MOTION</p>
-            <div class="hm-tile" style="--x: 811; --w: 229"></div>
-            <p class="hm-word" style="--cx: 929.5">AI</p>
-            <div class="hm-tile" style="--x: 757; --w: 406"><video class="hm-tile-media" poster="assets/works-11.webp" autoplay muted loop playsinline preload="metadata"><source src="assets/wd3-hero.mp4" type="video/mp4" /></video></div>
-            <p class="hm-word" style="--cx: 1015">FILM</p>
-            <div class="hm-tile" style="--x: 886; --w: 301"><video class="hm-tile-media" poster="assets/wd7-hero-poster.webp" autoplay muted loop playsinline preload="metadata"><source src="assets/wd7-hero.mp4" type="video/mp4" /></video></div>
-            <p class="hm-word" style="--cx: 960">CAMPAIGN</p>
-          </div>
-          <!-- 끊김 없이 이어지도록 같은 목록을 한 벌 더 붙인다 -->
-          <div class="hm-ticker-group" aria-hidden="true">
-            <div class="hm-tile hm-tile--zoom" style="--x: 680; --w: 540"><video class="hm-tile-media" poster="assets/wd1-hero-poster.webp" autoplay muted loop playsinline preload="metadata"><source src="assets/wd1-hero.mp4" type="video/mp4" /></video></div>
-            <p class="hm-word" style="--cx: 1060">PRODUCTION</p>
-            <div class="hm-tile" style="--x: 740; --w: 320"></div>
-            <p class="hm-word" style="--cx: 960">UI/UX</p>
-            <div class="hm-tile" style="--x: 910; --w: 350"><img class="hm-tile-media" src="assets/home-row-field.webp" alt="" /></div>
-            <p class="hm-word" style="--cx: 895">PHOTOGRAPHY</p>
-            <div class="hm-tile" style="--x: 740; --w: 440"><video class="hm-tile-media" poster="assets/home-row-smartthings-poster.webp" autoplay muted loop playsinline preload="metadata"><source src="assets/home-row-smartthings.mp4" type="video/mp4" /></video></div>
-            <p class="hm-word" style="--cx: 992.5">MOTION</p>
-            <div class="hm-tile" style="--x: 811; --w: 229"></div>
-            <p class="hm-word" style="--cx: 929.5">AI</p>
-            <div class="hm-tile" style="--x: 757; --w: 406"><video class="hm-tile-media" poster="assets/works-11.webp" autoplay muted loop playsinline preload="metadata"><source src="assets/wd3-hero.mp4" type="video/mp4" /></video></div>
-            <p class="hm-word" style="--cx: 1015">FILM</p>
-            <div class="hm-tile" style="--x: 886; --w: 301"><video class="hm-tile-media" poster="assets/wd7-hero-poster.webp" autoplay muted loop playsinline preload="metadata"><source src="assets/wd7-hero.mp4" type="video/mp4" /></video></div>
-            <p class="hm-word" style="--cx: 960">CAMPAIGN</p>
-          </div>
-        </div>
+      <!-- 피그마 Home (PC 피드백_1015, node 3394:72204) — 프리뷰(키프레임) 그대로.
+           썸네일 행(120)과 분야 단어 행(100)이 번갈아 14개, 행 중심 간격 150.
+           2.2초마다 모든 행이 한 칸씩 위로 올라가고(1.8초), 화면 가운데에 온 행만
+           또렷해진다(불투명·블러 0). 나머지는 흐리게(불투명 28%·블러 10).
+           맨 위로 빠진 행은 맨 아래로 돌아가 끝없이 반복된다. 움직임은 assets/home.js -->
+      <div class="hm-stage" aria-hidden="true">
+          <div class="hm-row" data-i="0"><div class="hm-tile hm-tile--zoom" style="--x: 680; --w: 540"><video class="hm-tile-media" poster="assets/wd1-hero-poster.webp" autoplay muted loop playsinline preload="metadata"><source src="assets/wd1-hero.mp4" type="video/mp4" /></video></div></div>
+          <div class="hm-row" data-i="1"><p class="hm-word" style="--cx: 1060">PRODUCTION</p></div>
+          <div class="hm-row" data-i="2"><div class="hm-tile" style="--x: 740; --w: 320"></div></div>
+          <div class="hm-row" data-i="3"><p class="hm-word" style="--cx: 960">UI/UX</p></div>
+          <div class="hm-row" data-i="4"><div class="hm-tile" style="--x: 910; --w: 350"><img class="hm-tile-media" src="assets/home-row-field.webp" alt="" /></div></div>
+          <div class="hm-row" data-i="5"><p class="hm-word" style="--cx: 895">PHOTOGRAPHY</p></div>
+          <div class="hm-row" data-i="6"><div class="hm-tile" style="--x: 740; --w: 440"><video class="hm-tile-media" poster="assets/home-row-smartthings-poster.webp" autoplay muted loop playsinline preload="metadata"><source src="assets/home-row-smartthings.mp4" type="video/mp4" /></video></div></div>
+          <div class="hm-row" data-i="7"><p class="hm-word" style="--cx: 992.5">MOTION</p></div>
+          <div class="hm-row" data-i="8"><div class="hm-tile" style="--x: 811; --w: 229"></div></div>
+          <div class="hm-row" data-i="9"><p class="hm-word" style="--cx: 929.5">AI</p></div>
+          <div class="hm-row" data-i="10"><div class="hm-tile" style="--x: 757; --w: 406"><video class="hm-tile-media" poster="assets/works-11.webp" autoplay muted loop playsinline preload="metadata"><source src="assets/wd3-hero.mp4" type="video/mp4" /></video></div></div>
+          <div class="hm-row" data-i="11"><p class="hm-word" style="--cx: 1015">FILM</p></div>
+          <div class="hm-row" data-i="12"><div class="hm-tile" style="--x: 886; --w: 301"><video class="hm-tile-media" poster="assets/wd7-hero-poster.webp" autoplay muted loop playsinline preload="metadata"><source src="assets/wd7-hero.mp4" type="video/mp4" /></video></div></div>
+          <div class="hm-row" data-i="13"><p class="hm-word" style="--cx: 960">CAMPAIGN</p></div>
       </div>
+      <!-- 위아래 흰색 페이드 (피그마 Dim 1920x300 두 장) -->
+      <div class="hm-dim hm-dim--top" aria-hidden="true"></div>
+      <div class="hm-dim hm-dim--bottom" aria-hidden="true"></div>
       <h1 class="sr-only">PL2 Creative Studio — Production, UI/UX, Photography, Motion, AI, Film, Campaign</h1>
     </a>
+    <script src="assets/home.js"></script>
   </body>
 </html>
