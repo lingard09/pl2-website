@@ -254,9 +254,11 @@
   height: min(5.2083vw, 100px);
 }
 
+/* 로고 200x76 (PC 피드백_1015, 원래 177x76) */
 .ab-brand img {
-  width: min(9.1984vw, 176.61px);
-  height: min(3.9422vw, 75.69px);
+  width: min(10.4167vw, 200px);
+  height: min(3.9583vw, 76px);
+  object-fit: contain;
 }
 
 @keyframes ab-brands-left {

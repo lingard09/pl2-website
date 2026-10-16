@@ -247,9 +247,8 @@
             <!-- 보정 전/후 비교 (PC 피드백_0930, 피그마 Frame 2116928760).
                  기본은 가운데 고정, 드래그(또는 키보드 ←/→)로 경계를 옮긴다 (compare.js).
                  왼쪽이 보정 전, 오른쪽이 보정 후.
-                 TODO(원본 대기): 피그마도 보정 전 사진이 따로 없어서 같은 사진에
-                 검정 20% 를 덮어 '전'을 흉내 내고 있다. 실제 보정 전 원본을 받으면
-                 .wd5-compare-before 의 img 만 바꾸고 딤(::after)을 지운다. -->
+                 보정 전 사진은 PC 피드백_1015 에서 들어온 원본(피그마 Before 081288)을
+                 보정 후와 같은 범위로 잘라 쓴다. 피그마도 Before 위에 검정 20% 를 덮어 둬서 딤은 유지. -->
             <div class="wd5-compare" data-reveal style="--pos: 50%">
               <img
                 class="wd5-compare-after"
@@ -258,7 +257,7 @@
                 draggable="false"
               />
               <div class="wd5-compare-before" aria-hidden="true">
-                <img src="assets/wd5-compare.webp" alt="" draggable="false" />
+                <img src="assets/wd5-compare-before.webp" alt="" draggable="false" />
               </div>
               <div
                 class="wd5-compare-handle"
