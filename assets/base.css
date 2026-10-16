@@ -713,3 +713,26 @@ html.pt-enter.pt-entering::after {
     animation: none;
   }
 }
+
+/* ══ 해외 방문자 자동 번역 (PC 피드백_1015, translate.js) ══════════════
+   Google 번역기가 붙이는 상단 배너·툴팁·하이라이트를 숨기고, 배너 때문에 밀리는
+   body top 을 되돌린다. 위젯 자리(#pl2-translate)도 화면에 보이지 않게 둔다. */
+#pl2-translate,
+.goog-te-banner-frame,
+iframe.skiptranslate,
+body > .skiptranslate,
+#goog-gt-tt,
+.goog-te-balloon-frame,
+.VIpgJd-ZVi9od-ORHb-OEVmcd,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
+
+.goog-text-highlight {
+  background: none !important;
+  box-shadow: none !important;
+}
