@@ -85,25 +85,22 @@
 }
 
 .wd7-badges {
+  display: block;
   width: 100%;
   aspect-ratio: 1920 / 827;
   object-fit: cover;
 }
 
 /* ══ 4. 개발 도구 3컷 ══════════════════════════════════ */
+/* Structure 창 1558x898 = 바 38 + 영상 860, 가운데 정렬 */
 .wd7-doc-01 {
-  display: block;
   width: 81.146%; /* 1558 / 1920 */
   margin: 0 auto;
-  aspect-ratio: 1558 / 959;
-  object-fit: cover;
 }
 
 .wd7-doc-02 {
   width: 62.917%; /* 1208 / 1920 */
   margin-left: 3.125%; /* x=60 */
-  aspect-ratio: 1208 / 657;
-  object-fit: cover;
 }
 
 /* 창 = 제목 바 이미지(1208x44) + 영상(1208x613). 피그마 Frame 1428752994 radius 12 */
@@ -114,52 +111,33 @@
   border-radius: min(0.625vw, 12px);
 }
 
-.wd7-window-bar {
-  display: block;
-  width: 100%;
-  aspect-ratio: 1208 / 44;
-  object-fit: cover;
-}
-
+.wd7-window-bar,
 .wd7-window video {
   display: block;
   width: 100%;
-  aspect-ratio: 1208 / 613;
   object-fit: cover;
 }
 
+.wd7-doc-02 .wd7-window-bar { aspect-ratio: 1208 / 44; }
+.wd7-doc-02 video { aspect-ratio: 1208 / 613; }
+.wd7-doc-01 .wd7-window-bar { aspect-ratio: 1558 / 38; }
+.wd7-doc-03 .wd7-window-bar { aspect-ratio: 1558 / 32; }
+.wd7-doc-01 video,
+.wd7-doc-03 video { aspect-ratio: 1558 / 860; }
+.wd7-doc-01,
+.wd7-doc-03 { border-radius: min(0.5483vw, 10.527px); }
+
+/* Remote Test Lab 창 1558x892 = 바 32 + 영상 860 */
 .wd7-doc-03 {
-  display: block;
-  width: 82.708%; /* 1588 / 1920 */
+  width: 81.146%; /* 1558 / 1920 */
   margin: 0 auto;
-  aspect-ratio: 1588 / 920;
-  object-fit: cover;
 }
 
-/* ══ 5. 반응형 (영상 밴드 안에 화면 컷) ════════════════ */
-.wd7-video-band {
-  position: relative;
-  display: flex;
-  justify-content: center;
+/* ══ 5. 반응형 영상 (1920x920) ═══════════════════════ */
+.wd7-band {
+  display: block;
   width: 100%;
-  height: min(47.9167vw, 920px);
-  padding: min(4.1667vw, 80px) 0;
-  background: var(--pl2-neutral-90);
-  overflow: hidden;
-}
-
-.wd7-video-band video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.wd7-video-band img {
-  position: relative;
-  width: 62.5%; /* 1200 / 1920 */
-  aspect-ratio: 1200 / 760;
+  aspect-ratio: 1920 / 920;
   object-fit: cover;
 }
 

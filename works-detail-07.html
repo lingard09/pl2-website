@@ -57,18 +57,17 @@
         <!-- ══ 1. 히어로 + 프로젝트 개요 ══ -->
         <section class="wd-top">
           <div class="wd-hero wd-hero--dark">
-            <!-- 피그마 히어로는 영상 전용(포스터 이미지 없음). 파일은 assets/wd7-hero.mp4.
-                 poster 그라디언트가 이 영상의 첫 프레임과 같은 것을 확인했다. -->
+            <!-- 히어로 영상 (2026-10-15 피드백에서 썸네일 영상으로 교체) -->
             <video
               class="wd-hero-media"
-              poster="assets/wd7-hero-poster.webp"
+              poster="assets/wd7-thumb-poster.webp"
               autoplay
               muted
               loop
               playsinline
               preload="metadata"
             >
-              <source src="assets/wd7-hero.mp4" type="video/mp4" />
+              <source src="assets/wd7-thumb.mp4" type="video/mp4" />
             </video>
             <div class="wd-hero-dim" aria-hidden="true"></div>
 
@@ -147,9 +146,17 @@
               src="assets/wd7-components.webp"
               alt=""
             />
-            <!-- 코드 블록 (피그마 Frame "2" 1920x827). 2026-10-13 시안에서 아이콘보다 앞으로 왔다.
-                 시안은 이 자리도 영상(93b45b5f)인데 아직 파일이 없어 이미지를 쓴다 -->
-            <img class="wd7-badges" src="assets/wd7-badges.webp" alt="" />
+            <!-- 코드 에디터 영상 (피그마 Frame "2" 1920x827). 아이콘보다 앞에 온다 -->
+            <video class="wd7-badges"
+              poster="assets/wd7-code-poster.webp"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+            >
+              <source src="assets/wd7-code.mp4" type="video/mp4" />
+            </video>
             <!-- 아이콘 그리드 영상 (2026-10-13 피드백, 피그마 Rectangle 34628192 1920x954) -->
             <video
               class="wd7-icons"
@@ -179,7 +186,20 @@
           </div>
 
           <div class="wd7-stack120">
-            <img class="wd7-doc-01" src="assets/wd7-doc-01.webp" alt="" />
+            <!-- Documentation 구조 창 (2026-10-15 피드백, 피그마 1558x898 = 바 38 + 영상 860) -->
+            <div class="wd7-doc-01 wd7-window">
+              <img class="wd7-window-bar" src="assets/wd7-structure-bar.webp" alt="" />
+              <video
+                poster="assets/wd7-structure-poster.webp"
+                autoplay
+                muted
+                loop
+                playsinline
+                preload="metadata"
+              >
+                <source src="assets/wd7-structure.mp4" type="video/mp4" />
+              </video>
+            </div>
             <!-- 커버 화면 팝업 창 (2026-10-13 피드백, 피그마 Frame 1428752994 1208x657).
                  위 44 는 창 제목 바(이미지), 아래 1208x613 이 영상이다 -->
             <div class="wd7-doc-02 wd7-window">
@@ -195,7 +215,20 @@
                 <source src="assets/wd7-popup.mp4" type="video/mp4" />
               </video>
             </div>
-            <img class="wd7-doc-03" src="assets/wd7-doc-03.webp" alt="" />
+            <!-- Remote Test Lab 창 (2026-10-15 피드백, 피그마 1558x892 = 바 32 + 영상 860) -->
+            <div class="wd7-doc-03 wd7-window">
+              <img class="wd7-window-bar" src="assets/wd7-rtl-bar.webp" alt="" />
+              <video
+                poster="assets/wd7-rtl-poster.webp"
+                autoplay
+                muted
+                loop
+                playsinline
+                preload="metadata"
+              >
+                <source src="assets/wd7-rtl.mp4" type="video/mp4" />
+              </video>
+            </div>
           </div>
         </section>
 
@@ -213,22 +246,17 @@
             </p>
           </div>
 
-          <!-- 피그마에서 이 밴드 배경이 영상이다. 히어로와 videoHash 가 같아서
-               assets/wd7-hero.mp4 를 그대로 참조한다 (파일을 복사하지 않아 캐시를 공유한다).
-               poster 는 피그마 노드 렌더 = 영상 첫 프레임. -->
-          <div class="wd7-video-band">
-            <video
-              poster="assets/wd7-band-poster.webp"
-              autoplay
-              muted
-              loop
-              playsinline
-              preload="metadata"
-            >
-              <source src="assets/wd7-hero.mp4" type="video/mp4" />
-            </video>
-            <img src="assets/wd7-responsive.webp" alt="" />
-          </div>
+          <!-- 반응형 영상 (2026-10-15 피드백, 피그마 Frame 2116929530 1920x920). 화면 컷까지 영상에 들어 있다 -->
+          <video class="wd7-band"
+            poster="assets/wd7-band-poster.webp"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          >
+            <source src="assets/wd7-band.mp4" type="video/mp4" />
+          </video>
         </section>
 
         <!-- ══ 6. 화면 모음 ══ -->

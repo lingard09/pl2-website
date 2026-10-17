@@ -57,10 +57,17 @@
             rel="noopener noreferrer"
             aria-label="구글지도에서 PL2 Creative Studio 위치 보기 (새 창)"
           >
-            <img
-              src="assets/contact-map.png"
-              alt="PL2 Creative Studio 위치 — 서울 중구 장충단로 13길 20, 동대문디자인플라자 북쪽"
-            />
+            <!-- 지도 영상은 한 번만 재생하고 마지막 프레임에서 멈춘다 (loop 없음, 2026-10-15 피드백) -->
+            <video
+              poster="assets/contact-map-poster.webp"
+              autoplay
+              muted
+              playsinline
+              preload="auto"
+              aria-label="PL2 Creative Studio 위치 — 서울 중구 장충단로 13길 20, 동대문디자인플라자 북쪽"
+            >
+              <source src="assets/contact-map.mp4" type="video/mp4" />
+            </video>
           </a>
         </div>
 

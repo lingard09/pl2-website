@@ -283,9 +283,16 @@
         </section>
 
         <!-- ══ 8. 영상 ══ -->
-        <section class="wd2-video">
-          <img src="assets/wd2-video.webp" alt="" />
-          <span class="wd2-video-play" aria-hidden="true"></span>
+        <!-- 브랜드 필름 (2026-10-15 피드백, 소리 있음). 버튼을 누르면 재생된다 (assets/video-play.js) -->
+        <section class="wd2-video" data-playing="false">
+          <video playsinline preload="metadata" poster="assets/wd2-video.webp">
+            <source src="assets/wd2-film.mp4" type="video/mp4" />
+          </video>
+          <button
+            type="button"
+            class="wd2-video-play"
+            aria-label="영상 재생"
+          ></button>
         </section>
       </div>
     </main>
@@ -319,5 +326,6 @@
     <script src="assets/gnb.js"></script>
     <script src="assets/top-btn.js"></script>
     <script src="assets/wd2-story.js"></script>
+    <script src="assets/video-play.js"></script>
   </body>
 </html>
