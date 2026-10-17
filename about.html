@@ -46,9 +46,7 @@
         <!-- ── Top: 히어로 + 인트로 ─────────────────────── -->
         <section class="ab-top">
           <div class="ab-hero">
-            <!-- 피그마 히어로는 영상. videoHash 7a2d0fe79949 가 Home 히어로와 같은
-                 파일이라 assets/home-hero.mp4 를 그대로 쓴다 (다운로드·캐시 공유).
-                 로딩 전에는 피그마의 이미지 fill(그라디언트)이 poster 로 보인다. -->
+            <!-- 히어로 영상 (PC 피드백_1015, 피그마 3339:46589 1920x620 가운데 자르기) -->
             <video
               class="ab-hero-media"
               poster="assets/about-hero-poster.webp"
@@ -58,7 +56,7 @@
               playsinline
               preload="metadata"
             >
-              <source src="assets/home-hero.mp4" type="video/mp4" />
+              <source src="assets/about-hero.mp4" type="video/mp4" />
             </video>
           </div>
 
@@ -110,7 +108,17 @@
 
         <!-- ── 장식 그래픽 (PL2 로고 + 그리드) ──────────── -->
         <section class="ab-graphic">
-          <img src="assets/about-grid.png" alt="" />
+          <!-- 로고 모션 (PC 피드백_1015, 피그마 Grid 1248x467) -->
+          <video
+            poster="assets/about-graphic-poster.webp"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          >
+            <source src="assets/about-graphic.mp4" type="video/mp4" />
+          </video>
         </section>
 
         <!-- ── 서비스 4블록 ─────────────────────────────── -->
@@ -160,23 +168,33 @@
                 기준으로 설계된 움직임입니다.
               </p>
             </div>
-            <!-- 피그마 이미지 fill 이 애니메이션 GIF (fffaef1ff09a) 다.
-                 상세 8번 히어로와 같은 해시라 assets/wd8-hero.mp4 를 공유한다. -->
+            <!-- Motion 영상 (PC 피드백_1015, 1190x960 가운데 자르기) -->
             <video
               class="ab-service-media" data-reveal
-              poster="assets/about-motion.webp"
+              poster="assets/about-motion-poster.webp"
               autoplay
               muted
               loop
               playsinline
               preload="metadata"
             >
-              <source src="assets/wd8-hero.mp4" type="video/mp4" />
+              <source src="assets/about-motion.mp4" type="video/mp4" />
             </video>
           </div>
 
           <div class="ab-service ab-service--h960">
-            <img class="ab-service-media" data-reveal src="assets/about-uiux.webp" alt="" />
+            <!-- UI/UX 영상 (PC 피드백_1015, 1190x960 가운데 자르기) -->
+            <video
+              class="ab-service-media" data-reveal
+              poster="assets/about-uiux-poster.webp"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+            >
+              <source src="assets/about-uiux.mp4" type="video/mp4" />
+            </video>
             <div class="ab-service-body" data-reveal>
               <div class="ab-service-head">
                 <h2 class="ab-service-title">UI /UX</h2>

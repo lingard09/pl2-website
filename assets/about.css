@@ -141,7 +141,9 @@
   justify-content: center;
 }
 
-.ab-graphic img {
+.ab-graphic video {
+  display: block;
+  object-fit: cover;
   width: 65%; /* 1248 / 1920 */
   aspect-ratio: 1248 / 467;
   height: auto;
