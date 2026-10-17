@@ -29,6 +29,10 @@
   };
 
   function load() {
+    // 한국어 문장 길이에 맞춰 넣은 줄바꿈은 번역문 중간을 끊는다 → 공백으로 바꿔 자연스럽게 흐르게 한다
+    Array.prototype.forEach.call(document.querySelectorAll("[data-ko-br] br"), function (br) {
+      br.parentNode.replaceChild(document.createTextNode(" "), br);
+    });
     var box = document.createElement("div");
     box.id = "pl2-translate";
     box.setAttribute("aria-hidden", "true");

@@ -63,8 +63,9 @@
   color: var(--pl2-neutral-30);
   font-size: min(1.0417vw, 20px) /* 20 */;
   font-weight: 400;
-  line-height: min(2.3958vw, 46px) /* 46 */;
+  line-height: min(1.9792vw, 38px) /* 38 (PC 피드백_1015) */;
   letter-spacing: -0.02em;
+  word-break: keep-all;
 }
 
 /* ── 통계 3열 ───────────────────────────────────────── */
@@ -97,6 +98,7 @@
   font-weight: 400;
   line-height: min(1.6667vw, 32px) /* 32 */;
   letter-spacing: -0.02em;
+  word-break: keep-all; /* 피그마처럼 어절 단위로 줄바꿈 */
 }
 
 /* ── 헤딩 + 2단 문단 ─────────────────────────────────── */
@@ -117,25 +119,20 @@
 }
 
 .ab-lead-cols {
-  container-type: inline-size;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: min(0.625vw, 12px);
 }
 
-/* 두 문단은 피그마대로 <br> 로만 줄이 나뉘어야 한다 (각 3줄 고정).
-   자동 줄바꿈을 막으려면 nowrap 이 필요한데, 글자가 18px 고정이면 1920 보다
-   좁은 창에서 줄이 칸을 뚫고 나간다 (1920 에서 이미 칸 695px / 줄 최대 ~690px 로 꽉 찬다).
-   그래서 폭이 줄면 글자도 같이 줄도록 컨테이너 기준 cqw 로 잡는다.
-   컨테이너(.ab-lead-cols)는 1920 에서 1401px → 18 / 1401 x 100 = 1.2848cqw.
-   1920 에서는 18px / 32.799px 과 소수점까지 같다. */
+/* 두 문단은 피그마대로 <br> 로 3줄씩 나뉜다. nowrap 은 쓰지 않는다 —
+   번역(영어 등)으로 문장이 길어지면 한 줄로 뻗어 옆 칸과 겹치기 때문에, 칸(695)을 넘는 줄은 접힌다. */
 .ab-lead-cols p {
   color: var(--pl2-neutral-40);
-  font-size: 1.2848cqw; /* 18 */
+  font-size: min(0.9375vw, 18px) /* 18 */;
   font-weight: 300;
-  line-height: 2.3411cqw; /* 32.799 */
+  line-height: min(1.7083vw, 32.8px) /* 32.799 */;
   letter-spacing: -0.02em;
-  white-space: nowrap;
+  word-break: keep-all;
 }
 
 /* ── 그리드 그래픽 (장식) ────────────────────────────── */
@@ -316,4 +313,22 @@
     var(--pl2-white) 20%,
     rgba(255, 255, 255, 0) 100%
   );
+}
+
+/* ── 자동 번역(영어 등)일 때 보정 ─────────────────────────
+   Google 번역은 <html> 에 translated-ltr / translated-rtl 클래스를 붙인다.
+   - 한국어 기준 마이너스 자간(-2~-4%)이 라틴 글자를 붙여 뭉개 보이게 해서 0 으로 되돌린다
+   - 소제목은 한 줄 기준 행간(24/24)이라 두 줄로 넘어가면 줄이 겹친다 → 1.3
+   - 한국어 문장에 맞춰 넣은 <br> 은 translate.js 가 공백으로 바꾼다 ([data-ko-br]) */
+html[class*="translated-"] .ab-intro p,
+html[class*="translated-"] .ab-stat-label,
+html[class*="translated-"] .ab-lead-cols p,
+html[class*="translated-"] .ab-service-sub,
+html[class*="translated-"] .ab-service-desc {
+  letter-spacing: 0;
+  word-break: normal;
+}
+
+html[class*="translated-"] .ab-service-sub {
+  line-height: 1.3;
 }
