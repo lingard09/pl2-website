@@ -29,10 +29,16 @@
   };
 
   function load() {
-    // 한국어 문장 길이에 맞춰 넣은 줄바꿈은 번역문 중간을 끊는다 → 공백으로 바꿔 자연스럽게 흐르게 한다
-    Array.prototype.forEach.call(document.querySelectorAll("[data-ko-br] br"), function (br) {
+    // 한국어 문장 길이에 맞춰 넣은 줄바꿈(<br>)은 번역문 중간을 끊는다 (단어 중간도 있다).
+    // 한글이 든 블록의 <br> 은 공백으로 바꿔 번역문이 칸 폭에 맞춰 자연스럽게 흐르게 한다.
+    // 번역하지 않는 곳(translate="no")은 그대로 둔다.
+    Array.prototype.forEach.call(document.querySelectorAll("body br"), function (br) {
+      var block = br.parentNode;
+      if (!block || block.closest('[translate="no"]')) return;
+      if (!/[\uac00-\ud7a3]/.test(block.textContent)) return;
       br.parentNode.replaceChild(document.createTextNode(" "), br);
     });
+
     var box = document.createElement("div");
     box.id = "pl2-translate";
     box.setAttribute("aria-hidden", "true");

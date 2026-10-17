@@ -736,3 +736,17 @@ body {
   background: none !important;
   box-shadow: none !important;
 }
+
+/* 번역문 타이포 보정 (전 페이지 공통)
+   - Google 번역은 바꾼 글을 <font> 로 감싼다. 한국어 기준 마이너스 자간이 라틴 글자를
+     붙여 뭉개 보이게 하므로 번역된 글자에만 자간 0 을 준다 (원래 영어인 제목은 그대로)
+   - 상세 헤더 설명은 한국어 줄 길이에 맞춰 nowrap 으로 묶어 두었는데, 번역문은 길어져
+     칸을 뚫고 나가므로 다시 자동 줄바꿈시킨다 (<br> 은 translate.js 가 공백으로 바꾼다) */
+html[class*="translated-"] font {
+  letter-spacing: 0;
+}
+
+html[class*="translated-"] .wd-head-desc,
+html[class*="translated-"] .wd-intro-desc {
+  white-space: normal;
+}

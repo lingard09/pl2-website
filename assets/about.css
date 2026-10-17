@@ -317,18 +317,8 @@
 
 /* ── 자동 번역(영어 등)일 때 보정 ─────────────────────────
    Google 번역은 <html> 에 translated-ltr / translated-rtl 클래스를 붙인다.
-   - 한국어 기준 마이너스 자간(-2~-4%)이 라틴 글자를 붙여 뭉개 보이게 해서 0 으로 되돌린다
-   - 소제목은 한 줄 기준 행간(24/24)이라 두 줄로 넘어가면 줄이 겹친다 → 1.3
-   - 한국어 문장에 맞춰 넣은 <br> 은 translate.js 가 공백으로 바꾼다 ([data-ko-br]) */
-html[class*="translated-"] .ab-intro p,
-html[class*="translated-"] .ab-stat-label,
-html[class*="translated-"] .ab-lead-cols p,
-html[class*="translated-"] .ab-service-sub,
-html[class*="translated-"] .ab-service-desc {
-  letter-spacing: 0;
-  word-break: normal;
-}
-
+   (번역문 자간 0 은 base.css 공통, <br> 은 translate.js 가 [data-ko-br] 에서 공백으로 바꾼다)
+   소제목은 한 줄 기준 행간(24/24)이라 번역문이 두 줄로 넘어가면 줄이 겹친다 → 1.3 */
 html[class*="translated-"] .ab-service-sub {
   line-height: 1.3;
 }
