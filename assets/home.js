@@ -44,13 +44,14 @@
   function blurSpike(el, focusNow) {
     if (!el.animate) return;
     var k = u();
-    var from = el._wasFocus ? 0 : 10 * k;
-    var to = focusNow ? 0 : 10 * k;
+    // 피그마 블러 값(10, 전환 중 24)의 절반 — 피그마 반경은 CSS blur 의 2배다
+    var from = el._wasFocus ? 0 : 5 * k;
+    var to = focusNow ? 0 : 5 * k;
     el._wasFocus = focusNow;
     el.animate(
       [
         { filter: "blur(" + from + "px)", easing: "ease-out" },
-        { filter: "blur(" + 24 * k + "px)", offset: 0.3, easing: "ease-out" },
+        { filter: "blur(" + 12 * k + "px)", offset: 0.3, easing: "ease-out" },
         { filter: focusNow ? "none" : "blur(" + to + "px)" },
       ],
       { duration: 720 }

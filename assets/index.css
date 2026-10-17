@@ -47,16 +47,15 @@
   left: 0;
   width: 100%;
   translate: 0 -50%;
-  opacity: 0.28;
-  filter: blur(calc(var(--u) * 10));
+  /* 피그마 1015: 주변 행은 투명도 100% + 레이어 블러 10.
+     피그마 블러 반경은 CSS blur 값의 2배라 blur(5) 로 옮긴다 (예전 0.28 투명도 + blur(10) 은 너무 흐렸다) */
+  filter: blur(calc(var(--u) * 5));
   /* 피그마 키프레임: 이동 1.8초 cubic-bezier(.16,.8,.24,1), 초점 전환 0.72초 */
-  transition: top 1.8s cubic-bezier(0.16, 0.8, 0.24, 1),
-    opacity 0.72s cubic-bezier(0.16, 0.8, 0.24, 1);
+  transition: top 1.8s cubic-bezier(0.16, 0.8, 0.24, 1);
   will-change: top, filter;
 }
 
 .hm-row.is-focus {
-  opacity: 1;
   filter: none;
 }
 
