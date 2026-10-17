@@ -1,12 +1,30 @@
 /* 해외 방문자 자동 번역 (PC 피드백_1015)
-   브라우저 언어가 한국어가 아니면 Google 웹사이트 번역기로 페이지를 그 언어로 바꿔 보여준다.
+   해외 방문자에게는 Google 웹사이트 번역기로 페이지를 브라우저 언어로 바꿔 보여준다.
    - 번역 대상 언어는 googtrans 쿠키(/ko/<언어>)로 정하고, 위젯 UI 는 숨긴다 (base.css)
-   - 한국어 사용자는 아무것도 불러오지 않는다
+   - 한국 사용자는 번역하지 않는다: 선호 언어 목록에 한국어가 하나라도 있거나
+     (영어 OS 를 쓰는 한국 사용자) 시간대가 한국(Asia/Seoul)이면 원문 그대로 둔다.
+     이때 예전에 남은 googtrans 쿠키도 지운다 — 남아 있으면 Google 이 계속 번역한다
    - 번역하면 안 되는 곳(브랜드명·로고 글자)은 HTML 에 translate="no" 를 붙여 둔다 */
 (function () {
   var langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || "ko"];
   var lang = String(langs[0] || "ko").toLowerCase();
-  if (lang.indexOf("ko") === 0) return;
+  var host = location.hostname;
+  var domains = [""];
+  if (host && host.indexOf(".") > 0) domains.push("; domain=." + host.replace(/^www\./, ""), "; domain=" + host);
+
+  var korean = Array.prototype.some.call(langs, function (l) {
+    return String(l).toLowerCase().indexOf("ko") === 0;
+  });
+  var tz = "";
+  try {
+    tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+  } catch (e) {}
+  if (korean || tz === "Asia/Seoul") {
+    domains.forEach(function (d) {
+      document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/" + d;
+    });
+    return;
+  }
 
   // Google 번역 언어 코드로 맞춘다 (중국어만 지역 구분, 나머지는 앞부분)
   var target = lang.split("-")[0];
@@ -14,7 +32,6 @@
   if (target === "iw") target = "he";
 
   var value = "/ko/" + target;
-  var host = location.hostname;
   document.cookie = "googtrans=" + value + "; path=/";
   if (host && host.indexOf(".") > 0) {
     document.cookie = "googtrans=" + value + "; path=/; domain=." + host.replace(/^www\./, "");
