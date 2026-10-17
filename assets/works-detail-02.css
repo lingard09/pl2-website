@@ -166,9 +166,12 @@
   height: calc(var(--stage-h) + 3 * 100vh);
 }
 
+/* 고정 위치: 왼쪽 이미지가 GNB(위 12 + 높이 60 = 72) 아래 보이는 영역의 세로 정중앙에 오도록.
+   이미지는 스테이지 세로 가운데에 있으므로 스테이지 중심을 (72 + 화면 높이) / 2 에 맞춘다.
+   화면이 스테이지보다 낮아도 0 으로 막지 않는다 — 막으면 이미지가 중앙보다 아래로 쏠렸다. */
 .wd2-story.is-ready .wd2-story-stage {
   position: sticky;
-  top: max(0px, calc((100vh - var(--stage-h)) / 2));
+  top: calc((100vh - var(--stage-h)) / 2 + 36px);
   height: var(--stage-h);
 }
 
