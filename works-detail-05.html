@@ -246,6 +246,7 @@
           <div class="wd5-retouch-block">
             <!-- 보정 전/후 비교 (PC 피드백_0930, 피그마 Frame 2116928760).
                  기본은 가운데 고정, 드래그(또는 키보드 ←/→)로 경계를 옮긴다 (compare.js).
+                 경계선 양옆 ←/→ 버튼(PC 피드백_1015, 피그마 Liquid Glass 36x36)을 누르면 10% 씩 옮겨 간다.
                  왼쪽이 보정 전, 오른쪽이 보정 후.
                  보정 전 사진은 PC 피드백_1015 에서 들어온 원본(피그마 Before 081288)을
                  보정 후와 같은 범위로 잘라 쓴다. 피그마도 Before 위에 검정 20% 를 덮어 둬서 딤은 유지. -->
@@ -267,7 +268,10 @@
                 aria-valuemin="0"
                 aria-valuemax="100"
                 aria-valuenow="50"
-              ></div>
+              >
+                <button type="button" class="wd5-compare-btn wd5-compare-btn--prev" aria-label="경계를 왼쪽으로" tabindex="-1"></button>
+                <button type="button" class="wd5-compare-btn wd5-compare-btn--next" aria-label="경계를 오른쪽으로" tabindex="-1"></button>
+              </div>
             </div>
 
             <!-- 아래 6장은 data-reveal 로 하나씩 등장한다 (PC 피드백_0930) -->

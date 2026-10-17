@@ -66,6 +66,10 @@ if [ "${PRETTY_URLS:-1}" != "0" ]; then
   python3 tools/pretty-urls.py dist
 fi
 
+# 배포본 HTML·CSS 에서 주석을 지운다 (2026-10-17). 누구나 '소스 보기'로 볼 수 있어서
+# 작업 메모는 저장소에만 남기고 서버에는 올리지 않는다.
+python3 tools/strip-comments.py dist
+
 # HTML 이 참조하는 파일·페이지가 전부 있는지 확인 (각 html 위치 기준 상대 경로)
 missing=0
 while read -r f; do

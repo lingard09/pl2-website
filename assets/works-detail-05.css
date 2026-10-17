@@ -217,6 +217,57 @@
   box-shadow: -2px 0 6px rgba(0, 0, 0, 0.4);
 }
 
+/* 경계선 양옆 ←/→ 버튼 (PC 피드백_1015, 피그마 Liquid Glass 36x36, 선에서 12 떨어짐, 세로 가운데).
+   선과 함께 움직인다. 누르면 compare.js 가 경계를 10% 옮기고 그동안만 --pos 에 transition 을 건다. */
+.wd5-compare-btn {
+  position: absolute;
+  top: 50%;
+  width: min(1.875vw, 36px);
+  height: min(1.875vw, 36px);
+  padding: 0;
+  border: 0.45px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  /* 화살표 14x9 (+ 그림자 여백 2) → 18 / 36. 화살표에 옅은 그림자를 넣어 흰 배경(보정 후)에서도 보이게 했다 */
+  background: rgba(255, 255, 255, 0.2) url("icon-compare-arrow.svg") center / 50% auto no-repeat;
+  box-shadow: 0 2.4px 12px rgba(0, 0, 0, 0.16), inset 0 0 0 0.5px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  cursor: pointer;
+  translate: 0 -50%;
+  transition: background-color 0.2s ease, scale 0.2s ease;
+}
+
+.wd5-compare-btn--prev {
+  right: calc(50% + min(0.625vw, 12px));
+  scale: -1 1; /* 같은 화살표를 좌우로 뒤집어 ← 로 쓴다 */
+}
+
+.wd5-compare-btn--next {
+  left: calc(50% + min(0.625vw, 12px));
+}
+
+.wd5-compare-btn:hover {
+  background-color: rgba(255, 255, 255, 0.32);
+}
+
+.wd5-compare-btn--prev:active {
+  scale: -0.92 0.92;
+}
+
+.wd5-compare-btn--next:active {
+  scale: 0.92;
+}
+
+@property --pos {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 50%;
+}
+
+.wd5-compare.is-stepping {
+  transition: --pos 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 .wd5-compare-handle:focus-visible::before {
   width: 3px;
   margin-left: -1px;
