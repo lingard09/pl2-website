@@ -336,7 +336,7 @@ button {
 
 :where(.gnb:not(.gnb--tw):not(.gnb--tb)) .gnb-item {
   color: var(--pl2-black);
-  border-bottom-color: var(--pl2-alpha-20);
+  border-bottom-color: rgba(0, 0, 0, 0.12); /* PC 피드백_1026 GNB 시안: 검정 12% */
 }
 
 /* T/W (어두운 배경): 컴포넌트는 검정 10% + GLASS, 글자 흰색 */
@@ -348,7 +348,7 @@ button {
 
 :where(.gnb--tw) .gnb-item {
   color: var(--pl2-white);
-  border-bottom-color: rgba(0, 0, 0, 0.2); /* PC 피드백_1015: 세 타입 모두 검정 20% */
+  border-bottom-color: rgba(255, 255, 255, 0.2); /* PC 피드백_1026 GNB 시안: 어두운 배경용은 흰색 20% */
 }
 
 /* 노란 패널 위에서는 검정 60% 가 올리브색으로 떠서 탁하다.
@@ -400,7 +400,7 @@ button {
 
 :where(.gnb--tb) .gnb-item {
   color: var(--pl2-black);
-  border-bottom-color: rgba(0, 0, 0, 0.2);
+  border-bottom-color: rgba(0, 0, 0, 0.12); /* PC 피드백_1026 GNB 시안: 검정 12% */
 }
 
 
