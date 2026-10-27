@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" data-motion="space">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -107,7 +107,7 @@
         </section>
 
         <!-- ── 장식 그래픽 (PL2 로고 + 그리드) ──────────── -->
-        <section class="ab-graphic">
+        <section class="ab-graphic" data-pin="1">
           <!-- 로고 모션 (PC 피드백_1015, 피그마 Grid 1248x467) -->
           <video
             poster="assets/about-graphic-poster.webp"
@@ -125,7 +125,7 @@
         <section class="ab-services">
           <!-- 블록마다 이미지·텍스트가 왼쪽 → 오른쪽 순서로 하나씩 등장한다 (data-reveal).
                둘의 top 이 같아서 motion.js 가 왼쪽부터 시차를 준다 -->
-          <div class="ab-service ab-service--h640">
+          <div class="ab-service ab-service--h640" data-snap>
             <!-- 피그마 이미지 fill 이 애니메이션 GIF (77e134582c1f) 다.
                  상세 3번 제품컷 1번과 같은 해시라 파일을 공유한다. -->
             <video
@@ -155,7 +155,7 @@
             </div>
           </div>
 
-          <div class="ab-service ab-service--h960">
+          <div class="ab-service ab-service--h960" data-snap>
             <div class="ab-service-body" data-reveal>
               <div class="ab-service-head">
                 <h2 class="ab-service-title">Motion</h2>
@@ -182,7 +182,7 @@
             </video>
           </div>
 
-          <div class="ab-service ab-service--h960">
+          <div class="ab-service ab-service--h960" data-snap>
             <!-- UI/UX 영상 (PC 피드백_1015, 1190x960 가운데 자르기) -->
             <video
               class="ab-service-media" data-reveal
@@ -210,7 +210,7 @@
             </div>
           </div>
 
-          <div class="ab-service ab-service--h640">
+          <div class="ab-service ab-service--h640" data-snap>
             <div class="ab-service-body" data-reveal>
               <div class="ab-service-head">
                 <h2 class="ab-service-title">AI</h2>
@@ -360,6 +360,8 @@
       </div>
     </footer>
 
+    <script src="assets/lenis.min.js"></script>
+    <script src="assets/space-motion.js"></script>
     <script src="assets/gnb.js"></script>
   </body>
 </html>

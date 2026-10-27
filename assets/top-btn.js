@@ -10,6 +10,11 @@
     var reduce =
       window.matchMedia &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // 공간 모션(관성 스크롤)이 켜진 페이지는 Lenis 로 올려야 스크롤이 서로 다투지 않는다
+    if (window.PL2Space && window.PL2Space.lenis) {
+      window.PL2Space.lenis.scrollTo(0, { duration: 1.4 });
+      return;
+    }
     window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
   });
 

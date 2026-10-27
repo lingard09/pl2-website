@@ -72,6 +72,14 @@
   // (overflow: hidden 은 스크롤바가 사라졌다 생기며 카드가 옆으로 튀어서 쓰지 않는다)
   var unlockScroll = pushing ? lockScroll() : null;
 
+  // 공간 모션 시범 (스크롤·모션 개선 문의, 2026-10-27): <html data-motion="space"> 인 페이지는
+  // 데스크톱(마우스·트랙패드, 폭 1024 이상)에서 등장 모션을 space-motion.js 에 맡긴다.
+  // 터치 기기·좁은 화면은 지금의 등장 모션을 그대로 쓴다.
+  var space =
+    root.getAttribute("data-motion") === "space" &&
+    window.matchMedia("(pointer: fine) and (min-width: 1024px)").matches;
+  if (space) root.classList.add("sp-on");
+
   document.addEventListener("DOMContentLoaded", function () {
     initPageTransition();
     // 전환 패널이 걷히는 중이면 등장 모션을 그만큼 늦춘다.
@@ -79,6 +87,7 @@
     // 첫 화면 안의 요소는 따로 등장시키지 않는다.
     // 밀어 올리기 중에는 첫 화면 카드가 화면 밖에서 출발해서, 관찰을 바로 시작하면
     // "화면 밖"으로 판정돼 숨겨진다. 카드가 모두 붙은 뒤부터 관찰한다.
+    if (space) return;
     initReveal(pushing ? pushTotal + 100 : entering || intro ? hold + 350 : 0, pushing);
   });
 
@@ -338,6 +347,16 @@
       ? [scope]
       : Array.prototype.slice.call(scope.querySelectorAll(".ab-stat-num"));
   }
+
+  // space-motion.js 가 About 숫자 카운팅을 그대로 쓸 수 있게 내보낸다
+  window.PL2Motion = {
+    startCounters: function (scope, delay) {
+      startCounters(scope, delay || 0);
+    },
+    stopCounters: function (scope) {
+      stopCounters(scope);
+    },
+  };
 
   function stopCounters(scope) {
     counterEls(scope).forEach(function (el) {
