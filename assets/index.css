@@ -47,7 +47,7 @@
   left: 0;
   width: 100%;
   translate: 0 -50%;
-  /* PC 피드백_1026: 행 자체에는 블러가 없다. 흐림은 위아래 딤(.hm-dim)의 배경 블러로만 준다 */
+  /* PC 피드백_1026 결정안(Frame 2116929566): 행에 블러·딤 없이 모두 또렷하게 */
   /* 피그마 키프레임: 이동 1.8초 cubic-bezier(.16,.8,.24,1) */
   transition: top 1.8s cubic-bezier(0.16, 0.8, 0.24, 1);
   will-change: top;
@@ -93,48 +93,7 @@
   white-space: nowrap;
 }
 
-/* 위아래 딤 (PC 피드백_1026, 피그마 Dim 1920x320 두 장).
-   흰색 2% + 가장자리 흰색 100% → 안쪽 320 에서 투명한 그라디언트에,
-   가장자리 25 → 안쪽 0 으로 줄어드는 점진 배경 블러(PROGRESSIVE)를 겹친다.
-   CSS 에는 점진 블러가 없어서 블러 층(::before)을 같은 방향 마스크로 흐려 흉내 낸다.
-   피그마 블러 반경은 CSS 값의 2배라 25 → 12.5 */
-.hm-dim {
-  position: absolute;
-  left: 0;
-  right: 0;
-  z-index: 1;
-  height: calc(var(--u) * 320);
-  pointer-events: none;
-}
-
-.hm-dim::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  backdrop-filter: blur(calc(var(--u) * 12.5));
-  -webkit-backdrop-filter: blur(calc(var(--u) * 12.5));
-}
-
-.hm-dim--top {
-  top: 0;
-  background: linear-gradient(#fff, rgba(255, 255, 255, 0)), rgba(255, 255, 255, 0.02);
-}
-
-.hm-dim--top::before {
-  mask-image: linear-gradient(#000, transparent);
-  -webkit-mask-image: linear-gradient(#000, transparent);
-}
-
-.hm-dim--bottom {
-  bottom: 0;
-  background: linear-gradient(to top, #fff, rgba(255, 255, 255, 0)), rgba(255, 255, 255, 0.02);
-}
-
-.hm-dim--bottom::before {
-  mask-image: linear-gradient(to top, #000, transparent);
-  -webkit-mask-image: linear-gradient(to top, #000, transparent);
-}
-
+/* 위아래 딤은 없다 (PC 피드백_1026 결정안 Frame 2116929566: 14개 행이 모두 또렷하게 보인다) */
 @media (prefers-reduced-motion: reduce) {
   .hm-row {
     transition: none;
