@@ -435,29 +435,39 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: min(3.125vw, 60px);
-  height: min(3.125vw, 60px);
+  /* PC 피드백_1026 BTN_TOP (3570:43269): 52x52 원형 글라스 (원래 60).
+     윤곽선은 메뉴바와 같은 흰 그라디언트 + 흰색 10% (::after), 그림자 0 5 25 검정 8%.
+     흰 바탕 위 렌더가 #F5~#FA 의 무채색 원이라 알파 .6 화이트 글래스는 그대로 둔다 */
+  width: min(2.7083vw, 52px);
+  height: min(2.7083vw, 52px);
   border-radius: 50%;
-  /* 노란 기가 튄다는 피드백으로 중성 화이트 글래스로 바꿨다 (PC 피드백_0930).
-     피그마 렌더 실측: 흰 바탕 위에서 #F5~#FA 의 무채색 원 + 그림자.
-     알파 .6 은 뒤가 비치면서도 어두운 카드 위에서 검정 화살표 대비가 AA(4.5:1)를
-     넘는 값이다 (이전 노란 글래스 때 .5 에서 실측한 기준과 같은 방식). */
   background: rgba(245, 245, 245, 0.6);
   /* 블러는 스케일하지 않는다 (GNB 패널과 같은 규칙) */
   backdrop-filter: blur(34px);
   -webkit-backdrop-filter: blur(34px);
   /* 푸터 영역에 들어가면 사라진다 (top-btn.js 가 .is-away 를 붙인다) */
   transition: opacity 0.4s ease, visibility 0s linear 0s;
-  /* 피그마 DROP_SHADOW 0 4 20 #000@12% + 유리 가장자리 하이라이트 */
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4),
-    0 min(0.2083vw, 4px) min(1.0417vw, 20px) rgba(0, 0, 0, 0.12);
+  box-shadow: 0 min(0.2579vw, 4.95px) min(1.2897vw, 24.76px) rgba(0, 0, 0, 0.08);
 }
 
-/* 회전 전 23.708x14.858 → -90deg 돌려 60x60 정중앙에 온다 */
+.top-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(105deg, rgba(255, 255, 255, 0.7) 10%, rgba(255, 255, 255, 0) 90%),
+    rgba(255, 255, 255, 0.1);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* 위쪽 화살표 13x21 (진회색 → 흰색 그라디언트, icon-top-arrow-up.svg) */
 .top-btn-arrow {
-  width: min(1.2348vw, 23.708px);
-  height: min(0.7738vw, 14.858px);
-  transform: rotate(-90deg);
+  width: min(0.6771vw, 13px);
+  height: min(1.0938vw, 21px);
 }
 
 .top-btn.is-away {
@@ -472,13 +482,13 @@ button {
   .top-btn {
     right: 40px;
     bottom: 40px;
-    width: 60px;
-    height: 60px;
+    width: 52px;
+    height: 52px;
   }
 
   .top-btn-arrow {
-    width: 23.708px;
-    height: 14.858px;
+    width: 13px;
+    height: 21px;
   }
 }
 
