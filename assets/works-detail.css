@@ -79,13 +79,24 @@
 }
 
 /* 피그마 Dim: 왼쪽 검정 20% → 오른쪽 투명 */
+/* 히어로 딤 (PC 피드백_1026 히어로 모음 → 2026-10-30 확정): 영상마다 Light / Dark 중 하나.
+   둘 다 왼쪽 끝 검정 → 화면 가운데(49.5%)에서 투명. 강도만 다르다 (Light 30%, Dark 50%).
+   글자는 모든 상세 히어로에서 흰색이다. */
 .wd-hero-dim {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     to right,
-    rgba(0, 0, 0, 0.2) 0%,
-    rgba(0, 0, 0, 0) 100%
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0) 49.5%
+  );
+}
+
+.wd-hero-dim--dark {
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0) 49.5%
   );
 }
 
