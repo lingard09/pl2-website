@@ -56,14 +56,12 @@
       <div class="wd-container">
         <!-- ══ 1. 히어로 + 프로젝트 개요 ══ -->
         <section class="wd-top">
-          <div class="wd-hero">
-            <!-- 피그마 히어로 fill 은 749x860 애니메이션 GIF (e358780883a0) → mp4 로 변환.
-                 정지 프레임은 poster 로 남겼다. Works 11번 카드와 같은 파일이다.
-                 피그마 scaleMode=FIT 라 works-detail.css 의 .wd-body--light .wd-hero-media
-                 (object-fit: contain) 가 그대로 먹는다. -->
+          <!-- 페이지는 라이트 테마지만 히어로는 가로형 영상 + 흰 글씨 (PC 피드백_1026 히어로 모음 3551:36189,
+               영상은 1030 Works 썸네일 haruharu). Works 카드와 같은 파일이다. -->
+          <div class="wd-hero wd-hero--dark">
             <video
               class="wd-hero-media"
-              poster="assets/wd3-hero.webp"
+              poster="assets/wd3-hero-poster.webp"
               autoplay
               muted
               loop
