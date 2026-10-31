@@ -6,6 +6,18 @@
   var btn = document.querySelector(".top-btn");
   if (!btn) return;
 
+  // 화살표만 페이지와 Difference 로 섞기 위해 복제해 위에 겹친다 (추가 전달_10.29, base.css 참고)
+  var ink = btn.cloneNode(true);
+  ink.classList.add("top-btn-ink");
+  ink.setAttribute("aria-hidden", "true");
+  ink.setAttribute("tabindex", "-1");
+  ink.setAttribute("inert", "");
+  btn.classList.add("top-btn-glass");
+  btn.parentNode.insertBefore(ink, btn.nextSibling);
+  new MutationObserver(function () {
+    ink.classList.toggle("is-away", btn.classList.contains("is-away"));
+  }).observe(btn, { attributes: true, attributeFilter: ["class"] });
+
   btn.addEventListener("click", function () {
     var reduce =
       window.matchMedia &&

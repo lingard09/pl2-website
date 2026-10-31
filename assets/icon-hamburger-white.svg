@@ -1,5 +1,1 @@
-<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="Icon/Normal/Hamburger">
-<path id="Icon" d="M5 16H27M5 8H27M5 24H27" stroke="white" stroke-width="2" stroke-linejoin="round"/>
-</g>
-</svg>
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 16H25M7 8H25M7 24H25" stroke="white" stroke-width="2" stroke-linejoin="round"/></svg>

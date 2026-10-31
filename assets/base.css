@@ -339,11 +339,10 @@ button {
   border-bottom-color: rgba(0, 0, 0, 0.12); /* PC 피드백_1026 GNB 시안: 검정 12% */
 }
 
-/* T/W (어두운 배경): 2026-10-30 메뉴바 시안(Frame 2116929568) — 채우기 없이 GLASS 20, 구분선 흰색 30%.
+/* T/W: 2026-10-30 메뉴바 시안(Frame 2116929568) — 채우기 없이 GLASS 20, 구분선 흰색 30%.
    피그마 GLASS 반경은 CSS blur 의 2배라 20 → 10.
-   시안의 글자·아이콘·구분선에는 Difference 블렌드가 걸려 있지만, 피그마에서도 메뉴바 안에서만
-   섞여 실제 화면은 흰색이다. 브라우저에서 진짜 Difference 로 섞으면 컬러 배경 위에서 글자가
-   보색(예: 청록 위 분홍)으로 바뀌어 시안과 달라지므로 흰색 그대로 둔다. */
+   추가 전달_10.29 부터 모든 페이지가 이 투명 메뉴 하나로 통일됐다 (글자·아이콘·구분선 Difference,
+   아래 '잉크 층' 참고). */
 :where(.gnb--tw) .gnb-panel {
   background: transparent;
   backdrop-filter: blur(10px);
@@ -409,6 +408,60 @@ button {
 
 
 
+/* ── Difference 잉크 층 (추가 전달_10.29) ──────────────────────
+   글자·햄버거·구분선을 흰색 Difference 로 섞어 밝은 배경에서는 검게, 어두운 배경에서는 희게 보이게 한다.
+   메뉴바는 fixed + backdrop-filter 라 그 안의 요소에 mix-blend-mode 를 걸면 메뉴바 안에서만 섞여
+   페이지와는 섞이지 않는다. 그래서 gnb.js 가 GNB 를 하나 복제해 바로 위에 겹쳐 둔다.
+     .gnb-glass (원본) : 블러·그림자·윤곽선·호버 배경, 클릭을 받는다. 글자·아이콘은 숨긴다.
+     .gnb-ink   (복제) : 배경 없이 흰 글자·아이콘·구분선만. 층 전체가 mix-blend-mode: difference.
+   호버한 행은 원본이 검정 60% + 노란 글자를 그리고, 복제의 같은 행 글자는 숨긴다. */
+.gnb.gnb-glass .gnb-brand,
+.gnb.gnb-glass .gnb-item {
+  color: transparent;
+  border-bottom-color: transparent;
+}
+
+.gnb.gnb-glass .gnb-toggle {
+  background-image: none;
+}
+
+.gnb.gnb-glass .gnb-item:hover,
+.gnb.gnb-glass .gnb-item:focus-visible {
+  background: rgba(0, 0, 0, 0.6);
+  color: #eee021;
+}
+
+.gnb.gnb-ink {
+  mix-blend-mode: difference;
+  pointer-events: none;
+}
+
+.gnb.gnb-ink .gnb-bar,
+.gnb.gnb-ink .gnb-panel {
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.gnb.gnb-ink .gnb-bar::after,
+.gnb.gnb-ink .gnb-panel::after {
+  display: none;
+}
+
+.gnb.gnb-ink .gnb-brand,
+.gnb.gnb-ink .gnb-item {
+  color: var(--pl2-white);
+}
+
+.gnb.gnb-ink .gnb-item {
+  border-bottom-color: rgba(255, 255, 255, 0.3);
+}
+
+.gnb.gnb-ink .gnb-item.is-hover {
+  color: transparent;
+}
+
 /* ── 모바일 GNB (PC 피드백_1007, 피그마 Mo 3108:15815) ──────────
    피그마 Mo(390) 에서 바는 좌우 20 을 뺀 350x60. 안쪽 치수(높이 60 / 패딩 24·20 /
    글자 25 / 아이콘 32 / 라운드 12)는 PC 와 같고 폭만 화면에 맞춰 늘어난다.
@@ -435,39 +488,38 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* PC 피드백_1026 BTN_TOP (3570:43269): 52x52 원형 글라스 (원래 60).
-     윤곽선은 메뉴바와 같은 흰 그라디언트 + 흰색 10% (::after), 그림자 0 5 25 검정 8%.
-     흰 바탕 위 렌더가 #F5~#FA 의 무채색 원이라 알파 .6 화이트 글래스는 그대로 둔다 */
-  width: min(2.7083vw, 52px);
-  height: min(2.7083vw, 52px);
+  /* 추가 전달_10.29 Top (3658:22362): 50x50 완전 투명 원 — 채우기·윤곽선 없이 GLASS 20 + 그림자 0 4 20 검정 12%.
+     화살표는 흰색 Difference (메뉴바와 같은 잉크 층 방식, top-btn.js 가 복제해 겹친다) */
+  width: min(2.6042vw, 50px);
+  height: min(2.6042vw, 50px);
   border-radius: 50%;
-  background: rgba(245, 245, 245, 0.6);
-  /* 블러는 스케일하지 않는다 (GNB 패널과 같은 규칙) */
-  backdrop-filter: blur(34px);
-  -webkit-backdrop-filter: blur(34px);
+  background: transparent;
+  /* 블러는 스케일하지 않는다 (GNB 패널과 같은 규칙). 피그마 GLASS 20 = CSS blur 10 */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   /* 푸터 영역에 들어가면 사라진다 (top-btn.js 가 .is-away 를 붙인다) */
   transition: opacity 0.4s ease, visibility 0s linear 0s;
-  box-shadow: 0 min(0.2579vw, 4.95px) min(1.2897vw, 24.76px) rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
 }
 
-.top-btn::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  padding: 1px;
-  border-radius: inherit;
-  background: linear-gradient(105deg, rgba(255, 255, 255, 0.7) 10%, rgba(255, 255, 255, 0) 90%),
-    rgba(255, 255, 255, 0.1);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-}
-
-/* 위쪽 화살표 13x21 (진회색 → 흰색 그라디언트, icon-top-arrow-up.svg) */
+/* 위쪽 화살표 (흰색, icon-top-arrow-thin.svg 는 버튼과 같은 50x50 캔버스) */
 .top-btn-arrow {
-  width: min(0.6771vw, 13px);
-  height: min(1.0938vw, 21px);
+  width: 100%;
+  height: 100%;
+}
+
+/* 원본 버튼은 블러·그림자만, 복제(.top-btn-ink)는 화살표만 Difference 로 섞는다 */
+.top-btn-glass .top-btn-arrow {
+  visibility: hidden;
+}
+
+.top-btn.top-btn-ink {
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  mix-blend-mode: difference;
+  pointer-events: none;
 }
 
 .top-btn.is-away {
@@ -477,18 +529,13 @@ button {
 }
 
 /* 1280 미만(태블릿·모바일)에서는 vw 로 줄이면 버튼이 손가락보다 작아진다
-   (834 에서 26px). GNB 와 같이 PC 크기 60 을 그대로 쓴다 (PC 피드백_1007). */
+   (834 에서 26px). GNB 와 같이 PC 크기 50 을 그대로 쓴다 (PC 피드백_1007). */
 @media (max-width: 1279.98px) {
   .top-btn {
     right: 40px;
     bottom: 40px;
-    width: 52px;
-    height: 52px;
-  }
-
-  .top-btn-arrow {
-    width: 13px;
-    height: 21px;
+    width: 50px;
+    height: 50px;
   }
 }
 

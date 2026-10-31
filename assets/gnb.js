@@ -8,8 +8,46 @@
   var toggle = gnb.querySelector(".gnb-toggle");
   if (!toggle) return;
 
+  // Difference 잉크 층 (추가 전달_10.29, base.css 참고): GNB 를 복제해 바로 위에 겹친다.
+  // 원본은 블러·클릭, 복제는 흰 글자·아이콘·구분선을 페이지와 Difference 로 섞는다.
+  var ink = gnb.cloneNode(true);
+  ink.classList.add("gnb-ink");
+  ink.setAttribute("aria-hidden", "true");
+  ink.setAttribute("inert", "");
+  Array.prototype.forEach.call(ink.querySelectorAll("[id]"), function (el) {
+    el.removeAttribute("id");
+  });
+  gnb.classList.add("gnb-glass");
+  gnb.parentNode.insertBefore(ink, gnb.nextSibling);
+
+  // 호버·포커스한 행은 원본이 노란 글자로 그리므로 복제의 같은 행 글자를 숨긴다
+  var items = gnb.querySelectorAll(".gnb-item");
+  var inkItems = ink.querySelectorAll(".gnb-item");
+  Array.prototype.forEach.call(items, function (item, i) {
+    function on() {
+      inkItems[i].classList.add("is-hover");
+    }
+    function off() {
+      if (!item.matches(":hover") && document.activeElement !== item) {
+        inkItems[i].classList.remove("is-hover");
+      }
+    }
+    item.addEventListener("mouseenter", on);
+    item.addEventListener("mouseleave", off);
+    item.addEventListener("focus", function () {
+      if (item.matches(":focus-visible")) on();
+    });
+    item.addEventListener("blur", off);
+  });
+
+  // 숨김(is-away) 같은 클래스 변화를 복제에도 그대로 옮긴다
+  new MutationObserver(function () {
+    ink.classList.toggle("is-away", gnb.classList.contains("is-away"));
+  }).observe(gnb, { attributes: true, attributeFilter: ["class"] });
+
   function setOpen(open) {
     gnb.setAttribute("data-dropdown", open ? "on" : "off");
+    ink.setAttribute("data-dropdown", open ? "on" : "off");
     toggle.setAttribute("aria-expanded", open ? "true" : "false");
     toggle.setAttribute("aria-label", open ? "메뉴 닫기" : "메뉴 열기");
   }

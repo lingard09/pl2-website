@@ -1,0 +1,153 @@
+/* PL2 works detail 13 전용 (공통 구조는 works-detail.css)
+   피그마: 추가 전달_10.29 Works_Detail_2 (3658:21138) — Gyeong-gi 4-H Club Campaign Film
+   흰 배경. 01 Grow → 05 Feast 단계 스크롤은 상세 02 와 같은 구조·스크립트(wd2-story.js)를 쓰고
+   색만 밝은 배경에 맞춘다 (비활성 #C8C8C8 / 활성 #212121 / 설명 #555555). */
+
+/* ══ 단계 (각 1920x960: 왼쪽 사진 묶음 960x960 + 오른쪽 목록 x=1240, w=620) ══ */
+.wd2-step-section {
+  display: flex;
+  align-items: center;
+  height: min(50vw, 960px);
+}
+
+.wd2-collage {
+  flex: none;
+  width: 50%; /* 960 / 1920 */
+  aspect-ratio: 960 / 960;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.wd2-steps {
+  flex: none;
+  width: 35.417%; /* 680 / 1920 */
+  margin-left: 14.583%; /* 1240 - 960 = 280 */
+}
+
+.wd2-step-list {
+  display: flex;
+  flex-direction: column;
+  gap: min(2.0833vw, 40px);
+  width: 91.176%; /* 620 / 680 */
+}
+
+.wd2-step {
+  display: flex;
+  flex-direction: column;
+}
+
+.wd2-step-head {
+  display: flex;
+  gap: min(0.8333vw, 16px);
+  color: var(--pl2-neutral-60); /* 비활성 #C8C8C8 */
+  font-family: var(--pl2-font-display);
+  font-size: min(2.7083vw, 52px) /* 52 */;
+  font-weight: 400;
+  line-height: min(3.2292vw, 62px) /* 62 */;
+}
+
+.wd2-step[data-active="true"] .wd2-step-head {
+  color: var(--pl2-neutral-10); /* 활성 #212121 */
+}
+
+.wd2-step-desc {
+  margin-top: min(1.25vw, 24px);
+  color: var(--pl2-neutral-30); /* #555555 */
+  font-size: min(0.9375vw, 18px) /* 18 */;
+  font-weight: 300;
+  line-height: min(1.7708vw, 34px) /* 34 */;
+  letter-spacing: -0.02em;
+  word-break: keep-all;
+}
+
+/* ══ 단계 스크롤 (wd2-story.js 가 .is-ready 와 data-step 을 붙인다) ══
+   스테이지 960 을 화면에 고정하고, 단계마다 화면 한 높이씩 스크롤하면 다음으로 넘어간다. */
+.wd2-story.is-ready {
+  --stage-h: min(50vw, 960px);
+  position: relative;
+  height: calc(var(--stage-h) + 4 * 100vh);
+}
+
+/* 고정 위치: GNB(72) 아래 보이는 영역의 세로 가운데 (상세 02 와 같은 계산) */
+.wd2-story.is-ready .wd2-story-stage {
+  position: sticky;
+  top: calc((100vh - var(--stage-h)) / 2 + 36px);
+  height: var(--stage-h);
+}
+
+.wd2-story.is-ready .wd2-step-section {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.6s ease, visibility 0s linear 0.6s;
+}
+
+.wd2-story.is-ready .wd2-step-section.is-current {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.6s ease, visibility 0s;
+}
+
+.wd2-story.is-ready .wd2-collage {
+  translate: 0 min(2.0833vw, 40px);
+  transition: translate 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.wd2-story.is-ready .is-current .wd2-collage {
+  translate: 0 0;
+}
+
+.wd2-story.is-ready .wd2-step-section .wd2-steps {
+  visibility: hidden;
+}
+
+.wd2-story-list {
+  position: absolute;
+  top: 50%;
+  left: 64.583%; /* 1240 / 1920 */
+  z-index: 1;
+  width: 32.292%; /* 620 / 1920 */
+  translate: 0 -50%;
+}
+
+.wd2-story-list .wd2-step-head {
+  transition: color 0.5s ease;
+}
+
+.wd2-story-desc {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.4s ease;
+}
+
+.wd2-story-desc > .wd2-step-desc {
+  overflow: hidden;
+  min-height: 0;
+  margin-top: 0;
+}
+
+.wd2-story-desc > .wd2-step-desc::before {
+  content: "";
+  display: block;
+  height: min(1.25vw, 24px);
+}
+
+.wd2-story-list .wd2-step[data-active="true"] .wd2-story-desc {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition: grid-template-rows 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.5s ease 0.15s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wd2-story-desc,
+  .wd2-story-list .wd2-step-head,
+  .wd2-story.is-ready .wd2-step-section,
+  .wd2-story.is-ready .wd2-collage {
+    transition: none;
+  }
+}

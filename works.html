@@ -27,7 +27,7 @@
          "실제 요소"의 background-color 로 상태바 색을 정한다 — ::before 같은 가상 요소와
          theme-color 는 무시해서 별도 요소로 둔다 (works.css 모바일 블록) -->
     <div class="wk-statusbar" aria-hidden="true"></div>
-    <nav class="gnb" data-dropdown="off" data-pinned>
+    <nav class="gnb gnb--tw" data-dropdown="off" data-pinned>
       <div class="gnb-bar">
         <span class="gnb-brand" translate="no">PL2 Creative Studio</span>
         <button
@@ -49,7 +49,7 @@
     <main class="wk-main">
       <h1 class="sr-only">Works</h1>
 
-      <!-- 카드 배치·크기: 피그마 Works 3024:13288 (PC 피드백_0930)
+      <!-- 카드 배치·크기: 피그마 Works 3024:13288 (PC 피드백_0930) → 추가 전달_10.29 Works 3658:20968
            크기 3종 = S 942x530 / M 942x707 / L 942x942 (피그마 2869:12801) -->
       <div class="wk-grid">
         <!-- 왼쪽 열 (피그마 Section 3024:13290) -->
@@ -62,14 +62,14 @@
               <p class="wk-card-project">Hanwha E-sports 2026 Asian Games</p>
             </div>
           </a>
-          <!-- 신규 (3024:13300). 상세 페이지 없음 -->
-          <article class="wk-card wk-card--s">
+          <!-- 상세 13 (추가 전달_10.29) -->
+          <a class="wk-card wk-card--s" href="works-detail-13.html">
             <img class="wk-card-media" src="assets/works-14.webp" alt="" />
             <div class="wk-card-overlay">
               <p class="wk-card-brand">경기도농업기술원</p>
-              <p class="wk-card-project">Gyeong-gi 4-H Club Project</p>
+              <p class="wk-card-project">Gyeong-gi 4-H Club Campaign Film</p>
             </div>
-          </article>
+          </a>
           <!-- 상세 07. 피그마 VIDEO fill(a68b97baec) -->
           <a class="wk-card wk-card--l" href="works-detail-07.html">
             <video
@@ -94,6 +94,14 @@
             <div class="wk-card-overlay">
               <p class="wk-card-brand">CJ</p>
               <p class="wk-card-project">CJ Milano Winter Olympics Campaign</p>
+            </div>
+          </a>
+          <!-- 상세 14 (추가 전달_10.29). 피그마 VIDEO fill(28fb25) — 영상 파일을 받기 전까지 같은 장면의 제품 영상 정지 화면 -->
+          <a class="wk-card wk-card--m" href="works-detail-14.html">
+            <img class="wk-card-media" src="assets/wd14-product-01-poster.webp" alt="" />
+            <div class="wk-card-overlay">
+              <p class="wk-card-brand">Samsung</p>
+              <p class="wk-card-project">SLBS Studio x Samsung Gangnam Store Film</p>
             </div>
           </a>
           <!-- 상세 09. S → M 으로 커져 원본(bef869db9d)에서 다시 잘랐다 -->
@@ -134,14 +142,24 @@
 
         <!-- 오른쪽 열 (피그마 Section 3024:13301) -->
         <div class="wk-col">
-          <!-- 신규 (3025:13661, 예전 블러 카드 dbb50cea74 가 공개로 바뀜). 상세 페이지 없음 -->
-          <article class="wk-card wk-card--s">
-            <img class="wk-card-media" src="assets/works-16.webp" alt="" />
+          <!-- 상세 12 (추가 전달_10.29). 썸네일 영상 skz.mp4 (VIDEO fill 3ec7fc) -->
+          <a class="wk-card wk-card--s" href="works-detail-12.html">
+            <video
+              class="wk-card-media"
+              poster="assets/works-16-poster.webp"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+            >
+              <source src="assets/works-16.mp4" type="video/mp4" />
+            </video>
             <div class="wk-card-overlay">
               <p class="wk-card-brand">JYP Entertainment</p>
-              <p class="wk-card-project">Stray Kids Pop-up Promotion Video</p>
+              <p class="wk-card-project">Stray Kids Pop-up Content Production</p>
             </div>
-          </article>
+          </a>
           <!-- 상세 01. VIDEO fill(5a495963d6) = 상세 01 히어로 -->
           <a class="wk-card wk-card--m" href="works-detail-01.html">
             <video
@@ -168,6 +186,14 @@
               <p class="wk-card-project">Shinsegae Duty Free Content Production</p>
             </div>
           </a>
+          <!-- 신규 (추가 전달_10.29, 이미지 a27a8c). 상세 페이지 없음 -->
+          <article class="wk-card wk-card--m">
+            <img class="wk-card-media" src="assets/works-17.webp" alt="" />
+            <div class="wk-card-overlay">
+              <p class="wk-card-brand">Samsung × Maison Margiela</p>
+              <p class="wk-card-project">Galaxy Z Flip4 Maison Margiela Edition</p>
+            </div>
+          </article>
           <!-- 상세 02 -->
           <a class="wk-card wk-card--s" href="works-detail-02.html">
             <img class="wk-card-media" src="assets/works-10.webp" alt="" />
@@ -215,8 +241,8 @@
     </main>
 
     <button type="button" class="top-btn" aria-label="맨 위로">
-      <!-- 피그마 BTN_TOP (PC 피드백_1026): 위쪽 화살표 13x21 -->
-      <img class="top-btn-arrow" src="assets/icon-top-arrow-up.svg" alt="" />
+      <!-- 피그마 Top (추가 전달_10.29): 투명 글라스 + Difference 화살표 -->
+      <img class="top-btn-arrow" src="assets/icon-top-arrow-thin.svg" alt="" />
     </button>
 
     <script src="assets/gnb.js"></script>

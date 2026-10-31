@@ -34,6 +34,9 @@ ROUTES = {
     "works-detail-09.html": "works/matier/",
     "works-detail-10.html": "works/cj-milano-olympics/",
     "works-detail-11.html": "works/hanwha-esports/",
+    "works-detail-12.html": "works/straykids-popup/",
+    "works-detail-13.html": "works/gyeonggi-4h-club/",
+    "works-detail-14.html": "works/slbs-studio/",
 }
 
 ATTR = re.compile(r'\b(href|src|poster)="([^"]*)"')
