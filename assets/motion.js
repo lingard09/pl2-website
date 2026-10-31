@@ -391,3 +391,39 @@
     });
   }
 })();
+
+/* 화면 밖 영상 일시정지 (2026-10-31)
+   자동 재생·반복 영상(autoplay + loop)은 화면 밖으로 나가면 멈추고 다시 들어오면 이어서 재생한다.
+   Works 처럼 영상 카드가 여러 장인 페이지에서 보이지 않는 영상까지 계속 디코딩하느라
+   스크롤이 끊기던 문제. 한 번만 재생하는 영상(Contact 지도)과 재생 버튼 영상은 건드리지 않는다. */
+(function () {
+  if (!("IntersectionObserver" in window)) return;
+
+  function init() {
+    var videos = document.querySelectorAll("video[autoplay][loop]");
+    if (!videos.length) return;
+    var io = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (e) {
+          var v = e.target;
+          if (e.isIntersecting) {
+            var p = v.play();
+            if (p && p.catch) p.catch(function () {});
+          } else if (!v.paused) {
+            v.pause();
+          }
+        });
+      },
+      { rootMargin: "200px 0px" }
+    );
+    Array.prototype.forEach.call(videos, function (v) {
+      io.observe(v);
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
