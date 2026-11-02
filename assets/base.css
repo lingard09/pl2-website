@@ -341,7 +341,7 @@ button {
 
 /* T/W: 2026-10-30 메뉴바 시안(Frame 2116929568) — 채우기 없이 GLASS 20, 구분선 흰색 30%.
    피그마 GLASS 반경은 CSS blur 의 2배라 20 → 10.
-   추가 전달_10.29 부터 모든 페이지가 이 투명 메뉴 하나로 통일됐다 (글자·아이콘·구분선 Difference,
+   추가 전달_10.29 부터 상세 페이지는 이 투명 메뉴 (글자·아이콘·구분선 Difference,
    아래 '잉크 층' 참고). */
 :where(.gnb--tw) .gnb-panel {
   background: transparent;
