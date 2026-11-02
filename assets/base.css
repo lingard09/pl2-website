@@ -897,7 +897,8 @@ html.lenis body {
 }
 
 .sp-on .sp-pin > video,
-.sp-on .sp-pin > img {
+.sp-on .sp-pin > img,
+.sp-on .sp-pin > [data-pin-media] {
   position: sticky;
   top: calc(50vh - var(--sp-pin-h, 0px) / 2);
 }

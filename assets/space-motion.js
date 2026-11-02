@@ -53,7 +53,7 @@
 
   // ── 5) 영상 구간 고정 (먼저 높이를 바꿔야 아래 요소 위치 계산이 맞는다) ──
   var pins = Array.prototype.map.call(document.querySelectorAll("[data-pin]"), function (sec) {
-    var media = sec.querySelector("video, img");
+    var media = sec.querySelector("[data-pin-media], video, img");
     var extra = parseFloat(sec.getAttribute("data-pin")) || 1; // 화면 높이의 배수
     sec.classList.add("sp-pin");
     sec.style.setProperty("--sp-pin-extra", extra * 100 + "vh");

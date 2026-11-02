@@ -107,18 +107,15 @@
         </section>
 
         <!-- ── 장식 그래픽 (PL2 로고 + 그리드) ──────────── -->
-        <section class="ab-graphic" data-pin="1">
-          <!-- 로고 모션 (1031 전달본, 피그마 Grid 1248x467) -->
-          <video
-            poster="assets/about-graphic-poster.webp"
-            autoplay
-            muted
-            loop
-            playsinline
-            preload="metadata"
-          >
-            <source src="assets/about-graphic.mp4" type="video/mp4" />
-          </video>
+        <section class="ab-graphic" data-pin="1.5">
+          <!-- PL 로고 (수정사항_11.02, 피그마 Frame 2116929594): 영상 대신 4장면을 스크롤에 따라 하나씩 얹는다
+               1 그리드 → 2 노란 가이드 라인 → 3 PL 로고 등장 → 4 노란 라인 사라짐(고정). about-pl.js -->
+          <div class="ab-pl" data-pin-media aria-hidden="true">
+            <img class="ab-pl-layer is-on" src="assets/about-pl-1.webp" alt="" />
+            <img class="ab-pl-layer" src="assets/about-pl-2.webp" alt="" />
+            <img class="ab-pl-layer" src="assets/about-pl-3.webp" alt="" />
+            <img class="ab-pl-layer" src="assets/about-pl-4.webp" alt="" />
+          </div>
         </section>
 
         <!-- ── 서비스 4블록 ─────────────────────────────── -->
@@ -362,5 +359,6 @@
     <script src="assets/lenis.min.js"></script>
     <script src="assets/space-motion.js"></script>
     <script src="assets/gnb.js"></script>
+    <script src="assets/about-pl.js"></script>
   </body>
 </html>

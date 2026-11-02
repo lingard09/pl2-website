@@ -141,12 +141,33 @@
   justify-content: center;
 }
 
-.ab-graphic video {
-  display: block;
-  object-fit: cover;
-  width: 65%; /* 1248 / 1920 */
-  aspect-ratio: 1248 / 467;
-  height: auto;
+/* PL 로고 4장면 (수정사항_11.02): 같은 자리에 겹쳐 두고 지금 단계만 보인다.
+   1 그리드는 늘 바닥에 깔려 있고, 2·3·4 가 차례로 그 위에 얹힌다 (투명 PNG → webp).
+   장면은 피그마 1240x467 (예전 영상 칸 1248x467 과 같은 자리) */
+.ab-pl {
+  position: relative;
+  width: 64.583%; /* 1240 / 1920 */
+  aspect-ratio: 1240 / 467;
+}
+
+.ab-pl-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.ab-pl-layer:first-child,
+.ab-pl-layer.is-on {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ab-pl-layer {
+    transition: none;
+  }
 }
 
 /* ── 서비스 4블록 ───────────────────────────────────── */
