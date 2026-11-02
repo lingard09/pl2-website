@@ -493,13 +493,45 @@ button {
   width: min(2.6042vw, 50px);
   height: min(2.6042vw, 50px);
   border-radius: 50%;
-  background: transparent;
   /* 블러는 스케일하지 않는다 (GNB 패널과 같은 규칙). 피그마 GLASS 20 = CSS blur 10 */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   /* 푸터 영역에 들어가면 사라진다 (top-btn.js 가 .is-away 를 붙인다) */
   transition: opacity 0.4s ease, visibility 0s linear 0s;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  /* 수정사항_11.02 Top_icon (3740:9445): 피그마 GLASS 렌더는 블러 위로 안쪽이 살짝 밝아지고
+     가장자리에 흰 빛 테두리가 생긴다 (아래 ::after). 안쪽은 거의 투명하고 가장자리 안쪽만 살짝 밝다. */
+  background: rgba(255, 255, 255, 0.02);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12),
+    inset 0 0 min(0.3125vw, 6px) rgba(255, 255, 255, 0.18);
+}
+
+/* 유리 테두리: 오른쪽·왼쪽 옆구리가 가장 밝고(빛 반사) 왼쪽 위는 거의 사라지는 흰 링 1px (피그마 렌더 기준).
+   원형 그라디언트(conic)를 깔고 가운데를 mask 로 뚫는다 (GNB 윤곽선과 같은 방식) */
+.top-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from 0deg,
+    rgba(255, 255, 255, 0.35) 0deg,
+    rgba(255, 255, 255, 1) 70deg,
+    rgba(255, 255, 255, 0.75) 125deg,
+    rgba(255, 255, 255, 0.5) 165deg,
+    rgba(255, 255, 255, 1) 235deg,
+    rgba(255, 255, 255, 0.8) 280deg,
+    rgba(255, 255, 255, 0.12) 325deg,
+    rgba(255, 255, 255, 0.35) 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.top-btn.top-btn-ink::after {
+  display: none;
 }
 
 /* 위쪽 화살표 (흰색, icon-top-arrow-thin.svg 는 버튼과 같은 50x50 캔버스) */
