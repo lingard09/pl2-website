@@ -135,8 +135,9 @@
             <img class="wdx-item" style="--x: 964; --y: 334; --w: 956; --hh: 514" src="assets/wd12-move-03.webp" alt="" data-reveal />
             <img class="wdx-item" style="--x: 0; --y: 736; --w: 956; --hh: 514" src="assets/wd12-move-02.webp" alt="" data-reveal />
             <img class="wdx-item" style="--x: 964; --y: 856; --w: 956; --hh: 514" src="assets/wd12-move-04.webp" alt="" data-reveal />
-            <!-- 영상 (VIDEO fill 1af1ed, 크로마키 촬영 현장) — 파일을 받으면 자동 재생 video 로 바꾼다 -->
-            <img class="wdx-item" style="--x: 181; --y: 1490; --w: 1558; --hh: 860" src="assets/wd12-move-video-poster.webp" alt="" data-reveal />
+            <video class="wdx-item" style="--x: 181; --y: 1490; --w: 1558; --hh: 860" poster="assets/wd12-move-video-poster.webp" autoplay muted loop playsinline preload="metadata" data-reveal>
+              <source src="assets/wd12-move.mp4" type="video/mp4" />
+            </video>
         </section>
 
         <!-- ══ The Story Behind the Pop-up (피그마 y 8871–11378) ══ -->
@@ -150,9 +151,12 @@
             </div>
             <img class="wdx-item" style="--x: 0; --y: 214; --w: 1033; --hh: 554" src="assets/wd12-story-01.webp" alt="" data-reveal />
             <img class="wdx-item" style="--x: 731; --y: 888; --w: 1189; --hh: 639" src="assets/wd12-story-02.webp" alt="" data-reveal />
-            <!-- 인터뷰 영상 (VIDEO fill 803e23, 재생 버튼) — 영상 파일을 받으면 video + 재생 버튼(video-play.js)으로 바꾼다 -->
-            <div class="wdx-item wdx-video" style="--x: 181; --y: 1647; --w: 1558; --hh: 860" data-reveal>
-              <img src="assets/wd12-story-video-poster.webp" alt="" />
+            <!-- 인터뷰 영상 (VIDEO fill 803e23, 소리 있음, 재생 버튼) -->
+            <div class="wdx-item wdx-video" style="--x: 181; --y: 1647; --w: 1558; --hh: 860" data-playing="false" data-reveal>
+              <video playsinline preload="metadata" poster="assets/wd12-story-video-poster.webp">
+                <source src="assets/wd12-interview.mp4" type="video/mp4" />
+              </video>
+              <button type="button" class="wdx-video-play" aria-label="영상 재생"></button>
             </div>
         </section>
 
@@ -167,8 +171,9 @@
             </div>
             <img class="wdx-item" style="--x: 966; --y: 214; --w: 954; --hh: 1200" src="assets/wd12-exp-02.webp" alt="" data-reveal />
             <img class="wdx-item" style="--x: 0; --y: 334; --w: 954; --hh: 1200" src="assets/wd12-exp-01.webp" alt="" data-reveal />
-            <!-- 영상 (VIDEO fill 610a2c, CCTV 크로마키 촬영 현장) — 파일을 받으면 자동 재생 video 로 바꾼다 -->
-            <img class="wdx-item" style="--x: 181; --y: 1654; --w: 1558; --hh: 860" src="assets/wd12-exp-video-poster.webp" alt="" data-reveal />
+            <video class="wdx-item" style="--x: 181; --y: 1654; --w: 1558; --hh: 860" poster="assets/wd12-exp-video-poster.webp" autoplay muted loop playsinline preload="metadata" data-reveal>
+              <source src="assets/wd12-exp.mp4" type="video/mp4" />
+            </video>
         </section>
       </div>
     </main>
@@ -201,5 +206,6 @@
 
     <script src="assets/gnb.js"></script>
     <script src="assets/top-btn.js"></script>
+    <script src="assets/video-play.js"></script>
   </body>
 </html>

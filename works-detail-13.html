@@ -236,11 +236,14 @@
           </div>
         </div>
 
-        <!-- ══ 캠페인 필름 (피그마 Video 3658:21342, 1920x1080 + 재생 버튼) ══
-             영상 파일(VIDEO fill 2e0765)을 받으면 video + 재생 버튼(video-play.js)으로 바꾼다 -->
+        <!-- ══ 캠페인 필름 (피그마 Video 3658:21342, 1920x1080 + 재생 버튼, 소리 있음) ══ -->
         <section class="wdx-stage" style="--h: 1080">
-            <div class="wdx-item wdx-video" style="--x: 0; --y: 0; --w: 1920; --hh: 1080">
-              <img src="assets/wd13-film-poster.webp" alt="" />
+            <!-- 캠페인 필름 (VIDEO fill 2e0765) -->
+            <div class="wdx-item wdx-video" style="--x: 0; --y: 0; --w: 1920; --hh: 1080" data-playing="false" data-reveal>
+              <video playsinline preload="metadata" poster="assets/wd13-film-poster.webp">
+                <source src="assets/wd13-film.mp4" type="video/mp4" />
+              </video>
+              <button type="button" class="wdx-video-play" aria-label="영상 재생"></button>
             </div>
         </section>
       </div>
@@ -275,5 +278,6 @@
     <script src="assets/gnb.js"></script>
     <script src="assets/top-btn.js"></script>
     <script src="assets/wd2-story.js"></script>
+    <script src="assets/video-play.js"></script>
   </body>
 </html>
