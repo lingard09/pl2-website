@@ -146,10 +146,15 @@
 
   function update() {
     var sy = lenis.scroll;
+    // 페이지 끝 근처 요소(푸터 하단 바 등)는 안착 지점까지 올라오지 못한다.
+    // 그런 요소는 맨 아래까지 스크롤했을 때를 안착 지점으로 본다 (안 그러면 화면 밖에 걸려 남는다)
+    var maxScroll = Math.max(0, lenis.limit || document.documentElement.scrollHeight - vh);
     items.forEach(function (it) {
       var top = it.top - sy; // 이동 전 원래 화면 위치
       if (top > vh * 1.4 || top + it.h < -vh * 0.4) return; // 멀리 있으면 계산 생략
-      var p = clamp((vh - top) / (vh * SETTLE), 0, 1);
+      var start = it.top - vh; // 윗변이 화면 아래끝에 닿는 스크롤
+      var end = Math.min(it.top - vh * (1 - SETTLE), maxScroll); // 안착하는 스크롤
+      var p = end > start ? clamp((sy - start) / (end - start), 0, 1) : 1;
       var target = it.travel * (1 - easeOutCubic(p));
       if (it.depth) target += (top + it.h / 2 - vh / 2) * it.depth;
       it.y += (target - it.y) * it.lag * 2; // 프레임마다 목표로 다가간다 (감속 안착)
