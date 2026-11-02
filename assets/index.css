@@ -93,9 +93,40 @@
   white-space: nowrap;
 }
 
+/* ── 3D 실린더 (수정사항_11.02, home.js 가 .is-3d 와 행마다 --a(각도)를 준다) ──────
+   행을 가로축 둘레 반지름 --r(피그마 px) 원통 위에 세운다. 가운데 행이 화면 평면(z 0)에 오도록
+   원통 중심을 -r 만큼 뒤로 민다. 원근은 스테이지 기준.
+   가운데에 멈춘 행(.is-center)은 1.25 배로 커진다. */
+.hm-stage.is-3d {
+  perspective: calc(var(--u) * 2200);
+  perspective-origin: 50% 50%;
+}
+
+.hm-stage.is-3d .hm-row {
+  --a: 0;
+  top: 50%;
+  transition: none;
+  will-change: transform, opacity;
+  transform: translateZ(calc(var(--u) * var(--r) * -1)) rotateX(calc(var(--a) * -1deg))
+    translateZ(calc(var(--u) * var(--r)));
+  backface-visibility: hidden;
+}
+
+.hm-stage.is-3d .hm-tile,
+.hm-stage.is-3d .hm-word {
+  transition: scale 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hm-stage.is-3d .hm-row.is-center .hm-tile,
+.hm-stage.is-3d .hm-row.is-center .hm-word {
+  scale: 1.25;
+}
+
 /* 위아래 딤은 없다 (PC 피드백_1026 결정안 Frame 2116929566: 14개 행이 모두 또렷하게 보인다) */
 @media (prefers-reduced-motion: reduce) {
-  .hm-row {
+  .hm-row,
+  .hm-stage.is-3d .hm-tile,
+  .hm-stage.is-3d .hm-word {
     transition: none;
   }
 }
