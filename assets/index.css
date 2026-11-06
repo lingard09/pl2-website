@@ -9,15 +9,17 @@
   overflow: hidden;
 }
 
-/* ── 히어로: 분야 슬롯 (PC 피드백_1015, 피그마 Home 3394:72204) ─────────
-   흰 바탕에 썸네일 행(120)과 단어 행(100)이 번갈아 14개, 간격 40 → 행 중심 간격 150.
-   2.2초마다 모든 행이 한 칸(150) 위로 올라가고, 화면 가운데(y 540)에 온 행만 또렷해진다.
-   위치는 assets/home.js 가 행마다 --s(칸 번호)로 넘긴다.
-   --u = 피그마 1px. 화면 "높이" 기준이다 (1080 에서 1px) — 맥북처럼 16:9 보다 세로가 긴
-   화면에서도 피그마 프레임과 같은 줄 수가 보이도록. 가로는 가운데 정렬이고, 내용이 가운데
-   약 700 폭 안에 있어서 좁은 화면에서도 잘리지 않게 100vw / 700 을 상한으로 둔다. */
+/* ── 히어로: 3D 실린더 (수정사항_11.06, 피그마 Home_PC 3826:23005 / Home_MO 3830:28892) ─────
+   흰 바탕에 썸네일 행과 단어 행이 번갈아 14개. 원통 위에서 굴러가고, 가운데 행이 가장 크다.
+   행의 위치·크기·기울기는 assets/home.js 가 매 프레임 transform 으로 준다.
+   --u = 피그마 1px (home.js 가 px 로 넣는다). PC 는 1920x1080 프레임, 모바일(599 이하)은 390x844 프레임 기준.
+   --fs / --lh / --hb = 단어 글자 크기 / 행간 / 썸네일 높이의 "기본"(가운데가 아닐 때) 값 — PC 90/80/80, 모바일 48/50/50. */
 .hm-hero {
-  --u: min(100dvh / 1080, 100vw / 700);
+  --u: min(100dvh / 1080, 100vw / 820);
+  --fs: 90;
+  --lh: 80;
+  --hb: 80;
+  --dim: 240;
   position: relative;
   display: block; /* 홈 전체가 Works 로 가는 링크(<a>)다 */
   color: inherit;
@@ -27,44 +29,42 @@
   height: 100dvh;
   background-color: var(--pl2-white);
   overflow: hidden;
+  touch-action: none; /* 끌기(드래그·스와이프)로 원통을 굴린다 — home.js */
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-/* 피그마 1920x1080 프레임. 화면 가운데에 둔다 (세로가 남으면 위아래로 행이 더 보인다) */
+@media (max-width: 599.98px) {
+  .hm-hero {
+    --u: calc(100vw / 390);
+    --fs: 48;
+    --lh: 50;
+    --hb: 50;
+    --dim: 120;
+  }
+}
+
+/* 원근은 스테이지(화면 전체) 가운데 기준. 거리는 home.js 가 --per 로 넣는다 */
 .hm-stage {
+  position: absolute;
+  inset: 0;
+  perspective: var(--per, 1000px);
+  perspective-origin: 50% 50%;
+}
+
+.hm-row {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: calc(var(--u) * 1920);
-  height: calc(var(--u) * 1080);
-  translate: -50% -50%;
+  will-change: transform;
+  transform-origin: 50% 50%;
 }
 
-/* 행: 중심 y = 90 + 150 x 칸 번호(--s). 칸 3(y 540)이 초점 자리 */
-.hm-row {
-  --s: 0;
-  position: absolute;
-  top: calc(var(--u) * (90 + 150 * var(--s)));
-  left: 0;
-  width: 100%;
-  translate: 0 -50%;
-  /* PC 피드백_1026 결정안(Frame 2116929566): 행에 블러·딤 없이 모두 또렷하게 */
-  /* 피그마 키프레임: 이동 1.8초 cubic-bezier(.16,.8,.24,1) */
-  transition: top 1.8s cubic-bezier(0.16, 0.8, 0.24, 1);
-  will-change: top;
-}
-
-
-/* 맨 위로 빠진 행을 맨 아래로 옮길 때는 움직임 없이 */
-.hm-row.is-wrapping {
-  transition: none;
-}
-
-/* 썸네일: 피그마 노란 바탕(#FADC38) + radius 12, 가로 위치·폭은 행마다 다르다 */
+/* 썸네일: 피그마 radius 12, 노란 바탕(#FADC38 — 영상이 뜨기 전). 기본 높이 80 / 50, 폭은 행마다 다르다 */
 .hm-tile {
   position: relative;
   width: calc(var(--u) * var(--w));
-  height: calc(var(--u) * 120);
-  margin-left: calc(var(--u) * var(--x));
+  height: calc(var(--u) * var(--hb));
   border-radius: calc(var(--u) * 12);
   background: #fadc38;
   overflow: hidden;
@@ -76,57 +76,66 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  pointer-events: none;
+  -webkit-user-drag: none;
 }
 
+/* 피그마에서 아래쪽을 맞춰 자른 썸네일 (Stray Kids, 캠페인 스틸) */
+.hm-tile--bottom .hm-tile-media {
+  object-position: 50% 100%;
+}
 
-/* 단어: Tannakone Medium 110 / 행간 100, 검정. 행마다 가운데 x(--cx)가 다르다 */
+/* 단어: Tannakone Medium Condensed. 기본 90/80 (모바일 48/50), 가운데에서 150/160 (72/90) 까지 커진다 */
 .hm-word {
-  height: calc(var(--u) * 100);
-  margin-left: calc(var(--u) * var(--cx));
-  translate: -50% 0;
   width: max-content;
   color: var(--pl2-black);
   font-family: var(--pl2-font-display);
-  font-size: calc(var(--u) * 110);
+  font-size: calc(var(--u) * var(--fs));
   font-weight: 500;
-  line-height: calc(var(--u) * 100);
+  line-height: calc(var(--u) * var(--lh));
   white-space: nowrap;
 }
 
-/* ── 3D 실린더 (수정사항_11.02, home.js 가 .is-3d 와 행마다 --a(각도)를 준다) ──────
-   행을 가로축 둘레 반지름 --r(피그마 px) 원통 위에 세운다. 가운데 행이 화면 평면(z 0)에 오도록
-   원통 중심을 -r 만큼 뒤로 민다. 원근은 스테이지 기준.
-   가운데에 멈춘 행(.is-center)은 1.25 배로 커진다. */
-.hm-stage.is-3d {
-  perspective: calc(var(--u) * 2200);
-  perspective-origin: 50% 50%;
+/* ── 외곽: 점진 블러 + 흰색 그라데이션 (피그마 Dim) ─────────────────────
+   피그마: 1920x240 (모바일 390x120) 위아래 두 장. 배경 블러 PROGRESSIVE — 가장자리 25 → 안쪽 0,
+   그 위에 흰색 100% → 0% 그라데이션 (+ 흰색 2%).
+   CSS 에는 점진 블러가 없어서 블러 세기가 다른 층 5장을 겹치고, 층마다 가장자리 쪽만 보이게 마스크를 건다. */
+.hm-dim {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: calc(var(--u) * var(--dim));
+  z-index: 2;
+  pointer-events: none;
+  --to: top; /* 가장자리 방향 */
 }
 
-.hm-stage.is-3d .hm-row {
-  --a: 0;
-  top: 50%;
-  transition: none;
-  will-change: transform, opacity;
-  transform: translateZ(calc(var(--u) * var(--r) * -1)) rotateX(calc(var(--a) * -1deg))
-    translateZ(calc(var(--u) * var(--r)));
-  backface-visibility: hidden;
+.hm-dim--top {
+  top: 0;
 }
 
-.hm-stage.is-3d .hm-tile,
-.hm-stage.is-3d .hm-word {
-  transition: scale 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+.hm-dim--bottom {
+  bottom: 0;
+  --to: bottom;
 }
 
-.hm-stage.is-3d .hm-row.is-center .hm-tile,
-.hm-stage.is-3d .hm-row.is-center .hm-word {
-  scale: 1.25;
+.hm-dim > i {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: linear-gradient(to var(--to), transparent var(--m0), #000 var(--m1));
+  mask-image: linear-gradient(to var(--to), transparent var(--m0), #000 var(--m1));
 }
 
-/* 위아래 딤은 없다 (PC 피드백_1026 결정안 Frame 2116929566: 14개 행이 모두 또렷하게 보인다) */
-@media (prefers-reduced-motion: reduce) {
-  .hm-row,
-  .hm-stage.is-3d .hm-tile,
-  .hm-stage.is-3d .hm-word {
-    transition: none;
-  }
+/* 안쪽(0%)에서 가장자리(100%)로 갈수록 센 층만 남는다: 1.6 → 3 → 6 → 12 → 25 */
+.hm-dim > i:nth-child(1) { --m0: 0%;  --m1: 20%;  backdrop-filter: blur(calc(var(--u) * 1.6)); -webkit-backdrop-filter: blur(calc(var(--u) * 1.6)); }
+.hm-dim > i:nth-child(2) { --m0: 20%; --m1: 40%;  backdrop-filter: blur(calc(var(--u) * 3));   -webkit-backdrop-filter: blur(calc(var(--u) * 3)); }
+.hm-dim > i:nth-child(3) { --m0: 40%; --m1: 60%;  backdrop-filter: blur(calc(var(--u) * 6));   -webkit-backdrop-filter: blur(calc(var(--u) * 6)); }
+.hm-dim > i:nth-child(4) { --m0: 60%; --m1: 80%;  backdrop-filter: blur(calc(var(--u) * 12));  -webkit-backdrop-filter: blur(calc(var(--u) * 12)); }
+.hm-dim > i:nth-child(5) { --m0: 80%; --m1: 100%; backdrop-filter: blur(calc(var(--u) * 25));  -webkit-backdrop-filter: blur(calc(var(--u) * 25)); }
+
+.hm-dim::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to var(--to), rgba(255, 255, 255, 0.02), #fff);
 }
