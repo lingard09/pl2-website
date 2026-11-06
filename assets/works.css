@@ -312,13 +312,15 @@ html:has(.wk-body) {
     aspect-ratio: 350 / 525;
   }
 
-  /* 두 열 껍데기를 풀어 카드 14장을 한 줄로 세운다 */
+  /* 두 열 껍데기를 풀어 카드 16장을 한 줄로 세운다 */
   .wk-col {
     display: contents;
   }
 
-  /* 피그마 Mo 순서: 한화 · JYP · 경기도 · GenAI · 신세계 · Dev Platform · AI Film ·
-     CJ · 하루하루 · Matièr · Evercell · Samsung Internet · SmartThings · Fluidic */
+  /* 피그마 Mo 순서 (수정사항_11.06 Works_MO 3835:30255): 한화 · JYP · 경기도 · GenAI · 신세계 ·
+     Dev Platform · Maison Margiela · CJ · AI Film · SLBS · 하루하루 · Matièr · Evercell ·
+     Samsung Internet · SmartThings · Fluidic.
+     (이전엔 14장 기준이라 order 가 없던 SmartThings·Fluidic 이 맨 위로 올라가 있었다) */
   .wk-col:first-child > :nth-child(1) { order: 1; }
   .wk-col:last-child > :nth-child(1) { order: 2; }
   .wk-col:first-child > :nth-child(2) { order: 3; }
@@ -331,6 +333,8 @@ html:has(.wk-body) {
   .wk-col:first-child > :nth-child(5) { order: 10; }
   .wk-col:last-child > :nth-child(6) { order: 11; }
   .wk-col:first-child > :nth-child(6) { order: 12; }
-  .wk-col:first-child > :nth-child(7) { order: 13; }
-  .wk-col:last-child > :nth-child(7) { order: 14; }
+  .wk-col:last-child > :nth-child(7) { order: 13; }
+  .wk-col:first-child > :nth-child(7) { order: 14; }
+  .wk-col:first-child > :nth-child(8) { order: 15; }
+  .wk-col:last-child > :nth-child(8) { order: 16; }
 }
