@@ -73,7 +73,8 @@ for (const [name, wantHeight] of targets) {
       .filter((f) => f.status === 'error')
       .map((f) => `${f.family} ${f.weight}`);
     const h1 = document.querySelector('.wd-hero-h1');
-    const box = h1 && h1.getBoundingClientRect();
+    // 등장 모션의 늘어남(scale)이 섞이지 않게 레이아웃 크기로 잰다
+    const box = h1 && { height: h1.offsetHeight, width: h1.offsetWidth };
     return {
       height: Math.round(document.body.scrollHeight),
       fontErrors: fonts,
