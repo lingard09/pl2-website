@@ -192,6 +192,14 @@ button {
   pointer-events: none;
 }
 
+/* 수정사항_11.06 메뉴바 확정: 노란(기본) 메뉴는 입체감을 빼고 평면으로 — 윤곽선 없음.
+   피그마 GNB(1932:14061) 의 바·드롭다운에도 stroke 가 없다. 그림자(8%)는 피그마에 남아 있어 그대로 둔다.
+   투명 메뉴(T/W·T/B)는 배경과 구분이 필요해 윤곽선을 유지한다. */
+:where(.gnb:not(.gnb--tw):not(.gnb--tb)) .gnb-bar::after,
+:where(.gnb:not(.gnb--tw):not(.gnb--tb)) .gnb-panel::after {
+  content: none;
+}
+
 .gnb-brand {
   color: var(--pl2-black);
   font-family: var(--pl2-font-display);
