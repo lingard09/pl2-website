@@ -40,6 +40,7 @@ ROUTES = {
 }
 
 ATTR = re.compile(r'\b(href|src|poster)="([^"]*)"')
+SRCSET = re.compile(r'\bsrcset="([^"]*)"')
 
 # 공유 미리보기(og:image 등)는 절대 주소여야 카톡·슬랙·페이스북이 읽는다.
 # 사이트 위치가 바뀌면(예: /new/ → 루트) SITE_URL 만 바꿔 빌드한다.
@@ -70,6 +71,20 @@ def rewrite(html, page_dir):
         return m.group(0)
 
     html = ATTR.sub(fix, html)
+
+    # <picture><source srcset> · <img srcset> 도 같은 규칙 (2026-11-07: 빠져 있어서 실서버 하위 폴더 페이지의
+    # 모바일 전용 이미지가 전부 404 였다 — 상세 히어로가 까맣게 나온 원인). "a.webp 1x, b.webp 2x" 처럼 여러 개일 수 있다.
+    def fix_srcset(m):
+        parts = []
+        for cand in m.group(1).split(","):
+            cand = cand.strip()
+            url, _, desc = cand.partition(" ")
+            if url.startswith(("assets/", "fonts/")):
+                url = up + url
+            parts.append((url + " " + desc).strip())
+        return f'srcset="{", ".join(parts)}"'
+
+    html = SRCSET.sub(fix_srcset, html)
     html = OG_IMAGE.sub(lambda m: m.group(1) + SITE_URL + "assets/", html)
     # 이 페이지의 정식 주소
     og_url = f'    <meta property="og:url" content="{SITE_URL}{page_dir}" />\n'

@@ -78,8 +78,11 @@ while read -r f; do
     case "$ref" in */) ref="${ref}index.html" ;; esac
     case "$ref" in privacy.html|terms.html|*/privacy.html|*/terms.html) continue ;; esac # 아직 없는 페이지
     [ -e "$dir/$ref" ] || { echo "빠짐: $ref (${f#dist/})"; missing=$((missing + 1)); }
-  done < <(grep -ohE '(src|href|poster)="[^"#:]*"' "$f" |
-    sed -E 's/^[a-z]*="//; s/"$//' | grep -v '^$' | sort -u)
+  done < <({
+    grep -ohE '(src|href|poster)="[^"#:]*"' "$f" | sed -E 's/^[a-z]*="//; s/"$//'
+    # <picture> 의 srcset 도 본다 (2026-11-07: 여기서 빠져 모바일 전용 이미지 404 를 못 잡았다)
+    grep -ohE 'srcset="[^"]*"' "$f" | sed -E 's/^srcset="//; s/"$//' | tr ',' '\n' | awk '{print $1}'
+  } | grep -v '^$' | sort -u)
 done < <(find dist -name '*.html')
 [ "$missing" -gt 0 ] && { echo "참조 누락 ${missing}건"; exit 1; }
 
