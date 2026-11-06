@@ -86,3 +86,108 @@
   aspect-ratio: 340 / 680;
   object-fit: contain;
 }
+
+/* 모바일 전용 7장 캐러셀은 PC 에서 숨긴다 */
+.wd4-mo-carousel {
+  display: none;
+}
+
+/* ══ 모바일 (수정사항_11.06, 피그마 13_MO 3898:30607, 390 폭) ══════════════
+   섹션 셋: 기기 목업(390x220) · 서비스 페이지 밴드(390x690) · 모바일 7장 캐러셀(390x690).
+   PC 의 폰 컷 4장 섹션은 모바일에서 캐러셀 뒤쪽 4장으로 들어간다. */
+@media (max-width: 599.98px) {
+  /* 헤더 ↔ 미디어 60 (첫 섹션만 20, 피그마 3898:30615) */
+  .wd4-section {
+    gap: 60px;
+  }
+
+  .wd-top + .wd4-section {
+    gap: 20px;
+  }
+
+  /* 첫 섹션 제목은 MO 에서도 가운데 2줄 (피그마 3898:30616 text-center).
+     공통 레이어가 제목 <br> 을 숨기지만 이 제목은 피그마 MO 도 같은 자리에서 꺾인다 */
+  .wd4-section .wd-head--center {
+    text-align: center;
+  }
+
+  .wd4-section .wd-head--center .wd-head-title br {
+    display: inline;
+  }
+
+  .wd-head-desc {
+    line-height: 24px;
+  }
+
+  /* ── 기기 목업: 390x220 안에 contain ── */
+  .wd4-mockups {
+    width: 100%;
+    aspect-ratio: 390 / 220;
+  }
+
+  /* ── 서비스 페이지: #EFEFEF 390x690 밴드, 페이지 컷 355.6 폭 가운데 (위 52 · 좌 17) ── */
+  .wd4-band {
+    align-items: center;
+    height: 690px;
+    padding: 0;
+  }
+
+  .wd4-band img {
+    width: 91.17%;
+  }
+
+  /* ── 모바일 컷: PC 엇갈린 배치 · 폰 4장 섹션 대신 캐러셀 ── */
+  .wd4-mobile,
+  .wd4-phones {
+    display: none;
+  }
+
+  .wd4-mo-carousel {
+    position: relative;
+    display: block;
+  }
+
+  .wd4-mo-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .wd4-mo-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 1:2 폰 컷을 390x690 칸에 contain (345 폭 가운데) */
+  .wd4-mo-track img {
+    flex: none;
+    width: 100%;
+    height: 690px;
+    object-fit: contain;
+    scroll-snap-align: start;
+  }
+
+  /* 점: 5px · 간격 4 · 아래 12. 밝은 배경이라 검정 계열 (#555 / 검정 12%) */
+  .wd-mo-dots {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    display: flex;
+    gap: 4px;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .wd-mo-dots span {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.12);
+    transition: background-color 0.2s ease;
+  }
+
+  .wd-mo-dots .is-active {
+    background: #555;
+  }
+}

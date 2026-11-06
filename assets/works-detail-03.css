@@ -101,7 +101,18 @@
   height: min(36.4583vw, 700px);
 }
 
+/* 모바일 전용 사진을 고르는 <picture> 는 상자를 만들지 않는다 (안의 img 가 그대로 배치된다) */
+.wd3-pic {
+  display: contents;
+}
+
+/* contents 로 풀면 <source> 도 flex 항목이 돼 gap 이 하나 더 생긴다 */
+.wd3-pic source {
+  display: none;
+}
+
 .wd3-duo > img,
+.wd3-duo > .wd3-pic > img,
 .wd3-duo > video,
 .wd3-duo > .wd3-crop {
   width: 49.688%; /* 954 / 1920 */
@@ -113,12 +124,14 @@
   align-self: flex-end;
 }
 
-.wd3-duo--right-low > :last-child {
+.wd3-duo--right-low > :last-child,
+.wd3-duo--right-low > .wd3-pic:last-child > img {
   align-self: flex-end;
 }
 
 .wd3-duo--left-low > :last-child,
-.wd3-duo--right-low > :first-child {
+.wd3-duo--right-low > :first-child,
+.wd3-duo--right-low > .wd3-pic:first-child > img {
   align-self: flex-start;
 }
 
@@ -152,4 +165,115 @@
   display: flex;
   flex-direction: column;
   gap: min(6.25vw, 120px);
+}
+
+/* ══ 모바일 (수정사항_11.06, 피그마 10_MO 3875:28920, 390 폭) ══════════════
+   모든 사진·영상이 화면 꽉 찬 390 폭으로 위에서 아래로 쌓인다 (헤더 ↔ 미디어 60, 미디어 사이 60).
+   PC 의 엇갈린 배치(좌·우 정렬, 위아래 120 어긋남)는 모두 푼다.
+   사진은 MO 크롭을 미리 잘라 둔 *-mo.webp (<picture>), 영상 2개는 .wd3-crop 값을 MO 크롭으로 바꾼다.
+   제품 섹션은 피그마 MO 순서대로 병 줄(290) → 튜브(220) — PC 와 좌우가 반대라 order 로 바꾼다. */
+@media (max-width: 599.98px) {
+  /* 위쪽 PC 규칙(설명 행간 34·32 를 vw 로 축소)이 공통 모바일 값을 덮으므로 다시 잡는다 */
+  .wd-head-desc,
+  .wd-head--center .wd-head-desc {
+    line-height: 24px;
+  }
+
+  /* 피그마 MO 제목은 SemiBold (PC 는 Bold) */
+  .wd-head-title--bold {
+    font-weight: 600;
+  }
+
+  /* 브랜드 필름만 헤더 ↔ 판 20 (피그마 3875:28928 — 설명이 숨겨진 섹션) */
+  .wd3-film {
+    gap: 20px;
+  }
+
+  .wd3-section,
+  .wd3-section--gap120,
+  .wd3-pair,
+  .wd3-stack120 {
+    gap: 60px;
+  }
+
+  /* ── 브랜드 필름: 연회색 판 390x220 + 캡션 Regular 11/16 (16 띄움, 피그마 3875:28932) ── */
+  .wd3-film-media {
+    gap: 16px;
+  }
+
+  .wd3-film-plate {
+    width: 100%;
+    aspect-ratio: 390 / 220;
+  }
+
+  /* 모바일은 판까지 들어간 한 장(wd3-brandfilm-mo.webp, 피그마 3875:28933)을 꽉 채운다 */
+  .wd3-film-plate img {
+    width: 100%;
+    aspect-ratio: 390 / 220;
+  }
+
+  .wd3-film-caption {
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 16px;
+  }
+
+  /* ── 사진: 꽉 찬 폭 + 피그마 MO 비율 ── */
+  .wd3-pair-a,
+  .wd3-pair-b,
+  .wd3-products,
+  .wd3-model-last,
+  .wd3-duo > .wd3-pic > img {
+    align-self: stretch;
+    width: 100%;
+  }
+
+  .wd3-section:nth-of-type(3) .wd3-pair-a { aspect-ratio: 390 / 290; } /* 3875:28939 */
+  .wd3-section:nth-of-type(3) .wd3-pair-b { aspect-ratio: 390 / 520; } /* 3875:28940 */
+  .wd3-products { aspect-ratio: 390 / 520; } /* 3875:28946 */
+  .wd3-section:nth-of-type(5) .wd3-pair-a { aspect-ratio: 390 / 390; } /* 3875:28953 */
+  .wd3-section:nth-of-type(5) .wd3-pair-b { aspect-ratio: 390 / 220; } /* 3875:28954 */
+  .wd3-model-last { aspect-ratio: 390 / 520; } /* 3889:29344 */
+
+  /* ── 듀오 2칸 → 세로 2장 (간격 60) ── */
+  .wd3-duo {
+    flex-direction: column;
+    gap: 60px;
+    height: auto;
+  }
+
+  .wd3-duo > img,
+  .wd3-duo > .wd3-pic > img,
+  .wd3-duo > video,
+  .wd3-duo > .wd3-crop,
+  .wd3-duo--left-low > :first-child,
+  .wd3-duo--left-low > :last-child {
+    align-self: stretch;
+    width: 100%;
+  }
+
+  /* 모델 2장: 290 · 220 (3889:29265 · 3889:29324) */
+  .wd3-duo--right-low > .wd3-pic:first-child > img {
+    aspect-ratio: 390 / 290;
+  }
+
+  .wd3-duo--right-low > .wd3-pic:last-child > img {
+    aspect-ratio: 390 / 220;
+  }
+
+  /* 제품 영상: 병 줄(product-02) 390x290 이 먼저, 튜브(product-01) 390x220 이 뒤 (3875:28948 · 3875:28947).
+     크롭은 피그마 MO 이미지 채우기 값 (병 줄 w170.44% h126.07% · 좌 -35.22% 위 -7.85%) */
+  .wd3-duo--left-low > .wd3-crop:last-child {
+    order: -1;
+    aspect-ratio: 390 / 290;
+    --sx: 0.5867 !important;
+    --sy: 0.7932 !important;
+    --tx: 0.2066 !important;
+    --ty: 0.0623 !important;
+  }
+
+  /* 튜브는 MO 크롭이 PC 와 같다 (w128.73% h116.46%) — 비율만 */
+  .wd3-duo--left-low > .wd3-crop:first-child {
+    aspect-ratio: 390 / 220;
+  }
 }

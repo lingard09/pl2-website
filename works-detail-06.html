@@ -118,14 +118,24 @@
         </section>
 
         <!-- ══ 4. 기초 스킨케어 컷 ══ -->
-        <section class="wd6-stack120">
+        <!-- 모바일은 위 헤더에 60 으로 붙는 390x390 3장 가로 캐러셀 (피그마 12_MO 3898:30075).
+             2·3번은 세로 원본에서 다시 자른 정사각 컷. .wd6-mo-track 은 PC 에서 display: contents -->
+        <section class="wd6-stack120 wd6-skincare" data-mo-carousel="3">
+          <div class="wd6-mo-track" data-mo-track>
           <img class="wd6-half" src="assets/wd6-skincare-01.webp" alt="" />
-          <img class="wd6-wide" src="assets/wd6-skincare-02.webp" alt="" />
-          <img
-            class="wd6-half wd6-half--right"
-            src="assets/wd6-skincare-03.webp"
-            alt=""
-          />
+          <picture>
+            <source media="(max-width: 599.98px)" srcset="assets/wd6-skincare-02-mo.webp" />
+            <img class="wd6-wide" src="assets/wd6-skincare-02.webp" alt="" />
+          </picture>
+          <picture>
+            <source media="(max-width: 599.98px)" srcset="assets/wd6-skincare-03-mo.webp" />
+            <img
+              class="wd6-half wd6-half--right"
+              src="assets/wd6-skincare-03.webp"
+              alt=""
+            />
+          </picture>
+          </div>
         </section>
 
         <!-- ══ 5. Cell Charger 헤더 ══ -->
@@ -140,8 +150,8 @@
           </div>
         </section>
 
-        <!-- ══ 6. Cell Charger 컷 ══ -->
-        <section>
+        <!-- ══ 6. Cell Charger 컷 ══ (모바일은 헤더에 60 으로 붙는 390x690) -->
+        <section class="wd6-cell">
           <!-- 애니메이션 GIF (6e229602cef7) -->
           <video
             class="wd6-square"
@@ -169,9 +179,12 @@
 
           <img class="wd6-wide" src="assets/wd6-suncare-01.webp" alt="" />
 
-          <div class="wd6-duo">
-            <img src="assets/wd6-suncare-02.webp" alt="" />
-            <img src="assets/wd6-suncare-03.webp" alt="" />
+          <!-- 모바일은 390x520 2장 가로 캐러셀 (피그마 12_MO 3898:30403). 묶음은 PC 에서 display: contents -->
+          <div class="wd6-duo-carousel" data-mo-carousel="2">
+            <div class="wd6-duo" data-mo-track>
+              <img src="assets/wd6-suncare-02.webp" alt="" />
+              <img src="assets/wd6-suncare-03.webp" alt="" />
+            </div>
           </div>
 
           <!-- 애니메이션 GIF (fe8e864217ee) -->
@@ -211,14 +224,27 @@
             </p>
           </div>
 
-          <div class="wd6-quad">
+          <!-- 모바일은 390x220 4장 가로 캐러셀 (피그마 12_MO 3898:30088, 순서 01·03·02·04 = 2x2 를 줄 순서로).
+               2~4번은 피그마 MO 크롭대로 다시 자른 컷. .wd6-mo-track 은 PC 에서 display: contents -->
+          <div class="wd6-quad" data-mo-carousel="4">
+            <div class="wd6-mo-track" data-mo-track>
             <div class="wd6-quad-col">
               <img src="assets/wd6-portrait-01.webp" alt="" />
-              <img src="assets/wd6-portrait-02.webp" alt="" />
+              <picture>
+                <source media="(max-width: 599.98px)" srcset="assets/wd6-portrait-02-mo.webp" />
+                <img src="assets/wd6-portrait-02.webp" alt="" />
+              </picture>
             </div>
             <div class="wd6-quad-col">
-              <img src="assets/wd6-portrait-03.webp" alt="" />
-              <img src="assets/wd6-portrait-04.webp" alt="" />
+              <picture>
+                <source media="(max-width: 599.98px)" srcset="assets/wd6-portrait-03-mo.webp" />
+                <img src="assets/wd6-portrait-03.webp" alt="" />
+              </picture>
+              <picture>
+                <source media="(max-width: 599.98px)" srcset="assets/wd6-portrait-04-mo.webp" />
+                <img src="assets/wd6-portrait-04.webp" alt="" />
+              </picture>
+            </div>
             </div>
           </div>
         </section>
@@ -281,5 +307,6 @@
     <script src="assets/gnb.js"></script>
     <script src="assets/top-btn.js"></script>
     <script src="assets/video-play.js"></script>
+    <script src="assets/wd-mo-carousel.js"></script>
   </body>
 </html>

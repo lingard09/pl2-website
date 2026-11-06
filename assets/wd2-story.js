@@ -5,6 +5,22 @@
 (function () {
   var story = document.querySelector(".wd2-story");
   if (!story) return;
+
+  // 모바일(수정사항_11.06, 피그마 8_MO)은 네 단계를 위에서 아래로 쌓기만 한다 — 고정 스크롤을 켜지 않는다.
+  // 모바일로 연 뒤 PC 폭으로 넓히면 그때 켠다. (PC → 모바일은 CSS 가 .is-ready 를 무시한다)
+  var mobile = window.matchMedia ? window.matchMedia("(max-width: 599.98px)") : null;
+  if (mobile && mobile.matches) {
+    var onChange = function () {
+      if (mobile.matches) return;
+      if (mobile.removeEventListener) mobile.removeEventListener("change", onChange);
+      init();
+    };
+    if (mobile.addEventListener) mobile.addEventListener("change", onChange);
+    return;
+  }
+  init();
+
+  function init() {
   var steps = story.querySelectorAll(".wd2-step-section");
   if (steps.length < 2) return;
 
@@ -68,4 +84,5 @@
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", onScroll);
   update();
+  }
 })();

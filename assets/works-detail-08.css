@@ -144,3 +144,74 @@
   outline: min(0.1042vw, 2px) solid var(--pl2-white);
   outline-offset: min(-0.2083vw, -4px);
 }
+
+/* 듀오 이미지를 <picture> 로 감쌌다 (모바일 컷). PC 에서는 img 가 그대로 flex 항목이 되게 한다 */
+.wd8-duo picture {
+  display: contents;
+}
+
+/* picture 가 contents 면 <source> 가 블록 칸으로 잡혀 간격이 생긴다 */
+.wd8-duo source {
+  display: none;
+}
+
+/* ══ 모바일 (수정사항_11.06, 피그마 14_MO 3898:31091, 390 폭) ══════════════════
+   미디어는 전부 좌우 꽉 찬 390x220 한 줄 쌓기. 헤더 ↔ 미디어 60, 미디어끼리 60. */
+@media (max-width: 599.98px) {
+  /* 이 파일 맨 위 PC 값(행간 32 · 가운데 헤더 간격 24, vw)이 공통 모바일 규칙보다 뒤에 와서 이기므로 되돌린다 */
+  .wd-head-desc {
+    line-height: 24px;
+  }
+
+  .wd-head--center {
+    gap: 20px;
+  }
+
+  .wd8-section,
+  .wd8-stack120 {
+    gap: 60px;
+  }
+
+  .wd8-wide,
+  .wd8-connect-01,
+  .wd8-connect-02,
+  .wd8-connect-03,
+  .wd8-grid {
+    align-self: stretch;
+    width: 100%;
+    margin: 0;
+    aspect-ratio: 390 / 220;
+  }
+
+  /* ── 5. 일상 속 모션: 엇갈림 없이 위아래 2장 (3898:31117 · 31422) ── */
+  .wd8-duo {
+    flex-direction: column;
+    gap: 60px;
+  }
+
+  .wd8-duo picture {
+    display: block;
+  }
+
+  .wd8-duo img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 390 / 220;
+    object-position: top;
+  }
+
+  .wd8-duo img:last-child {
+    margin-top: 0;
+  }
+
+  /* ── 7. 본편 영상 390x220, 재생 삼각형 20x36 (PlayBTN 36 박스, 3898:31459) ── */
+  .wd8-video {
+    aspect-ratio: 390 / 220;
+  }
+
+  .wd8-video-play::before {
+    width: 20px;
+    height: 36px;
+    filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.3));
+  }
+}

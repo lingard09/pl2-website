@@ -330,3 +330,259 @@
   outline: min(0.1042vw, 2px) solid var(--pl2-white);
   outline-offset: min(-0.2083vw, -4px);
 }
+
+/* 모바일 전용 미디어·캐러셀 점은 PC 에서 숨긴다. 시퀀스 바깥 틀은 PC 배치에 끼지 않게 contents */
+.wd2-mo-media,
+.wd-mo-dots {
+  display: none;
+}
+
+.wd2-seq-wrap {
+  display: contents;
+}
+
+/* ══ 모바일 (수정사항_11.06, 피그마 8_MO 3875:27707, 390 폭) ══════════════
+   - 3~6 단계 스크롤은 모바일에서 끄고(wd2-story.js) 네 단계를 섹션처럼 위에서 아래로 쌓는다 (사이 200).
+     단계마다 활성 항목(번호 + 이름 + 설명)만 보이고, 그 아래 60 띄워 모바일 전용 캐러셀이 온다.
+     PC 콜라주(960x960 한 장)는 쓰지 않고 피그마 MO 의 낱장(390x220)을 쓴다 (wd2-*-mo.webp).
+   - 파이프라인은 같은 마크업을 390x690 칸 가운데에 그린다 (피그마 3875:28334, 점 간격 104).
+   - 시퀀스 6장은 390x220 캐러셀, 헤더는 가운데 정렬 (피그마 3875:28385).
+   - 캐러셀: CSS scroll-snap 가로 스크롤 + 점 (wd-mo-carousel.js). */
+@media (max-width: 599.98px) {
+  /* 위쪽 PC 규칙(헤더 간격 24 · 설명 행간 32 를 vw 로 축소)이 공통 모바일 값을 덮으므로 다시 잡는다 */
+  .wd-head--center {
+    gap: 20px;
+  }
+
+  .wd-head-desc {
+    line-height: 24px;
+  }
+
+  .wd2-question {
+    padding: 0;
+  }
+
+  /* PC → 모바일로 폭을 줄인 경우에도 고정 스크롤 배치를 풀어 둔다 */
+  .wd2-story,
+  .wd2-story.is-ready {
+    height: auto;
+  }
+
+  .wd2-story-stage,
+  .wd2-story.is-ready .wd2-story-stage {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    gap: 200px;
+    height: auto;
+  }
+
+  .wd2-step-section,
+  .wd2-step-section--tall,
+  .wd2-story.is-ready .wd2-step-section {
+    position: static;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 60px;
+    height: auto;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .wd2-story.is-ready .wd2-step-section .wd2-steps {
+    visibility: visible;
+  }
+
+  .wd2-story-list,
+  .wd2-collage {
+    display: none;
+  }
+
+  .wd2-story.is-ready .wd2-pipeline-wrap {
+    translate: none;
+  }
+
+  /* ── 단계 헤더: 번호 + 이름 Tannakone 26/28 (간격 12), 설명 Light 13/24 (위 20) ── */
+  .wd2-steps,
+  .wd2-steps--after-pipeline {
+    order: -1;
+    width: auto;
+    margin-left: 0;
+    padding: 0 20px;
+  }
+
+  .wd2-step-list {
+    width: auto;
+  }
+
+  .wd2-step[data-active="false"] {
+    display: none;
+  }
+
+  .wd2-step-head {
+    gap: 12px;
+    color: var(--pl2-neutral-80);
+    font-size: 26px;
+    line-height: 28px;
+    letter-spacing: -0.02em;
+  }
+
+  .wd2-step[data-active="true"] .wd2-step-head {
+    color: var(--pl2-neutral-80);
+  }
+
+  .wd2-step-desc,
+  .is-en .wd2-step-desc {
+    margin-top: 20px;
+    font-size: 13px;
+    line-height: 24px;
+    letter-spacing: -0.02em;
+    word-break: keep-all;
+  }
+
+  .wd2-step-desc br {
+    display: none;
+  }
+
+  /* ── 모바일 캐러셀 (390x220, 피그마 3875:27994 외) ── */
+  .wd2-mo-media {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+  }
+
+  .wd2-mo-figure {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .wd2-mo-caption {
+    color: var(--pl2-neutral-60);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 16px;
+    text-align: center;
+  }
+
+  .wd2-mo-carousel,
+  .wd2-seq-wrap {
+    position: relative;
+    display: block;
+  }
+
+  .wd2-mo-track,
+  .wd2-seq-grid {
+    display: flex;
+    gap: 0;
+    padding: 0;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    background: none;
+  }
+
+  .wd2-mo-track::-webkit-scrollbar,
+  .wd2-seq-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 피그마 MO 는 마지막 장(맨 위 레이어)이 보이는 첫 장 — PC 순서는 두고 모바일만 거꾸로 */
+  .wd2-seq-grid img:nth-child(1) { order: 6; }
+  .wd2-seq-grid img:nth-child(2) { order: 5; }
+  .wd2-seq-grid img:nth-child(3) { order: 4; }
+  .wd2-seq-grid img:nth-child(4) { order: 3; }
+  .wd2-seq-grid img:nth-child(5) { order: 2; }
+  .wd2-seq-grid img:nth-child(6) { order: 1; }
+
+  .wd2-mo-track img,
+  .wd2-seq-grid img {
+    flex: none;
+    width: 100%;
+    aspect-ratio: 390 / 220;
+    object-fit: cover;
+    scroll-snap-align: start;
+  }
+
+  /* 점 5px, 간격 4, 아래 12 (피그마 Pagination) */
+  .wd-mo-dots {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    display: flex;
+    gap: 4px;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .wd-mo-dots span {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transition: background-color 0.3s ease;
+  }
+
+  .wd-mo-dots span.is-active {
+    background: var(--pl2-neutral-90);
+  }
+
+  /* ── 파이프라인 390x690: 점 12 · 간격 104 · 선 2x63, 레이블 좌우 교대 (피그마 3875:28334) ── */
+  .wd2-pipeline-wrap {
+    justify-content: center;
+    width: 100%;
+    height: 690px;
+  }
+
+  .wd2-pipe {
+    grid-template-columns: 120px 24px 120px;
+    column-gap: 42px;
+    row-gap: 80px;
+    grid-auto-rows: 24px;
+  }
+
+  .wd2-pipe-label {
+    font-size: 20px;
+    line-height: 29px;
+  }
+
+  .wd2-pipe-dot {
+    width: 24px;
+    height: 24px;
+  }
+
+  .wd2-pipe-dot::before {
+    top: 6px;
+    left: 6px;
+    width: 12px;
+    height: 12px;
+  }
+
+  .wd2-pipe-dot:not(:last-of-type)::after {
+    top: 32px;
+    left: 11px;
+    width: 2px;
+    height: 63px;
+  }
+
+  /* ── 시퀀스: 헤더 가운데 정렬, 헤더 ↔ 캐러셀 60 ── */
+  .wd2-sequence {
+    gap: 60px;
+  }
+
+  .wd2-sequence .wd-head {
+    text-align: center;
+  }
+
+  /* ── 영상 390x220, 재생 삼각형 20x36 (피그마 PlayBTN 36 칸) ── */
+  .wd2-video {
+    aspect-ratio: 390 / 220;
+  }
+
+  .wd2-video-play::before {
+    width: 20px;
+    height: 36px;
+    filter: drop-shadow(0 0 17px rgba(0, 0, 0, 0.3));
+  }
+}

@@ -1,0 +1,139 @@
+/* PL2 works detail 12 전용 (공통 구조는 works-detail.css)
+   PC 는 전부 works-detail.css 의 .wdx-stage 좌표 배치라 여기에는 모바일만 있다.
+   PC 에 영향이 없게, 모바일용으로 넣은 감싸개(<picture>·슬라이더)는 PC 에서 상자를 없앤다. */
+
+/* 감싸개가 contents 라 안의 .wdx-item 은 그대로 스테이지 기준 절대 배치로 남는다 */
+.wd12-pic,
+.wd12-slider,
+.wd12-track {
+  display: contents;
+}
+
+/* 크롬은 <source> 에 상자를 만들어서, 부모가 contents 가 되면 flex 항목이 하나 더 생긴다 */
+.wd12-pic source {
+  display: none;
+}
+
+/* 슬라이더 점 (모바일 전용, PC 에서는 숨김) */
+.wd12-dots {
+  display: none;
+}
+
+/* ══ 모바일 (수정사항_11.06, 피그마 2_MO 3859:9975, 390 폭) ══════════════════
+   - 미디어는 모두 390 꽉 찬 폭, 사이 60 (공통 .wdx-stage).
+   - 팝업 공간 3컷: 390x290 · 390x220 · 390x520 (세 번째는 모바일 전용 세로 컷).
+   - Closer to StrayKids: 제목만 가운데, 제목 ↔ 이미지 20.
+   - Made to Move: 4장 → 390x220 한 장씩 넘기는 슬라이더 (아래 12 에 점 4개) + 영상 390x220.
+   - Story: 390x220 두 장 + 인터뷰 영상 390x220 (재생 버튼 36 칸).
+   - Step into the Experience: 태블릿 → CCTV 화면 순 (PC 와 반대), 390x520 두 장 + 영상 390x220. */
+@media (max-width: 599.98px) {
+  .wdx-stage > .wdx-item:not(.wdx-head),
+  .wd12-pic > .wdx-item,
+  .wd12-track > .wdx-item {
+    aspect-ratio: 390 / 220;
+  }
+
+  .wdx-stage > img.wdx-item:first-child {
+    aspect-ratio: 390 / 290;
+  }
+
+  .wd12-pic > .wdx-item,
+  .wdx-stage > .wdx-item[data-mo-order="1"],
+  .wdx-stage > .wdx-item[data-mo-order="2"] {
+    aspect-ratio: 390 / 520;
+  }
+
+  .wdx-item[data-mo-order="1"] {
+    order: 1;
+  }
+
+  .wdx-item[data-mo-order="2"] {
+    order: 2;
+  }
+
+  .wdx-item[data-mo-order="3"] {
+    order: 3;
+  }
+
+  /* 영상 칸: 높이를 비율로 잡고 화면을 채운다 */
+  .wdx-video video {
+    height: 100%;
+  }
+
+  /* 재생 버튼: 피그마 PlayBTN 36 칸 안 삼각형 높이 30. 폭은 icon-play.svg 비율(30:54)대로 17 */
+  .wdx-video-play::before {
+    width: 17px;
+    height: 30px;
+    filter: drop-shadow(0 0 12px rgba(0, 0, 0, 0.3));
+  }
+
+  /* ── Closer to StrayKids ── */
+  .wd12-closer {
+    gap: 20px;
+  }
+
+  .wd12-closer .wdx-head--center {
+    text-align: center;
+  }
+
+  /* ── Made to Move 슬라이더 ── */
+  .wd12-slider {
+    position: relative;
+    display: block;
+  }
+
+  .wd12-track {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .wd12-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .wd12-track > .wdx-item {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+  }
+
+  /* 피그마 MO 는 마지막 장(맨 위 레이어 Image_04)이 보이는 첫 장 — PC 순서는 두고 모바일만 거꾸로
+     (상세 02 와 같은 규칙). DOM 은 move-01 · 03 · 02 · 04 = 피그마 Image_01~04 순서다 */
+  .wd12-track > .wdx-item:nth-child(1) { order: 4; }
+  .wd12-track > .wdx-item:nth-child(2) { order: 3; }
+  .wd12-track > .wdx-item:nth-child(3) { order: 2; }
+  .wd12-track > .wdx-item:nth-child(4) { order: 1; }
+
+  /* 넘기는 슬라이드마다 스크롤 등장(기울기)이 따로 돌면 어색해서 모바일에서는 끈다 */
+  .mo-on .wd12-track .mo-reveal.mo-out {
+    transform: none;
+    translate: none;
+    scale: none;
+  }
+
+  /* 점: 지름 5, 사이 4, 아래 12 (피그마 Pagination I3865:11058;3865:10885) */
+  .wd12-dots {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    display: flex;
+    gap: 4px;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .wd12-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transition: background-color 300ms ease;
+  }
+
+  .wd12-dot.is-active {
+    background: #f5f5f5;
+  }
+}

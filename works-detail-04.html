@@ -102,7 +102,11 @@
             </h2>
           </div>
 
-          <img class="wd4-mockups" src="assets/wd4-mockups.webp" alt="" />
+          <picture>
+            <!-- 모바일은 기기 셋을 좁게 다시 배치한 컷 (피그마 13_MO 3898:30619) -->
+            <source media="(max-width: 599.98px)" srcset="assets/wd4-mockups-mo.webp" />
+            <img class="wd4-mockups" src="assets/wd4-mockups.webp" alt="" />
+          </picture>
         </section>
 
         <!-- ══ 3. 서비스 페이지 ══ -->
@@ -142,6 +146,21 @@
             <img class="wd4-mobile-01" src="assets/wd4-mobile-01.webp" alt="" />
             <img class="wd4-mobile-02" src="assets/wd4-mobile-02.webp" alt="" />
             <img class="wd4-mobile-03" src="assets/wd4-mobile-03.webp" alt="" />
+          </div>
+
+          <!-- 모바일 전용: 위 3장 + 아래 폰 컷 4장을 한 줄 7장 캐러셀로 (피그마 13_MO 3898:30629).
+               PC 에서는 숨겨 두고(lazy 라 받지도 않는다), 모바일에서는 위 배치와 폰 컷 섹션을 숨긴다.
+               2·3번은 PC 컷(459x680)이 아니라 1:2 로 다시 자른 컷이다. -->
+          <div class="wd4-mo-carousel" data-mo-carousel="7">
+            <div class="wd4-mo-track" data-mo-track>
+              <img src="assets/wd4-mobile-01.webp" alt="" loading="lazy" />
+              <img src="assets/wd4-mobile-02-mo.webp" alt="" loading="lazy" />
+              <img src="assets/wd4-mobile-03-mo.webp" alt="" loading="lazy" />
+              <img src="assets/wd4-phone-01.webp" alt="" loading="lazy" />
+              <img src="assets/wd4-phone-02.webp" alt="" loading="lazy" />
+              <img src="assets/wd4-phone-03.webp" alt="" loading="lazy" />
+              <img src="assets/wd4-phone-04.webp" alt="" loading="lazy" />
+            </div>
           </div>
         </section>
 
@@ -193,5 +212,6 @@
 
     <script src="assets/gnb.js"></script>
     <script src="assets/top-btn.js"></script>
+    <script src="assets/wd-mo-carousel.js"></script>
   </body>
 </html>

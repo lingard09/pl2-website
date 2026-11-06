@@ -223,8 +223,15 @@
 
           <!-- 두 장은 data-reveal 로 왼쪽 → 오른쪽 순서로 하나씩 등장 (PC 피드백_0930) -->
           <div class="wd8-duo">
-            <img src="assets/wd8-life-01.webp" alt="" data-reveal />
-            <img src="assets/wd8-life-02.webp" alt="" data-reveal />
+            <!-- 모바일(14_MO 3898:31117 · 31422)은 16:9 원본 프레임 전체를 쓰는 다른 컷 -->
+            <picture>
+              <source media="(max-width: 599.98px)" srcset="assets/wd8-life-01-mo.webp" />
+              <img src="assets/wd8-life-01.webp" alt="" data-reveal />
+            </picture>
+            <picture>
+              <source media="(max-width: 599.98px)" srcset="assets/wd8-life-02-mo.webp" />
+              <img src="assets/wd8-life-02.webp" alt="" data-reveal />
+            </picture>
           </div>
         </section>
 

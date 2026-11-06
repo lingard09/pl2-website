@@ -117,6 +117,164 @@
   object-fit: cover;
 }
 
-.wd11-duo img + img {
+.wd11-duo img + img,
+.wd11-duo img + .wd11-pic img {
   margin-top: min(6.25vw, 120px);
+}
+
+/* 모바일 전용 컷을 고르는 <picture> 는 PC 배치에 끼지 않게 상자를 없앤다
+   (안의 img 가 원래 자리의 flex 항목으로 그대로 남는다) */
+.wd11-players picture,
+.wd11-pic,
+.wd11-players-track {
+  display: contents;
+}
+
+/* 크롬은 <source> 에 상자를 만들어서, 부모가 contents 가 되면 flex 간격이 하나 더 생긴다 */
+.wd11-players source,
+.wd11-pic source {
+  display: none;
+}
+
+/* 슬라이더 점 (모바일 전용, PC 에서는 숨김) */
+.wd11-dots {
+  display: none;
+}
+
+/* ══ 모바일 (수정사항_11.06, 피그마 1_MO 3802:20587 · 영문 3933:23818, 390 폭) ══════════
+   - 섹션 안 헤더 ↔ 미디어 60, 이미지는 모두 390 꽉 찬 폭.
+   - 63빌딩 2장: 390x220 + 캡션 Regular 11/16 (사이 16), 두 묶음 사이 60.
+   - 고가도로 390x290, 신문 390x520 (모바일 전용 컷), 버스정류장 390x520 두 장 (사이 60, 엇갈림 없음).
+   - 선수 6인: 390x520 한 장씩 넘기는 슬라이더 (모바일 전용 3:4 컷), 아래 12 에 점 6개. */
+@media (max-width: 599.98px) {
+  .wd11-section,
+  .wd11-figures {
+    gap: 60px;
+  }
+
+  /* 위 PC 규칙(가운데 헤더 간격 24 · 설명 745 폭)이 공통 모바일 규칙보다 뒤에 와서 다시 잡는다 */
+  .wd-head--center {
+    gap: 20px;
+  }
+
+  .wd-head--center .wd-head-desc {
+    width: auto;
+  }
+
+  .wd11-figure {
+    gap: 16px;
+  }
+
+  .wd11-figure img {
+    width: 100%;
+    aspect-ratio: 390 / 220;
+  }
+
+  /* Winning 은 피그마에서 아래쪽이 조금 더 잘린다 (높이 124.68%, 위 -0.58%) */
+  .wd11-figure + .wd11-figure img {
+    object-position: 50% 0;
+  }
+
+  .wd11-figure figcaption {
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 16px;
+  }
+
+  .wd11-highway {
+    width: 100%;
+    aspect-ratio: 390 / 290;
+  }
+
+  .wd11-paper {
+    width: 100%;
+    aspect-ratio: 390 / 520;
+  }
+
+  .wd11-duo {
+    flex-direction: column;
+    gap: 60px;
+  }
+
+  .wd11-duo img {
+    width: 100%;
+    aspect-ratio: 390 / 520;
+  }
+
+  .wd11-duo img + img,
+  .wd11-duo img + .wd11-pic img {
+    margin-top: 0;
+  }
+
+  /* ── 선수 6인 슬라이더 ── */
+  .wd11-players {
+    position: relative;
+    display: block;
+    padding: 0;
+  }
+
+  .wd11-players-track {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .wd11-players-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .wd11-players-left,
+  .wd11-pair,
+  .wd11-pair--right {
+    display: contents;
+  }
+
+  .wd11-pair img {
+    flex: 0 0 100%;
+    width: 100%;
+    aspect-ratio: 390 / 520;
+    scroll-snap-align: start;
+  }
+
+  /* 피그마 MO 는 마지막 장(맨 위 레이어 Image_06 = ZEKA)이 보이는 첫 장 — PC 순서는 두고 모바일만 거꾸로
+     (상세 02 와 같은 규칙). <picture> 는 contents 라 flex 항목인 img 에 건다 */
+  .wd11-players-left .wd11-pair:first-child picture:nth-child(1) img { order: 6; }
+  .wd11-players-left .wd11-pair:first-child picture:nth-child(2) img { order: 5; }
+  .wd11-players-left .wd11-pair:last-child picture:nth-child(1) img { order: 4; }
+  .wd11-players-left .wd11-pair:last-child picture:nth-child(2) img { order: 3; }
+  .wd11-pair--right picture:nth-child(1) img { order: 2; }
+  .wd11-pair--right picture:nth-child(2) img { order: 1; }
+
+  /* 넘기는 슬라이드마다 스크롤 등장(기울기)이 따로 돌면 어색해서 모바일에서는 끈다 */
+  .mo-on .wd11-players .mo-reveal.mo-out {
+    transform: none;
+    translate: none;
+    scale: none;
+  }
+
+  /* 점: 지름 5, 사이 4, 아래 12 (피그마 Pagination I3857:31720;3852:31552) */
+  .wd11-dots {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    display: flex;
+    gap: 4px;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .wd11-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transition: background-color 300ms ease;
+  }
+
+  .wd11-dot.is-active {
+    background: #f5f5f5;
+  }
 }

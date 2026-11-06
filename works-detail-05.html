@@ -105,7 +105,7 @@
         <section class="wd5-question">
           <div class="wd-head wd-head--center">
             <h2 class="wd-head-title wd-head-title--bold">
-              <span data-l="ko">신세계면세점 만의 경험은<br />어떻게 시작될까?</span><span data-l="en" lang="en">The Shinsegae Duty Free Experience</span>
+              <span data-l="ko">신세계면세점 만의 경험은<br class="wd5-br" />어떻게 시작될까?</span><span data-l="en" lang="en">The Shinsegae Duty Free Experience</span>
             </h2>
             <p class="wd-head-desc">
               <span data-l="ko">신세계면세점이 전달하고자 하는 브랜드 경험을 하나의 흐름으로 보여주기
@@ -178,14 +178,17 @@
         <section>
           <div class="wd-head wd-head--center">
             <h3 class="wd-head-title">
-              <span data-l="ko">여행의 격을 높이는 신세계면세점을<br />우아하고 당당한 두 모델의
+              <span data-l="ko">여행의 격을 높이는 신세계면세점을<br class="wd5-br" />우아하고 당당한 두 모델의<br class="wd5-mo-br" />
               모습을 통해 보여줍니다.</span><span data-l="en" lang="en">Two poised, confident models showcase how Shinsegae Duty Free elevates the travel experience.</span>
             </h3>
           </div>
         </section>
 
         <!-- ══ 5. 2열 4장 ══ -->
-        <section class="wd5-quad">
+        <!-- 모바일은 390x220 4장 가로 캐러셀 (피그마 5_MO 3875:24734, 순서 01·03·02·04 = 2x2 를 줄 순서로).
+             .wd5-mo-track 은 PC 에서 display: contents 라 배치에 끼지 않는다 -->
+        <section class="wd5-quad" data-mo-carousel="4">
+          <div class="wd5-mo-track" data-mo-track>
           <div class="wd5-quad-col">
             <img src="assets/wd5-quad-01.webp" alt="" />
             <img src="assets/wd5-quad-02.webp" alt="" />
@@ -193,6 +196,7 @@
           <div class="wd5-quad-col wd5-quad-col--low">
             <img src="assets/wd5-quad-03.webp" alt="" />
             <img src="assets/wd5-quad-04.webp" alt="" />
+          </div>
           </div>
         </section>
 
@@ -223,7 +227,7 @@
         <!-- ══ 8. 질문 2 ══ -->
         <section>
           <div class="wd-head wd-head--center">
-            <h2 class="wd-head-title wd-head-title--bold"><span data-l="ko">캠페인 비주얼의 완성도는 어디에서 결정될까?</span><span data-l="en" lang="en">The Details Behind Campaign Visuals</span></h2>
+            <h2 class="wd-head-title wd-head-title--bold"><span data-l="ko">캠페인 비주얼의 완성도는<br class="wd5-mo-br" /> 어디에서 결정될까?</span><span data-l="en" lang="en">The Details Behind Campaign Visuals</span></h2>
             <p class="wd-head-desc">
               <span data-l="ko">모델 KYOKA의 캠페인 이미지를 브랜드 톤에 맞춰 리터칭했습니다.<br />
               피부 표현과 컬러 밸런스, 전체적인 톤을 섬세하게 보정하여 촬영 원본의
@@ -252,14 +256,21 @@
                  보정 전 사진은 PC 피드백_1015 에서 들어온 원본(피그마 Before 081288)을
                  보정 후와 같은 범위로 잘라 쓴다. 피그마도 Before 위에 검정 20% 를 덮어 둬서 딤은 유지. -->
             <div class="wd5-compare" data-reveal style="--pos: 50%">
-              <img
-                class="wd5-compare-after"
-                src="assets/wd5-compare.webp"
-                alt="KYOKA 캠페인 이미지 보정 후"
-                draggable="false"
-              />
+              <!-- 모바일(390x220)은 세로 원본에서 얼굴 쪽을 다시 잘라 쓴다 (피그마 5_MO 3875:25229) -->
+              <picture>
+                <source media="(max-width: 599.98px)" srcset="assets/wd5-compare-mo.webp" />
+                <img
+                  class="wd5-compare-after"
+                  src="assets/wd5-compare.webp"
+                  alt="KYOKA 캠페인 이미지 보정 후"
+                  draggable="false"
+                />
+              </picture>
               <div class="wd5-compare-before" aria-hidden="true">
-                <img src="assets/wd5-compare-before.webp" alt="" draggable="false" />
+                <picture>
+                  <source media="(max-width: 599.98px)" srcset="assets/wd5-compare-before-mo.webp" />
+                  <img src="assets/wd5-compare-before.webp" alt="" draggable="false" />
+                </picture>
               </div>
               <div
                 class="wd5-compare-handle"
@@ -275,17 +286,23 @@
               </div>
             </div>
 
-            <!-- 아래 6장은 data-reveal 로 하나씩 등장한다 (PC 피드백_0930) -->
+            <!-- 아래 6장은 data-reveal 로 하나씩 등장한다 (PC 피드백_0930).
+                 모바일은 줄마다 390x690 3장 가로 캐러셀 (피그마 5_MO 3875:25201 · 3875:25335).
+                 .wd5-kyoka-carousel 은 PC 에서 display: contents -->
             <div class="wd5-kyoka-stack">
-              <div class="wd5-kyoka-row wd5-kyoka-row--first">
+              <div class="wd5-kyoka-carousel" data-mo-carousel="3">
+              <div class="wd5-kyoka-row wd5-kyoka-row--first" data-mo-track>
                 <img src="assets/wd5-kyoka-01.webp" alt="" data-reveal />
                 <img src="assets/wd5-kyoka-02.webp" alt="" data-reveal />
                 <img src="assets/wd5-kyoka-03.webp" alt="" data-reveal />
               </div>
-              <div class="wd5-kyoka-row wd5-kyoka-row--second">
+              </div>
+              <div class="wd5-kyoka-carousel" data-mo-carousel="3">
+              <div class="wd5-kyoka-row wd5-kyoka-row--second" data-mo-track>
                 <img src="assets/wd5-kyoka-04.webp" alt="" data-reveal />
                 <img src="assets/wd5-kyoka-05.webp" alt="" data-reveal />
                 <img src="assets/wd5-kyoka-06.webp" alt="" data-reveal />
+              </div>
               </div>
             </div>
           </div>
@@ -332,6 +349,7 @@
     <script src="assets/gnb.js"></script>
     <script src="assets/top-btn.js"></script>
     <script src="assets/compare.js"></script>
+    <script src="assets/wd-mo-carousel.js"></script>
     <script src="assets/video-play.js"></script>
   </body>
 </html>

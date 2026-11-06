@@ -214,6 +214,11 @@
   height: min(50vw, 960px);
 }
 
+/* 모바일 캐러셀용 트랙 — PC 에서는 없는 것처럼 (반쪽 두 개가 그대로 .wd-illust 의 flex 항목) */
+.wd-illust-track {
+  display: contents;
+}
+
 .wd-illust-half {
   position: relative;
   flex: 1 1 0;
@@ -314,3 +319,195 @@
   object-fit: cover;
 }
 
+/* 모바일 캐러셀 점(wd-mo-carousel.js 가 붙인다)은 PC 에서 숨긴다 — flex 항목으로 끼면 간격이 생긴다 */
+.wd-mo-dots {
+  display: none;
+}
+
+/* ══ 모바일 (수정사항_11.06, 피그마 4_MO 3865:11932, 390 폭) ══════════════
+   공통 모바일 레이어(works-detail.css) 위에 이 페이지 섹션만 잡는다.
+   - 헤더 ↔ 미디어 60, 미디어 사이 60. 영상·이미지는 화면 꽉 찬 390 폭 + 피그마 비율.
+   - 필름스트립은 300x400 카드(간격 12, 왼쪽 20)를 손으로 넘기는 가로 스크롤 (자동 회전은 wd1-strip.js 가 쉰다).
+   - 일러스트 4장은 390x690 한 장씩 넘기는 캐러셀 + 점 (wd-mo-carousel.js).
+     피그마에서는 레이어 분리 섹션 안(영상 아래 60)에 들어 있어 섹션 간격 200 을 60 으로 줄인다.
+   - 스티커 행은 이미지 390x290(contain) 아래 캡션 가운데 정렬 (24 띄움). */
+@media (max-width: 599.98px) {
+  /* 피그마 MO 제목은 SemiBold (PC 는 Bold) */
+  .wd-head-title--bold {
+    font-weight: 600;
+  }
+
+  .wd-style,
+  .wd-layer,
+  .wd-stickers {
+    gap: 60px;
+  }
+
+  /* 영상 3개: 390x290 (피그마 3865:11944 · 3870:12988 · 3875:23337) */
+  .wd-style-video,
+  .wd-band-video,
+  .wd-final {
+    aspect-ratio: 390 / 290;
+  }
+
+  /* ── 필름스트립 → 가로 스크롤 (피그마 3870:12939) ── */
+  .wd-strip-section {
+    gap: 16px;
+  }
+
+  .wd-strip {
+    height: auto;
+    overflow: visible;
+  }
+
+  .wd-strip::before,
+  .wd-strip::after {
+    display: none;
+  }
+
+  .wd-strip-track {
+    position: static;
+    display: flex;
+    gap: 12px;
+    width: auto;
+    height: auto;
+    padding: 0 20px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 0 20px;
+    scrollbar-width: none;
+    transform: none;
+  }
+
+  .wd-strip-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* data-slot 별 PC 위치·크기는 모두 무시하고 같은 카드로 */
+  .wd-strip-track img,
+  .wd-strip-track img[data-slot] {
+    position: static;
+    flex: none;
+    width: 300px;
+    height: 400px;
+    scroll-snap-align: start;
+    transition: none;
+  }
+
+  .wd-strip-caption {
+    padding: 0 20px;
+    font-size: 11px;
+    line-height: 16px;
+  }
+
+  /* ── 일러스트 캐러셀 (피그마 3870:13004, 390x690) ── */
+  .wd-illust {
+    position: relative;
+    display: block;
+    height: auto;
+    margin-top: -140px; /* 섹션 간격 200 → 레이어 영상 아래 60 */
+  }
+
+  .wd-illust-track {
+    display: flex;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .wd-illust-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .wd-illust-half,
+  .wd-illust picture {
+    display: contents;
+  }
+
+  /* contents 로 풀면 <source> 도 flex 항목이 되므로 감춘다 */
+  .wd-illust source {
+    display: none;
+  }
+
+  .wd-illust-half img,
+  .wd-illust .wd-illust-1,
+  .wd-illust .wd-illust-2,
+  .wd-illust .wd-illust-3,
+  .wd-illust .wd-illust-4 {
+    position: static;
+    flex: none;
+    width: 100%;
+    aspect-ratio: 390 / 690;
+    scroll-snap-align: start;
+  }
+
+  /* 피그마 MO 는 마지막 장(맨 위 레이어, 해바라기 길)이 보이는 첫 장 — PC 순서는 두고 모바일만 거꾸로 */
+  .wd-illust .wd-illust-1 { order: 4; }
+  .wd-illust .wd-illust-2 { order: 3; }
+  .wd-illust .wd-illust-3 { order: 2; }
+  .wd-illust .wd-illust-4 { order: 1; }
+
+  /* 점 5px, 간격 4, 아래 12 (피그마 Pagination) */
+  .wd-mo-dots {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    display: flex;
+    gap: 4px;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .wd-mo-dots span {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transition: background-color 0.3s ease;
+  }
+
+  .wd-mo-dots span.is-active {
+    background: var(--pl2-neutral-90);
+  }
+
+  /* ── 스티커 5행 (피그마 3875:23166 외) ── */
+  .wd-sticker-rows {
+    gap: 60px;
+  }
+
+  .wd-sticker-row,
+  .wd-sticker-row--reverse {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 24px;
+    height: auto;
+  }
+
+  .wd-sticker-grid {
+    width: 100%;
+    aspect-ratio: 390 / 290;
+  }
+
+  .wd-sticker-caption {
+    padding: 0 20px;
+    text-align: center;
+  }
+
+  /* 제목 Medium 12/16 · 설명 Light 11/16, 사이 16 */
+  .wd-sticker-caption h3 {
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0;
+  }
+
+  .wd-sticker-caption p {
+    margin-top: 16px;
+    font-size: 11px;
+    font-weight: 300;
+    line-height: 16px;
+    letter-spacing: 0;
+    word-break: keep-all;
+  }
+}

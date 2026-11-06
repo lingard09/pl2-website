@@ -116,12 +116,31 @@
 
           <!-- 이미지 3장은 data-reveal 로 하나씩 따로 등장한다 (PC 피드백_0930) -->
           <div class="wd7-services">
+            <!-- 모바일(6_MO 3875:25373)은 Main → Forum → Support 순 390x390 정사각 + 캡션 (순서는 CSS order) -->
             <div class="wd7-services-col">
-              <img src="assets/wd7-service-01.webp" alt="" data-reveal />
-              <img src="assets/wd7-service-02.webp" alt="" data-reveal />
+              <figure class="wd7-fig wd7-fig--main">
+                <picture>
+                  <source media="(max-width: 599.98px)" srcset="assets/wd7-service-main-mo.webp" />
+                  <img src="assets/wd7-service-01.webp" alt="" data-reveal />
+                </picture>
+                <figcaption class="wd7-cap">Main Page</figcaption>
+              </figure>
+              <figure class="wd7-fig wd7-fig--support">
+                <picture>
+                  <source media="(max-width: 599.98px)" srcset="assets/wd7-service-support-mo.webp" />
+                  <img src="assets/wd7-service-02.webp" alt="" data-reveal />
+                </picture>
+                <figcaption class="wd7-cap">Support Page</figcaption>
+              </figure>
             </div>
             <div class="wd7-services-col wd7-services-col--center">
-              <img src="assets/wd7-service-03.webp" alt="" data-reveal />
+              <figure class="wd7-fig wd7-fig--forum">
+                <picture>
+                  <source media="(max-width: 599.98px)" srcset="assets/wd7-service-forum-mo.webp" />
+                  <img src="assets/wd7-service-03.webp" alt="" data-reveal />
+                </picture>
+                <figcaption class="wd7-cap">Forum Page</figcaption>
+              </figure>
             </div>
           </div>
         </section>
@@ -188,6 +207,7 @@
 
           <div class="wd7-stack120">
             <!-- Documentation 구조 창 (2026-10-15 피드백, 피그마 1558x898 = 바 38 + 영상 860) -->
+            <figure class="wd7-fig">
             <div class="wd7-doc-01 wd7-window">
               <img class="wd7-window-bar" src="assets/wd7-structure-bar.webp" alt="" />
               <video
@@ -201,8 +221,11 @@
                 <source src="assets/wd7-structure.mp4" type="video/mp4" />
               </video>
             </div>
+            <figcaption class="wd7-cap">Structure</figcaption>
+            </figure>
             <!-- 커버 화면 팝업 창 (2026-10-13 피드백, 피그마 Frame 1428752994 1208x657).
                  위 44 는 창 제목 바(이미지), 아래 1208x613 이 영상이다 -->
+            <figure class="wd7-fig">
             <div class="wd7-doc-02 wd7-window">
               <img class="wd7-window-bar" src="assets/wd7-popup-bar.webp" alt="" />
               <video
@@ -216,7 +239,10 @@
                 <source src="assets/wd7-popup.mp4" type="video/mp4" />
               </video>
             </div>
+            <figcaption class="wd7-cap">Pop-ups on the cover screen</figcaption>
+            </figure>
             <!-- Remote Test Lab 창 (피그마 1558x892 = 바 32 + 영상 860, 영상은 PC 피드백_1026 Rectangle 34628193) -->
+            <figure class="wd7-fig">
             <div class="wd7-doc-03 wd7-window">
               <img class="wd7-window-bar" src="assets/wd7-rtl-bar.webp" alt="" />
               <video
@@ -230,6 +256,8 @@
                 <source src="assets/wd7-rtl.mp4" type="video/mp4" />
               </video>
             </div>
+            <figcaption class="wd7-cap">Remote Test Lab</figcaption>
+            </figure>
           </div>
         </section>
 
@@ -237,7 +265,7 @@
         <section class="wd7-section">
           <div class="wd-head wd-head--center">
             <h2 class="wd-head-title">
-              A Consistent Experience Across Every Screen
+              A Consistent Experience <span class="wd7-mo-line">Across Every Screen</span>
             </h2>
             <p class="wd-head-desc">
               <span data-l="ko">플랫폼의 경험은 하나의 화면에서 끝나지 않습니다. 데스크톱과 모바일
@@ -258,10 +286,41 @@
           >
             <source src="assets/wd7-band.mp4" type="video/mp4" />
           </video>
+          <!-- 모바일 전용 화면 모음 (6_MO 3875:26765 · 26811 · 26833): 390x690 폰 화면 4장씩 가로 스와이프 3묶음.
+               PC 의 6. 화면 모음(가로 컷 + 폰 4장)을 대신한다. PC 에서는 숨겨 lazy 라 받지 않는다 -->
+          <div class="wd7-screens-list">
+            <div class="wd7-screens" data-wd7-screens>
+              <div class="wd7-screens-track">
+                <img src="assets/wd7-mo-screen-01.webp" alt="" loading="lazy" />
+                <img src="assets/wd7-mo-screen-02.webp" alt="" loading="lazy" />
+                <img src="assets/wd7-mo-screen-03.webp" alt="" loading="lazy" />
+                <img src="assets/wd7-mo-screen-04.webp" alt="" loading="lazy" />
+              </div>
+              <div class="wd7-screens-dots" aria-hidden="true"><span class="is-active"></span><span></span><span></span><span></span></div>
+            </div>
+            <div class="wd7-screens" data-wd7-screens>
+              <div class="wd7-screens-track">
+                <img src="assets/wd7-mo-screen-05.webp" alt="" loading="lazy" />
+                <img src="assets/wd7-mo-screen-06.webp" alt="" loading="lazy" />
+                <img src="assets/wd7-mo-screen-07.webp" alt="" loading="lazy" />
+                <img src="assets/wd7-mo-screen-08.webp" alt="" loading="lazy" />
+              </div>
+              <div class="wd7-screens-dots" aria-hidden="true"><span class="is-active"></span><span></span><span></span><span></span></div>
+            </div>
+            <div class="wd7-screens" data-wd7-screens>
+              <div class="wd7-screens-track">
+                <img src="assets/wd7-mo-screen-09.webp" alt="" loading="lazy" />
+                <img src="assets/wd7-mo-screen-10.webp" alt="" loading="lazy" />
+                <img src="assets/wd7-mo-screen-11.webp" alt="" loading="lazy" />
+                <img src="assets/wd7-mo-screen-12.webp" alt="" loading="lazy" />
+              </div>
+              <div class="wd7-screens-dots" aria-hidden="true"><span class="is-active"></span><span></span><span></span><span></span></div>
+            </div>
+          </div>
         </section>
 
         <!-- ══ 6. 화면 모음 ══ -->
-        <section class="wd7-stack120">
+        <section class="wd7-stack120 wd7-gallery">
           <div class="wd7-pair">
             <img src="assets/wd7-pair-01.webp" alt="" />
             <img src="assets/wd7-pair-02.webp" alt="" />
@@ -320,5 +379,6 @@
 
     <script src="assets/gnb.js"></script>
     <script src="assets/top-btn.js"></script>
+    <script src="assets/wd7-screens.js"></script>
   </body>
 </html>

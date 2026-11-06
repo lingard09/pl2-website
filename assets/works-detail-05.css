@@ -299,3 +299,231 @@
   flex-direction: column;
   gap: min(6.25vw, 120px);
 }
+
+/* 모바일 캐러셀용 묶음은 PC 에서 배치에 끼지 않는다 (자식이 그대로 원래 자리에 놓인다).
+   점(wd-mo-carousel.js 가 넣는다)도 PC 에서는 숨긴다 — 안 숨기면 KYOKA 줄 사이 flex gap 이 한 칸 더 생긴다 */
+.wd5-mo-track,
+.wd5-kyoka-carousel {
+  display: contents;
+}
+
+.wd-mo-dots {
+  display: none;
+}
+
+/* 모바일에서만 꺾는 줄 (피그마 5_MO 제목 줄바꿈) */
+.wd5-mo-br {
+  display: none;
+}
+
+/* ══ 모바일 (수정사항_11.06, 피그마 5_MO 3875:23733, 390 폭) ══════════════
+   모든 미디어가 390 전체 폭. 헤더 ↔ 미디어 60, 덩어리 사이 200 (공통).
+   2열 4장 · KYOKA 두 줄은 가로로 넘기는 캐러셀(scroll-snap)로, 엇갈린 3장은 세로로 쌓는다. */
+@media (max-width: 599.98px) {
+  .wd-head-desc {
+    line-height: 24px;
+  }
+
+  .wd5-section {
+    gap: 60px;
+  }
+
+  .wd5-question {
+    padding: 0;
+  }
+
+  /* 이 페이지 CSS 의 가운데 헤더 gap(40 → vw) 이 공통 모바일 값보다 뒤에 있어 다시 잡는다 */
+  .wd-head--center {
+    gap: 20px;
+  }
+
+  /* 제목 줄바꿈은 피그마 MO 와 같은 자리 (공통 레이어는 제목 <br> 을 숨긴다) */
+  .wd-head-title .wd5-br,
+  .wd-head-title .wd5-mo-br {
+    display: inline;
+  }
+
+  /* 가운데 문구 섹션(여행의 격을…)은 MO 에서도 가운데 (피그마 3875:24714) */
+  .wd-head--center:not(:has(.wd-head-desc)) {
+    text-align: center;
+  }
+
+  /* ── 동선 영상 390x160 · 스틸 영상 390x220 ── */
+  .wd5-route {
+    aspect-ratio: 390 / 160;
+  }
+
+  .wd5-still {
+    width: 100%;
+    aspect-ratio: 390 / 220;
+  }
+
+  /* ── 가로 캐러셀 공통: 한 장 = 390 폭, 한 장씩 멈춘다 ── */
+  .wd5-quad,
+  .wd5-kyoka-carousel {
+    position: relative;
+    display: block;
+  }
+
+  .wd5-mo-track,
+  .wd5-kyoka-row {
+    display: flex;
+    gap: 0;
+    width: auto;
+    margin-left: 0;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .wd5-mo-track::-webkit-scrollbar,
+  .wd5-kyoka-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ── 2열 4장 → 390x220 4장 (줄 순서 01·03·02·04) ── */
+  .wd5-quad-col {
+    display: contents;
+  }
+
+  .wd5-quad-col img {
+    flex: none;
+    width: 100%;
+    aspect-ratio: 390 / 220;
+    scroll-snap-align: start;
+  }
+
+  .wd5-quad-col:first-child img:last-child {
+    order: 3;
+  }
+
+  .wd5-quad-col--low img:first-child {
+    order: 2;
+  }
+
+  .wd5-quad-col--low img:last-child {
+    order: 4;
+  }
+
+  /* ── 엇갈린 3장 → 390x520 · 390x220 · 390x390 세로로, 간격 60 (피그마 3875:24853) ── */
+  .wd5-trio {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    height: auto;
+  }
+
+  .wd5-trio img {
+    position: static;
+    width: 100%;
+    margin: 0;
+    object-fit: cover;
+  }
+
+  .wd5-trio-01 {
+    aspect-ratio: 390 / 520;
+  }
+
+  .wd5-trio-02 {
+    aspect-ratio: 390 / 220;
+  }
+
+  .wd5-trio-03 {
+    aspect-ratio: 1 / 1;
+  }
+
+  /* ── 영상 390x220, 재생 삼각형 17x30 (피그마 MO PlayBTN 36 칸 안) ── */
+  .wd5-video {
+    aspect-ratio: 390 / 220;
+  }
+
+  .wd5-video-play::before {
+    width: 17px;
+    height: 30px;
+    filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.3));
+  }
+
+  /* ── 리터칭: 비교 390x220 → KYOKA 1줄 · 2줄 (각 390x690), 사이 60 ── */
+  .wd5-retouch-block,
+  .wd5-kyoka-stack {
+    gap: 60px;
+  }
+
+  .wd5-compare {
+    width: 100%;
+    aspect-ratio: 390 / 220;
+  }
+
+  /* 비교 버튼 24x24, 선에서 6 (피그마 Liquid Glass 165 / 225) */
+  .wd5-compare-btn {
+    width: 24px;
+    height: 24px;
+  }
+
+  .wd5-compare-btn--prev {
+    right: calc(50% + 6px);
+  }
+
+  .wd5-compare-btn--next {
+    left: calc(50% + 6px);
+  }
+
+  /* KYOKA: 2:3 컷을 690 높이(460 폭)로 채우고 피그마 위치대로 민다. 빈 곳은 사진 바탕색 */
+  .wd5-kyoka-row img {
+    flex: none;
+    width: 100%;
+    height: 690px;
+    aspect-ratio: auto;
+    background: #f6f6f6;
+    object-fit: cover;
+    scroll-snap-align: start;
+  }
+
+  .wd5-kyoka-row--first img:first-child {
+    object-position: -109px 0;
+  }
+
+  .wd5-kyoka-row--second img:nth-child(1) {
+    object-position: -69px -11px;
+  }
+
+  .wd5-kyoka-row--second img:nth-child(2) {
+    object-position: -70px -28px;
+  }
+
+  .wd5-kyoka-row--second img:nth-child(3) {
+    object-position: -62px -14px;
+  }
+
+  /* 점: 5px · 간격 4 · 아래 12. 2열 4장은 사진 위 흰색, KYOKA 는 밝은 바탕이라 검정 계열 */
+  .wd-mo-dots {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    display: flex;
+    gap: 4px;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .wd-mo-dots span {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transition: background-color 0.2s ease;
+  }
+
+  .wd-mo-dots .is-active {
+    background: #f5f5f5;
+  }
+
+  .wd5-kyoka-carousel .wd-mo-dots span {
+    background: rgba(0, 0, 0, 0.12);
+  }
+
+  .wd5-kyoka-carousel .wd-mo-dots .is-active {
+    background: #555;
+  }
+}

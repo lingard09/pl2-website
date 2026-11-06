@@ -364,3 +364,254 @@ html[class*="translated-"] .ab-service-sub {
   font-size: min(1.3542vw, 26px); /* 26 */
   line-height: min(1.3542vw, 26px); /* 26 */
 }
+
+/* ══ 모바일 (수정사항_11.06, 피그마 About_MO 한글 3898:31466 · 영문 3933:24195, 390 폭) ══════
+   PC 는 1920 비율 축소지만 모바일은 피그마 MO 값(px)을 그대로 쓴다. 모바일은 공간 모션
+   (space-motion.js, 데스크톱 전용) 없이 일반 등장 모션만 돈다.
+   - 리듬: 큰 덩어리 사이 200 (히어로·통계·헤딩·서비스 4개·브랜드·푸터), 하단 여백 200.
+   - 히어로: 위 160 은 어두운 띠(#1f2224 → 투명, 240 높이 그라디언트가 영상 위로 살짝 덮는다),
+     영상 390x290, 아래 60 띄우고 인트로 가운데 정렬.
+   - 통계: 세로 3줄, 오른쪽 정렬, 라벨이 숫자 위 (라벨 18/30 · 숫자 Tannakone 80/96).
+   - 헤딩 + 문단 2개 + PL 그래픽이 한 덩어리 (사이 60 · 문단 사이 40).
+   - 서비스: 모두 영상 위 · 글 아래 (사이 60). 영상 높이 290 / 290 / 390 / 220.
+   - 브랜드: 로고 칸 120x52, 사이 8, 두 줄 사이 20, 양끝 흰 그라디언트 60.
+   - 한글 문단의 <br> 은 PC 폭 기준이라 숨기고 칸에 맞춰 흐르게 한다. */
+@media (max-width: 599.98px) {
+  /* 꽉 찬 폭 영상이 등장 모션(skewX)으로 비틀린 동안 화면 오른쪽으로 삐져나와
+     가로 스크롤이 생겼다 → 본문 가로만 잘라 둔다 (clip 은 스크롤 상자를 만들지 않는다) */
+  .ab-main {
+    overflow-x: clip;
+  }
+
+  .ab-container {
+    gap: 200px;
+    padding-bottom: 200px;
+  }
+
+  /* ── 히어로 + 인트로 ── */
+  .ab-top {
+    position: relative;
+    gap: 60px;
+    padding-top: 160px;
+  }
+
+  /* 피그마 Rectangle 34628196: 390x240, #1f2224 70.36% → rgba(39,40,45,0) */
+  .ab-top::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 240px;
+    background: linear-gradient(to bottom, #1f2224 70.36%, rgba(39, 40, 45, 0));
+    pointer-events: none;
+  }
+
+  .ab-hero {
+    aspect-ratio: 390 / 290;
+  }
+
+  .ab-intro {
+    padding: 0 20px;
+  }
+
+  /* Works-About/MO/Intro-text: Light 14/26 #555, 가운데 */
+  .ab-intro p,
+  .is-en .ab-intro p {
+    max-width: none;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 26px;
+    text-align: center;
+  }
+
+  .ab-intro br,
+  .ab-lead-cols br,
+  .ab-service-desc br {
+    display: none;
+  }
+
+  /* ── 통계 ── */
+  .ab-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 20px;
+  }
+
+  .ab-stat {
+    gap: 24px;
+    text-align: right;
+  }
+
+  .ab-stat-label {
+    order: -1;
+    padding: 0;
+    font-size: 18px;
+    line-height: 30px;
+  }
+
+  .ab-stat-num {
+    font-size: 80px;
+    line-height: 96px;
+  }
+
+  /* ── 헤딩 + 문단 ── */
+  .ab-lead {
+    gap: 60px;
+    padding: 0 20px;
+  }
+
+  /* Tannakone 32, 행간 AUTO (피그마 높이 43) */
+  .ab-lead-title {
+    color: var(--pl2-neutral-10);
+    font-size: 32px;
+    line-height: 43px;
+  }
+
+  .ab-lead-cols {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .ab-lead-cols p {
+    font-size: 14px;
+    line-height: 26px;
+  }
+
+  /* PL 그래픽 390x146: 헤딩 덩어리 안에서 문단과 60 (공통 간격 200 - 140) */
+  .ab-graphic {
+    margin-top: -140px;
+  }
+
+  .ab-pl {
+    width: 100%;
+  }
+
+  /* ── 서비스 ── */
+  .ab-services {
+    gap: 200px;
+  }
+
+  .ab-service,
+  .ab-service--h640,
+  .ab-service--h960 {
+    flex-direction: column;
+    gap: 60px;
+    height: auto;
+  }
+
+  .ab-service-media {
+    order: -1;
+    width: 100%;
+    height: 290px;
+  }
+
+  .ab-service:nth-child(3) .ab-service-media {
+    height: 390px; /* UI/UX */
+  }
+
+  .ab-service:nth-child(4) .ab-service-media {
+    height: 220px; /* AI */
+  }
+
+  .ab-service-body {
+    gap: 20px;
+    justify-content: flex-start;
+    width: 100%;
+    height: auto;
+    padding: 0 20px;
+  }
+
+  .ab-service-head {
+    gap: 20px;
+  }
+
+  .ab-service-title {
+    color: var(--pl2-neutral-10);
+    font-size: 32px;
+    line-height: 43px;
+  }
+
+  /* Works-About/MO/Subtitle: SemiBold 18, 행간 100% (피그마 높이 22) */
+  .ab-service-sub {
+    color: var(--pl2-neutral-10);
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 22px;
+    letter-spacing: -0.02em;
+  }
+
+  .ab-service-desc {
+    font-size: 13px;
+    line-height: 24px;
+    word-break: keep-all;
+  }
+
+  /* ── 브랜드 마퀴 ── */
+  .ab-brands-row {
+    gap: 8px;
+    animation-name: ab-brands-left-mo;
+  }
+
+  .ab-brands-row + .ab-brands-row {
+    margin-top: 20px;
+    animation-name: ab-brands-right-mo;
+  }
+
+  .ab-brand {
+    width: 120px;
+    height: 52px;
+  }
+
+  .ab-brand img {
+    width: 95px;
+    height: 36px;
+  }
+
+  .ab-brands::before,
+  .ab-brands::after {
+    width: 60px;
+  }
+
+  /* ── 영문판 (Works-About/MO/*-eng) ──
+     Intro-text-eng 16/28 · Cotent-text-eng 15/25 · Subtitle-eng 20 (행간 100%, 피그마 높이 24) */
+  .is-en .ab-intro p,
+  .is-en .ab-lead-cols p {
+    font-size: 16px;
+    line-height: 28px;
+    letter-spacing: -0.02em;
+  }
+
+  .is-en .ab-service-desc {
+    font-size: 15px;
+    line-height: 25px;
+    letter-spacing: -0.02em;
+  }
+
+  .is-en .ab-service-sub {
+    font-size: 20px;
+    line-height: 24px;
+  }
+}
+
+/* 모바일 마퀴: 로고 사이 8 → 반 벌 + 4 만큼 민다 */
+@keyframes ab-brands-left-mo {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-50% - 4px));
+  }
+}
+
+@keyframes ab-brands-right-mo {
+  from {
+    transform: translateX(calc(-50% - 4px));
+  }
+  to {
+    transform: translateX(0);
+  }
+}

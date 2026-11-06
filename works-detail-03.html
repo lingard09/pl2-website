@@ -111,7 +111,7 @@
 
           <div class="wd3-film-media">
             <div class="wd3-film-plate">
-              <img src="assets/wd3-brandfilm.webp" alt="" />
+              <picture class="wd3-pic"><source media="(max-width: 599.98px)" srcset="assets/wd3-brandfilm-mo.webp" /><img src="assets/wd3-brandfilm.webp" alt="" /></picture>
             </div>
             <p class="wd3-film-caption">DFS WONDER</p>
           </div>
@@ -132,9 +132,11 @@
           </div>
 
           <!-- 두 장이 스크롤에 맞춰 하나씩 등장 (PC 피드백_0930, Frame 2116929459) -->
+          <!-- 모바일(수정사항_11.06, 피그마 10_MO)은 같은 사진을 다른 비율로 자른 *-mo.webp 를 쓴다.
+               <picture> 는 display: contents 라 PC 배치는 그대로다 -->
           <div class="wd3-pair">
-            <img class="wd3-pair-a" src="assets/wd3-mood-01.webp" alt="" data-reveal />
-            <img class="wd3-pair-b" src="assets/wd3-mood-02.webp" alt="" data-reveal />
+            <picture class="wd3-pic"><source media="(max-width: 599.98px)" srcset="assets/wd3-mood-01-mo.webp" /><img class="wd3-pair-a" src="assets/wd3-mood-01.webp" alt="" data-reveal /></picture>
+            <picture class="wd3-pic"><source media="(max-width: 599.98px)" srcset="assets/wd3-mood-02-mo.webp" /><img class="wd3-pair-b" src="assets/wd3-mood-02.webp" alt="" data-reveal /></picture>
           </div>
         </section>
 
@@ -151,7 +153,7 @@
             </p>
           </div>
 
-          <img class="wd3-products" src="assets/wd3-products.webp" alt="" />
+          <picture class="wd3-pic"><source media="(max-width: 599.98px)" srcset="assets/wd3-products-mo.webp" /><img class="wd3-products" src="assets/wd3-products.webp" alt="" /></picture>
 
           <div class="wd3-duo wd3-duo--left-low">
             <!-- 애니메이션 GIF (77e134582c1f) → About 프로덕션 섹션과 같은 파일.
@@ -204,8 +206,8 @@
 
           <!-- 두 장이 스크롤에 맞춰 하나씩 등장 (PC 피드백_0930, Frame 2116929430) -->
           <div class="wd3-pair">
-            <img class="wd3-pair-a" src="assets/wd3-daily-01.webp" alt="" data-reveal />
-            <img class="wd3-pair-b" src="assets/wd3-daily-02.webp" alt="" data-reveal />
+            <picture class="wd3-pic"><source media="(max-width: 599.98px)" srcset="assets/wd3-daily-01-mo.webp" /><img class="wd3-pair-a" src="assets/wd3-daily-01.webp" alt="" data-reveal /></picture>
+            <picture class="wd3-pic"><source media="(max-width: 599.98px)" srcset="assets/wd3-daily-02-mo.webp" /><img class="wd3-pair-b" src="assets/wd3-daily-02.webp" alt="" data-reveal /></picture>
           </div>
         </section>
 
@@ -223,10 +225,10 @@
 
           <div class="wd3-stack120">
             <div class="wd3-duo wd3-duo--right-low">
-              <img src="assets/wd3-model-01.webp" alt="" />
-              <img src="assets/wd3-model-02.webp" alt="" />
+              <picture class="wd3-pic"><source media="(max-width: 599.98px)" srcset="assets/wd3-model-01-mo.webp" /><img src="assets/wd3-model-01.webp" alt="" /></picture>
+              <picture class="wd3-pic"><source media="(max-width: 599.98px)" srcset="assets/wd3-model-02-mo.webp" /><img src="assets/wd3-model-02.webp" alt="" /></picture>
             </div>
-            <img class="wd3-model-last" src="assets/wd3-model-03.webp" alt="" />
+            <picture class="wd3-pic"><source media="(max-width: 599.98px)" srcset="assets/wd3-model-03-mo.webp" /><img class="wd3-model-last" src="assets/wd3-model-03.webp" alt="" /></picture>
           </div>
         </section>
       </div>

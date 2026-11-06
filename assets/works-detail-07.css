@@ -173,3 +173,196 @@
   aspect-ratio: 340 / 680;
   object-fit: cover;
 }
+
+/* 모바일 전용 요소의 PC 기본값: 캡션·화면 모음 캐러셀은 숨기고, 캡션 묶음(figure)은 레이아웃에서 빠진다 */
+.wd7-fig {
+  display: contents;
+}
+
+.wd7-services picture {
+  display: contents;
+}
+
+/* picture 가 contents 면 <source> 가 블록 칸으로 잡혀 열 간격이 생긴다 */
+.wd7-services source {
+  display: none;
+}
+
+.wd7-cap,
+.wd7-screens-list {
+  display: none;
+}
+
+/* ══ 모바일 (수정사항_11.06, 피그마 6_MO 3875:25361, 390 폭) ══════════════════
+   헤더 ↔ 미디어 60, 미디어끼리 60, 캡션은 미디어 아래 16 (Regular 11/16 가운데).
+   미디어는 모두 좌우 꽉 찬 390 폭. PC 의 6. 화면 모음은 모바일에서 5번 섹션 안의
+   폰 화면 캐러셀 3묶음(.wd7-screens)으로 바뀐다. */
+@media (max-width: 599.98px) {
+  /* 이 파일 맨 위 PC 값(행간 32 · 가운데 헤더 간격 24, vw)이 공통 모바일 규칙보다 뒤에 와서 이기므로 되돌린다 */
+  .wd-head-desc {
+    line-height: 24px;
+  }
+
+  .wd-head--center {
+    gap: 20px;
+  }
+
+  .wd7-section,
+  .wd7-stack120 {
+    gap: 60px;
+  }
+
+  .wd7-fig {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 0;
+  }
+
+  .wd7-cap {
+    display: block;
+    color: var(--pl2-neutral-40, #777);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 16px;
+    text-align: center;
+  }
+
+  /* ── 2. 서비스 3컷: 한 줄로 쌓고 Main → Forum → Support (3875:25603 · 25633 · 25649) ── */
+  .wd7-services {
+    flex-direction: column;
+    gap: 60px;
+    padding: 0;
+  }
+
+  .wd7-services-col {
+    display: contents;
+  }
+
+  .wd7-fig--main { order: 1; }
+  .wd7-fig--forum { order: 2; }
+  .wd7-fig--support { order: 3; }
+
+  .wd7-services picture {
+    display: block;
+  }
+
+  .wd7-services-col img {
+    display: block;
+    aspect-ratio: 1;
+  }
+
+  /* ── 3. 디자인 시스템: 타이포 390x290 · 배지 390x220 · 코드 390x120 · 아이콘 390x220 ── */
+  /* 타이포 밴드: 카드 362 폭이 세로 가운데 (피그마 이미지 cover 크롭과 같은 자리) */
+  .wd7-band-blue {
+    align-items: center;
+    height: 290px;
+    padding: 0;
+  }
+
+  .wd7-band-blue img {
+    width: 362px;
+  }
+
+  .wd7-components {
+    width: 100%;
+    aspect-ratio: 390 / 220;
+  }
+
+  .wd7-badges {
+    aspect-ratio: 390 / 120;
+  }
+
+  .wd7-icons {
+    aspect-ratio: 390 / 220;
+  }
+
+  /* ── 4. 개발 도구 창 3개: 각각 390x220 (제목 바 + 영상), 모서리 없음 ── */
+  .wd7-doc-01,
+  .wd7-doc-02,
+  .wd7-doc-03 {
+    width: 100%;
+    height: 220px;
+    margin: 0;
+    border-radius: 0;
+  }
+
+  /* 모바일 프레임에는 창 제목 바가 없다 (390 폭에선 글자도 안 읽힌다) → 영상만 꽉 채운다 */
+  .wd7-window-bar {
+    display: none;
+  }
+
+  .wd7-doc-01 video,
+  .wd7-doc-02 video,
+  .wd7-doc-03 video {
+    flex: 1;
+    min-height: 0;
+    aspect-ratio: auto;
+  }
+
+  /* ── 5. 반응형 영상 390x220 + 폰 화면 캐러셀 ── */
+  /* 제목은 피그마처럼 "A Consistent Experience / Across Every Screen" 두 줄 */
+  .wd7-mo-line {
+    display: block;
+  }
+
+  .wd7-band {
+    aspect-ratio: 390 / 220;
+  }
+
+  .wd7-gallery {
+    display: none;
+  }
+
+  .wd7-screens-list {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+  }
+
+  .wd7-screens {
+    position: relative;
+  }
+
+  .wd7-screens-track {
+    display: flex;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .wd7-screens-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 화면 이미지(1:2, 폰 테두리 포함)를 390x690 칸에 contain (피그마 Image_01~04) */
+  .wd7-screens-track img {
+    flex: 0 0 100%;
+    height: 690px;
+    object-fit: contain;
+    scroll-snap-align: start;
+  }
+
+  /* 점 5px · 간격 4 · 아래 12 (Pagination, 현재 #555 · 나머지 검정 12%) */
+  .wd7-screens-dots {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    display: flex;
+    gap: 4px;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .wd7-screens-dots span {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.12);
+  }
+
+  .wd7-screens-dots span.is-active {
+    background: #555;
+  }
+}

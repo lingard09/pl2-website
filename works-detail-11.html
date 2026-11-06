@@ -139,20 +139,24 @@
              왼쪽 2x2 (x120, 340x460, 가로 40 / 세로 240), 오른쪽 1x2 (x1080, 350 내려감).
              6장이 하나씩 등장한다. -->
         <section class="wd11-players">
+          <!-- 모바일: 6장을 한 장씩 넘기는 슬라이더 + 점 (피그마 1_MO 3857:31720). PC 에서는 display: contents -->
+          <div class="wd11-players-track">
           <div class="wd11-players-left">
             <div class="wd11-pair">
-              <img src="assets/wd11-player-01.webp" alt="" data-reveal />
-              <img src="assets/wd11-player-02.webp" alt="" data-reveal />
+              <picture><source media="(max-width: 599.98px)" srcset="assets/wd11-player-01-mo.webp" /><img src="assets/wd11-player-01.webp" alt="" data-reveal /></picture>
+              <picture><source media="(max-width: 599.98px)" srcset="assets/wd11-player-02-mo.webp" /><img src="assets/wd11-player-02.webp" alt="" data-reveal /></picture>
             </div>
             <div class="wd11-pair">
-              <img src="assets/wd11-player-03.webp" alt="" data-reveal />
-              <img src="assets/wd11-player-04.webp" alt="" data-reveal />
+              <picture><source media="(max-width: 599.98px)" srcset="assets/wd11-player-03-mo.webp" /><img src="assets/wd11-player-03.webp" alt="" data-reveal /></picture>
+              <picture><source media="(max-width: 599.98px)" srcset="assets/wd11-player-04-mo.webp" /><img src="assets/wd11-player-04.webp" alt="" data-reveal /></picture>
             </div>
           </div>
           <div class="wd11-pair wd11-pair--right">
-            <img src="assets/wd11-player-05.webp" alt="" data-reveal />
-            <img src="assets/wd11-player-06.webp" alt="" data-reveal />
+            <picture><source media="(max-width: 599.98px)" srcset="assets/wd11-player-05-mo.webp" /><img src="assets/wd11-player-05.webp" alt="" data-reveal /></picture>
+            <picture><source media="(max-width: 599.98px)" srcset="assets/wd11-player-06-mo.webp" /><img src="assets/wd11-player-06.webp" alt="" data-reveal /></picture>
           </div>
+          </div>
+          <div class="wd11-dots" aria-hidden="true"><span class="wd11-dot is-active"></span><span class="wd11-dot"></span><span class="wd11-dot"></span><span class="wd11-dot"></span><span class="wd11-dot"></span><span class="wd11-dot"></span></div>
         </section>
 
         <!-- ══ 5. 신문 지면 ══ -->
@@ -167,7 +171,11 @@
             </p>
           </div>
 
-          <img class="wd11-paper" src="assets/wd11-paper.webp" alt="" />
+          <!-- 모바일은 지면이 더 넓게 보이는 컷 (피그마 1_MO 3865:10990) -->
+          <picture class="wd11-pic">
+            <source media="(max-width: 599.98px)" srcset="assets/wd11-paper-mo.webp" />
+            <img class="wd11-paper" src="assets/wd11-paper.webp" alt="" data-reveal />
+          </picture>
         </section>
 
         <!-- ══ 6. 버스정류장 야립 ══ -->
@@ -186,7 +194,8 @@
           <!-- 두 장은 왼쪽 → 오른쪽 순서로 하나씩 등장, 오른쪽은 120 내려간다 -->
           <div class="wd11-duo">
             <img src="assets/wd11-bus-01.webp" alt="" data-reveal />
-            <img src="assets/wd11-bus-02.webp" alt="" data-reveal />
+            <!-- 모바일 컷은 피그마 1_MO 3865:11057 그대로 (정류장 이름판을 어두운 사각형으로 가림) -->
+            <picture class="wd11-pic"><source media="(max-width: 599.98px)" srcset="assets/wd11-bus-02-mo.webp" /><img src="assets/wd11-bus-02.webp" alt="" data-reveal /></picture>
           </div>
         </section>
       </div>
@@ -230,5 +239,6 @@
 
     <script src="assets/gnb.js"></script>
     <script src="assets/top-btn.js"></script>
+    <script src="assets/wd11-slider.js"></script>
   </body>
 </html>

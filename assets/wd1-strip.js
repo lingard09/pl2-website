@@ -15,7 +15,11 @@
   var imgs = Array.prototype.slice.call(track.querySelectorAll("img[data-slot]"));
   if (!imgs.length) return;
 
+  // 모바일(수정사항_11.06, 4_MO 3870:12929)은 손으로 넘기는 가로 스크롤이라 자동 회전을 쉰다
+  var mobile = window.matchMedia ? window.matchMedia("(max-width: 599.98px)") : null;
+
   function step() {
+    if (mobile && mobile.matches) return;
     imgs.forEach(function (img) {
       var slot = parseInt(img.getAttribute("data-slot"), 10) - 1;
       if (slot < MIN) {

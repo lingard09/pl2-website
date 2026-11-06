@@ -629,6 +629,26 @@
     display: none;
   }
 
+  /* 페이지 CSS(works-detail-NN.css)가 이 파일 뒤에 로드되고 PC 용 .wd-head--center { gap } ·
+     .wd-head-desc { line-height } 를 같은 우선순위로 다시 써서 모바일 값이 덮였다 (간격 5px · 행간 6.5px).
+     .wd-body 를 붙여 공통 모바일 값이 항상 이기게 한다. 굵은 제목(--bold)도 MO 는 SemiBold 다. */
+  .wd-body .wd-head,
+  .wd-body .wd-head--left,
+  .wd-body .wd-head--right,
+  .wd-body .wd-head--center {
+    gap: 20px;
+  }
+
+  .wd-body .wd-head-desc {
+    line-height: 24px;
+  }
+
+  .wd-body .wd-head-title,
+  .wd-body .wd-head-title--bold {
+    font-weight: 600;
+    line-height: 28px;
+  }
+
   /* ── 자유 배치 스테이지(상세 12·13·14)는 모바일에서 위에서 아래로 쌓는다 ── */
   .wdx-stage {
     display: flex;

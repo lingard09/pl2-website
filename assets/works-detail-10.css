@@ -168,3 +168,126 @@
   outline: min(0.1042vw, 2px) solid var(--pl2-white);
   outline-offset: min(-0.2083vw, -4px);
 }
+
+/* 상세 10 첫 블록 제목: 피그마 MO 는 PC 와 다른 자리에서 끊는다 (.wd10-br-mo 는 모바일 전용) */
+.wd10-br-mo {
+  display: none;
+}
+
+/* 슬라이더 점 (모바일 전용, PC 에서는 숨김) */
+.wd10-dots {
+  display: none;
+}
+
+/* ══ 모바일 (수정사항_11.06, 피그마 7_MO 3875:27147, 390 폭) ══════════════════
+   - 개요 섹션은 PC 의 위아래 240 패딩 없이 헤더만 (공통 리듬 200 이 간격).
+   - GIF 영상 4행: 모두 390x220 꽉 찬 폭, 사이 60 (PC 의 좌·우 엇갈림 없음).
+   - 폰 목업 4장 → 350x620 한 장씩 넘기는 슬라이더 (좌우 20, 둥근 12, 아래 점 4개).
+   - 재생 영상: 390x220, 슬라이더와 200 떨어진 별도 덩어리. */
+@media (max-width: 599.98px) {
+  .wd10-lead {
+    padding: 0;
+  }
+
+  .wd10-lead .wd-head--center {
+    gap: 20px;
+  }
+
+  .wd-head--left .wd-head-desc,
+  .wd-head--right .wd-head-desc {
+    line-height: 24px;
+  }
+
+  /* 콘텐츠 블록 제목은 피그마 MO 도 PC 처럼 두 줄로 끊는다 (공통 규칙이 숨긴 <br> 을 되살림) */
+  .wd10-block .wd-head-title br,
+  .wd10-block .wd-head-title .wd10-br-mo {
+    display: inline;
+  }
+
+  .wd10-block .wd-head-title .wd10-br-pc {
+    display: none;
+  }
+
+  .wd10-block,
+  .wd10-stack {
+    gap: 60px;
+  }
+
+  .wd10-w1244,
+  .wd10-w1111,
+  .wd10-w716,
+  .wd10-w954 {
+    width: 100%;
+    aspect-ratio: 390 / 220;
+  }
+
+  /* 폰 목업: 가로 스크롤 스냅 슬라이더 (wd10-slider.js 가 점을 맞춘다) */
+  .wd10-phones {
+    position: relative;
+    display: flex;
+    width: 350px;
+    max-width: calc(100% - 40px);
+    margin: 0 auto;
+    aspect-ratio: 350 / 620;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border-radius: 12px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .wd10-phones::-webkit-scrollbar {
+    display: none;
+  }
+
+  .wd10-phone,
+  .wd10-phone--low {
+    position: static;
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    border-radius: 0;
+    scroll-snap-align: start;
+  }
+
+  .wd10-slider {
+    position: relative;
+  }
+
+  /* 점: 지름 4.5, 사이 3.6, 아래 10.8 (피그마 Pagination I3875:27527;3870:13031) */
+  .wd10-dots {
+    position: absolute;
+    bottom: 11px;
+    left: 50%;
+    display: flex;
+    gap: 3.6px;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .wd10-dot {
+    width: 4.5px;
+    height: 4.5px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transition: background-color 300ms ease;
+  }
+
+  .wd10-dot.is-active {
+    background: var(--pl2-white);
+  }
+
+  .wd10-video {
+    margin-top: 140px; /* 스택 간격 60 + 140 = 피그마 200 */
+    aspect-ratio: 390 / 220;
+  }
+
+  /* PlayBTN 36 (피그마 I3875:27599;3865:11272) — 삼각형 비율 30:54 유지 */
+  .wd10-play::before {
+    width: 20px;
+    height: 36px;
+    filter: drop-shadow(0 0 25px rgba(0, 0, 0, 0.3));
+  }
+}

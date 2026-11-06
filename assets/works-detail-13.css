@@ -151,3 +151,162 @@
     transition: none;
   }
 }
+
+/* 모바일 전용 캐러셀 (PC 에서는 숨김, 지연 로딩이라 받지도 않는다) */
+.wd2-mo-media {
+  display: none;
+}
+
+/* ══ 모바일 (수정사항_11.06, 피그마 3_MO 3865:11395, 390 폭) ══════════════════
+   - From Field to Table: 헤더 ↔ 이미지 60, 이미지 390x160.
+   - 01 Grow → 05 Feast: 고정 스크롤 없이 위에서 아래로 쌓는다 (wd2-story.js 가 모바일에서는 켜지 않는다).
+     단계마다 [번호 + 이름 Tannakone 26/28 · 설명 Light 13/24] → 60 → 390x220 캐러셀 (점 2~3개), 단계 사이 200.
+   - 캠페인 필름 390x220 + 재생 버튼.
+   구조·값은 상세 02 의 모바일 단계(works-detail-02.css)와 같다. */
+@media (max-width: 599.98px) {
+  /* From Field to Table 이미지 (피그마 Media_120 3875:24678) */
+  .wdx-stage > img.wdx-item {
+    aspect-ratio: 390 / 160;
+  }
+
+  /* PC → 모바일로 폭을 줄인 경우에도 고정 스크롤 배치를 풀어 둔다 */
+  .wd2-story,
+  .wd2-story.is-ready {
+    height: auto;
+  }
+
+  .wd2-story-stage,
+  .wd2-story.is-ready .wd2-story-stage {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    gap: 200px;
+    height: auto;
+  }
+
+  .wd2-step-section,
+  .wd2-story.is-ready .wd2-step-section {
+    position: static;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 60px;
+    height: auto;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .wd2-story.is-ready .wd2-step-section .wd2-steps {
+    visibility: visible;
+  }
+
+  .wd2-story-list,
+  .wd2-collage {
+    display: none;
+  }
+
+  /* ── 단계 헤더: 번호 + 이름 Tannakone 26/28 (간격 12) #212121, 설명 Light 13/24 #777 (위 20) ── */
+  .wd2-steps {
+    order: -1;
+    width: auto;
+    margin-left: 0;
+    padding: 0 20px;
+  }
+
+  .wd2-step-list {
+    width: auto;
+  }
+
+  .wd2-step[data-active="false"] {
+    display: none;
+  }
+
+  .wd2-step-head,
+  .wd2-step[data-active="true"] .wd2-step-head {
+    gap: 12px;
+    color: var(--pl2-neutral-10);
+    font-size: 26px;
+    line-height: 28px;
+    letter-spacing: -0.02em;
+  }
+
+  .wd2-step-desc,
+  .is-en .wd2-step-desc {
+    margin-top: 20px;
+    color: var(--pl2-neutral-40);
+    font-size: 13px;
+    line-height: 24px;
+    letter-spacing: -0.02em;
+    word-break: keep-all;
+  }
+
+  .wd2-step-desc br {
+    display: none;
+  }
+
+  /* ── 390x220 캐러셀 (wd-mo-carousel.js 가 점을 만든다) ── */
+  .wd2-mo-media {
+    display: block;
+  }
+
+  .wd2-mo-carousel {
+    position: relative;
+  }
+
+  .wd2-mo-track {
+    display: flex;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .wd2-mo-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .wd2-mo-track img {
+    flex: none;
+    width: 100%;
+    aspect-ratio: 390 / 220;
+    object-fit: cover;
+    scroll-snap-align: start;
+  }
+
+  /* 점 5px, 간격 4, 아래 12 (피그마 Pagination I3865:11418;3865:10885) */
+  .wd-mo-dots {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    display: flex;
+    gap: 4px;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .wd-mo-dots span {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transition: background-color 0.3s ease;
+  }
+
+  .wd-mo-dots span.is-active {
+    background: #f5f5f5;
+  }
+
+  /* ── 캠페인 필름 390x220, 재생 삼각형 높이 30 (피그마 PlayBTN 36 칸, 3865:11924) ── */
+  .wdx-video {
+    aspect-ratio: 390 / 220;
+  }
+
+  .wdx-video video {
+    height: 100%;
+  }
+
+  .wdx-video-play::before {
+    width: 17px;
+    height: 30px;
+    filter: drop-shadow(0 0 12px rgba(0, 0, 0, 0.3));
+  }
+}

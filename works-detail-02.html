@@ -112,6 +112,16 @@
             <!-- ══ 3. 01 Landscape ══ -->
             <section class="wd2-step-section">
               <img class="wd2-collage" src="assets/wd2-collage-01.webp" alt="" />
+              <!-- 모바일 전용 (피그마 8_MO 3875:27994, 390x220 3장 캐러셀). 피그마에서 보이는 장(맨 위 레이어)이 첫 장이 되도록 역순. PC 에서는 숨긴다 (지연 로딩이라 PC 에서는 받지도 않는다) -->
+              <div class="wd2-mo-media">
+                <div class="wd2-mo-carousel" data-mo-carousel>
+                <div class="wd2-mo-track" data-mo-track>
+                  <img src="assets/wd2-land-03-mo.webp" alt="" loading="lazy" />
+                  <img src="assets/wd2-land-02-mo.webp" alt="" loading="lazy" />
+                  <img src="assets/wd2-land-01-mo.webp" alt="" loading="lazy" />
+                </div>
+                </div>
+              </div>
               <div class="wd2-steps">
                 <div class="wd2-step-list">
                   <div class="wd2-step" data-active="true">
@@ -147,6 +157,29 @@
             <!-- ══ 4. 02 Characters ══ -->
             <section class="wd2-step-section wd2-step-section--tall">
               <img class="wd2-collage" src="assets/wd2-collage-02.webp" alt="" />
+              <!-- 모바일 전용 (피그마 8_MO 3875:28050 · 3875:28230, 인물별 3장 캐러셀 + 캡션). PC 에서는 숨긴다 (지연 로딩이라 PC 에서는 받지도 않는다) -->
+              <div class="wd2-mo-media">
+                <figure class="wd2-mo-figure">
+                <div class="wd2-mo-carousel" data-mo-carousel>
+                <div class="wd2-mo-track" data-mo-track>
+                  <img src="assets/wd2-soonja-03-mo.webp" alt="" loading="lazy" />
+                  <img src="assets/wd2-soonja-02-mo.webp" alt="" loading="lazy" />
+                  <img src="assets/wd2-soonja-01-mo.webp" alt="" loading="lazy" />
+                </div>
+                </div>
+                <figcaption class="wd2-mo-caption"><span data-l="ko">순자</span><span data-l="en" lang="en">Soonja</span></figcaption>
+                </figure>
+                <figure class="wd2-mo-figure">
+                <div class="wd2-mo-carousel" data-mo-carousel>
+                <div class="wd2-mo-track" data-mo-track>
+                  <img src="assets/wd2-h01-03-mo.webp" alt="" loading="lazy" />
+                  <img src="assets/wd2-h01-02-mo.webp" alt="" loading="lazy" />
+                  <img src="assets/wd2-h01-01-mo.webp" alt="" loading="lazy" />
+                </div>
+                </div>
+                <figcaption class="wd2-mo-caption">H-01</figcaption>
+                </figure>
+              </div>
               <div class="wd2-steps">
                 <div class="wd2-step-list">
                   <div class="wd2-step" data-active="false">
@@ -182,6 +215,18 @@
             <!-- ══ 5. 03 Elements ══ -->
             <section class="wd2-step-section wd2-step-section--tall">
               <img class="wd2-collage" src="assets/wd2-collage-03.webp" alt="" />
+              <!-- 모바일 전용 (피그마 8_MO 3875:28261, 390x220 5장 캐러셀). PC 에서는 숨긴다 (지연 로딩이라 PC 에서는 받지도 않는다) -->
+              <div class="wd2-mo-media">
+                <div class="wd2-mo-carousel" data-mo-carousel>
+                <div class="wd2-mo-track" data-mo-track>
+                  <img src="assets/wd2-elem-05-mo.webp" alt="" loading="lazy" />
+                  <img src="assets/wd2-elem-04-mo.webp" alt="" loading="lazy" />
+                  <img src="assets/wd2-elem-03-mo.webp" alt="" loading="lazy" />
+                  <img src="assets/wd2-elem-02-mo.webp" alt="" loading="lazy" />
+                  <img src="assets/wd2-elem-01-mo.webp" alt="" loading="lazy" />
+                </div>
+                </div>
+              </div>
               <div class="wd2-steps">
                 <div class="wd2-step-list">
                   <div class="wd2-step" data-active="false">
@@ -277,13 +322,16 @@
           </div>
 
           <!-- 제목이 먼저 나오고 시퀀스 6장이 이어서 하나씩 올라온다 (PC 피드백_0930) -->
-          <div class="wd2-seq-grid">
+          <!-- 모바일(피그마 8_MO 3875:28389)은 390x220 한 장씩 넘기는 캐러셀. 트랙 바깥 틀은 PC 에서 display: contents -->
+          <div class="wd2-seq-wrap" data-mo-carousel>
+          <div class="wd2-seq-grid" data-mo-track>
             <img src="assets/wd2-seq-01.webp" alt="" data-reveal />
             <img src="assets/wd2-seq-02.webp" alt="" data-reveal />
             <img src="assets/wd2-seq-03.webp" alt="" data-reveal />
             <img src="assets/wd2-seq-04.webp" alt="" data-reveal />
             <img src="assets/wd2-seq-05.webp" alt="" data-reveal />
             <img src="assets/wd2-seq-06.webp" alt="" data-reveal />
+          </div>
           </div>
         </section>
 
@@ -341,6 +389,7 @@
     <script src="assets/gnb.js"></script>
     <script src="assets/top-btn.js"></script>
     <script src="assets/wd2-story.js"></script>
+    <script src="assets/wd-mo-carousel.js"></script>
     <script src="assets/video-play.js"></script>
   </body>
 </html>

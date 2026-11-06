@@ -177,28 +177,69 @@
 
           <!-- 이 아래 이미지는 스크롤에 맞춰 한 장씩 등장 (PC 피드백_0930, Rectangle 4238 부터) -->
           <div class="wd9-stack120">
-            <img class="wd9-wide-1200" src="assets/wd9-mood-01.webp" alt="" data-reveal />
+            <picture>
+                  <source media="(max-width: 599.98px)" srcset="assets/wd9-mood-01-mo.webp" />
+                  <img class="wd9-wide-1200" src="assets/wd9-mood-01.webp" alt="" data-reveal />
+                </picture>
 
-            <div class="wd9-duo-tall">
-              <img src="assets/wd9-mood-02.webp" alt="" data-reveal />
-              <img src="assets/wd9-mood-03.webp" alt="" data-reveal />
+            <!-- 모바일은 390x520 가로 스와이프 2장 (11_MO 3898:29782). PC 에선 .wd9-swipe 가 레이아웃에서 빠진다 -->
+            <div class="wd9-swipe" data-wd9-swipe>
+              <div class="wd9-duo-tall wd9-swipe-track">
+                <picture>
+                  <source media="(max-width: 599.98px)" srcset="assets/wd9-mood-02-mo.webp" />
+                  <img src="assets/wd9-mood-02.webp" alt="" data-reveal />
+                </picture>
+                <picture>
+                  <source media="(max-width: 599.98px)" srcset="assets/wd9-mood-03-mo.webp" />
+                  <img src="assets/wd9-mood-03.webp" alt="" data-reveal />
+                </picture>
+              </div>
+              <div class="wd9-swipe-dots" aria-hidden="true"><span class="is-active"></span><span></span></div>
             </div>
 
-            <img class="wd9-wide-1558" src="assets/wd9-mood-04.webp" alt="" data-reveal />
+            <picture>
+                  <source media="(max-width: 599.98px)" srcset="assets/wd9-mood-04-mo.webp" />
+                  <img class="wd9-wide-1558" src="assets/wd9-mood-04.webp" alt="" data-reveal />
+                </picture>
 
-            <img class="wd9-half" src="assets/wd9-mood-05.webp" alt="" data-reveal />
-            <img
-              class="wd9-half wd9-half--right"
-              src="assets/wd9-mood-06.webp"
-              alt="" data-reveal />
-            <img class="wd9-half" src="assets/wd9-mood-07.webp" alt="" data-reveal />
-
-            <div class="wd9-duo-tall">
-              <img src="assets/wd9-mood-08.webp" alt="" data-reveal />
-              <img src="assets/wd9-mood-09.webp" alt="" data-reveal />
+            <!-- 모바일은 390x290 가로 스와이프 3장 (3898:29889) -->
+            <div class="wd9-swipe" data-wd9-swipe>
+              <div class="wd9-swipe-track wd9-swipe-track--contents">
+                <picture>
+                  <source media="(max-width: 599.98px)" srcset="assets/wd9-mood-05-mo.webp" />
+                  <img class="wd9-half" src="assets/wd9-mood-05.webp" alt="" data-reveal />
+                </picture>
+                <picture>
+                  <source media="(max-width: 599.98px)" srcset="assets/wd9-mood-06-mo.webp" />
+                  <img class="wd9-half wd9-half--right" src="assets/wd9-mood-06.webp" alt="" data-reveal />
+                </picture>
+                <picture>
+                  <source media="(max-width: 599.98px)" srcset="assets/wd9-mood-07-mo.webp" />
+                  <img class="wd9-half" src="assets/wd9-mood-07.webp" alt="" data-reveal />
+                </picture>
+              </div>
+              <div class="wd9-swipe-dots" aria-hidden="true"><span class="is-active"></span><span></span><span></span></div>
             </div>
 
-            <img class="wd9-square" src="assets/wd9-mood-10.webp" alt="" data-reveal />
+            <!-- 모바일은 390x520 가로 스와이프 2장 (3898:29927) -->
+            <div class="wd9-swipe" data-wd9-swipe>
+              <div class="wd9-duo-tall wd9-swipe-track">
+                <picture>
+                  <source media="(max-width: 599.98px)" srcset="assets/wd9-mood-08-mo.webp" />
+                  <img src="assets/wd9-mood-08.webp" alt="" data-reveal />
+                </picture>
+                <picture>
+                  <source media="(max-width: 599.98px)" srcset="assets/wd9-mood-09-mo.webp" />
+                  <img src="assets/wd9-mood-09.webp" alt="" data-reveal />
+                </picture>
+              </div>
+              <div class="wd9-swipe-dots" aria-hidden="true"><span class="is-active"></span><span></span></div>
+            </div>
+
+            <picture>
+                  <source media="(max-width: 599.98px)" srcset="assets/wd9-mood-10-mo.webp" />
+                  <img class="wd9-square" src="assets/wd9-mood-10.webp" alt="" data-reveal />
+                </picture>
           </div>
         </section>
 
@@ -232,11 +273,20 @@
           </div>
 
           <div class="wd9-stack120">
-            <div class="wd9-duo-580">
-              <img src="assets/wd9-model-01.webp" alt="" data-reveal />
-              <img src="assets/wd9-model-02.webp" alt="" data-reveal />
+            <!-- 모바일은 390x220 가로 스와이프 3장 (3898:30013). 3번째는 모바일 전용 가로 컷 -->
+            <div class="wd9-swipe" data-wd9-swipe>
+              <div class="wd9-swipe-track wd9-swipe-track--contents">
+                <div class="wd9-duo-580">
+                  <img src="assets/wd9-model-01.webp" alt="" data-reveal />
+                  <img src="assets/wd9-model-02.webp" alt="" data-reveal />
+                </div>
+                <picture>
+                  <source media="(max-width: 599.98px)" srcset="assets/wd9-model-03-mo.webp" />
+                  <img class="wd9-model-last" src="assets/wd9-model-03.webp" alt="" data-reveal />
+                </picture>
+              </div>
+              <div class="wd9-swipe-dots" aria-hidden="true"><span class="is-active"></span><span></span><span></span></div>
             </div>
-            <img class="wd9-model-last" src="assets/wd9-model-03.webp" alt="" data-reveal />
           </div>
         </section>
       </div>
@@ -281,5 +331,6 @@
     <script src="assets/gnb.js"></script>
     <script src="assets/top-btn.js"></script>
     <script src="assets/wd9-carousel.js"></script>
+    <script src="assets/wd9-swipe.js"></script>
   </body>
 </html>

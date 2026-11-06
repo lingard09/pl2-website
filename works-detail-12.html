@@ -30,6 +30,7 @@
     <script src="assets/motion.js"></script>
     <script src="assets/translate.js" defer></script>
     <link rel="stylesheet" href="assets/works-detail.css" />
+    <link rel="stylesheet" href="assets/works-detail-12.css" />
   </head>
   <body class="wd-body wd-body--light">
     <nav class="gnb gnb--tw" data-dropdown="off" data-pinned>
@@ -113,11 +114,12 @@
         <section class="wdx-stage" style="--h: 1999">
             <img class="wdx-item" style="--x: 181; --y: 0; --w: 1558; --hh: 860" src="assets/wd12-space-01.webp" alt="" data-reveal />
             <img class="wdx-item" style="--x: 809; --y: 940; --w: 1111; --hh: 595" src="assets/wd12-space-02.webp" alt="" data-reveal />
-            <img class="wdx-item" style="--x: 0; --y: 1615; --w: 716; --hh: 384" src="assets/wd12-space-03.webp" alt="" data-reveal />
+            <!-- 모바일은 세로 3:4 컷 (피그마 2_MO 3875:25131) -->
+            <picture class="wd12-pic"><source media="(max-width: 599.98px)" srcset="assets/wd12-space-03-mo.webp" /><img class="wdx-item" style="--x: 0; --y: 1615; --w: 716; --hh: 384" src="assets/wd12-space-03.webp" alt="" data-reveal /></picture>
         </section>
 
         <!-- ══ Closer to StrayKids (피그마 y 5069–5881) ══ -->
-        <section class="wdx-stage" style="--h: 812">
+        <section class="wdx-stage wd12-closer" style="--h: 812">
             <div class="wdx-item wdx-head wdx-head--center" style="--x: 0; --y: 0; --w: 1920">
               <h2 class="wd-head-title">Closer to StrayKids</h2>
             </div>
@@ -133,10 +135,16 @@
                 경쾌한 움직임과 그래픽적인 연출로 팝업의 유쾌한 분위기를 표현했습니다.</span><span data-l="en" lang="en">Using chroma key footage, we produced playful animated videos featuring the members, combining their movements with colorful graphics and motion effects.</span>
               </p>
             </div>
-            <img class="wdx-item" style="--x: 0; --y: 214; --w: 956; --hh: 514" src="assets/wd12-move-01.webp" alt="" data-reveal />
-            <img class="wdx-item" style="--x: 964; --y: 334; --w: 956; --hh: 514" src="assets/wd12-move-03.webp" alt="" data-reveal />
-            <img class="wdx-item" style="--x: 0; --y: 736; --w: 956; --hh: 514" src="assets/wd12-move-02.webp" alt="" data-reveal />
-            <img class="wdx-item" style="--x: 964; --y: 856; --w: 956; --hh: 514" src="assets/wd12-move-04.webp" alt="" data-reveal />
+            <!-- 모바일: 4장을 한 장씩 넘기는 슬라이더 + 점 (피그마 2_MO 3865:11058). PC 에서는 두 겹 모두 display: contents -->
+            <div class="wd12-slider">
+              <div class="wd12-track">
+                <img class="wdx-item" style="--x: 0; --y: 214; --w: 956; --hh: 514" src="assets/wd12-move-01.webp" alt="" data-reveal />
+                <img class="wdx-item" style="--x: 964; --y: 334; --w: 956; --hh: 514" src="assets/wd12-move-03.webp" alt="" data-reveal />
+                <img class="wdx-item" style="--x: 0; --y: 736; --w: 956; --hh: 514" src="assets/wd12-move-02.webp" alt="" data-reveal />
+                <img class="wdx-item" style="--x: 964; --y: 856; --w: 956; --hh: 514" src="assets/wd12-move-04.webp" alt="" data-reveal />
+              </div>
+              <div class="wd12-dots" aria-hidden="true"><span class="wd12-dot is-active"></span><span class="wd12-dot"></span><span class="wd12-dot"></span><span class="wd12-dot"></span></div>
+            </div>
             <video class="wdx-item" style="--x: 181; --y: 1490; --w: 1558; --hh: 860" poster="assets/wd12-move-video-poster.webp" autoplay muted loop playsinline preload="metadata" data-reveal>
               <source src="assets/wd12-move.mp4" type="video/mp4" />
             </video>
@@ -171,9 +179,9 @@
                 화면 속 아티스트와 팬이 하나의 프레임에서 만나는 참여형 경험을 구현했습니다.</span><span data-l="en" lang="en">We created CCTV-style videos using chroma key footage. When fans entered a member’s birthday, that member appeared on screen, letting them take photos as if they were sharing the space with their favorite member.</span>
               </p>
             </div>
-            <img class="wdx-item" style="--x: 966; --y: 214; --w: 954; --hh: 1200" src="assets/wd12-exp-02.webp" alt="" data-reveal />
-            <img class="wdx-item" style="--x: 0; --y: 334; --w: 954; --hh: 1200" src="assets/wd12-exp-01.webp" alt="" data-reveal />
-            <video class="wdx-item" style="--x: 181; --y: 1654; --w: 1558; --hh: 860" poster="assets/wd12-exp-video-poster.webp" autoplay muted loop playsinline preload="metadata" data-reveal>
+            <img class="wdx-item" style="--x: 966; --y: 214; --w: 954; --hh: 1200" src="assets/wd12-exp-02.webp" alt="" data-reveal data-mo-order="2" />
+            <img class="wdx-item" style="--x: 0; --y: 334; --w: 954; --hh: 1200" src="assets/wd12-exp-01.webp" alt="" data-reveal data-mo-order="1" />
+            <video class="wdx-item" style="--x: 181; --y: 1654; --w: 1558; --hh: 860" poster="assets/wd12-exp-video-poster.webp" autoplay muted loop playsinline preload="metadata" data-reveal data-mo-order="3">
               <source src="assets/wd12-exp.mp4" type="video/mp4" />
             </video>
         </section>
@@ -218,6 +226,7 @@
 
     <script src="assets/gnb.js"></script>
     <script src="assets/top-btn.js"></script>
+    <script src="assets/wd12-slider.js"></script>
     <script src="assets/video-play.js"></script>
   </body>
 </html>

@@ -166,3 +166,172 @@
   outline: min(0.1042vw, 2px) solid var(--pl2-white);
   outline-offset: min(-0.2083vw, -4px);
 }
+
+/* 모바일 전용 크롭용 <picture> 와 캐러셀 묶음은 PC 배치에 끼지 않는다 (img 가 그대로 flex 항목).
+   점(wd-mo-carousel.js 가 넣는다)도 PC 에서는 숨긴다 — 안 숨기면 flex gap 이 한 칸 더 생긴다 */
+.wd6-skincare picture,
+.wd6-quad picture,
+.wd6-mo-track,
+.wd6-duo-carousel {
+  display: contents;
+}
+
+/* picture 가 contents 가 되면 <source> 도 flex 항목으로 잡혀 gap 을 한 칸씩 더 만든다 */
+.wd6-skincare source,
+.wd6-quad source,
+.wd-mo-dots {
+  display: none;
+}
+
+/* ══ 모바일 (수정사항_11.06, 피그마 12_MO 3898:30050, 390 폭) ══════════════
+   모든 미디어가 390 전체 폭. 헤더 ↔ 미디어 60, 덩어리 사이 200 (공통).
+   PC 에서 헤더와 사진이 다른 섹션인 곳(기초 스킨케어 · Cell Charger)은 사진 섹션을 끌어올려 60 으로 붙인다.
+   기초 스킨케어 3장 · 선케어 듀오 · 포트레이트 4장은 가로로 넘기는 캐러셀(scroll-snap). */
+@media (max-width: 599.98px) {
+  .wd-head-desc {
+    line-height: 24px;
+  }
+
+  .wd-head--center {
+    gap: 20px;
+  }
+
+  .wd6-section,
+  .wd6-stack120 {
+    gap: 60px;
+  }
+
+  /* 200(공통 섹션 간격) → 60 */
+  .wd6-skincare,
+  .wd6-cell {
+    margin-top: -140px;
+  }
+
+  /* ── 컬렉션 390x220 ── */
+  .wd6-collection {
+    width: 100%;
+    aspect-ratio: 390 / 220;
+  }
+
+  /* ── 가로 캐러셀 공통: 한 장 = 390 폭, 한 장씩 멈춘다 ── */
+  .wd6-skincare,
+  .wd6-duo-carousel,
+  .wd6-quad {
+    position: relative;
+    display: block;
+  }
+
+  .wd6-mo-track,
+  .wd6-duo {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .wd6-mo-track::-webkit-scrollbar,
+  .wd6-duo::-webkit-scrollbar {
+    display: none;
+  }
+
+  .wd6-mo-track img,
+  .wd6-duo img {
+    flex: none;
+    width: 100%;
+    margin: 0;
+    object-fit: cover;
+    scroll-snap-align: start;
+  }
+
+  /* 기초 스킨케어 390x390 */
+  .wd6-skincare img {
+    aspect-ratio: 1 / 1;
+  }
+
+  /* ── Cell Charger 390x690 (정사각 영상 가운데를 세로로 자른다) ── */
+  .wd6-square {
+    width: 100%;
+    aspect-ratio: 390 / 690;
+  }
+
+  /* ── 선케어: 390x220 → 듀오 390x520 캐러셀 → 영상 390x220 → 영상 390x290 ── */
+  .wd6-wide {
+    width: 100%;
+    aspect-ratio: 390 / 220;
+  }
+
+  .wd6-duo img {
+    aspect-ratio: 390 / 520;
+  }
+
+  .wd6-duo img:last-child {
+    margin-top: 0;
+  }
+
+  .wd6-tall {
+    width: 100%;
+    aspect-ratio: 390 / 220;
+  }
+
+  .wd6-small {
+    width: 100%;
+    aspect-ratio: 390 / 290;
+  }
+
+  /* ── 포트레이트 2x2 → 390x220 4장 (줄 순서 01·03·02·04) ── */
+  .wd6-quad-col {
+    display: contents;
+  }
+
+  .wd6-quad-col img {
+    aspect-ratio: 390 / 220;
+  }
+
+  .wd6-quad-col:first-child picture img {
+    order: 3;
+  }
+
+  .wd6-quad-col:last-child picture:first-child img {
+    order: 2;
+  }
+
+  .wd6-quad-col:last-child picture:last-child img {
+    order: 4;
+  }
+
+  /* ── 영상 390x220, 재생 삼각형 17x30 (피그마 MO PlayBTN 36 칸 안) ── */
+  .wd6-video {
+    aspect-ratio: 390 / 220;
+  }
+
+  .wd6-video-play::before {
+    width: 17px;
+    height: 30px;
+    filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.3));
+  }
+
+  /* 점: 5px · 간격 4 · 아래 12, 사진 위라 흰색 (#F5F5F5 / 흰 40%) */
+  .wd-mo-dots {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    display: flex;
+    gap: 4px;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .wd-mo-dots span {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transition: background-color 0.2s ease;
+  }
+
+  .wd-mo-dots .is-active {
+    background: #f5f5f5;
+  }
+}

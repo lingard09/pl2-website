@@ -1,0 +1,39 @@
+/* ─────────────────────────────────────────────────────────
+   Works Detail 14 — SLBS Studio x Samsung Gangnam Store Film
+   PC 는 공통 자유 배치 스테이지(.wdx-stage)만 쓰므로 여기에는 모바일 값만 둔다.
+   ───────────────────────────────────────────────────────── */
+
+/* ══ 모바일 (수정사항_11.06, 피그마 9_MO 3875:28433, 390 폭) ══════════════════
+   공통 규칙이 스테이지를 세로로 쌓아 준다 (사이 60). 여기서는
+   - 영상·사진을 모두 390x220 꽉 찬 폭으로 (PC 1244·1111·716·954 폭과 엇갈림 없음)
+   - 첫 섹션은 제목만 있어 제목 ↔ 영상 20, 영상 ↔ 캡션 16 (피그마 Frame 3875:28449)
+   - 마지막 필름도 390x220, 재생 버튼 36 */
+@media (max-width: 599.98px) {
+  .wdx-stage > video.wdx-item,
+  .wdx-stage > img.wdx-item,
+  .wdx-video {
+    aspect-ratio: 390 / 220;
+    object-fit: cover;
+  }
+
+  /* 첫 섹션 제목은 MO 에서도 가운데 (피그마 Text 3875:28446 text-center) */
+  .wdx-head--center {
+    text-align: center;
+  }
+
+  .wdx-stage:has(.wdx-caption) {
+    gap: 20px;
+  }
+
+  .wdx-caption {
+    margin-top: -4px; /* 20 - 4 = 16 */
+    font-weight: 400;
+  }
+
+  /* PlayBTN 36 (피그마 Video 3875:28913) — 삼각형 비율 30:54 유지 */
+  .wdx-video-play::before {
+    width: 20px;
+    height: 36px;
+    filter: drop-shadow(0 0 25px rgba(0, 0, 0, 0.3));
+  }
+}

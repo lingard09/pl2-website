@@ -171,3 +171,182 @@
   aspect-ratio: 960 / 1141;
   object-fit: cover;
 }
+
+/* ── 모바일 스와이프 묶음·모바일 컷 <picture> 의 PC 기본값 ──
+   PC 에서는 감싼 요소가 레이아웃에서 빠져 이미지가 예전처럼 바로 flex 항목이 된다. */
+.wd9-section picture,
+.wd9-swipe,
+.wd9-swipe-track--contents {
+  display: contents;
+}
+
+/* picture 가 contents 면 <source> 가 블록 칸으로 잡혀 간격이 생긴다 */
+.wd9-section source,
+.wd9-swipe-dots {
+  display: none;
+}
+
+/* 듀오의 이미지가 각자 <picture> 의 마지막 자식이 되어 img:last-child 가 둘 다 걸린다 → 왼쪽은 되돌린다 */
+.wd9-duo-tall > picture:first-child img {
+  margin-top: 0;
+}
+
+/* ══ 모바일 (수정사항_11.06, 피그마 11_MO 3889:29400, 390 폭) ══════════════════
+   미디어는 모두 좌우 꽉 찬 390 폭. 헤더 ↔ 미디어 60, 미디어끼리 60.
+   PC 의 듀오·엇갈린 3장·모델 컷은 가로 스와이프 묶음(scroll-snap, 점 5px · 간격 4 · 아래 12)이 된다.
+   크롭이 PC 와 다른 장은 피그마 MO 크롭 그대로 뽑은 wd9-*-mo.webp 를 <picture> 로 쓴다. */
+@media (max-width: 599.98px) {
+  /* 이 파일 맨 위 PC 값(행간 32/34 · 가운데 헤더 간격 24, vw)이 공통 모바일 규칙보다 뒤에 와서 이기므로 되돌린다 */
+  .wd-head-desc,
+  .wd-head--lh34 .wd-head-desc {
+    line-height: 24px;
+  }
+
+  .wd-head--center {
+    gap: 20px;
+  }
+
+  .wd9-section,
+  .wd9-stack120 {
+    gap: 60px;
+  }
+
+  .wd9-question {
+    padding: 0;
+  }
+
+  .wd9-section picture {
+    display: block;
+  }
+
+  /* ── 3·6. 스토리보드 390x160 (Media_120 3898:30039 · 30045) ── */
+  .wd9-strip {
+    display: block;
+    aspect-ratio: 390 / 160;
+  }
+
+  /* ── 4. 제품 라인 캐러셀 390x220: 틀을 화면 폭 그대로, 점은 MO 규격 ── */
+  .wd9-carousel {
+    aspect-ratio: 390 / 220;
+  }
+
+  .wd9-carousel-window {
+    left: 0;
+    width: 100%;
+  }
+
+  .wd9-carousel-dots {
+    top: auto;
+    bottom: 12px;
+    gap: 4px;
+  }
+
+  .wd9-carousel-dot {
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.4);
+  }
+
+  .wd9-carousel-dot.is-active {
+    background: #f5f5f5;
+  }
+
+  /* ── 5. 브랜드 무드 단독 컷 ── */
+  .wd9-wide-1200,
+  .wd9-wide-1558 {
+    width: 100%;
+    aspect-ratio: 390 / 220;
+  }
+
+  .wd9-square {
+    width: 100%;
+  }
+
+  /* ── 스와이프 묶음 ── */
+  .wd9-swipe {
+    position: relative;
+    display: block;
+  }
+
+  .wd9-swipe-track,
+  .wd9-swipe-track--contents {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .wd9-swipe-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .wd9-swipe-track > picture,
+  .wd9-swipe-track > img,
+  .wd9-duo-580 > img {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+  }
+
+  .wd9-swipe-track img,
+  .wd9-swipe-track .wd9-duo-tall img,
+  .wd9-duo-580 img,
+  .wd9-duo-580 img:last-child,
+  .wd9-duo-tall img:last-child {
+    display: block;
+    width: 100%;
+    margin: 0;
+    object-fit: cover;
+  }
+
+  .wd9-duo-tall img {
+    aspect-ratio: 390 / 520;
+  }
+
+  .wd9-half,
+  .wd9-half--right {
+    align-self: auto;
+    aspect-ratio: 390 / 290;
+  }
+
+  /* 모델 컷: 듀오는 칸에서 빠지고 두 장이 각각 한 장(390x220)이 된다 */
+  .wd9-duo-580 {
+    display: contents;
+  }
+
+  .wd9-duo-580 img,
+  .wd9-model-last {
+    aspect-ratio: 390 / 220;
+  }
+
+  /* 가로로 화면 밖에 있는 장은 스크롤 등장 모션을 받지 않는다 (넘길 때 튀어 오르지 않게) */
+  .mo-on .wd9-swipe-track .mo-reveal.mo-out,
+  .mo-on .wd9-swipe-track .mo-reveal.mo-3d.mo-out {
+    translate: none;
+    scale: none;
+    transform: none;
+  }
+
+  .wd9-swipe-dots {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    display: flex;
+    gap: 4px;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .wd9-swipe-dots span {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+  }
+
+  .wd9-swipe-dots span.is-active {
+    background: #f5f5f5;
+  }
+}

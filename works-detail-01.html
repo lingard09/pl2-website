@@ -184,14 +184,18 @@
         </section>
 
         <!-- ══ 5. 일러스트 4장 ══ -->
-        <section class="wd-illust">
+        <!-- 모바일(수정사항_11.06, 피그마 4_MO 3870:13005)은 390x690 한 장씩 가로로 넘기는 캐러셀.
+             트랙은 PC 에서 display: contents 라 PC 배치에는 영향이 없다. 세로 컷은 *-mo.webp -->
+        <section class="wd-illust" data-mo-carousel>
+          <div class="wd-illust-track" data-mo-track>
           <div class="wd-illust-half">
-            <img class="wd-illust-1" src="assets/wd1-illust-01.webp" alt="" />
-            <img class="wd-illust-2" src="assets/wd1-illust-02.webp" alt="" />
+            <picture><source media="(max-width: 599.98px)" srcset="assets/wd1-illust-01-mo.webp" /><img class="wd-illust-1" src="assets/wd1-illust-01.webp" alt="" /></picture>
+            <picture><source media="(max-width: 599.98px)" srcset="assets/wd1-illust-02-mo.webp" /><img class="wd-illust-2" src="assets/wd1-illust-02.webp" alt="" /></picture>
           </div>
           <div class="wd-illust-half">
-            <img class="wd-illust-3" src="assets/wd1-illust-03.webp" alt="" />
-            <img class="wd-illust-4" src="assets/wd1-illust-04.webp" alt="" />
+            <picture><source media="(max-width: 599.98px)" srcset="assets/wd1-illust-03-mo.webp" /><img class="wd-illust-3" src="assets/wd1-illust-03.webp" alt="" /></picture>
+            <picture><source media="(max-width: 599.98px)" srcset="assets/wd1-illust-04-mo.webp" /><img class="wd-illust-4" src="assets/wd1-illust-04.webp" alt="" /></picture>
+          </div>
           </div>
         </section>
 
@@ -323,5 +327,6 @@
     <script src="assets/gnb.js"></script>
     <script src="assets/top-btn.js"></script>
     <script src="assets/wd1-strip.js"></script>
+    <script src="assets/wd-mo-carousel.js"></script>
   </body>
 </html>
