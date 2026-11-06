@@ -649,6 +649,18 @@
     line-height: 28px;
   }
 
+  /* 영문판 모바일 본문 (수정사항_11.06 1_MO 영문 코멘트): 인트로 14/26 → 16/28, 콘텐츠 13/24 → 14/25 */
+  .is-en .wd-body .wd-intro-desc {
+    font-size: 16px;
+    line-height: 28px;
+  }
+
+  .is-en .wd-body .wd-head-desc,
+  .is-en .wd-body .wd2-step-desc {
+    font-size: 14px;
+    line-height: 25px;
+  }
+
   /* ── 자유 배치 스테이지(상세 12·13·14)는 모바일에서 위에서 아래로 쌓는다 ── */
   .wdx-stage {
     display: flex;

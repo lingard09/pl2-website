@@ -615,3 +615,23 @@ html[class*="translated-"] .ab-service-sub {
     transform: translateX(0);
   }
 }
+
+/* 개요 문구: PC 는 긴 문구, 모바일은 짧은 새 문구 (수정사항_11.06 About_MO 코멘트) */
+.ab-intro-mo {
+  display: none;
+}
+
+@media (max-width: 599.98px) {
+  .ab-intro-pc {
+    display: none;
+  }
+
+  .ab-intro .ab-intro-mo {
+    display: block;
+  }
+
+  /* 영문 모바일 문구는 두 문단 (피그마 줄바꿈 두 번) */
+  .ab-intro .ab-intro-mo br {
+    display: inline;
+  }
+}

@@ -291,7 +291,7 @@ html:has(.wk-body) {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 12px;
+    gap: 30px;
   }
 
   /* 모바일 시안은 라운드 12 고정 */
@@ -337,4 +337,17 @@ html:has(.wk-body) {
   .wk-col:first-child > :nth-child(7) { order: 14; }
   .wk-col:first-child > :nth-child(8) { order: 15; }
   .wk-col:last-child > :nth-child(8) { order: 16; }
+
+  /* 수정사항_11.06 Works_MO 코멘트: 카드 사이 30 · 텍스트 좌우 4 (6 → 4) · 브랜드명 자간 -2%.
+     피그마 Thumnail/Works MO: Overlay 위 16 · 좌우 4 · gap 6 / Brand 16/18 / Project SemiBold 20 */
+  .wk-card-overlay,
+  .wk-card--l .wk-card-overlay {
+    gap: 6px;
+    padding: 16px 4px 0;
+  }
+
+  .wk-card-brand {
+    line-height: 18px;
+    letter-spacing: -0.02em;
+  }
 }
