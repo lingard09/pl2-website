@@ -938,3 +938,18 @@ html.lenis body {
   position: sticky;
   top: calc(50vh - var(--sp-pin-h, 0px) / 2);
 }
+
+/* ══ 한/영 원고 (lang.js, 수정사항_11.06 "데스크탑 영문 버전") ══════════════
+   영문판이 있는 페이지는 같은 요소 안에 두 원고를 나란히 둔다:
+     <p class="wd-intro-desc"><span data-l="ko">한글…</span><span data-l="en" lang="en">English…</span></p>
+   html.is-en 이면 영문만, 아니면 한글만 보인다. 요소 자체는 그대로라 페이지 CSS·모션이 바뀌지 않는다.
+   한글은 <br> 로 줄을 고정하지만 영문은 칸 폭에 맞춰 흐른다 (nowrap 을 풀어 준다). */
+:root:not(.is-en) [data-l="en"],
+.is-en [data-l="ko"] {
+  display: none !important;
+}
+
+[data-l="en"] {
+  white-space: normal;
+  word-break: normal;
+}

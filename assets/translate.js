@@ -4,7 +4,8 @@
    - 한국 사용자는 번역하지 않는다: 선호 언어 목록에 한국어가 하나라도 있거나
      (영어 OS 를 쓰는 한국 사용자) 시간대가 한국(Asia/Seoul)이면 원문 그대로 둔다.
      이때 예전에 남은 googtrans 쿠키도 지운다 — 남아 있으면 Google 이 계속 번역한다
-   - 번역하면 안 되는 곳(브랜드명·로고 글자)은 HTML 에 translate="no" 를 붙여 둔다 */
+   - 번역하면 안 되는 곳(브랜드명·로고 글자)은 HTML 에 translate="no" 를 붙여 둔다
+   - 영문 원고가 있는 페이지(상세 14개 + About, html.is-en)는 번역하지 않는다 — lang.js (수정사항_11.06) */
 (function () {
   var langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || "ko"];
   var lang = String(langs[0] || "ko").toLowerCase();
@@ -19,7 +20,10 @@
   try {
     tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
   } catch (e) {}
-  if (korean || tz === "Asia/Seoul") {
+  // lang.js 가 정한 언어를 따른다 (?lang= 고정 포함). 영문 원고가 있는 페이지는 번역기를 띄우지 않는다
+  if (window.PL2_LANG) korean = window.PL2_LANG === "ko";
+  var hasEnglish = document.documentElement.classList.contains("is-en");
+  if (korean || (!window.PL2_LANG && tz === "Asia/Seoul") || hasEnglish) {
     domains.forEach(function (d) {
       document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/" + d;
     });

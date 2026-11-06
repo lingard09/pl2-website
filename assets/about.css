@@ -345,3 +345,22 @@
 html[class*="translated-"] .ab-service-sub {
   line-height: 1.3;
 }
+
+/* ── 영문판 (html.is-en, 피그마 텍스트 스타일 Works-About/PC/*-eng, 수정사항_11.06) ──
+   Intro-text-eng 22 / 38 (칸 894) · Content-text-eng 20 / 34 자간 0 · Subtitle-eng 26 / 26 자간 -4% */
+.is-en .ab-intro p {
+  max-width: min(46.5625vw, 894px); /* 894 */
+  font-size: min(1.1458vw, 22px); /* 22 */
+}
+
+.is-en .ab-lead-cols p,
+.is-en .ab-service-desc {
+  font-size: min(1.0417vw, 20px); /* 20 */
+  line-height: min(1.7708vw, 34px); /* 34 */
+  letter-spacing: 0;
+}
+
+.is-en .ab-service-sub {
+  font-size: min(1.3542vw, 26px); /* 26 */
+  line-height: min(1.3542vw, 26px); /* 26 */
+}

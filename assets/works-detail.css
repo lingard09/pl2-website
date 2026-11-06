@@ -444,3 +444,19 @@
   outline: min(0.1042vw, 2px) solid var(--pl2-white);
   outline-offset: max(-0.2083vw, -4px);
 }
+
+/* ══ 영문판 글자 (html.is-en, 피그마 텍스트 스타일 Works-About/PC/*-eng) ══════════
+   Intro-text-eng   22 / 38, 자간 -2%, 칸 894 (한글은 20 / 36, <br> 로 줄 고정)
+   Content-text-eng 20 / 34, 자간 0  (한글은 18 / 34). 칸 폭(736 · 620)은 한글과 같다 */
+.is-en .wd-intro-desc {
+  max-width: min(46.5625vw, 894px); /* 894 */
+  font-size: min(1.1458vw, 22px); /* 22 */
+  line-height: min(1.9792vw, 38px); /* 38 */
+}
+
+.is-en .wd-head-desc,
+.is-en .wd2-step-desc {
+  font-size: min(1.0417vw, 20px); /* 20 */
+  line-height: min(1.7708vw, 34px); /* 34 */
+  letter-spacing: 0;
+}
