@@ -58,7 +58,11 @@
         <!-- ══ 1. 히어로 + 프로젝트 개요 ══ -->
         <section class="wd-top">
           <div class="wd-hero wd-hero--dark">
-            <img class="wd-hero-media" src="assets/wd4-hero.webp" alt="" />
+            <picture>
+              <!-- 모바일 세로 썸네일 (수정사항_11.06 MO 히어로) -->
+              <source media="(max-width: 599.98px)" srcset="assets/wd4-hero-mo.webp" />
+              <img class="wd-hero-media" src="assets/wd4-hero.webp" alt="" />
+            </picture>
             <div class="wd-hero-dim" aria-hidden="true"></div>
 
             <div class="wd-hero-title">
@@ -162,7 +166,17 @@
           <img class="ft-logo" src="assets/logo-pl2.svg" alt="PL2" />
           <p class="ft-copy">© 2026 PL2 All Rights Reserved.</p>
         </div>
+        <!-- 모바일 전용 (수정사항_11.06 MO Footer 3857:32790). PC 하단 바에는 없다 -->
+        <div class="ft-contact">
+          <p class="ft-title">Contact</p>
+          <ul class="ft-contact-list">
+            <li><a href="tel:+821012345678">+82 10-1234-5678</a></li>
+            <li><a class="ft-mail" href="mailto:PL2std@PL2.com">PL2std@PL2.com</a></li>
+            <li class="ft-addr">04563<br />서울특별시 중구 장충단로 13길 20, 현대시티타워 12층<br />12F, 20, Jangchungdan-ro 13-gil, Jung-gu, Seoul, Republic of Korea</li>
+          </ul>
+        </div>
         <nav class="ft-links">
+          <p class="ft-title">Legal</p>
           <a href="privacy.html">Privacy Policy</a>
           <span class="ft-divider" aria-hidden="true"></span>
           <a href="terms.html">Terms of Use</a>

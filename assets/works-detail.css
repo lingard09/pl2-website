@@ -460,3 +460,201 @@
   line-height: min(1.7708vw, 34px); /* 34 */
   letter-spacing: 0;
 }
+
+/* ══ 모바일 공통 (수정사항_11.06, 피그마 1_MO 3802:20587 외 상세 MO 14장, 390 폭) ══════════
+   PC 는 1920 비율 축소(vw·cqw)지만 모바일은 피그마 MO 값(px)을 그대로 쓴다.
+   - 히어로: 화면 꽉 찬 세로(390x844 비율), GNB 가 그 위에 뜬다 (본문을 내리지 않는다).
+     제목 묶음은 왼쪽 아래(좌 20 · 아래 60). 딤은 아래에서 위로 (검정 30% → 투명) + 위쪽 살짝(16%).
+     세로 썸네일이 있는 페이지는 <picture> 로 모바일 전용 이미지(wdN-hero-mo.webp)를 쓴다.
+   - 리듬: 히어로 ↔ 개요 60, 큰 덩어리(섹션) 사이 200, 헤더 ↔ 미디어 60.
+   - 헤더: 좌우 20, 제목 SemiBold 20/28 · 설명 Light 13/24 (자간 -2%), PC 의 가운데·오른쪽 정렬은 모두 왼쪽으로.
+   - 한글 본문의 <br> 은 PC 폭 기준이라 모바일에서는 무시하고 칸에 맞춰 흐르게 한다 (keep-all).
+   페이지마다 다른 섹션(갤러리·캐러셀 등)은 works-detail-NN.css 의 모바일 블록에서 잡는다. */
+@media (max-width: 599.98px) {
+  .wd-main {
+    padding-top: 0;
+  }
+
+  .wd-container {
+    gap: 200px;
+    padding-bottom: 200px;
+  }
+
+  .wd-top {
+    gap: 60px;
+  }
+
+  /* ── 히어로 ── */
+  .wd-hero {
+    aspect-ratio: 390 / 844;
+  }
+
+  .wd-hero-media,
+  .wd-body--light .wd-hero-media {
+    object-fit: cover;
+  }
+
+  .wd-hero-dim,
+  .wd-hero-dim--dark {
+    background:
+      linear-gradient(to top, rgba(0, 0, 0, 0.3) 23.59%, rgba(0, 0, 0, 0) 41.61%),
+      linear-gradient(to top, rgba(0, 0, 0, 0) 79.76%, rgba(0, 0, 0, 0.16) 89.02%);
+  }
+
+  /* 다크 테마는 히어로 아래가 검정 바탕으로 이어진다 (피그마 1_MO 이미지 위 검정 18% → 투명 28%) */
+  .wd-body:not(.wd-body--light) .wd-hero-dim {
+    background:
+      linear-gradient(to top, #000 18%, rgba(0, 0, 0, 0) 28.35%),
+      linear-gradient(to top, rgba(0, 0, 0, 0.3) 23.59%, rgba(0, 0, 0, 0) 41.61%),
+      linear-gradient(to top, rgba(0, 0, 0, 0) 79.76%, rgba(0, 0, 0, 0.16) 89.02%);
+  }
+
+  .wd-hero-title {
+    top: auto;
+    bottom: 60px;
+    left: 20px;
+    gap: 30px;
+    width: calc(100% - 40px);
+    transform: none;
+  }
+
+  .wd-hero-head {
+    gap: 16px;
+  }
+
+  .wd-hero-brand {
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 16px;
+    line-height: 11px;
+  }
+
+  /* 모바일 히어로 글자는 모두 흰색 (라이트 테마도 사진·영상 위) */
+  .wd-hero-h1,
+  .wd-body--light .wd-hero-h1 {
+    color: var(--pl2-white);
+    font-size: 40px;
+    line-height: 42px;
+    -webkit-text-stroke: 0.5px currentColor;
+  }
+
+  .wd-body--light .wd-hero-brand {
+    background: rgba(255, 255, 255, 0.24);
+    color: var(--pl2-neutral-90);
+  }
+
+  .wd-hero-tags {
+    gap: 6px;
+    overflow: hidden;
+  }
+
+  .wd-tag,
+  .wd-body--light .wd-tag {
+    padding: 4px 6px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--pl2-neutral-80);
+    font-size: 12px;
+    line-height: 12px;
+  }
+
+  /* ── 개요: 가운데 정렬, 제목 Tannakone 32/40, 본문 Light 14/26 ── */
+  .wd-intro {
+    gap: 24px;
+    padding: 0 20px;
+    text-align: center;
+  }
+
+  .wd-intro-title {
+    font-size: 32px;
+    line-height: 40px;
+  }
+
+  .wd-intro-desc,
+  .is-en .wd-intro-desc {
+    max-width: none;
+    font-size: 14px;
+    line-height: 26px;
+    letter-spacing: -0.02em;
+    word-break: keep-all;
+  }
+
+  /* ── 섹션 헤더 ── */
+  .wd-head,
+  .wd-head--left,
+  .wd-head--right,
+  .wd-head--center {
+    align-items: stretch;
+    gap: 20px;
+    padding: 0 20px;
+    text-align: left;
+  }
+
+  .wd-head-title,
+  .wd-head--center .wd-head-title,
+  .wd-head--left .wd-head-desc,
+  .wd-head--center .wd-head-desc {
+    width: auto;
+  }
+
+  .wd-head-title {
+    font-size: 20px;
+    line-height: 28px;
+    letter-spacing: -0.02em;
+  }
+
+  .wd-head-desc,
+  .wd-head--center .wd-head-desc,
+  .is-en .wd-head-desc,
+  .wdx-head .wd-head-desc {
+    font-size: 13px;
+    line-height: 24px;
+    letter-spacing: -0.02em;
+    word-break: keep-all;
+  }
+
+  /* 페이지 CSS 가 PC 줄 고정용으로 nowrap 을 건 곳이 있어 모바일에서는 푼다 */
+  .wd-intro-desc,
+  .wd-head-title,
+  .wd-head-desc,
+  .wd-intro-desc [data-l],
+  .wd-head-title [data-l],
+  .wd-head-desc [data-l] {
+    white-space: normal;
+  }
+
+  .wd-intro-desc br,
+  .wd-head-desc br,
+  .wd-head-title br {
+    display: none;
+  }
+
+  /* ── 자유 배치 스테이지(상세 12·13·14)는 모바일에서 위에서 아래로 쌓는다 ── */
+  .wdx-stage {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    aspect-ratio: auto;
+  }
+
+  .wdx-item {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    height: auto;
+  }
+
+  .wdx-head,
+  .wdx-head--center {
+    gap: 20px;
+    padding: 0 20px;
+    text-align: left;
+  }
+
+  /* 캡션: Regular 11/16 가운데 */
+  .wdx-caption {
+    font-size: 11px;
+    line-height: 16px;
+  }
+}

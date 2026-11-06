@@ -39,3 +39,13 @@
     root.lang = "en";
   }
 })();
+
+/* 모바일에서 본문의 <br> 을 숨길 때(works-detail.css · about.css 모바일 블록) 앞뒤 단어가 붙지 않게
+   <br> 앞에 공백을 하나 넣어 둔다. 줄 끝 공백은 그려지지 않아서 PC 화면은 그대로다. */
+document.addEventListener("DOMContentLoaded", function () {
+  Array.prototype.forEach.call(document.querySelectorAll("main br"), function (br) {
+    var prev = br.previousSibling;
+    if (prev && prev.nodeType === 3 && /\s$/.test(prev.textContent)) return;
+    br.parentNode.insertBefore(document.createTextNode(" "), br);
+  });
+});
