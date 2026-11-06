@@ -501,8 +501,10 @@
       linear-gradient(to top, rgba(0, 0, 0, 0) 79.76%, rgba(0, 0, 0, 0.16) 89.02%);
   }
 
-  /* 다크 테마는 히어로 아래가 검정 바탕으로 이어진다 (피그마 1_MO 이미지 위 검정 18% → 투명 28%) */
-  .wd-body:not(.wd-body--light) .wd-hero-dim {
+  /* 상세 11 만 히어로 아래가 검정 바탕으로 이어진다 (피그마 1_MO 이미지 fill 위 검정 18% → 투명 28%).
+     다른 MO 히어로에는 이 그라데이션이 없다 — 다크 테마 전체에 걸었더니 01·02·08·09·10 히어로 아래 30% 가
+     까맣게 덮였다 (2026-11-07 모바일 피드백). */
+  .wd-hero--fade-black .wd-hero-dim {
     background:
       linear-gradient(to top, #000 18%, rgba(0, 0, 0, 0) 28.35%),
       linear-gradient(to top, rgba(0, 0, 0, 0.3) 23.59%, rgba(0, 0, 0, 0) 41.61%),
