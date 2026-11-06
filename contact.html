@@ -46,10 +46,15 @@
 
     <main class="ct-main">
       <h1 class="sr-only">Contact</h1>
-
+      <!-- 피그마 수정사항_11.06 Contact_PC (3910:34679) / Contact_MO (3910:34795).
+           PC: 지도 1360x642 + 정보 400, 아래 끝 맞춤, 화면 세로 가운데.
+           모바일: 지도 390x290 (좌우 꽉) → 정보 → 화면 아래 Contact Us 버튼 -->
       <div class="ct-row">
         <div class="ct-map">
-          <!-- 지도 클릭 시 구글지도로 연결 (디자인피드백_0918) -->
+          <!-- 지도 클릭 시 구글지도로 연결 (디자인피드백_0918).
+               지도는 11.06 새 지도(역 이름·라벨 모양이 바뀜)로 교체했다. 피그마 Contact_MO 의 지도
+               래스터(4096x1626, 1920x760 영역의 2.13 배, 라벨 포함)를 PC·모바일 같이 쓰고 자르는 위치만 다르다.
+               예전 지도 영상(contact-map.mp4, 1015 피드백의 한 번 재생)은 옛 지도라 더 쓰지 않는다. -->
           <a
             class="ct-map-link"
             href="https://www.google.com/maps/search/?api=1&amp;query=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C%20%EC%A4%91%EA%B5%AC%20%EC%9E%A5%EC%B6%A9%EB%8B%A8%EB%A1%9C13%EA%B8%B8%2020"
@@ -57,34 +62,31 @@
             rel="noopener noreferrer"
             aria-label="구글지도에서 PL2 Creative Studio 위치 보기 (새 창)"
           >
-            <!-- 지도 영상은 한 번만 재생하고 마지막 프레임에서 멈춘다 (loop 없음, 2026-10-15 피드백) -->
-            <video
-              poster="assets/contact-map-poster.webp"
-              autoplay
-              muted
-              playsinline
-              preload="auto"
-              aria-label="PL2 Creative Studio 위치 — 서울 중구 장충단로 13길 20, 동대문디자인플라자 북쪽"
-            >
-              <source src="assets/contact-map.mp4" type="video/mp4" />
-            </video>
+            <img
+              class="ct-map-img"
+              src="assets/contact-map.webp"
+              width="4096"
+              height="1626"
+              alt="PL2 Creative Studio 위치 — 서울 중구 장충단로 13길 20, 동대문디자인플라자 북쪽"
+            />
           </a>
         </div>
-
         <div class="ct-info">
-          <p class="ct-address">
-            <span class="ct-address-name">PL2 Creative Studio</span><br /><br />
-            +82 10-1234-5678<br /><br />
-            <a href="mailto:PL2std@PL2.com">PL2std@PL2.com</a><br /><br />
-            04563<br />
-            12F, 20, Jangchungdan-ro 13-gil,<br />
-            Jung-gu, Seoul, Republic of Korea<br />
-            서울특별시 중구 장충단로 13길 20,<br />
-            현대시티타워 12층
-          </p>
-
-          <!-- 피그마에 이동 대상이 없어서 위 이메일과 같은 mailto 로 걸었다 -->
-          <a class="ct-cta" href="mailto:PL2std@PL2.com">Contact</a>
+          <p class="ct-name" translate="no">PL2 Creative Studio</p>
+          <div class="ct-details">
+            <div class="ct-lines">
+              <div class="ct-group">
+                <p class="ct-line"><a href="tel:+821012345678">+82 10-1234-5678</a></p>
+                <p class="ct-line"><a class="ct-mail" href="mailto:PL2std@PL2.com">PL2std@PL2.com</a></p>
+              </div>
+              <div class="ct-group ct-group--addr">
+                <p class="ct-line">서울특별시 중구 장충단로 13길 20,<br />현대시티타워 12층</p>
+                <p class="ct-line ct-line--en">12F, 20, Jangchungdan-ro 13-gil,<br />Jung-gu, Seoul, Republic of Korea</p>
+              </div>
+            </div>
+            <!-- 피그마에 이동 대상이 없어서 위 이메일과 같은 mailto 로 걸었다 -->
+            <a class="ct-cta" href="mailto:PL2std@PL2.com"><span>Contact Us</span></a>
+          </div>
         </div>
       </div>
     </main>
