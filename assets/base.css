@@ -110,6 +110,11 @@ body {
   color: var(--pl2-black);
   font-family: var(--pl2-font-body);
   -webkit-font-smoothing: antialiased;
+  /* 한글도 어절(띄어쓰기) 단위로 줄바꿈한다 (수정사항_11.06 "전체적인 업데이트").
+     기본값은 글자 단위라 "시작됩\n니다" 처럼 단어 중간에서 끊겼다.
+     칸보다 긴 한 단어(URL 등)는 넘치지 않게 그때만 글자 단위로 끊는다. */
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 img,
