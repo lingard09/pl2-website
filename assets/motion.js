@@ -1,8 +1,8 @@
 /* 공통 모션 (모든 페이지 공유) — 피그마 "PC 모션피드백_0928" (2836:11814)
-   1) 스크롤 등장: 콘텐츠가 아래에서 자석에 끌려오듯 올라와 붙는다 (후순위 모션 변경 사항,
-      피그마 3933:23802 — 참고: Codrops Staggered 3D Grid Animations).
-      투명도로 서서히 나타나지 않고, 뒤로 눕고 세로로 늘어난 채 출발해 가속하며 제자리에 안착한다.
-      (이전: WeTransfer Ideas Report 2021 참고, 투명도 + 80px 아래에서 expo-out)
+   1) 스크롤 등장: 콘텐츠가 화면 아래 멀리서 곧게 끌려 올라와 붙는다 (후순위 모션 변경 사항,
+      피그마 3933:23802 + 11.07 추가 코멘트 image 804·805 — 참고 데모의 "오른쪽 아래" HALCYON 그리드).
+      투명도·기울기 없이 300 아래에서 출발하고, 같은 줄에서는 가운데가 먼저·바깥쪽이 늦게 올라온다.
+      (이전: 3D 로 눕고 비틀리던 버전 → "왼쪽 위 장면 같다"는 피드백으로 교체)
    2) About 통계 숫자 카운팅
    3) 페이지 전환: 노란 패널이 아래에서 덮고 위로 빠진다 (참고: koto.com/work)
       Home → Works 만 다르다 (PC 피드백_0930, 피그마 슬라이드 8·9): Home 화면이 위로 밀려
@@ -223,7 +223,8 @@
     ".ft",
   ].join(",");
   var STAGGER = 90;
-  var DURATION = 1100; // base.css .mo-anim transition 과 맞춘다
+  var SIDE_LAG = 260; // 화면 끝에 붙은 요소가 가운데 요소보다 늦게 출발하는 시간
+  var DURATION = 1300; // base.css .mo-anim transition 과 맞춘다
 
   function initReveal(startDelay, skipFirstScreen) {
     if (!("IntersectionObserver" in window)) return;
@@ -257,21 +258,14 @@
       clearTimeout(el._moTimer);
       el.classList.remove("mo-anim");
       el.style.transitionDelay = "";
-      var r = el.getBoundingClientRect();
-      var above = r.bottom <= 0;
+      var above = el.getBoundingClientRect().bottom <= 0;
       el.style.setProperty("--mo-dir", above ? "-1" : "1");
-      // 화면 왼쪽 절반이면 왼쪽으로, 오른쪽이면 오른쪽으로 비틀린 채 출발한다 (자석 등장)
-      el.style.setProperty("--mo-side", r.left + r.width / 2 < window.innerWidth / 2 ? "-1" : "1");
       el.classList.add("mo-out");
     }
 
     // 밀어 올리기 진입 중에는 본문이 화면 한 높이만큼 내려가 있다
     var shift = skipFirstScreen ? window.innerHeight : 0;
     els.forEach(function (el) {
-      // 자석 등장의 3D 기울기는 transform 을 쓴다. 페이지 CSS 가 이미 transform 을 쓰는
-      // 요소(가운데 정렬 translateX(-50%) 등)는 덮어쓰면 자리가 틀어지므로 기울기는 빼고
-      // translate·scale(개별 속성)만 쓴다.
-      if (getComputedStyle(el).transform === "none") el.classList.add("mo-3d");
       el.classList.add("mo-reveal");
       if (skipFirstScreen && el.getBoundingClientRect().top - shift < window.innerHeight) return;
       hide(el);
@@ -290,8 +284,19 @@
         var dir = a.style.getPropertyValue("--mo-dir") === "-1" ? -1 : 1;
         return dir * (ra.top - rb.top) || ra.left - rb.left;
       });
-      queue.forEach(function (el, i) {
-        var delay = i * STAGGER;
+      // 같은 높이(±12px)는 같은 줄로 본다. 줄마다 STAGGER, 줄 안에서는 화면 가운데에서
+      // 멀수록 SIDE_LAG 만큼 늦게 → 가운데가 먼저 솟고 양옆이 따라오는 피라미드 (참고 데모 HALCYON)
+      var row = -1;
+      var lastTop = null;
+      var vw = window.innerWidth;
+      queue.forEach(function (el) {
+        var rc = el.getBoundingClientRect();
+        if (lastTop === null || Math.abs(rc.top - lastTop) > 12) {
+          row++;
+          lastTop = rc.top;
+        }
+        var off = Math.min(1, Math.abs(rc.left + rc.width / 2 - vw / 2) / (vw / 2));
+        var delay = row * STAGGER + Math.round(off * SIDE_LAG);
         el.style.transitionDelay = delay + "ms";
         el.classList.add("mo-anim");
         el.classList.remove("mo-out");

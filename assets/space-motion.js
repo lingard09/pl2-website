@@ -6,9 +6,9 @@
    1) 관성 스크롤 — Lenis. 휠을 굴리면 미끄러지듯 따라오다 감속하며 멈춘다.
    2) 스크롤 연동 등장 — 요소가 화면 아래에서 출발해 스크롤에 맞춰 올라오고, 정해진 지점에서
       감속하며 제자리에 안착한다. 요소마다 이동 거리(travel)와 따라붙는 속도(lag)를 달리 줘서
-      같은 줄의 이미지·텍스트가 약간씩 시간차를 두고 움직인다. 투명도는 쓰지 않는다 —
-      출발할 땐 뒤로 눕고(rotateX) 세로로 늘어나고 화면 바깥쪽으로 비틀린 채라, 올라오면서
-      자석에 끌려오듯 펴지며 붙는다 (후순위 모션 변경 사항, 피그마 3933:23802).
+      같은 줄의 이미지·텍스트가 약간씩 시간차를 두고 움직인다. 투명도·기울기 없이 곧게 올라온다 —
+      참고 데모의 HALCYON 그리드처럼 화면 아래 멀리서 출발하고(이동 거리 1.6 배), 화면 가운데에서
+      먼 요소일수록 늦게 안착해 가운데가 먼저 솟는다 (후순위 모션 변경 사항 3933:23802, 11.07 코멘트).
    3) 깊이감 — 이미지·영상은 틀 안에서 살짝 확대된 채 스크롤보다 느리게 움직이고(패럴랙스),
       히어로는 스크롤보다 느리게 내려가 아래 콘텐츠가 그 위를 덮고 지나간다.
    4) 부드러운 스냅 — data-snap 구간 근처에서 스크롤이 멈추면 그 구간이 화면 가운데 오도록
@@ -65,18 +65,19 @@
   // ── 2) 3) 움직일 요소 등록 ──────────────────────────
   // travel: 출발 거리(px, 1920 기준) / lag: 따라붙는 비율(작을수록 늦게 감속하며 붙는다)
   // depth: 안착 뒤에도 남는 패럴랙스 세기 (화면 가운데에서 멀어질수록 이만큼 비켜 간다)
+  var TRAVEL_SCALE = 1.6; // 11.07: 참고 데모처럼 더 멀리 아래에서 올라온다
   var items = [];
   function add(el, travel, lag, depth, onEnter) {
     if (!el) return;
     el.classList.add("sp-item");
     items.push({
       el: el,
-      travel: travel * unit,
+      travel: travel * TRAVEL_SCALE * unit,
+      base: travel,
       lag: lag,
       depth: depth || 0,
-      y: travel * unit,
-      r: 1, // 남은 형태 변형 (1 = 출발 상태, 0 = 제자리)
-      side: 1, // -1 화면 왼쪽 / 1 오른쪽 (비틀림 방향)
+      y: travel * TRAVEL_SCALE * unit,
+      off: 0, // 화면 가운데에서 떨어진 정도 (0 = 가운데, 1 = 화면 끝)
       top: 0,
       h: 0,
       entered: false,
@@ -140,7 +141,8 @@
       it.h = it.el.offsetHeight;
       var left = 0;
       for (var n = it.el; n; n = n.offsetParent) left += n.offsetLeft;
-      it.side = left + it.el.offsetWidth / 2 < vw / 2 ? -1 : 1;
+      it.off = Math.min(1, Math.abs(left + it.el.offsetWidth / 2 - vw / 2) / (vw / 2));
+      it.travel = it.base * TRAVEL_SCALE * unit;
     });
     frames.forEach(function (f) {
       f.top = docTop(f.frame);
@@ -150,6 +152,7 @@
 
   // 출발 지점: 요소 윗변이 화면 아래끝 / 안착 지점: 윗변이 화면 아래에서 SETTLE 만큼 올라왔을 때
   var SETTLE = 0.55;
+  var SIDE_LAG = 0.12;
 
   function update() {
     var sy = lenis.scroll;
@@ -160,26 +163,15 @@
       var top = it.top - sy; // 이동 전 원래 화면 위치
       if (top > vh * 1.4 || top + it.h < -vh * 0.4) return; // 멀리 있으면 계산 생략
       var start = it.top - vh; // 윗변이 화면 아래끝에 닿는 스크롤
-      var end = Math.min(it.top - vh * (1 - SETTLE), maxScroll); // 안착하는 스크롤
+      // 가운데에서 먼 요소는 화면 높이의 최대 12% 만큼 더 스크롤해야 안착한다 (가운데가 먼저 솟는다)
+      var end = Math.min(it.top - vh * (1 - SETTLE) + it.off * vh * SIDE_LAG, maxScroll); // 안착하는 스크롤
       var p = end > start ? clamp((sy - start) / (end - start), 0, 1) : 1;
       var rem = 1 - easeOutCubic(p);
       var target = it.travel * rem;
       if (it.depth) target += (top + it.h / 2 - vh / 2) * it.depth;
       it.y += (target - it.y) * it.lag * 2; // 프레임마다 목표로 다가간다 (감속 안착)
       if (Math.abs(target - it.y) < 0.05) it.y = target;
-      it.r += (rem - it.r) * it.lag * 2;
-      if (Math.abs(rem - it.r) < 0.0005) it.r = rem;
-      // 자석 등장: 뒤로 누운 채(최대 28°) 세로로 늘어나(최대 1.18) 바깥쪽으로 비틀려(5°) 출발한다.
-      // 늘어남은 윗변 기준 (base.css .sp-item transform-origin)
-      var tf = "translate3d(0," + it.y.toFixed(2) + "px,0)";
-      if (it.r > 0.001) {
-        tf =
-          "perspective(1600px) " + tf +
-          " rotateX(" + (it.r * 28).toFixed(2) + "deg)" +
-          " skewX(" + (it.side * it.r * 5).toFixed(2) + "deg)" +
-          " scale(1," + (1 + it.r * 0.18).toFixed(4) + ")";
-      }
-      it.el.style.transform = tf;
+      it.el.style.transform = "translate3d(0," + it.y.toFixed(2) + "px,0)";
       if (!it.entered && p > 0.25) {
         it.entered = true;
         if (it.onEnter) it.onEnter();
