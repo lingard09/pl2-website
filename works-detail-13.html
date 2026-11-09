@@ -33,6 +33,7 @@
     <link rel="stylesheet" href="assets/works-detail-13.css" />
   </head>
   <body class="wd-body wd-body--light">
+    <div class="mo-bottombar" aria-hidden="true"></div>
     <nav class="gnb gnb--tw" data-dropdown="off" data-pinned>
       <div class="gnb-bar">
         <span class="gnb-brand" translate="no">PL2 Creative Studio</span>
@@ -83,9 +84,7 @@
           <div class="wd-intro">
             <p class="wd-intro-title">A New Perspective on Agriculture</p>
             <p class="wd-intro-desc">
-              <span data-l="ko">경기도 청년농업인들의 이야기를 기존의 설명 중심 홍보 방식에서 벗어나 감각적인 영상으로 풀어냈습니다.<br />
-              농업의 일상적인 행위와 반복되는 움직임에 주목하고, 재배부터 기다림, 수확, 전달, 만찬까지 이어지는 과정을<br />
-              하이패션 필름의 시각적 언어로 재해석했습니다.</span><span data-l="en" lang="en">PL2 produced a promotional film featuring young farmers from the Gyeonggi 4-H Club. Blending contemporary dance with fashion film techniques, the film reimagines the language of farming through metaphor, turning everyday farm work into movement. It follows the journey from planting and growing to harvest, delivery, and a shared meal.</span>
+              <span data-l="ko">경기도 청년농업인들의 이야기를 <br class="br-mo" />기존의 설명 중심 홍보 방식에서 벗어나 <br class="br-mo" />감각적인 영상으로 풀어냈습니다. <br class="br-mo" />농업의 일상적인 행위와 반복되는 움직임에 주목하고, <br class="br-mo" />재배부터 기다림, 수확, 전달, 만찬까지 이어지는 과정을 <br class="br-mo" />하이패션 필름의 시각적 언어로 재해석했습니다.</span><span data-l="en" lang="en">PL2 produced a promotional film featuring young farmers from the Gyeonggi 4-H Club. Blending contemporary dance with fashion film techniques, the film reimagines the language of farming through metaphor, turning everyday farm work into movement. It follows the journey from planting and growing to harvest, delivery, and a shared meal.</span>
             </p>
           </div>
         </section>
@@ -95,21 +94,23 @@
             <div class="wdx-item wdx-head" style="--x: 1124; --y: 0; --w: 736">
               <h2 class="wd-head-title">From Field to Table</h2>
               <p class="wd-head-desc">
-                <span data-l="ko">재배, 기다림, 수확, 전달, 만찬으로 이어지는 농업의 과정을 다섯 개의 장면으로 구성했습니다.<br />
-                각 과정에서 반복되는 행위와 시간의 흐름을 감각적인 화면으로 연결하며, 하나의 이야기로 완성했습니다.</span><span data-l="en" lang="en">The film follows five stages of farming, using choreographed movements and visual transitions to connect each part of the agricultural process into one continuous story.</span>
+                <span data-l="ko">재배, 기다림, 수확, 전달, 만찬으로 이어지는 농업의 과정을 다섯 개의 장면으로 구성했습니다. 각 과정에서 반복되는 행위와 시간의 흐름을 감각적인 화면으로 연결하며, 하나의 이야기로 완성했습니다.</span><span data-l="en" lang="en">The film follows five stages of farming, using choreographed movements and visual transitions to connect each part of the agricultural process into one continuous story.</span>
               </p>
             </div>
             <img class="wdx-item" style="--x: 0; --y: 214; --w: 1920; --hh: 530" src="assets/wd13-field.webp" alt="" data-reveal />
         </section>
 
         <!-- ══ 01 Grow → 05 Feast (피그마 Frame 2116928556 외 4개, 각 1920x960)
-             상세 02 와 같은 단계 스크롤 (wd2-story.js 를 그대로 쓴다): 스테이지를 화면에 고정하고
-             스크롤에 따라 왼쪽 사진 묶음과 오른쪽 활성 항목·설명이 1 → 5 로 바뀐다.
-             왼쪽 사진 묶음은 피그마 960x960 프레임을 통째로 export 했다. ══ -->
-        <div class="wd2-story" data-reveal>
+             수정사항_11.09 스크롤 모션 (wd-magnet-story.js, 피그마 4031:24599): 왼쪽 사진은 카드마다 다른 속도로 올라오다
+             챕터가 화면 가운데 오면 피그마 위치에 맞고, 오른쪽 목록은 고정된 채 현재 챕터가 왼쪽으로 가며 커진다. ══ -->
+        <div class="wd2-story" data-list-x="62.5,60.9375,64.5833,64.5833,64.5833">
           <div class="wd2-story-stage">
             <section class="wd2-step-section">
-              <img class="wd2-collage" src="assets/wd13-step-01.webp" alt="" />
+              <div class="wdm-cards">
+                <img class="wdm-card" style="left:0.0000%;top:0.0000%;width:33.5938%" src="assets/wd13-ch1-1.webp" alt="" />
+                <img class="wdm-card" style="left:0.0000%;top:38.3333%;width:20.8333%" src="assets/wd13-ch1-2.webp" alt="" />
+                <img class="wdm-card" style="left:16.9271%;top:63.0208%;width:33.0729%" src="assets/wd13-ch1-3.webp" alt="" />
+              </div>
               <!-- 모바일 전용 (피그마 3_MO 3865:11418, 390x220 3장 캐러셀). 피그마에서 보이는 장(맨 위 레이어)이 첫 장이 되도록 역순 (상세 02 와 같은 규칙). PC 에서는 숨긴다 (지연 로딩이라 PC 에서는 받지도 않는다) -->
               <div class="wd2-mo-media">
                 <div class="wd2-mo-carousel" data-mo-carousel>
@@ -125,8 +126,7 @@
                   <div class="wd2-step" data-active="true">
                     <p class="wd2-step-head"><span>01</span><span>Grow</span></p>
                     <p class="wd2-step-desc">
-                      <span data-l="ko">씨앗을 심고 작물을 가꾸는 청년농업인들의 반복적인 움직임에 주목했습니다.<br />
-                      농업의 시작을 이루는 일상적인 행위를 감각적인 장면으로 담아냈습니다.</span><span data-l="en" lang="en">We captured the repetitive rhythm of planting and tending crops, using choreography to express the physical labor of farming.</span>
+                      <span data-l="ko">씨앗을 심고 작물을 가꾸는 청년농업인들의 반복적인 움직임에 주목했습니다. 농업의 시작을 이루는 일상적인 행위를 감각적인 장면으로 담아냈습니다.</span><span data-l="en" lang="en">We captured the repetitive rhythm of planting and tending crops, using choreography to express the physical labor of farming.</span>
                     </p>
                   </div>
                   <div class="wd2-step" data-active="false">
@@ -145,7 +145,11 @@
               </div>
             </section>
             <section class="wd2-step-section">
-              <img class="wd2-collage" src="assets/wd13-step-02.webp" alt="" />
+              <div class="wdm-cards">
+                <img class="wdm-card" style="left:0.0000%;top:0.0000%;width:47.6042%" src="assets/wd13-ch2-1.webp" alt="" />
+                <img class="wdm-card" style="left:0.0000%;top:54.7917%;width:20.5729%" src="assets/wd13-ch2-2.webp" alt="" />
+                <img class="wdm-card" style="left:21.1979%;top:67.2917%;width:26.4062%" src="assets/wd13-ch2-3.webp" alt="" />
+              </div>
               <!-- 모바일 전용 (피그마 3_MO 3865:11707) -->
               <div class="wd2-mo-media">
                 <div class="wd2-mo-carousel" data-mo-carousel>
@@ -164,8 +168,7 @@
                   <div class="wd2-step" data-active="true">
                     <p class="wd2-step-head"><span>02</span><span>Waiting</span></p>
                     <p class="wd2-step-desc">
-                      <span data-l="ko">작물이 자라기까지 필요한 기다림의 시간을 표현했습니다.<br />
-                      눈에 보이지 않는 성장의 과정을 여유로운 화면 구성과 시간의 흐름으로 풀어냈습니다.</span><span data-l="en" lang="en">Through slow movements and carefully composed shots, we portrayed the time and patience required for crops to grow.</span>
+                      <span data-l="ko">작물이 자라기까지 필요한 기다림의 시간을 표현했습니다. 눈에 보이지 않는 성장의 과정을 여유로운 화면 구성과 시간의 흐름으로 풀어냈습니다.</span><span data-l="en" lang="en">Through slow movements and carefully composed shots, we portrayed the time and patience required for crops to grow.</span>
                     </p>
                   </div>
                   <div class="wd2-step" data-active="false">
@@ -181,7 +184,11 @@
               </div>
             </section>
             <section class="wd2-step-section">
-              <img class="wd2-collage" src="assets/wd13-step-03.webp" alt="" />
+              <div class="wdm-cards">
+                <img class="wdm-card" style="left:16.9271%;top:0.0000%;width:33.0729%" src="assets/wd13-ch3-1.webp" alt="" />
+                <img class="wdm-card" style="left:0.0000%;top:38.3333%;width:20.8333%" src="assets/wd13-ch3-2.webp" alt="" />
+                <img class="wdm-card" style="left:8.2292%;top:63.0208%;width:33.5938%" src="assets/wd13-ch3-3.webp" alt="" />
+              </div>
               <!-- 모바일 전용 (피그마 3_MO 3865:11744) -->
               <div class="wd2-mo-media">
                 <div class="wd2-mo-carousel" data-mo-carousel>
@@ -203,8 +210,7 @@
                   <div class="wd2-step" data-active="true">
                     <p class="wd2-step-head"><span>03</span><span>Pick</span></p>
                     <p class="wd2-step-desc">
-                      <span data-l="ko">정성껏 기른 작물을 수확하는 반복적인 행위를 담았습니다.<br />
-                      오랜 기다림과 노력이 결실로 이어지는 순간을 시각적으로 표현했습니다.</span><span data-l="en" lang="en">For the harvest scene, we used recurring gestures to celebrate the fruits of the farmers’ time and care.</span>
+                      <span data-l="ko">정성껏 기른 작물을 수확하는 반복적인 행위를 담았습니다. 오랜 기다림과 노력이 결실로 이어지는 순간을 시각적으로 표현했습니다.</span><span data-l="en" lang="en">For the harvest scene, we used recurring gestures to celebrate the fruits of the farmers’ time and care.</span>
                     </p>
                   </div>
                   <div class="wd2-step" data-active="false">
@@ -217,7 +223,10 @@
               </div>
             </section>
             <section class="wd2-step-section">
-              <img class="wd2-collage" src="assets/wd13-step-04.webp" alt="" />
+              <div class="wdm-cards">
+                <img class="wdm-card" style="left:0.0000%;top:12.2917%;width:33.5938%" src="assets/wd13-ch4-1.webp" alt="" />
+                <img class="wdm-card" style="left:16.4062%;top:50.6250%;width:33.5938%" src="assets/wd13-ch4-2.webp" alt="" />
+              </div>
               <!-- 모바일 전용 (피그마 3_MO 3865:11770) -->
               <div class="wd2-mo-media">
                 <div class="wd2-mo-carousel" data-mo-carousel>
@@ -241,8 +250,7 @@
                   <div class="wd2-step" data-active="true">
                     <p class="wd2-step-head"><span>04</span><span>Deliver</span></p>
                     <p class="wd2-step-desc">
-                      <span data-l="ko">수확한 농산물이 손에서 손으로 전달되는 과정을 담았습니다.<br />
-                      움직임을 통해 농업의 결실이 사람과 사람 사이로 이어지는 모습을 표현했습니다.</span><span data-l="en" lang="en">Through choreography, the harvest is passed from hand to hand, evoking both the act of delivery and the bonds it creates between people.</span>
+                      <span data-l="ko">수확한 농산물이 손에서 손으로 전달되는 과정을 담았습니다. 움직임을 통해 농업의 결실이 사람과 사람 사이로 이어지는 모습을 표현했습니다.</span><span data-l="en" lang="en">Through choreography, the harvest is passed from hand to hand, evoking both the act of delivery and the bonds it creates between people.</span>
                     </p>
                   </div>
                   <div class="wd2-step" data-active="false">
@@ -252,7 +260,11 @@
               </div>
             </section>
             <section class="wd2-step-section">
-              <img class="wd2-collage" src="assets/wd13-step-05.webp" alt="" />
+              <div class="wdm-cards">
+                <img class="wdm-card" style="left:0.0000%;top:0.0000%;width:47.6042%" src="assets/wd13-ch5-1.webp" alt="" />
+                <img class="wdm-card" style="left:0.0000%;top:67.2917%;width:26.4062%" src="assets/wd13-ch5-2.webp" alt="" />
+                <img class="wdm-card" style="left:27.0312%;top:54.7917%;width:20.5729%" src="assets/wd13-ch5-3.webp" alt="" />
+              </div>
               <!-- 모바일 전용 (피그마 3_MO 3865:11796) -->
               <div class="wd2-mo-media">
                 <div class="wd2-mo-carousel" data-mo-carousel>
@@ -280,8 +292,7 @@
                   <div class="wd2-step" data-active="true">
                     <p class="wd2-step-head"><span>05</span><span>Feast</span></p>
                     <p class="wd2-step-desc">
-                      <span data-l="ko">재배부터 이어진 모든 과정이 하나의 식탁에서 완성됩니다. 청년농업인들이 함께하는<br />
-                      만찬을 통해 농업의 결실을 나누고, 이야기의 마지막을 장식했습니다.</span><span data-l="en" lang="en">The film closes with a shared meal, as the young farmers gather around the table to enjoy the harvest, bringing the story full circle.</span>
+                      <span data-l="ko">재배부터 이어진 모든 과정이 하나의 식탁에서 완성됩니다. 청년농업인들이 함께하는 만찬을 통해 농업의 결실을 나누고, 이야기의 마지막을 장식했습니다.</span><span data-l="en" lang="en">The film closes with a shared meal, as the young farmers gather around the table to enjoy the harvest, bringing the story full circle.</span>
                     </p>
                   </div>
                 </div>
@@ -342,7 +353,7 @@
     <script src="assets/gnb.js"></script>
     <script src="assets/top-btn.js"></script>
     <script src="assets/wd-mo-carousel.js"></script>
-    <script src="assets/wd2-story.js"></script>
+    <script src="assets/wd-magnet-story.js"></script>
     <script src="assets/video-play.js"></script>
   </body>
 </html>

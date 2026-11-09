@@ -96,6 +96,21 @@
   white-space: nowrap;
 }
 
+/* 가운데 단어 호버: 움직이는 그라데이션 (수정사항_11.09, Gradient Text #ffe100 · #ffdf9f · #ff5454, 2초) */
+.hm-word.is-gradient {
+  background: linear-gradient(90deg, #ffe100, #ffdf9f, #ff5454, #ffdf9f, #ffe100) 0 0 / 200% 100% repeat-x;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: hm-gradient 2s linear infinite;
+}
+
+@keyframes hm-gradient {
+  to {
+    background-position: 200% 0;
+  }
+}
+
 /* ── 외곽: 점진 블러 + 흰색 그라데이션 (피그마 Dim) ─────────────────────
    피그마: 1920x240 (모바일 390x120) 위아래 두 장. 배경 블러 PROGRESSIVE — 가장자리 25 → 안쪽 0,
    그 위에 흰색 100% → 0% 그라데이션 (+ 흰색 2%).

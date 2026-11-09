@@ -156,7 +156,7 @@
   width: 100%;
   height: 100%;
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.9s ease; /* 수정사항_11.09: 더 천천히, 스무스하게 */
 }
 
 .ab-pl-layer:first-child,

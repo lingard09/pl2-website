@@ -26,7 +26,7 @@
     var top = stage.getBoundingClientRect().top;
     // 첫 화면에 이미 들어와 있는 경우(모바일)에도 맨 위에서는 1 장면부터 시작하도록
     // 실제로 스크롤한 거리로도 제한한다
-    return Math.min((vh * 0.75 - top) / (vh * 0.5), window.scrollY / (vh * 0.6));
+    return Math.min((vh * 0.85 - top) / (vh * 0.75), window.scrollY / (vh * 1));
   }
 
   function update() {

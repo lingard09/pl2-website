@@ -91,6 +91,7 @@
       var a = o * STEP;
       var z = (Math.cos((a * Math.PI) / 180) - 1) * R; // 원통 둘레를 따라 뒤로 물러난다
       var k = (PER - z) / PER; // 원근 보정: 뒤로 간 만큼 작아지고 가운데로 쏠리는 것을 되돌린다
+      it.scale = s * k;
       it.row.style.zIndex = String(100 - Math.round(d * 10));
       it.row.style.transform =
         "translate(-50%,-50%) translate3d(" +
@@ -233,4 +234,57 @@
 
   measure();
   paint(pos);
+
+  // ── 가운데 행 호버 (수정사항_11.09, 하단 예시: React Bits Magnet · Gradient Text) ──
+  // 커서 주변 100 안이면 커서 쪽으로 절반만큼 끌려가고, 벗어나면 제자리로 돌아온다.
+  // 이미지는 Magnet 만, 단어는 Magnet + 그라데이션. 행의 scale 안쪽에서 움직이니 그만큼 나눈다.
+  if (!reduce && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    var PAD = 100;
+    var STRENGTH = 2;
+    var hot = null; // { el, it, x, y }
+
+    function release() {
+      if (!hot) return;
+      hot.el.style.transition = "translate 0.5s ease-in-out";
+      hot.el.style.translate = "0 0";
+      hot.el.classList.remove("is-gradient");
+      hot = null;
+    }
+
+    window.addEventListener("pointermove", function (e) {
+      if (e.pointerType === "touch") return;
+      if (drag) {
+        release();
+        return;
+      }
+      var it = items[mod(Math.round(target), N)];
+      var el = it.tile || it.row.querySelector(".hm-word");
+      if (!el || Math.abs(target - pos) > 0.08) {
+        release();
+        return;
+      }
+      if (hot && hot.el !== el) release();
+      var ox = hot ? hot.x : 0;
+      var oy = hot ? hot.y : 0;
+      var r = el.getBoundingClientRect();
+      var cx = r.left + r.width / 2 - ox;
+      var cy = r.top + r.height / 2 - oy;
+      var inside =
+        Math.abs(e.clientX - cx) < r.width / 2 + PAD &&
+        Math.abs(e.clientY - cy) < r.height / 2 + PAD;
+      if (!inside) {
+        release();
+        return;
+      }
+      var x = (e.clientX - cx) / STRENGTH;
+      var y = (e.clientY - cy) / STRENGTH;
+      hot = { el: el, x: x, y: y };
+      el.style.transition = "translate 0.3s ease-out";
+      var s = it.scale || 1;
+      el.style.translate = (x / s).toFixed(2) + "px " + (y / s).toFixed(2) + "px";
+      if (!it.tile) el.classList.add("is-gradient");
+    });
+    document.addEventListener("mouseleave", release);
+    window.addEventListener("wheel", release, { passive: true });
+  }
 })();

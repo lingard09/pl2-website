@@ -1,6 +1,6 @@
 /* PL2 works detail 13 전용 (공통 구조는 works-detail.css)
    피그마: 추가 전달_10.29 Works_Detail_2 (3658:21138) — Gyeong-gi 4-H Club Campaign Film
-   흰 배경. 01 Grow → 05 Feast 단계 스크롤은 상세 02 와 같은 구조·스크립트(wd2-story.js)를 쓰고
+   흰 배경. 01 Grow → 05 Feast 단계 스크롤은 상세 02 와 같은 구조·스크립트(wd-magnet-story.js)를 쓰고
    색만 밝은 배경에 맞춘다 (비활성 #C8C8C8 / 활성 #212121 / 설명 #555555). */
 
 /* ══ 단계 (각 1920x960: 왼쪽 사진 묶음 960x960 + 오른쪽 목록 x=1240, w=620) ══ */
@@ -60,7 +60,7 @@
   word-break: keep-all;
 }
 
-/* ══ 단계 스크롤 (wd2-story.js 가 .is-ready 와 data-step 을 붙인다) ══
+/* ══ 단계 스크롤 (wd-magnet-story.js 가 .is-ready 와 data-step 을 붙인다) ══
    스테이지 960 을 화면에 고정하고, 단계마다 화면 한 높이씩 스크롤하면 다음으로 넘어간다. */
 .wd2-story.is-ready {
   --stage-h: min(50vw, 960px);
@@ -159,7 +159,7 @@
 
 /* ══ 모바일 (수정사항_11.06, 피그마 3_MO 3865:11395, 390 폭) ══════════════════
    - From Field to Table: 헤더 ↔ 이미지 60, 이미지 390x160.
-   - 01 Grow → 05 Feast: 고정 스크롤 없이 위에서 아래로 쌓는다 (wd2-story.js 가 모바일에서는 켜지 않는다).
+   - 01 Grow → 05 Feast: 고정 스크롤 없이 위에서 아래로 쌓는다 (wd-magnet-story.js 가 모바일에서는 켜지 않는다).
      단계마다 [번호 + 이름 Tannakone 26/28 · 설명 Light 13/24] → 60 → 390x220 캐러셀 (점 2~3개), 단계 사이 200.
    - 캠페인 필름 390x220 + 재생 버튼.
    구조·값은 상세 02 의 모바일 단계(works-detail-02.css)와 같다. */
@@ -308,5 +308,16 @@
     width: 17px;
     height: 30px;
     filter: drop-shadow(0 0 12px rgba(0, 0, 0, 0.3));
+  }
+}
+
+/* 수정사항_11.09 모바일 썸네일: 아래쪽이 짙은 녹색으로 이어진다 (피그마 Image fill 위 그라데이션) */
+@media (max-width: 599.98px) {
+  .wd-hero .wd-hero-dim,
+  .wd-hero .wd-hero-dim--dark {
+    background:
+      linear-gradient(to top, rgb(21, 43, 7) 0%, rgba(21, 43, 7, 0) 34.5%),
+      linear-gradient(to top, rgba(0, 0, 0, 0.3) 23.59%, rgba(0, 0, 0, 0) 41.61%),
+      linear-gradient(to top, rgba(0, 0, 0, 0) 79.76%, rgba(0, 0, 0, 0.16) 89.02%);
   }
 }

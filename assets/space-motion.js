@@ -120,9 +120,8 @@
   all(".ab-brands-row").forEach(function (el, i) {
     add(el, 120 + i * 60, 0.09 - i * 0.015, 0);
   });
-  all(".ft-hero, .ft-bar").forEach(function (el, i) {
-    add(el, 140 + i * 40, 0.09, 0);
-  });
+  // 푸터는 노란 블록과 하단 바가 따로 붙지 않게 한 덩어리로 (수정사항_11.09)
+  add(document.querySelector(".ft-inner"), 140, 0.09, 0);
 
   var hero = document.querySelector(".ab-hero-media");
 

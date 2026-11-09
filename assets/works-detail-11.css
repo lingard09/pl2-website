@@ -25,7 +25,6 @@
    글자가 vw 로 같이 줄어들어 좁은 창에서도 비율은 유지된다. */
 .wd-head-desc {
   letter-spacing: -0.02em;
-  white-space: nowrap;
 }
 
 /* ══ 2. 63빌딩 야립: 이미지 + 캡션 2벌 (사이 120) ════════ */

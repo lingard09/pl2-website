@@ -1,8 +1,8 @@
 /* 공통 모션 (모든 페이지 공유) — 피그마 "PC 모션피드백_0928" (2836:11814)
-   1) 스크롤 등장: 콘텐츠가 화면 아래 멀리서 곧게 끌려 올라와 붙는다 (후순위 모션 변경 사항,
-      피그마 3933:23802 + 11.07 추가 코멘트 image 804·805 — 참고 데모의 "오른쪽 아래" HALCYON 그리드).
-      투명도·기울기 없이 300 아래에서 출발하고, 같은 줄에서는 가운데가 먼저·바깥쪽이 늦게 올라온다.
-      (이전: 3D 로 눕고 비틀리던 버전 → "왼쪽 위 장면 같다"는 피드백으로 교체)
+   1) 스크롤 등장: 콘텐츠가 화면 아래에서 순서대로 끌려 올라와 앞선 요소에 붙는 마그네틱 모션
+      (수정사항_11.09, 피그마 코드 레이어 PL2 Works Magnetic Scroll 을 Home 제외 전 페이지 기준으로).
+      투명도·기울기 없이 출발하고, 도착 직전 미세하게 튕기며 정착한다.
+      Works 2열 카드는 works.js 가 코드 레이어 그대로 스프링으로 움직인다.
    2) About 통계 숫자 카운팅
    3) 페이지 전환: 노란 패널이 아래에서 덮고 위로 빠진다 (참고: koto.com/work)
       Home → Works 만 다르다 (PC 피드백_0930, 피그마 슬라이드 8·9): Home 화면이 위로 밀려
@@ -222,9 +222,9 @@
     // 문서 높이가 늘지 않는다 (base.css 의 .ft 등장 규칙).
     ".ft",
   ].join(",");
-  var STAGGER = 90;
-  var SIDE_LAG = 260; // 화면 끝에 붙은 요소가 가운데 요소보다 늦게 출발하는 시간
-  var DURATION = 1300; // base.css .mo-anim transition 과 맞춘다
+  var STAGGER = 110; // 하나씩 차례로 출발하는 간격 (코드 레이어와 같다)
+  var STAGGER_MAX = 880; // 한꺼번에 많이 들어올 때 뒤쪽이 너무 늦지 않게
+  var DURATION = 1100; // base.css .mo-anim transition 과 맞춘다
 
   function initReveal(startDelay, skipFirstScreen) {
     if (!("IntersectionObserver" in window)) return;
@@ -234,11 +234,14 @@
     // - 여러 덩어리를 감싼 요소에 붙이면 한 번에 같이 (상세 01 스트립 + 캡션)
     // 그걸 품은 상위 덩어리와 그 안쪽 요소는 대상에서 빼야 이동이 겹치지 않는다.
     var singles = document.querySelectorAll("[data-reveal]");
+    var twoCol = window.matchMedia("(min-width: 600px)").matches;
     var els = Array.prototype.filter.call(
       document.querySelectorAll(TARGETS + ",[data-reveal]"),
       function (el) {
         // 스크린리더 전용 · 장식 오버레이 · 숨은 요소는 건드리지 않는다
         if (el.classList.contains("sr-only")) return false;
+        // Works 2열 카드는 works.js 가 움직인다 (모바일 1열은 여기서 그대로 등장)
+        if (twoCol && el.classList.contains("wk-card")) return false;
         if (el.getAttribute("aria-hidden") === "true") return false;
         if (!el.hasAttribute("data-reveal")) {
           for (var i = 0; i < singles.length; i++) {
@@ -284,19 +287,10 @@
         var dir = a.style.getPropertyValue("--mo-dir") === "-1" ? -1 : 1;
         return dir * (ra.top - rb.top) || ra.left - rb.left;
       });
-      // 같은 높이(±12px)는 같은 줄로 본다. 줄마다 STAGGER, 줄 안에서는 화면 가운데에서
-      // 멀수록 SIDE_LAG 만큼 늦게 → 가운데가 먼저 솟고 양옆이 따라오는 피라미드 (참고 데모 HALCYON)
-      var row = -1;
-      var lastTop = null;
-      var vw = window.innerWidth;
-      queue.forEach(function (el) {
-        var rc = el.getBoundingClientRect();
-        if (lastTop === null || Math.abs(rc.top - lastTop) > 12) {
-          row++;
-          lastTop = rc.top;
-        }
-        var off = Math.min(1, Math.abs(rc.left + rc.width / 2 - vw / 2) / (vw / 2));
-        var delay = row * STAGGER + Math.round(off * SIDE_LAG);
+      // 위→아래, 왼→오 순서로 하나씩 끌려 올라와 앞선 요소에 붙는다 (수정사항_11.09 마그네틱 모션).
+      // 2열이면 자연히 좌 → 우 → 좌 → 우로 번갈아 나온다. 한번 출발하면 CSS 전환이라 끝까지 정착한다.
+      queue.forEach(function (el, i) {
+        var delay = Math.min(i * STAGGER, STAGGER_MAX);
         el.style.transitionDelay = delay + "ms";
         el.classList.add("mo-anim");
         el.classList.remove("mo-out");

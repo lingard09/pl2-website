@@ -448,8 +448,11 @@
 /* ══ 영문판 글자 (html.is-en, 피그마 텍스트 스타일 Works-About/PC/*-eng) ══════════
    Intro-text-eng   22 / 38, 자간 -2%, 칸 894 (한글은 20 / 36, <br> 로 줄 고정)
    Content-text-eng 20 / 34, 자간 0  (한글은 18 / 34). 칸 폭(736 · 620)은 한글과 같다 */
+.wd-intro-desc {
+  max-width: min(46.5625vw, 894px); /* 894 — 한글도 영문처럼 칸 안에서 자동 줄바꿈 (수정사항_11.09) */
+}
+
 .is-en .wd-intro-desc {
-  max-width: min(46.5625vw, 894px); /* 894 */
   font-size: min(1.1458vw, 22px); /* 22 */
   line-height: min(1.9792vw, 38px); /* 38 */
 }
@@ -463,7 +466,7 @@
 
 /* ══ 모바일 공통 (수정사항_11.06, 피그마 1_MO 3802:20587 외 상세 MO 14장, 390 폭) ══════════
    PC 는 1920 비율 축소(vw·cqw)지만 모바일은 피그마 MO 값(px)을 그대로 쓴다.
-   - 히어로: 화면 꽉 찬 세로(390x844 비율), GNB 가 그 위에 뜬다 (본문을 내리지 않는다).
+   - 히어로: 세로(390x760 비율, 수정사항_11.09), GNB 가 그 위에 뜬다 (본문을 내리지 않는다).
      제목 묶음은 왼쪽 아래(좌 20 · 아래 60). 딤은 아래에서 위로 (검정 30% → 투명) + 위쪽 살짝(16%).
      세로 썸네일이 있는 페이지는 <picture> 로 모바일 전용 이미지(wdN-hero-mo.webp)를 쓴다.
    - 리듬: 히어로 ↔ 개요 60, 큰 덩어리(섹션) 사이 200, 헤더 ↔ 미디어 60.
@@ -485,8 +488,11 @@
   }
 
   /* ── 히어로 ── */
+  /* 수정사항_11.09: 이미지 + 제목 + 태그가 첫 화면에 다 들어오게 390x760.
+     주소창이 다 보이는 짧은 화면에서는 보이는 높이(svh)까지만 쓴다 */
   .wd-hero {
-    aspect-ratio: 390 / 844;
+    aspect-ratio: 390 / 760;
+    max-height: 100svh;
   }
 
   .wd-hero-media,
@@ -631,6 +637,18 @@
     display: none;
   }
 
+  /* 개요 문단은 피그마가 정한 줄대로 (수정사항_11.09). 390 보다 좁은 폰은 줄이 넘쳐 꺾이니 자동 줄바꿈으로 */
+  .wd-intro-desc br.br-mo {
+    display: inline;
+  }
+
+  @media (max-width: 374.98px) {
+    .wd-intro-desc br.br-mo,
+    .wd-intro-title br.br-mo {
+      display: none;
+    }
+  }
+
   /* 페이지 CSS(works-detail-NN.css)가 이 파일 뒤에 로드되고 PC 용 .wd-head--center { gap } ·
      .wd-head-desc { line-height } 를 같은 우선순위로 다시 써서 모바일 값이 덮였다 (간격 5px · 행간 6.5px).
      .wd-body 를 붙여 공통 모바일 값이 항상 이기게 한다. 굵은 제목(--bold)도 MO 는 SemiBold 다. */
@@ -690,5 +708,124 @@
   .wdx-caption {
     font-size: 11px;
     line-height: 16px;
+  }
+}
+
+/* 영상 히어로 8개의 모바일 썸네일 (수정사항_11.09: 모바일은 영상 없이 피그마 이미지).
+   <source media> 로 모바일에서는 영상을 받지도 않는다 */
+.wd-hero .wd-hero-media--mo {
+  display: none;
+}
+
+@media (max-width: 599.98px) {
+  .wd-hero .wd-hero-media--mo {
+    display: block;
+  }
+
+  .wd-hero video.wd-hero-media {
+    display: none;
+  }
+}
+
+/* ══ 수정사항_11.09 스크롤 모션 (wd-magnet-story.js, 상세 13·02. 피그마 챕터 960 또는 1031 + 사이 320) ══ */
+.wdm-cards {
+  position: relative;
+  flex: none;
+  width: 100%;
+  aspect-ratio: 1920 / 960;
+}
+
+.wdm-card {
+  position: absolute;
+  display: block;
+  height: auto;
+  will-change: transform;
+}
+
+.wd2-story.is-magnet {
+  position: relative;
+}
+
+.wd2-story.is-magnet .wd2-step-section {
+  position: relative;
+  height: min(50vw, 960px);
+}
+
+.wd2-story.is-magnet .wd2-step-section--tall {
+  height: min(53.6979vw, 1031px);
+}
+
+.wd2-story.is-magnet .wd2-step-section + .wd2-step-section {
+  margin-top: min(16.6667vw, 320px);
+}
+
+.wd2-story.is-magnet .wd2-step-section .wd2-steps {
+  display: none;
+}
+
+.wd2-story.is-magnet .wd2-pipeline-wrap {
+  will-change: transform;
+}
+
+/* 위아래를 목록 높이 절반만큼 비워, 처음·끝에서 목록이 앞뒤 섹션으로 넘치거나 끌려가지 않게 한다 */
+.wdm-rail {
+  position: absolute;
+  inset: min(14.0625vw, 270px) 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* 높이 0 인 기준점만 화면에 고정한다. 목록 높이가 챕터마다 달라져도 가운데가 흔들리지 않는다 */
+.wdm-anchor {
+  position: sticky;
+  top: calc(50vh + 36px); /* GNB 아래 보이는 영역의 가운데 */
+  height: 0;
+}
+
+.wd2-story.is-magnet .wdm-list {
+  position: absolute;
+  top: 0;
+  left: var(--lx, 62.5%); /* 챕터마다 피그마 위치 */
+  width: 37.5%; /* 720 / 1920 */
+  gap: min(1.5625vw, 30px);
+  translate: 0 -50%;
+  transition: left 1.1s var(--mo-magnet);
+  pointer-events: auto;
+}
+
+/* 비활성: 52 Regular #C8C8C8, 오른쪽으로 20. 활성: 60 Medium #212121 — 글자 크기 대신 scale 로 키워 끊기지 않게 */
+.wdm-list .wd2-step-head {
+  width: max-content;
+  transform-origin: left center;
+  translate: min(1.0417vw, 20px) 0;
+  transition: translate 1.1s var(--mo-magnet), scale 1.1s var(--mo-magnet), color 0.5s ease;
+}
+
+.wdm-list .wd2-step[data-active="true"] .wd2-step-head {
+  translate: 0 0;
+  scale: 1.1538;
+  font-weight: 500;
+}
+
+.wdm-list .wd2-step-desc {
+  font-size: min(1.0417vw, 20px);
+  line-height: min(1.875vw, 36px);
+}
+
+.is-en .wdm-list .wd2-step-desc {
+  font-size: min(1.0417vw, 20px);
+  line-height: min(1.7708vw, 34px);
+}
+
+@media (max-width: 599.98px) {
+  .wdm-cards {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wd2-story.is-magnet .wdm-list,
+  .wdm-list .wd2-step-head {
+    transition: none;
   }
 }

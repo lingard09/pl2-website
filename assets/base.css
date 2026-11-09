@@ -210,16 +210,77 @@ button {
   white-space: nowrap;
 }
 
+/* 햄버거 ↔ X 모션 (수정사항_11.09 화면 기록: 압축 → 중앙 집결 → X 펼침 → 미세 바운스).
+   햄버거 18x16 (선 3개, 굵기 2), X 13.33x18.67 (선 길이 22.9, 수평에서 54.46도). 가운데 선은 배경으로 그린다.
+   선은 X 길이로 만들어 두고 닫혔을 때만 18 로 줄인다 — scale·rotate·translate 를 따로 전환하려고. */
 .gnb-toggle {
+  --bar: var(--pl2-black);
+  position: relative;
   flex: none;
   width: 32px; /* 32 */
   height: 32px;
-  background: url("icon-hamburger.svg") center /
-    32px 32px no-repeat;
+  background: linear-gradient(var(--bar), var(--bar)) center / 18px 2px no-repeat;
+  transition: background-size 0.1s linear 0.1s;
+}
+
+.gnb-toggle::before,
+.gnb-toggle::after {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: 4.55px;
+  width: 22.9px;
+  height: 2px;
+  background: var(--bar);
+  scale: 0.786 1;
+  /* 닫힐 때: X 를 먼저 접고, 위아래로 벌어지며 살짝 튕긴다 */
+  transition:
+    rotate 0.2s ease-in,
+    scale 0.2s ease-in,
+    translate 0.32s cubic-bezier(0.34, 1.56, 0.64, 1) 0.14s;
+}
+
+.gnb-toggle::before {
+  translate: 0 -8px;
+}
+
+.gnb-toggle::after {
+  translate: 0 8px;
 }
 
 .gnb[data-dropdown="on"] .gnb-toggle {
-  background-image: url("icon-x.svg");
+  background-size: 0 2px;
+  transition: background-size 0.1s linear 0.08s;
+}
+
+.gnb[data-dropdown="on"] .gnb-toggle::before,
+.gnb[data-dropdown="on"] .gnb-toggle::after {
+  translate: 0 0;
+  scale: 1 1;
+  /* 열릴 때: 가운데로 모인 뒤 X 로 펼쳐지며 살짝 넘어갔다 돌아온다 */
+  transition:
+    translate 0.18s ease-in,
+    rotate 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) 0.16s,
+    scale 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) 0.16s;
+}
+
+.gnb[data-dropdown="on"] .gnb-toggle::before {
+  rotate: 54.46deg;
+}
+
+.gnb[data-dropdown="on"] .gnb-toggle::after {
+  rotate: -54.46deg;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gnb-toggle,
+  .gnb-toggle::before,
+  .gnb-toggle::after,
+  .gnb[data-dropdown="on"] .gnb-toggle,
+  .gnb[data-dropdown="on"] .gnb-toggle::before,
+  .gnb[data-dropdown="on"] .gnb-toggle::after {
+    transition: none;
+  }
 }
 
 /* ── 드롭다운 패널 ───────────────────────────────────────
@@ -392,11 +453,7 @@ button {
 }
 
 .gnb--tw .gnb-toggle {
-  background-image: url("icon-hamburger-white.svg");
-}
-
-.gnb--tw[data-dropdown="on"] .gnb-toggle {
-  background-image: url("icon-x-white.svg");
+  --bar: var(--pl2-white);
 }
 
 
@@ -435,7 +492,7 @@ button {
 }
 
 .gnb.gnb-glass .gnb-toggle {
-  background-image: none;
+  --bar: transparent;
 }
 
 .gnb.gnb-glass .gnb-item:hover,
@@ -713,14 +770,19 @@ button {
    .mo-out  = 출발 상태. 화면 밖에서 붙였다 뗐다 하므로 전환 없이 즉시 바뀐다.
    .mo-anim = 등장하는 동안만 붙는 transition. 끝나면 떼서 요소 고유의 전환을 살린다.
    --mo-dir = 1 이면 아래에서, -1 이면 위에서 들어온다 (스크롤을 올릴 때). */
+:root {
+  /* 마그네틱 정착 (수정사항_11.09, 피그마 코드 레이어 PL2 Works Magnetic Scroll 의 카드 스프링 78/14.5).
+     가속하며 끌려 올라와 도착 직전 살짝 넘어갔다가(320 이동에 약 4px) 제자리에 붙는다 */
+  --mo-magnet: linear(0.0, 0.0221, 0.0774, 0.1535, 0.2409, 0.3328, 0.4238, 0.5106, 0.591, 0.6635, 0.7277, 0.7834, 0.831, 0.8709, 0.904, 0.9309, 0.9524, 0.9693, 0.9823, 0.992, 0.9992, 1.0041, 1.0074, 1.0094, 1.0104, 1.0107, 1.0104, 1.0098, 1.009, 1.0081, 1.0071, 1.0061, 1.0052, 1.0043, 1.0036, 1.0029, 1.0023, 1.0018, 1.0014, 1.001, 1.0007, 1.0005, 1.0003, 1.0002, 1);
+}
+
 .mo-on .mo-reveal.mo-anim {
-  /* 빠르게 끌려 올라오다 제자리 근처에서 길게 감속하며 붙는다 */
-  transition: translate 1.3s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: translate 1.1s var(--mo-magnet);
 }
 
 .mo-on .mo-reveal.mo-out {
-  /* 300 — 참고 데모처럼 멀리 아래에서 올라온다 */
-  translate: 0 calc(var(--mo-dir, 1) * min(15.625vw, 300px));
+  /* 코드 레이어의 끌어당김 거리: 화면 34% (최대 320) */
+  translate: 0 calc(var(--mo-dir, 1) * min(34vh, 320px));
 }
 
 /* 푸터는 박스 자체는 제자리에 두고 안쪽 노란 블록들(.ft-hero + .ft-bar)을 한 몸으로
@@ -730,7 +792,7 @@ button {
 }
 
 .mo-on .ft.mo-reveal.mo-anim > * {
-  transition: translate 1.3s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: translate 1.1s var(--mo-magnet);
   transition-delay: inherit; /* motion.js 가 .ft 에 준 시차를 그대로 따른다 */
 }
 
@@ -786,9 +848,15 @@ html::after {
   position: fixed;
   inset: 0;
   z-index: 10000;
-  background: var(--pl2-yellow);
   pointer-events: none;
   translate: 0 100%;
+}
+
+/* 평소에는 색을 비워 둔다. 화면 바로 아래 대기 중인 노란 패널을 iOS Safari 가 하단 바 색으로
+   집어 가서 바가 노랗게 물들었다 (수정사항_11.09). */
+html.pt-leave::after,
+html.pt-enter::after {
+  background: var(--pl2-yellow);
 }
 
 /* 덮을 때는 빠르게 출발해서 감속한다 (ease-out-quart).
@@ -1044,5 +1112,33 @@ html.lenis body {
   .ft-links a[href^="contact"],
   .ft-divider {
     display: none;
+  }
+}
+
+/* ── 수정사항_11.09 ── */
+/* 모바일에서만 줄을 나누는 <br> (피그마 줄바꿈 그대로). .br-pc 를 함께 달면 PC 에서도 줄을 나눈다 */
+@media (min-width: 600px) {
+  br.br-mo:not(.br-pc) {
+    display: none;
+  }
+}
+
+/* iOS Safari 하단 바 색을 페이지 바탕색으로 맞춘다. Safari 는 화면 가장자리에 고정된
+   실제 요소의 background-color 를 집어 간다 (works 의 .wk-statusbar 와 같은 원리) */
+.mo-bottombar {
+  display: none;
+}
+
+@media (max-width: 599.98px) {
+  .mo-bottombar {
+    display: block;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    height: 1px;
+    background: inherit;
+    pointer-events: none;
   }
 }

@@ -33,6 +33,7 @@
     <link rel="stylesheet" href="assets/works-detail-01.css" />
   </head>
   <body class="wd-body">
+    <div class="mo-bottombar" aria-hidden="true"></div>
     <!-- 피그마 GNB Type=T/W (어두운 배경용) -->
     <nav class="gnb gnb--tw" data-dropdown="off" data-pinned>
       <div class="gnb-bar">
@@ -69,8 +70,10 @@
               playsinline
               preload="metadata"
             >
-              <source src="assets/wd1-hero.mp4" type="video/mp4" />
+              <source media="(min-width: 600px)" src="assets/wd1-hero.mp4" type="video/mp4" />
             </video>
+            <!-- 모바일은 영상 대신 피그마 썸네일 이미지 (수정사항_11.09) -->
+            <img class="wd-hero-media wd-hero-media--mo" src="assets/wd1-hero-mo.webp" alt="" />
             <div class="wd-hero-dim wd-hero-dim--dark" aria-hidden="true"></div>
 
             <div class="wd-hero-title">
@@ -89,16 +92,10 @@
 
           <div class="wd-intro">
             <p class="wd-intro-title">
-              Samsung Generative<br />AI Image Sample Project
+              Samsung Generative<br class="br-mo br-pc" />AI Image Sample Project
             </p>
             <p class="wd-intro-desc">
-              <span data-l="ko">PL2는 삼성의 생성형 AI 이미지 기능을 위한 비주얼 샘플과 프롬프트를
-              제작했습니다.<br />
-              Drawing Assist, PENUP, Sticker Set 영역을 중심으로 총 10개의 이미지
-              샘플을 기획·제작했으며, 각 샘플의 스타일과<br />
-              사용 맥락에 맞는 프롬프트를 함께 구성했습니다. 이를 통해 생성형 AI
-              기능의 활용 가능성을 시각적으로 제안하고,<br />
-              실제 서비스에서 참고 가능한 레퍼런스 콘텐츠를 제공했습니다.</span><span data-l="en" lang="en">PL2 developed image samples and prompts for Samsung's generative AI features, including Drawing Assist, PENUP, and Sticker Set. We explored different visual styles and image-editing possibilities, creating sample content that demonstrates how each feature can be used for creative work and everyday applications.</span>
+              <span data-l="ko">PL2는 삼성의 생성형 AI 이미지 기능을 위한 <br class="br-mo" />비주얼 샘플과 프롬프트를 제작했습니다. <br class="br-mo" />Drawing Assist, PENUP, Sticker Set 영역을 중심으로 <br class="br-mo" />총 10개의 이미지 샘플을 기획·제작했으며, 각 샘플의 스타일과 <br class="br-mo" />사용 맥락에 맞는 프롬프트를 함께 구성했습니다. <br class="br-mo" />이를 통해 생성형 AI 기능의 활용 가능성을 시각적으로 제안하고, <br class="br-mo" />실제 서비스에서 참고 가능한 레퍼런스 콘텐츠를 제공했습니다.</span><span data-l="en" lang="en">PL2 developed image samples and prompts for Samsung's generative AI features, including Drawing Assist, PENUP, and Sticker Set. We explored different visual styles and image-editing possibilities, creating sample content that demonstrates how each feature can be used for creative work and everyday applications.</span>
             </p>
           </div>
         </section>
@@ -110,7 +107,7 @@
               <span data-l="ko">하나의 대상을 유지하면서도<br />표현 양식만 바뀔 수 있을까?</span><span data-l="en" lang="en">Can the Same Subject Be<br />Expressed in Different Styles?</span>
             </h2>
             <p class="wd-head-desc">
-              <span data-l="ko">다양한 스타일의 특징을 언어로 정의하고,<br />AI가 이를 안정적으로
+              <span data-l="ko">다양한 스타일의 특징을 언어로 정의하고, AI가 이를 안정적으로
               재현할 수 있도록 프롬프트를 설계했습니다.</span><span data-l="en" lang="en">We developed prompts to generate consistent results across different visual styles,<br />testing how the same subject could be presented through various illustration techniques.</span>
             </p>
           </div>
@@ -163,7 +160,7 @@
               새로운 창작의 시작점</span><span data-l="en" lang="en">Layer Separation for New Creations</span>
             </h2>
             <p class="wd-head-desc">
-              <span data-l="ko">PENUP에 적용된 자동 레이어 분리 기능을 통해<br />하나의 이미지를 아래
+              <span data-l="ko">PENUP에 적용된 자동 레이어 분리 기능을 통해 하나의 이미지를 아래
               레이어로 분리하고 활용할 수 있도록 설계했습니다.</span><span data-l="en" lang="en">We explored PENUP's automatic layer separation feature, demonstrating how individual elements of an image can be separated, repositioned, and edited for further creative use.</span>
             </p>
           </div>
@@ -208,7 +205,7 @@
             </h2>
             <p class="wd-head-desc">
               <span data-l="ko">동물, 식물, 음식, 동화, 다이어리 5가지 카테고리로 100종의 스티커를
-              만들어<br />일관성과 다양성을 동시에 확보했습니다.</span><span data-l="en" lang="en">We created 100 stickers across five themes: animals, plants, food, fairy tales, and journaling. Each set has its own distinct details, while a shared illustration style keeps the entire collection visually cohesive.</span>
+              만들어 일관성과 다양성을 동시에 확보했습니다.</span><span data-l="en" lang="en">We created 100 stickers across five themes: animals, plants, food, fairy tales, and journaling. Each set has its own distinct details, while a shared illustration style keeps the entire collection visually cohesive.</span>
             </p>
           </div>
 

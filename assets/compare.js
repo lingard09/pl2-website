@@ -2,7 +2,7 @@
    .wd5-compare 의 --pos(0~100%) 를 바꿔 왼쪽 '보정 전' 레이어를 그만큼만 보여준다.
    - 이미지 위 어디서든 누른 채 좌우로 끌면 경계가 따라온다 (마우스·터치·펜)
    - 경계선에 포커스를 두고 ←/→ 로 5%, Home/End 로 끝까지
-   - 경계선 양옆 ←/→ 버튼으로 10% 씩 (부드럽게 이동, PC 피드백_1015)
+   - 경계선 양옆 ←/→ 버튼: 누르면 10% 씩 (PC 피드백_1015), 끌면 선처럼 따라온다 (수정사항_11.09)
    기본값은 가운데(50%). */
 (function () {
   var boxes = document.querySelectorAll(".wd5-compare");
@@ -33,32 +33,59 @@
       }, 500);
     }
 
+    /* 좌우 버튼도 선처럼 끌 수 있다 (수정사항_11.09). 움직이지 않고 떼면 지금처럼 10% 이동.
+       버튼에서 시작한 드래그는 누른 지점과 경계선의 간격을 유지해서, 누르는 순간 튀지 않는다. */
+    var fromBtn = null;
+    var startX = 0;
+    var grabOffset = 0;
+    var moved = false;
+    var DRAG_THRESHOLD = 4;
+
     Array.prototype.forEach.call(box.querySelectorAll(".wd5-compare-btn"), function (btn) {
       var delta = btn.classList.contains("wd5-compare-btn--prev") ? -10 : 10;
-      // 버튼을 누를 때는 드래그로 넘어가지 않게 막는다
-      btn.addEventListener("pointerdown", function (e) {
-        e.stopPropagation();
+      btn.addEventListener("click", function (e) {
+        // 마우스·터치는 pointerup 에서 처리했다. detail 0 은 보조기기의 click 이다.
+        if (e.detail === 0) stepBy(delta);
       });
-      btn.addEventListener("click", function () {
-        stepBy(delta);
-      });
+      btn.dataset.delta = String(delta);
     });
 
     box.addEventListener("pointerdown", function (e) {
       if (e.button !== 0) return;
       box.classList.remove("is-stepping");
       dragging = true;
+      moved = false;
+      startX = e.clientX;
       box.setPointerCapture(e.pointerId);
-      fromEvent(e);
+      fromBtn = e.target.closest ? e.target.closest(".wd5-compare-btn") : null;
+      if (fromBtn) {
+        var r = box.getBoundingClientRect();
+        var now = parseFloat(box.style.getPropertyValue("--pos")) || 50;
+        grabOffset = e.clientX - (r.left + (r.width * now) / 100);
+      } else {
+        fromEvent(e);
+      }
     });
     box.addEventListener("pointermove", function (e) {
-      if (dragging) fromEvent(e);
+      if (!dragging) return;
+      if (!fromBtn) {
+        fromEvent(e);
+        return;
+      }
+      if (!moved && Math.abs(e.clientX - startX) < DRAG_THRESHOLD) return;
+      moved = true;
+      var r = box.getBoundingClientRect();
+      set(((e.clientX - grabOffset - r.left) / r.width) * 100);
     });
-    function stop() {
+    box.addEventListener("pointerup", function () {
+      if (dragging && fromBtn && !moved) stepBy(Number(fromBtn.dataset.delta));
       dragging = false;
-    }
-    box.addEventListener("pointerup", stop);
-    box.addEventListener("pointercancel", stop);
+      fromBtn = null;
+    });
+    box.addEventListener("pointercancel", function () {
+      dragging = false;
+      fromBtn = null;
+    });
 
     if (handle) {
       handle.addEventListener("keydown", function (e) {

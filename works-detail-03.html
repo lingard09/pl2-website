@@ -33,6 +33,7 @@
     <link rel="stylesheet" href="assets/works-detail-03.css" />
   </head>
   <body class="wd-body wd-body--light">
+    <div class="mo-bottombar" aria-hidden="true"></div>
     <!-- 피그마 GNB Type=T/B (밝은 배경용) -->
     <nav class="gnb gnb--tw" data-dropdown="off" data-pinned>
       <div class="gnb-bar">
@@ -69,8 +70,10 @@
               playsinline
               preload="metadata"
             >
-              <source src="assets/wd3-hero.mp4" type="video/mp4" />
+              <source media="(min-width: 600px)" src="assets/wd3-hero.mp4" type="video/mp4" />
             </video>
+            <!-- 모바일은 영상 대신 피그마 썸네일 이미지 (수정사항_11.09) -->
+            <img class="wd-hero-media wd-hero-media--mo" src="assets/wd3-hero-mo.webp" alt="" />
             <div class="wd-hero-dim" aria-hidden="true"></div>
 
             <div class="wd-hero-title">
@@ -91,12 +94,7 @@
           <div class="wd-intro">
             <p class="wd-intro-title">Healthy Beauty, Rooted in Nature</p>
             <p class="wd-intro-desc">
-              <span data-l="ko">하루하루는 자연에서 찾은 건강한 아름다움을 바탕으로, 피부 본연의
-              균형을<br />
-              생각하는 비건 화장품 브랜드입니다. 이번 프로젝트에서는 브랜드가
-              지닌 자연 친화적인 가치와<br />
-              편안한 인상이 제품과 인물에 일관되게 이어질 수 있도록 브랜드 필름,
-              제품 촬영, 모델 비주얼을 구성했습니다.</span><span data-l="en" lang="en">Haruharu is a vegan skincare brand rooted in nature-inspired, healthy beauty. PL2 produced a brand film, product photography, and model visuals that bring its clean, natural philosophy to life. Every element was planned to share a single mood and visual identity throughout the project.</span>
+              <span data-l="ko">하루하루는 자연에서 찾은 건강한 아름다움을 바탕으로, <br class="br-mo" />피부 본연의 균형을 생각하는 비건 화장품 브랜드입니다. <br class="br-mo" />이번 프로젝트에서는 브랜드가 지닌 자연 친화적인 가치와 <br class="br-mo" />편안한 인상이 제품과 인물에 일관되게 이어질 수 있도록 <br class="br-mo" />브랜드 필름, 제품 촬영, 모델 비주얼을 구성했습니다.</span><span data-l="en" lang="en">Haruharu is a vegan skincare brand rooted in nature-inspired, healthy beauty. PL2 produced a brand film, product photography, and model visuals that bring its clean, natural philosophy to life. Every element was planned to share a single mood and visual identity throughout the project.</span>
             </p>
           </div>
         </section>
@@ -198,7 +196,7 @@
                  --tight (자간 -0.02em) 로 여유를 만든다. 줄 위치는 피그마 렌더와 같다. -->
             <p class="wd-head-desc wd-head-desc--tight">
               <span data-l="ko">건강한 아름다움은 특별한 순간보다 매일 반복되는 작은 습관에
-              가깝습니다. 한 손에 자연스럽게 들어오는<br />제품의 크기와 간결한
+              가깝습니다. 한 손에 자연스럽게 들어오는 제품의 크기와 간결한
               형태를 중심으로, 사용자의 일상 가까이에 놓이는 하루하루의 모습을
               담았습니다.</span><span data-l="en" lang="en">Good skin is built on small, everyday habits. We focused on the products’ compact size and simple forms, showing how Haruharu fits effortlessly into a daily routine.</span>
             </p>

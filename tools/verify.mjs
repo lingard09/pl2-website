@@ -32,7 +32,7 @@ const PAGES = {
   'about.html': 8112,
   'contact.html': null, // 100dvh 라 뷰포트에 따라 달라진다
   'works-detail-01.html': 13717,
-  'works-detail-02.html': 10679, // 2026-10-07 단계 4개를 sticky 스크롤로 합침
+  'works-detail-02.html': 11385, // 2026-11-10 4-H 와 같은 스크롤 모션으로 교체 (챕터를 차례로 쌓는다)
   'works-detail-03.html': 12341,
   'works-detail-04.html': 9899,
   'works-detail-05.html': 14089,
@@ -41,7 +41,7 @@ const PAGES = {
   'works-detail-08.html': 11670,
   'works-detail-09.html': 18036,
   'works-detail-10.html': 13758,
-  'works-detail-11.html': 11248, // 2026-10-07 신규 (피그마 3032:14308)
+  'works-detail-11.html': 11180, // 2026-10-07 신규 (피그마 3032:14308). 2026-11-10 한글 강제 줄바꿈 제거로 -68
 };
 
 // 아직 원본을 못 받은 영상 — 404 가 나도 정상이다 (NOTES "남은 것" 참고)

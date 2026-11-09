@@ -35,6 +35,7 @@
     <link rel="stylesheet" href="assets/works-detail-09.css" />
   </head>
   <body class="wd-body">
+    <div class="mo-bottombar" aria-hidden="true"></div>
     <!-- 피그마 GNB Type=T/W (다크 테마) -->
     <nav class="gnb gnb--tw" data-dropdown="off" data-pinned>
       <div class="gnb-bar">
@@ -71,8 +72,10 @@
               playsinline
               preload="metadata"
             >
-              <source src="assets/wd9-hero.mp4" type="video/mp4" />
+              <source media="(min-width: 600px)" src="assets/wd9-hero.mp4" type="video/mp4" />
             </video>
+            <!-- 모바일은 영상 대신 피그마 썸네일 이미지 (수정사항_11.09) -->
+            <img class="wd-hero-media wd-hero-media--mo" src="assets/wd9-hero-mo.webp" alt="" />
             <!-- 수정사항_11.06: Dim_Light 30% (10.29 에는 Dark 50% 였다) -->
             <div class="wd-hero-dim" aria-hidden="true"></div>
 
@@ -96,10 +99,7 @@
           <div class="wd-intro">
             <p class="wd-intro-title">Defining the Brand Mood</p>
             <p class="wd-intro-desc">
-              <span data-l="ko">마티에르의 브랜드 아이덴티티를 시각적으로 전달하기 위해 브랜드
-              필름과 제품 촬영을 진행했습니다. 색조 화장품이 <br />
-              가진 컬러와 질감, 그리고 브랜드가 추구하는 무드를 하나의 일관된
-              비주얼로 표현하여 브랜드 경험을 구축했습니다.</span><span data-l="en" lang="en">PL2 produced a brand film and product photography for the makeup brand Matièr. Focusing on the colors, textures, and fine details of each product, we built a visual language that captures the brand’s distinctive mood and ties every product back to its world.</span>
+              <span data-l="ko">마티에르의 브랜드 아이덴티티를 시각적으로 전달하기 위해 <br class="br-mo" />브랜드 필름과 제품 촬영을 진행했습니다. <br class="br-mo" />색조 화장품이 가진 컬러와 질감, 그리고 브랜드가 추구하는 무드를 하나의 일관된 비주얼로 표현하여 브랜드 경험을 구축했습니다.</span><span data-l="en" lang="en">PL2 produced a brand film and product photography for the makeup brand Matièr. Focusing on the colors, textures, and fine details of each product, we built a visual language that captures the brand’s distinctive mood and ties every product back to its world.</span>
             </p>
           </div>
         </section>
@@ -111,7 +111,7 @@
             <p class="wd-head-desc">
               <span data-l="ko">브랜드의 첫인상은 제품만으로 완성되지 않습니다. 공간과 인물,
               제품의 움직임을 하나의 흐름으로 연결하여 브랜드가 전달하고자
-              하는 감각과 분위기를 자연스럽게 경험할 수 있도록 설계했습니다.</span><span data-l="en" lang="en">A brand’s first impression goes beyond its products. We wove the space, the models, and the movement of each product into a single visual sequence, inviting viewers to step into the world of Matièr.</span>
+              하는 감각과 분위기를 자연스럽게 경험할 수 있도록 설계했습니다.</span><span data-l="en" lang="en">A brand’s first impression goes beyond its products.<br />We wove the space, the models, and the movement of each product<br />into a single visual sequence, inviting viewers to step into the world of Matièr.</span>
             </p>
           </div>
         </section>
@@ -170,8 +170,8 @@
             </h2>
             <p class="wd-head-desc">
               <span data-l="ko">제품을 단순히 기록하는 것을 넘어 브랜드가 전달하고자 하는 분위기를
-              시각적으로 표현했습니다. <br /> 컬러와 오브제, 라이팅을 활용하여 제품과
-              브랜드의 감성이 함께 전달될 수 있는 이미지를 제작했습니다.</span><span data-l="en" lang="en">We went beyond standard product photography to capture the spirit of Matièr. Through a curated palette, props, and lighting, we created images where each product shines within the brand’s world.</span>
+              시각적으로 표현했습니다. 컬러와 오브제, 라이팅을 활용하여 제품과
+              브랜드의 감성이 함께 전달될 수 있는 이미지를 제작했습니다.</span><span data-l="en" lang="en">We went beyond standard product photography to capture the spirit<br />of Matièr. Through a curated palette, props, and lighting,<br />we created images where each product shines within the brand’s world.</span>
             </p>
           </div>
 
@@ -251,7 +251,7 @@
             </h2>
             <p class="wd-head-desc">
               <span data-l="ko">제품의 발색과 텍스처를 직관적으로 전달하기 위해 제형의 질감과
-              컬러를 섬세하게 촬영했습니다. <br /> 사용감을 시각적으로 표현하여 제품의
+              컬러를 섬세하게 촬영했습니다. 사용감을 시각적으로 표현하여 제품의
               특징이 자연스럽게 전달될 수 있도록 구성했습니다.</span><span data-l="en" lang="en">Through detailed close-ups, we captured the color, texture, and finish of each Matièr product. By showing how every formula looks and feels on the skin, the images let viewers almost sense it for themselves.</span>
             </p>
           </div>
@@ -267,7 +267,7 @@
             </h2>
             <p class="wd-head-desc">
               <span data-l="ko">모델 컷을 통해 제품이 실제 사용되는 모습을 담아 브랜드가 지향하는
-              이미지를 완성했습니다. <br /> 메이크업과 조명, 컬러 톤을 조화롭게
+              이미지를 완성했습니다. 메이크업과 조명, 컬러 톤을 조화롭게
               구성하여 제품의 매력과 브랜드의 무드를 함께 전달했습니다.</span><span data-l="en" lang="en">We photographed models wearing Matièr’s makeup to show how it looks in real life. With makeup, lighting, and color tones working in harmony, the products take center stage without ever stepping outside the brand’s look.</span>
             </p>
           </div>
