@@ -774,10 +774,12 @@ button {
   /* 마그네틱 정착 (수정사항_11.09, 피그마 코드 레이어 PL2 Works Magnetic Scroll 의 카드 스프링 78/14.5).
      가속하며 끌려 올라와 도착 직전 살짝 넘어갔다가(320 이동에 약 4px) 제자리에 붙는다 */
   --mo-magnet: linear(0.0, 0.0221, 0.0774, 0.1535, 0.2409, 0.3328, 0.4238, 0.5106, 0.591, 0.6635, 0.7277, 0.7834, 0.831, 0.8709, 0.904, 0.9309, 0.9524, 0.9693, 0.9823, 0.992, 0.9992, 1.0041, 1.0074, 1.0094, 1.0104, 1.0107, 1.0104, 1.0098, 1.009, 1.0081, 1.0071, 1.0061, 1.0052, 1.0043, 1.0036, 1.0029, 1.0023, 1.0018, 1.0014, 1.001, 1.0007, 1.0005, 1.0003, 1.0002, 1);
+  /* 수정사항_11.10: Works·상세 등장은 About 처럼 튕김 없이 천천히 붙는다 (임계 감쇠 스프링 ω=5, 1.6초) */
+  --mo-soft: linear(0.0, 0.0175, 0.0616, 0.1219, 0.1912, 0.2642, 0.3374, 0.4082, 0.4751, 0.5372, 0.594, 0.6454, 0.6916, 0.7326, 0.7689, 0.8009, 0.8288, 0.8532, 0.8743, 0.8926, 0.9084, 0.922, 0.9337, 0.9437, 0.9523, 0.9596, 0.9658, 0.9711, 0.9756, 0.9794, 0.9826, 0.9854, 0.9877, 0.9897, 0.9913, 0.9927, 0.9939, 0.9949, 0.9957, 0.9964, 1);
 }
 
 .mo-on .mo-reveal.mo-anim {
-  transition: translate 1.1s var(--mo-magnet);
+  transition: translate 1.6s var(--mo-soft);
 }
 
 .mo-on .mo-reveal.mo-out {
@@ -792,7 +794,7 @@ button {
 }
 
 .mo-on .ft.mo-reveal.mo-anim > * {
-  transition: translate 1.1s var(--mo-magnet);
+  transition: translate 1.6s var(--mo-soft);
   transition-delay: inherit; /* motion.js 가 .ft 에 준 시차를 그대로 따른다 */
 }
 
@@ -1123,6 +1125,13 @@ html.lenis body {
   }
 }
 
+/* PC 에서만 줄을 나누는 <br> (수정사항_11.10: 가운데 정렬 문단은 피그마 줄바꿈 그대로) */
+@media (max-width: 599.98px) {
+  br.br-pc-only {
+    display: none;
+  }
+}
+
 /* iOS Safari 하단 바 색을 페이지 바탕색으로 맞춘다. Safari 는 화면 가장자리에 고정된
    실제 요소의 background-color 를 집어 간다 (works 의 .wk-statusbar 와 같은 원리) */
 .mo-bottombar {
@@ -1136,7 +1145,7 @@ html.lenis body {
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 1;
+    z-index: -1; /* 콘텐츠 뒤에 둔다. 위에 있으면 Safari 하단 바 위로 1px 줄이 보였다 (수정사항_11.10) */
     height: 1px;
     background: inherit;
     pointer-events: none;

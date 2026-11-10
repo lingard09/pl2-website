@@ -294,6 +294,11 @@ html:has(.wk-body) {
     gap: 30px;
   }
 
+  /* 수정사항_11.10: 멀리서 올라오면 카드 사이가 비어 보여서, 짧게만 움직이고 화면에 들어오기 전에 출발한다 (motion.js) */
+  .mo-on .wk-card.mo-reveal.mo-out {
+    translate: 0 calc(var(--mo-dir, 1) * 40px);
+  }
+
   /* 모바일 시안은 라운드 12 고정 */
   .wk-card-media {
     border-radius: 12px;

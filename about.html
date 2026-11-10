@@ -48,7 +48,7 @@
         <!-- ── Top: 히어로 + 인트로 ─────────────────────── -->
         <section class="ab-top">
           <div class="ab-hero">
-            <!-- 히어로 영상 (1031 전달본, 1920x620 가운데 자르기) -->
+            <!-- 히어로 영상 (수정사항_11.10 전달본 34.7초. PC 1920x620, 모바일 390x290 비율로 각각 가운데 자르기) -->
             <video
               class="ab-hero-media"
               poster="assets/about-hero-poster.webp"
@@ -58,6 +58,7 @@
               playsinline
               preload="metadata"
             >
+              <source media="(max-width: 599.98px)" src="assets/about-hero-mo.mp4" type="video/mp4" />
               <source src="assets/about-hero.mp4" type="video/mp4" />
             </video>
           </div>

@@ -19,7 +19,7 @@
   var root = document.documentElement;
   var LEFT_RATE = 0.008;
   var RIGHT_RATE = 0.016;
-  var RELEASE_GAP = 110;
+  var RELEASE_GAP = 130;
 
   var columns = [
     { el: cols[0], right: false, y: 0, v: 0 },
@@ -166,7 +166,8 @@
     var p = pull();
     states.forEach(function (s) {
       var target = s.released ? 0 : p;
-      s.v += ((target - s.y) * 78 - s.v * 14.5) * dt;
+      // 수정사항_11.10: About 처럼 튕김 없이 천천히 붙는다 (코드 레이어는 78 / 14.5)
+      s.v += ((target - s.y) * 25 - s.v * 10) * dt;
       s.y += s.v * dt;
       if (Math.abs(target - s.y) < 0.08 && Math.abs(s.v) < 0.08) {
         s.y = target;

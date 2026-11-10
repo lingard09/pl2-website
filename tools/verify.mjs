@@ -31,7 +31,7 @@ const PAGES = {
   'works.html': 5137, // 2026-10-07 레이아웃 교체 (피그마 3024:13288)
   'about.html': 8112,
   'contact.html': null, // 100dvh 라 뷰포트에 따라 달라진다
-  'works-detail-01.html': 13717,
+  'works-detail-01.html': 17025,
   'works-detail-02.html': 11385, // 2026-11-10 4-H 와 같은 스크롤 모션으로 교체 (챕터를 차례로 쌓는다)
   'works-detail-03.html': 12341,
   'works-detail-04.html': 9899,

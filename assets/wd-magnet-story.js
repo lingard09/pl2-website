@@ -25,8 +25,8 @@
     if (sections.length < 2) return;
 
     var SPEEDS = [0.2, 0.1, 0.3, 0.15];
-    // 챕터마다 목록의 왼쪽 위치 (1920 기준 %). 예: 62.5 = 1200
-    var LIST_X = (story.getAttribute("data-list-x") || "62.5").split(",").map(function (v) {
+    // 목록의 왼쪽 위치 (1920 기준 %). 쉼표로 챕터마다 다르게 줄 수 있다. 60.4167 = 1160
+    var LIST_X = (story.getAttribute("data-list-x") || "60.4167").split(",").map(function (v) {
       return v + "%";
     });
     var FOLLOW = 0.14; // 프레임마다 목표로 다가가는 비율 (60fps 기준)
@@ -65,6 +65,22 @@
       };
     });
 
+    // 휠로 내릴 때 이미지가 끊겨 올라오지 않게 About 과 같은 관성 스크롤을 쓴다 (수정사항_11.10).
+    // 스크롤과 이미지 이동을 같은 프레임에 처리해야 어긋나지 않는다.
+    var lenis = null;
+    if (!reduce && window.Lenis && window.matchMedia("(pointer: fine)").matches) {
+      lenis = new window.Lenis({ lerp: 0.085, wheelMultiplier: 0.9, smoothWheel: true });
+      window.PL2Space = { lenis: lenis }; // top-btn.js 가 같은 관성으로 올라가게
+      lenis.on("scroll", function () {
+        frame(performance.now());
+      });
+      var drive = function (t) {
+        lenis.raf(t);
+        requestAnimationFrame(drive);
+      };
+      requestAnimationFrame(drive);
+    }
+
     var current = -1;
     var raf = null;
     var last = 0;
@@ -97,7 +113,7 @@
         if (reduce) return;
         c.cards.forEach(function (card) {
           var goal = d * card.k;
-          card.y = card.y === null ? goal : card.y + (goal - card.y) * ratio;
+          card.y = card.y === null || lenis ? goal : card.y + (goal - card.y) * ratio;
           if (Math.abs(goal - card.y) > 0.1) moving = true;
           else card.y = goal;
           card.el.style.transform = "translate3d(0," + card.y.toFixed(2) + "px,0)";

@@ -222,9 +222,9 @@
     // 문서 높이가 늘지 않는다 (base.css 의 .ft 등장 규칙).
     ".ft",
   ].join(",");
-  var STAGGER = 110; // 하나씩 차례로 출발하는 간격 (코드 레이어와 같다)
+  var STAGGER = 130; // 하나씩 차례로 출발하는 간격
   var STAGGER_MAX = 880; // 한꺼번에 많이 들어올 때 뒤쪽이 너무 늦지 않게
-  var DURATION = 1100; // base.css .mo-anim transition 과 맞춘다
+  var DURATION = 1600; // base.css .mo-anim transition 과 맞춘다
 
   function initReveal(startDelay, skipFirstScreen) {
     if (!("IntersectionObserver" in window)) return;
@@ -235,6 +235,8 @@
     // 그걸 품은 상위 덩어리와 그 안쪽 요소는 대상에서 빼야 이동이 겹치지 않는다.
     var singles = document.querySelectorAll("[data-reveal]");
     var twoCol = window.matchMedia("(min-width: 600px)").matches;
+    // 모바일 Works 는 화면에 들어오기 전에 미리 출발해서 빈 화면이 보이지 않게 한다 (수정사항_11.10)
+    var early = !twoCol && document.body.classList.contains("wk-body");
     var els = Array.prototype.filter.call(
       document.querySelectorAll(TARGETS + ",[data-reveal]"),
       function (el) {
@@ -317,7 +319,7 @@
           requestAnimationFrame(flush);
         }
       },
-      { rootMargin: "0px 0px -8% 0px", threshold: 0 }
+      { rootMargin: early ? "25% 0px 25% 0px" : "0px 0px -8% 0px", threshold: 0 }
     );
 
     // 퇴장: 화면 밖으로 완전히 나갔을 때만 되돌린다 (보이는 채로 사라지지 않게)
@@ -335,7 +337,7 @@
           stopCounters(el);
         });
       },
-      { rootMargin: "0px", threshold: 0 }
+      { rootMargin: early ? "25% 0px 25% 0px" : "0px", threshold: 0 }
     );
 
     setTimeout(function () {
@@ -434,4 +436,68 @@
   } else {
     init();
   }
+})();
+
+/* 모바일 가로 슬라이드 자동 넘김 (수정사항_11.10)
+   손으로 넘기는 scroll-snap 칸은 그대로 두고, 화면에 보이는 동안 3초마다 다음 장으로 넘긴다.
+   손을 대면 멈추고 뗀 뒤 5초가 지나면 이어 간다. 마지막 장 다음은 처음으로 돌아간다. */
+(function () {
+  if (!("IntersectionObserver" in window)) return;
+  if (!window.matchMedia("(max-width: 599.98px)").matches) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  var INTERVAL = 3000;
+  var RESUME = 5000;
+
+  function setup(track) {
+    var visible = false;
+    var pausedUntil = 0;
+
+    new IntersectionObserver(
+      function (entries) {
+        visible = entries[entries.length - 1].isIntersecting;
+      },
+      { threshold: 0.6 }
+    ).observe(track);
+
+    function slideWidth() {
+      var kids = track.querySelectorAll("*");
+      for (var i = 0; i < kids.length; i++) {
+        if (getComputedStyle(kids[i]).scrollSnapAlign === "none") continue;
+        var w = kids[i].getBoundingClientRect().width;
+        if (w) return w + (parseFloat(getComputedStyle(track).columnGap) || 0);
+      }
+      return track.clientWidth;
+    }
+
+    function hold() {
+      pausedUntil = Infinity;
+    }
+    function letGo() {
+      pausedUntil = Date.now() + RESUME;
+    }
+    track.addEventListener("touchstart", hold, { passive: true });
+    track.addEventListener("touchend", letGo, { passive: true });
+    track.addEventListener("touchcancel", letGo, { passive: true });
+
+    setInterval(function () {
+      if (!visible || document.hidden || Date.now() < pausedUntil) return;
+      var max = track.scrollWidth - track.clientWidth;
+      if (max < 4) return;
+      // 한 장씩 민다. order · display: contents 로 DOM 순서와 화면 순서가 달라서 자식 위치 대신 장 폭으로 센다
+      var now = track.scrollLeft;
+      var w = slideWidth();
+      var next = now >= max - 2 ? 0 : Math.min(max, (Math.round(now / w) + 1) * w);
+      track.scrollTo({ left: next, behavior: "smooth" });
+    }, INTERVAL);
+  }
+
+  window.addEventListener("load", function () {
+    Array.prototype.forEach.call(document.querySelectorAll("main *"), function (el) {
+      var cs = getComputedStyle(el);
+      if ((cs.overflowX === "auto" || cs.overflowX === "scroll") && /x|inline/.test(cs.scrollSnapType)) {
+        setup(el);
+      }
+    });
+  });
 })();

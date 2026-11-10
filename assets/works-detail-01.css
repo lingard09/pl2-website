@@ -192,6 +192,68 @@
   object-fit: cover;
 }
 
+/* 레이어 얹힘 모션 (수정사항_11.10, 피그마 4084:28906). PC 에서 영상 자리를 대신한다 */
+.wd-stack {
+  display: none;
+}
+
+@media (min-width: 600px) {
+  .wd-layer .wd-band-video {
+    display: none;
+  }
+
+  .wd-stack {
+    --band: min(50vw, 960px);
+    display: block;
+    /* 띠를 화면 가운데 세워 두고 300vh 동안 스크롤에 맞춰 진행한다 */
+    height: calc(var(--band) + 300vh);
+    background: #1e2123;
+  }
+
+  .wd-stack-pin {
+    position: sticky;
+    top: max(0px, calc((100vh - var(--band)) / 2));
+    height: var(--band);
+    overflow: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wd-stack {
+      height: auto;
+    }
+  }
+
+  .wd-stack-stage {
+    position: absolute;
+    top: 10.4167%; /* 100 / 960 */
+    left: 50%;
+    width: min(20.8333vw, 400px);
+    aspect-ratio: 400 / 760;
+    translate: -50% 0;
+  }
+
+  .wd-stack-set {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+
+  .wd-stack-set--up {
+    top: max(-1.0417vw, -20px);
+    bottom: min(1.0417vw, 20px);
+  }
+
+  .wd-stack-set img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: min(1.25vw, 24px); /* 24 */
+    opacity: 0;
+    will-change: translate, opacity;
+  }
+}
+
 .wd-band {
   display: flex;
   justify-content: center;
@@ -293,24 +355,38 @@
 
 .wd-sticker-caption {
   flex: 1 1 0;
-  padding: min(1.25vw, 24px) 0;
+  padding: min(1.25vw, 24px) min(3.125vw, 60px); /* 수정사항_11.10: 옆 여백 60 */
 }
 
 .wd-sticker-caption h3 {
   color: var(--pl2-neutral-60);
-  font-size: min(0.7292vw, 14px) /* 14 */;
+  font-size: min(0.8333vw, 16px) /* 16 (수정사항_11.10) */;
   font-weight: 500;
-  line-height: min(0.8854vw, 17px) /* 17 */;
+  line-height: min(0.9896vw, 19px) /* 19 */;
   letter-spacing: -0.02em;
 }
 
 .wd-sticker-caption p {
-  margin-top: min(0.4167vw, 8px);
+  margin-top: min(0.625vw, 12px); /* 12 (수정사항_11.10) */
   color: var(--pl2-neutral-50);
   font-size: min(0.7292vw, 14px) /* 14 */;
   font-weight: 400;
-  line-height: min(0.9375vw, 18px) /* 18 */;
+  line-height: min(1.1458vw, 22px) /* 22 */;
   letter-spacing: -0.02em;
+}
+
+/* 영문 설명은 18 / 16 (수정사항_11.10, 피그마 4084:29609) */
+@media (min-width: 600px) {
+  .wd-sticker-caption h3 [data-l="en"] {
+    font-size: min(0.9375vw, 18px);
+    line-height: min(1.1458vw, 22px);
+    letter-spacing: 0;
+  }
+
+  .wd-sticker-caption p [data-l="en"] {
+    font-size: min(0.8333vw, 16px);
+    line-height: min(1.1458vw, 22px);
+  }
 }
 
 .wd-final {

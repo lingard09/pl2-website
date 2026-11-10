@@ -586,3 +586,9 @@
     filter: drop-shadow(0 0 17px rgba(0, 0, 0, 0.3));
   }
 }
+
+/* AI 필름 설명은 18/34 (피그마 4031:24960) — 4-H 는 20/36 */
+.wdm-list .wd2-step-desc {
+  font-size: min(0.9375vw, 18px);
+  line-height: min(1.7708vw, 34px);
+}

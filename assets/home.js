@@ -238,17 +238,54 @@
   // ── 가운데 행 호버 (수정사항_11.09, 하단 예시: React Bits Magnet · Gradient Text) ──
   // 커서 주변 100 안이면 커서 쪽으로 절반만큼 끌려가고, 벗어나면 제자리로 돌아온다.
   // 이미지는 Magnet 만, 단어는 Magnet + 그라데이션. 행의 scale 안쪽에서 움직이니 그만큼 나눈다.
+  // 기준점은 끌려가지 않는 행의 위치로 잰다. 움직이는 글자를 재면 그 오차가 다음 이동에 섞여 떨린다 (수정사항_11.10).
   if (!reduce && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
     var PAD = 100;
     var STRENGTH = 2;
-    var hot = null; // { el, it, x, y }
+    var TAU_FOLLOW = 110; // ms, 커서를 따라갈 때
+    var TAU_RELEASE = 170; // ms, 제자리로 돌아올 때
+    var hot = null; // 지금 끌리고 있는 항목
+    var moving = [];
+    var magRaf = null;
+    var magLast = 0;
+
+    function magTick(now) {
+      var dt = magLast ? Math.min(now - magLast, 64) : 16.7;
+      magLast = now;
+      moving = moving.filter(function (m) {
+        var k = 1 - Math.exp(-dt / (m === hot ? TAU_FOLLOW : TAU_RELEASE));
+        m.x += (m.tx - m.x) * k;
+        m.y += (m.ty - m.y) * k;
+        var done = Math.abs(m.tx - m.x) < 0.05 && Math.abs(m.ty - m.y) < 0.05;
+        if (done) {
+          m.x = m.tx;
+          m.y = m.ty;
+        }
+        var s = m.it.scale || 1;
+        m.el.style.translate = (m.x / s).toFixed(2) + "px " + (m.y / s).toFixed(2) + "px";
+        return !done;
+      });
+      if (moving.length) {
+        magRaf = requestAnimationFrame(magTick);
+      } else {
+        magRaf = null;
+        magLast = 0;
+      }
+    }
+
+    function magRun(m) {
+      if (moving.indexOf(m) < 0) moving.push(m);
+      if (magRaf === null) magRaf = requestAnimationFrame(magTick);
+    }
 
     function release() {
       if (!hot) return;
-      hot.el.style.transition = "translate 0.5s ease-in-out";
-      hot.el.style.translate = "0 0";
-      hot.el.classList.remove("is-gradient");
+      var m = hot;
       hot = null;
+      m.tx = 0;
+      m.ty = 0;
+      m.el.classList.remove("is-gradient");
+      magRun(m);
     }
 
     window.addEventListener("pointermove", function (e) {
@@ -264,11 +301,9 @@
         return;
       }
       if (hot && hot.el !== el) release();
-      var ox = hot ? hot.x : 0;
-      var oy = hot ? hot.y : 0;
-      var r = el.getBoundingClientRect();
-      var cx = r.left + r.width / 2 - ox;
-      var cy = r.top + r.height / 2 - oy;
+      var r = it.row.getBoundingClientRect();
+      var cx = r.left + r.width / 2;
+      var cy = r.top + r.height / 2;
       var inside =
         Math.abs(e.clientX - cx) < r.width / 2 + PAD &&
         Math.abs(e.clientY - cy) < r.height / 2 + PAD;
@@ -276,13 +311,12 @@
         release();
         return;
       }
-      var x = (e.clientX - cx) / STRENGTH;
-      var y = (e.clientY - cy) / STRENGTH;
-      hot = { el: el, x: x, y: y };
-      el.style.transition = "translate 0.3s ease-out";
-      var s = it.scale || 1;
-      el.style.translate = (x / s).toFixed(2) + "px " + (y / s).toFixed(2) + "px";
+      if (!it.mag) it.mag = { el: el, it: it, x: 0, y: 0, tx: 0, ty: 0 };
+      hot = it.mag;
+      hot.tx = (e.clientX - cx) / STRENGTH;
+      hot.ty = (e.clientY - cy) / STRENGTH;
       if (!it.tile) el.classList.add("is-gradient");
+      magRun(hot);
     });
     document.addEventListener("mouseleave", release);
     window.addEventListener("wheel", release, { passive: true });

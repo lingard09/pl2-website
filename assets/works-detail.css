@@ -785,8 +785,8 @@
 .wd2-story.is-magnet .wdm-list {
   position: absolute;
   top: 0;
-  left: var(--lx, 62.5%); /* 챕터마다 피그마 위치 */
-  width: 37.5%; /* 720 / 1920 */
+  left: var(--lx, 60.4167%); /* 1160 / 1920 */
+  width: 34.375%; /* 660 / 1920 — 오른쪽 여백 100 (피그마 수정본) */
   gap: min(1.5625vw, 30px);
   translate: 0 -50%;
   transition: left 1.1s var(--mo-magnet);
