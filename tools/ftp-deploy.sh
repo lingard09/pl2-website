@@ -4,6 +4,7 @@
 #   ./tools/build-dist.sh          # 먼저 dist 를 만들고
 #   ./tools/ftp-deploy.sh          # 올린다 (비밀번호는 실행할 때 입력)
 #   ./tools/ftp-deploy.sh --code-only   # 영상·webp 빼고 (코드만 고쳤을 때)
+#   ./tools/ftp-deploy.sh --no-video    # 영상만 빼고 (이미지는 바뀌었지만 mp4 는 그대로일 때)
 #
 #   FTP_HOST=... FTP_USER=... FTP_DIR=... ./tools/ftp-deploy.sh   # 값 바꾸려면
 #
@@ -30,8 +31,11 @@ MODE="전체"
 if [ "$1" = "--code-only" ]; then
   EXCLUDE="--exclude-glob *.mp4 --exclude-glob *.webp"
   MODE="코드만 (mp4·webp 제외)"
+elif [ "$1" = "--no-video" ]; then
+  EXCLUDE="--exclude-glob *.mp4"
+  MODE="영상 빼고 (mp4 제외)"
 elif [ -n "$1" ]; then
-  echo "모르는 옵션: $1 (쓸 수 있는 것: --code-only)"; exit 1
+  echo "모르는 옵션: $1 (쓸 수 있는 것: --code-only, --no-video)"; exit 1
 fi
 
 [ -d dist ] || { echo "dist/ 가 없다. 먼저 ./tools/build-dist.sh 를 돌려라."; exit 1; }
