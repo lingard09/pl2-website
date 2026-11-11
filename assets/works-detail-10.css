@@ -21,6 +21,14 @@
   gap: min(1.25vw, 24px);
 }
 
+/* 수정사항_11.11 (4129:12803): 개요 헤더 칸 894 */
+@media (min-width: 600px) {
+  .wd10-head--wide.wd-head--center .wd-head-title,
+  .wd10-head--wide.wd-head--center .wd-head-desc {
+    width: 46.5625%; /* 894 / 1920 */
+  }
+}
+
 /* ══ 3·4. 콘텐츠 블록 ═════════════════════════════════════
    피그마 Frame 2116929457 / 2116929490: 헤더 180 + gap 80 + 이미지 스택 4658 */
 .wd10-block {

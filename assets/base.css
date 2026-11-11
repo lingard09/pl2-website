@@ -1132,6 +1132,22 @@ html.lenis body {
   }
 }
 
+/* PC 와 모바일 문장이 다른 곳 (수정사항_11.11: 피그마 MO 원고가 PC 와 다른 문단).
+   <span class="wd-t-pc">PC 문장</span><span class="wd-t-mo">MO 문장</span> */
+.wd-t-mo {
+  display: none;
+}
+
+@media (max-width: 599.98px) {
+  .wd-t-pc {
+    display: none;
+  }
+
+  .wd-t-mo {
+    display: inline;
+  }
+}
+
 /* iOS Safari 하단 바 색을 페이지 바탕색으로 맞춘다. Safari 는 화면 가장자리에 고정된
    실제 요소의 background-color 를 집어 간다 (works 의 .wk-statusbar 와 같은 원리) */
 .mo-bottombar {

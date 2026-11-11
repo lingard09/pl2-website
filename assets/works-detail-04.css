@@ -2,13 +2,6 @@
    피그마: Works_Detail (node 2345:60737) — Samsung Internet Website Renewal
    라이트 테마(`.wd-body--light`) + GNB Type=T/B. 섹션 리듬 320px. */
 
-.wd-head-desc {
-  line-height: min(1.7708vw, 34px) /* 34 */;
-}
-
-.wd-head--center .wd-head-desc {
-  line-height: min(1.6667vw, 32px) /* 32 */;
-}
 
 /* 섹션 공통: 헤더 ↔ 본문 80 */
 .wd4-section {

@@ -111,7 +111,7 @@
 }
 
 .ab-lead-title {
-  color: var(--pl2-neutral-5);
+  color: var(--pl2-neutral-10); /* 수정사항_11.11 블랙 타이틀 #212121 */
   font-family: var(--pl2-font-display);
   font-size: min(3.125vw, 60px) /* 60 */;
   font-weight: 500;
@@ -127,10 +127,10 @@
 /* 두 문단은 피그마대로 <br> 로 3줄씩 나뉜다. nowrap 은 쓰지 않는다 —
    번역(영어 등)으로 문장이 길어지면 한 줄로 뻗어 옆 칸과 겹치기 때문에, 칸(695)을 넘는 줄은 접힌다. */
 .ab-lead-cols p {
-  color: var(--pl2-neutral-40);
+  color: var(--pl2-neutral-30); /* 수정사항_11.11 블랙 본문 #555555 */
   font-size: min(0.9375vw, 18px) /* 18 */;
-  font-weight: 300;
-  line-height: min(1.7083vw, 32.8px) /* 32.799 */;
+  font-weight: 400; /* 수정사항_11.11 본문 Regular */
+  line-height: min(1.6667vw, 32px) /* 32 */;
   letter-spacing: -0.02em;
   word-break: keep-all;
 }
@@ -221,7 +221,7 @@
 }
 
 .ab-service-title {
-  color: var(--pl2-neutral-5);
+  color: var(--pl2-neutral-10);
   font-family: var(--pl2-font-display);
   font-size: min(2.0833vw, 40px) /* 40 */;
   font-weight: 500;
@@ -238,9 +238,9 @@
 }
 
 .ab-service-desc {
-  color: var(--pl2-neutral-40);
+  color: var(--pl2-neutral-30);
   font-size: min(0.9375vw, 18px) /* 18 */;
-  font-weight: 300;
+  font-weight: 400; /* 수정사항_11.11 본문 Regular */
   line-height: min(1.6667vw, 32px) /* 32 */;
   letter-spacing: -0.02em;
 }
@@ -421,7 +421,7 @@ html[class*="translated-"] .ab-service-sub {
   .is-en .ab-intro p {
     max-width: none;
     font-size: 14px;
-    font-weight: 300;
+    font-weight: 400; /* 수정사항_11.11 본문 Regular */
     line-height: 26px;
     text-align: center;
   }
@@ -634,4 +634,33 @@ html[class*="translated-"] .ab-service-sub {
   .ab-intro .ab-intro-mo br {
     display: inline;
   }
+
+  /* 수정사항_11.11: 문단 줄바꿈은 피그마 MO 그대로 (br.br-mo). 390 보다 좁으면 자동 줄바꿈 */
+  .ab-lead-cols br.br-mo,
+  .ab-service-desc br.br-mo {
+    display: inline;
+  }
+
+  /* 2단 문단은 PC·MO 원고가 다르다 (MO 가 더 짧다) */
+  .ab-pc-text {
+    display: none;
+  }
+
+  .ab-mo-text {
+    display: inline;
+  }
 }
+
+@media (max-width: 374.98px) {
+  .ab-lead-cols br.br-mo,
+  .ab-service-desc br.br-mo {
+    display: none;
+  }
+}
+
+@media (min-width: 600px) {
+  .ab-mo-text {
+    display: none;
+  }
+}
+

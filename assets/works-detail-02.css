@@ -91,10 +91,10 @@
 
 .wd2-step-desc {
   margin-top: min(1.25vw, 24px);
-  color: var(--pl2-neutral-60);
+  color: var(--pl2-neutral-80); /* 수정사항_11.11 본문 #EFEFEF · Regular 18/32 */
   font-size: min(0.9375vw, 18px) /* 18 */;
-  font-weight: 300;
-  line-height: min(1.7708vw, 34px) /* 34 */;
+  font-weight: 400;
+  line-height: min(1.6667vw, 32px) /* 32 */;
 }
 
 /* ══ 파이프라인 다이어그램 ═════════════════════════════
@@ -440,7 +440,7 @@
     word-break: keep-all;
   }
 
-  .wd2-step-desc br {
+  .wd2-step-desc br:not(.br-mo) {
     display: none;
   }
 
@@ -590,5 +590,5 @@
 /* AI 필름 설명은 18/34 (피그마 4031:24960) — 4-H 는 20/36 */
 .wdm-list .wd2-step-desc {
   font-size: min(0.9375vw, 18px);
-  line-height: min(1.7708vw, 34px);
+  line-height: min(1.6667vw, 32px);
 }

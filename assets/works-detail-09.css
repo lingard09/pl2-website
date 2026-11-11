@@ -6,10 +6,7 @@
   line-height: min(1.6667vw, 32px) /* 32 */;
 }
 
-/* 섹션 5·6·7 헤더 설명만 행간 34 */
-.wd-head--lh34 .wd-head-desc {
-  line-height: min(1.7708vw, 34px) /* 34 */;
-}
+/* (섹션 5·6·7 의 행간 34 는 수정사항_11.11 에서 공통 32 로 통일) */
 
 .wd-head--center {
   gap: min(1.25vw, 24px);
@@ -197,8 +194,7 @@
    크롭이 PC 와 다른 장은 피그마 MO 크롭 그대로 뽑은 wd9-*-mo.webp 를 <picture> 로 쓴다. */
 @media (max-width: 599.98px) {
   /* 이 파일 맨 위 PC 값(행간 32/34 · 가운데 헤더 간격 24, vw)이 공통 모바일 규칙보다 뒤에 와서 이기므로 되돌린다 */
-  .wd-head-desc,
-  .wd-head--lh34 .wd-head-desc {
+  .wd-head-desc {
     line-height: 24px;
   }
 

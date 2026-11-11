@@ -192,7 +192,7 @@
 }
 
 .wd-intro-title {
-  color: var(--pl2-neutral-95);
+  color: var(--pl2-white);
   font-family: var(--pl2-font-display);
   font-size: min(3.125vw, 60px) /* 60 */;
   font-weight: 500;
@@ -200,9 +200,9 @@
 }
 
 .wd-intro-desc {
-  color: var(--pl2-neutral-70);
+  color: var(--pl2-neutral-80); /* 수정사항_11.11: 본문 #EFEFEF · Regular */
   font-size: min(1.0417vw, 20px) /* 20 */;
-  font-weight: 300;
+  font-weight: 400;
   line-height: min(1.875vw, 36px) /* 36 */;
   letter-spacing: -0.02em;
 }
@@ -218,7 +218,7 @@
    디자인을 그대로 따르기로 해서 다수인 600 을 기본으로 두고 Bold 만 모디파이어로 뺐다.
    어느 헤더가 Bold 인지는 NOTES.md "섹션 헤더 굵기" 표 참고. */
 .wd-head-title {
-  color: var(--pl2-neutral-90);
+  color: var(--pl2-white); /* 수정사항_11.11: 제목 #FFFFFF */
   font-size: min(1.6667vw, 32px) /* 32 */;
   font-weight: 600;
   line-height: min(2.3958vw, 46px) /* 46 */;
@@ -230,10 +230,10 @@
 }
 
 .wd-head-desc {
-  color: var(--pl2-neutral-60);
+  color: var(--pl2-neutral-80);
   font-size: min(0.9375vw, 18px) /* 18 */;
-  font-weight: 300;
-  line-height: min(1.7708vw, 34px) /* 34 */;
+  font-weight: 400;
+  line-height: min(1.6667vw, 32px) /* 32 — 수정사항_11.11 본문(pc) 한글 18/32 */;
 }
 
 /* 문단이 736px 2줄 용량을 거의 꽉 채워서(≈99%) 브라우저·폰트에 따라 한 줄 더 꺾이는
@@ -254,10 +254,6 @@
 .wd-head--center .wd-head-title,
 .wd-head--center .wd-head-desc {
   width: 38.333%; /* 736 / 1920 */
-}
-
-.wd-head--center .wd-head-title {
-  color: var(--pl2-neutral-80);
 }
 
 .wd-head--center .wd-head-desc {
@@ -321,7 +317,7 @@
 
 .wd-body--light .wd-intro-desc,
 .wd-body--light .wd-head-desc {
-  color: var(--pl2-neutral-40);
+  color: var(--pl2-neutral-30); /* 수정사항_11.11: 블랙 본문 #555555 */
 }
 
 /* 라이트 테마 페이지인데 히어로만 어두운 경우 (예: 상세 05 — 영상 히어로) */
@@ -637,14 +633,20 @@
     display: none;
   }
 
-  /* 개요 문단은 피그마가 정한 줄대로 (수정사항_11.09). 390 보다 좁은 폰은 줄이 넘쳐 꺾이니 자동 줄바꿈으로 */
-  .wd-intro-desc br.br-mo {
+  /* 개요·헤더 문단은 피그마 MO 가 정한 줄대로 (수정사항_11.09 개요, 11.11 헤더까지).
+     390 보다 좁은 폰은 줄이 넘쳐 꺾이니 자동 줄바꿈으로 */
+  .wd-intro-desc br.br-mo,
+  .wd-head-desc br.br-mo,
+  .wd-head-title br.br-mo {
     display: inline;
   }
 
   @media (max-width: 374.98px) {
     .wd-intro-desc br.br-mo,
-    .wd-intro-title br.br-mo {
+    .wd-intro-title br.br-mo,
+    .wd-head-desc br.br-mo,
+    .wd-head-title br.br-mo,
+    .wd2-step-desc br.br-mo {
       display: none;
     }
   }
@@ -669,7 +671,7 @@
     line-height: 28px;
   }
 
-  /* 영문판 모바일 본문 (수정사항_11.06 1_MO 영문 코멘트): 인트로 14/26 → 16/28, 콘텐츠 13/24 → 14/25 */
+  /* 영문판 모바일 본문: 인트로 16/28, 콘텐츠 15/25 (수정사항_11.11) */
   .is-en .wd-body .wd-intro-desc {
     font-size: 16px;
     line-height: 28px;
@@ -677,7 +679,7 @@
 
   .is-en .wd-body .wd-head-desc,
   .is-en .wd-body .wd2-step-desc {
-    font-size: 14px;
+    font-size: 15px;
     line-height: 25px;
   }
 
@@ -808,8 +810,8 @@
 }
 
 .wdm-list .wd2-step-desc {
-  font-size: min(1.0417vw, 20px);
-  line-height: min(1.875vw, 36px);
+  font-size: min(0.9375vw, 18px); /* 수정사항_11.11 본문 18/32 */
+  line-height: min(1.6667vw, 32px);
 }
 
 .is-en .wdm-list .wd2-step-desc {

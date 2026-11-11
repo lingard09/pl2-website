@@ -11,6 +11,19 @@
   gap: min(1.25vw, 24px);
 }
 
+/* 수정사항_11.11 (4127:12765): 디자인 시스템 · 반응형 헤더 설명은 칸 894 */
+@media (min-width: 600px) {
+  .wd7-head--wide.wd-head--left .wd-head-desc {
+    width: 49.667%; /* 894 / 1800 (부모 좌우 패딩 60) */
+  }
+
+  .wd7-head--wide.wd-head--center .wd-head-title,
+  .wd7-head--wide.wd-head--center .wd-head-desc {
+    width: 46.5625%; /* 894 / 1920 */
+  }
+}
+
+
 /* 히어로 제목이 한 문장(줄바꿈 문자 없음)인데 피그마에서는 883px 박스에서 2줄로 꺾인다.
    폰트에 따라 3줄이 되지 않도록 <br> 로 고정하고 nowrap 은 그대로 둔다. */
 

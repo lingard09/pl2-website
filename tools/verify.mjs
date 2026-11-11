@@ -26,22 +26,23 @@ const BASE = process.env.BASE || 'http://localhost:8765';
 
 // 피그마 프레임 높이 (NOTES.md "페이지 목록" 과 같은 값)
 // 2026-10-07 상세 페이지 크레딧 제거로 상세 01~10 이 464 씩 줄었다 (크레딧 464 → 하단 여백 320 은 그대로)
+// 2026-11-11 수정사항_11.11 문구·줄바꿈 + 본문 행간 34→32 로 01·03·04·05·06·09·10·11 높이 갱신
 const PAGES = {
   'index.html': 1080,
   'works.html': 5137, // 2026-10-07 레이아웃 교체 (피그마 3024:13288)
   'about.html': 8112,
   'contact.html': null, // 100dvh 라 뷰포트에 따라 달라진다
-  'works-detail-01.html': 17025,
+  'works-detail-01.html': 17013,
   'works-detail-02.html': 11385, // 2026-11-10 4-H 와 같은 스크롤 모션으로 교체 (챕터를 차례로 쌓는다)
-  'works-detail-03.html': 12341,
-  'works-detail-04.html': 9899,
-  'works-detail-05.html': 14089,
-  'works-detail-06.html': 16974,
+  'works-detail-03.html': 12321,
+  'works-detail-04.html': 9887,
+  'works-detail-05.html': 14340,
+  'works-detail-06.html': 17102,
   'works-detail-07.html': 17013,
   'works-detail-08.html': 11670,
-  'works-detail-09.html': 18036,
-  'works-detail-10.html': 13758,
-  'works-detail-11.html': 11180, // 2026-10-07 신규 (피그마 3032:14308). 2026-11-10 한글 강제 줄바꿈 제거로 -68
+  'works-detail-09.html': 18092,
+  'works-detail-10.html': 13844,
+  'works-detail-11.html': 11232, // 2026-10-07 신규 (피그마 3032:14308). 2026-11-10 한글 강제 줄바꿈 제거로 -68
 };
 
 // 아직 원본을 못 받은 영상 — 404 가 나도 정상이다 (NOTES "남은 것" 참고)

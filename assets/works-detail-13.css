@@ -54,8 +54,8 @@
   margin-top: min(1.25vw, 24px);
   color: var(--pl2-neutral-30); /* #555555 */
   font-size: min(0.9375vw, 18px) /* 18 */;
-  font-weight: 300;
-  line-height: min(1.7708vw, 34px) /* 34 */;
+  font-weight: 400; /* 수정사항_11.11 Regular 18/32 */
+  line-height: min(1.6667vw, 32px) /* 32 */;
   letter-spacing: -0.02em;
   word-break: keep-all;
 }
@@ -232,14 +232,14 @@
   .wd2-step-desc,
   .is-en .wd2-step-desc {
     margin-top: 20px;
-    color: var(--pl2-neutral-40);
+    color: var(--pl2-neutral-30);
     font-size: 13px;
     line-height: 24px;
     letter-spacing: -0.02em;
     word-break: keep-all;
   }
 
-  .wd2-step-desc br {
+  .wd2-step-desc br:not(.br-mo) {
     display: none;
   }
 
@@ -321,3 +321,5 @@
       linear-gradient(to top, rgba(0, 0, 0, 0) 79.76%, rgba(0, 0, 0, 0.16) 89.02%);
   }
 }
+
+
