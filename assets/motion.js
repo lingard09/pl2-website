@@ -233,26 +233,28 @@
     // - 묶음 안의 개별 요소에 붙이면 하나씩 따로 (상세 07 이미지 3장, 상세 01 스티커 5행)
     // - 여러 덩어리를 감싼 요소에 붙이면 한 번에 같이 (상세 01 스트립 + 캡션)
     // 그걸 품은 상위 덩어리와 그 안쪽 요소는 대상에서 빼야 이동이 겹치지 않는다.
-    var singles = document.querySelectorAll("[data-reveal]");
+    // data-reveal="pc" 는 PC 에서만 개별 등장한다 (모바일에서 가로 슬라이더가 되는 묶음, 상세 10 폰 4장)
     var twoCol = window.matchMedia("(min-width: 600px)").matches;
+    var SINGLE = twoCol ? "[data-reveal]" : "[data-reveal]:not([data-reveal=pc])";
+    var singles = document.querySelectorAll(SINGLE);
     // 모바일 Works 는 화면에 들어오기 전에 미리 출발해서 빈 화면이 보이지 않게 한다 (수정사항_11.10)
     var early = !twoCol && document.body.classList.contains("wk-body");
     var els = Array.prototype.filter.call(
-      document.querySelectorAll(TARGETS + ",[data-reveal]"),
+      document.querySelectorAll(TARGETS + "," + SINGLE),
       function (el) {
         // 스크린리더 전용 · 장식 오버레이 · 숨은 요소는 건드리지 않는다
         if (el.classList.contains("sr-only")) return false;
         // Works 2열 카드는 works.js 가 움직인다 (모바일 1열은 여기서 그대로 등장)
         if (twoCol && el.classList.contains("wk-card")) return false;
         if (el.getAttribute("aria-hidden") === "true") return false;
-        if (!el.hasAttribute("data-reveal")) {
+        if (!el.matches(SINGLE)) {
           for (var i = 0; i < singles.length; i++) {
             if (el.contains(singles[i])) return false;
           }
         }
         // 반대로 data-reveal 덩어리 안쪽 요소는 그 덩어리와 같이 움직인다
         // (예: 상세 01 스트립 + 캡션을 한 번에)
-        var host = el.parentElement && el.parentElement.closest("[data-reveal]");
+        var host = el.parentElement && el.parentElement.closest(SINGLE);
         if (host) return false;
         return el.offsetParent !== null || getComputedStyle(el).position === "fixed";
       }
@@ -328,6 +330,16 @@
         entries.forEach(function (entry) {
           if (entry.isIntersecting) return;
           var el = entry.target;
+          // 모바일 (수정사항_11.11 #320): 위로 빠져나간 요소는 숨기지 않는다. 손가락으로 되돌려
+          // 올릴 때 이미 본 콘텐츠가 위에서 다시 떨어지며 덜컥거렸다. 빠르게 넘겨 등장하지 못한 채
+          // 위로 지나간 요소도 제자리에 바로 놓아, 거꾸로 스크롤하면 그대로 보이게 한다.
+          // 아래로 빠져나간 요소는 그대로 숨겨 두어 다시 내려가면 아래에서 올라온다.
+          if (!twoCol && entry.boundingClientRect.bottom <= 0) {
+            clearTimeout(el._moTimer);
+            el.classList.remove("mo-anim", "mo-out");
+            el.style.transitionDelay = "";
+            return;
+          }
           if (el.classList.contains("mo-out")) {
             // 아직 안 나타난 채 반대편으로 넘어갔으면 방향만 고친다
             hide(el);

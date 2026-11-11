@@ -89,10 +89,28 @@
    가운데 칸에 들어온 이미지는 커지고 나간 이미지는 작아진다. -5 칸에서 밀려난 이미지는
    화면 밖에서 +5 칸으로 순간 이동해 끝없이 이어진다.
    --u = 피그마 1px (1920 에서 1px, 좁아지면 같은 비율로 줄어든다). */
-.wd-strip-section {
+.wd-strip-pin {
   display: flex;
   flex-direction: column;
   gap: min(1.6667vw, 32px);
+}
+
+/* PC 스크롤 연동 (수정사항_11.11 #325): 띠를 화면 가운데 세워 두고 360vh 동안
+   스크롤에 맞춰 왼쪽 → 오른쪽으로 아홉 칸 굴린 뒤 놓아준다. 위치·크기는 wd1-strip.js 가 직접 정한다 */
+@media (min-width: 600px) and (prefers-reduced-motion: no-preference) {
+  .wd-strip-section[data-strip-scroll] {
+    height: calc(var(--strip-pin, 100vh) + 360vh);
+  }
+
+  .wd-strip-section[data-strip-scroll] .wd-strip-pin {
+    position: sticky;
+    top: max(0px, calc((100vh - var(--strip-pin, 100vh)) / 2));
+  }
+
+  .wd-strip--scroll .wd-strip-track img {
+    transition: none;
+    will-change: left, top, width, height;
+  }
 }
 
 .wd-strip {
@@ -205,8 +223,9 @@
   .wd-stack {
     --band: min(50vw, 960px);
     display: block;
-    /* 띠를 화면 가운데 세워 두고 300vh 동안 스크롤에 맞춰 진행한다 */
-    height: calc(var(--band) + 300vh);
+    /* 띠를 화면 가운데 세워 두고 스크롤에 맞춰 진행한다.
+       수정사항_11.11 #301 너무 빨리 올라온다 → 300vh 에서 500vh 로 늘려 같은 타임라인을 천천히 */
+    height: calc(var(--band) + 500vh);
     background: #1e2123;
   }
 
@@ -427,7 +446,7 @@
   }
 
   /* ── 필름스트립 → 가로 스크롤 (피그마 3870:12939) ── */
-  .wd-strip-section {
+  .wd-strip-pin {
     gap: 16px;
   }
 

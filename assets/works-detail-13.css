@@ -1,7 +1,7 @@
 /* PL2 works detail 13 전용 (공통 구조는 works-detail.css)
    피그마: 추가 전달_10.29 Works_Detail_2 (3658:21138) — Gyeong-gi 4-H Club Campaign Film
-   흰 배경. 01 Grow → 05 Feast 단계 스크롤은 상세 02 와 같은 구조·스크립트(wd-magnet-story.js)를 쓰고
-   색만 밝은 배경에 맞춘다 (비활성 #C8C8C8 / 활성 #212121 / 설명 #555555). */
+   흰 배경. 01 Grow → 05 Feast 는 고정 프레임 하나에서 챕터가 바뀐다 (wd13-chapters.js, 수정사항_11.11).
+   색은 밝은 배경에 맞춘다 (비활성 #C8C8C8 / 활성 #212121 / 설명 #555555). */
 
 /* ══ 단계 (각 1920x960: 왼쪽 사진 묶음 960x960 + 오른쪽 목록 x=1240, w=620) ══ */
 .wd2-step-section {
@@ -60,18 +60,19 @@
   word-break: keep-all;
 }
 
-/* ══ 단계 스크롤 (wd-magnet-story.js 가 .is-ready 와 data-step 을 붙인다) ══
-   스테이지 960 을 화면에 고정하고, 단계마다 화면 한 높이씩 스크롤하면 다음으로 넘어간다. */
+/* ══ 단계 고정 프레임 (수정사항_11.11 #327·#328, 피그마 4170:25246 · wd13-chapters.js 가 .is-ready 를 붙인다) ══
+   다섯 챕터를 1920x960 프레임 하나에 겹쳐 화면에 고정하고, 챕터마다 화면 한 높이씩 스크롤하면 다음으로 넘어간다.
+   왼쪽 사진 묶음은 교차 페이드 + 카드가 차례로 살짝 올라와 붙고, 오른쪽 목록은 x=1160, 폭 660, 항목 간격 30. */
 .wd2-story.is-ready {
   --stage-h: min(50vw, 960px);
   position: relative;
-  height: calc(var(--stage-h) + 4 * 100vh);
+  height: calc(var(--stage-h) + (var(--steps, 5) - 1) * 100vh);
 }
 
-/* 고정 위치: GNB(72) 아래 보이는 영역의 세로 가운데 (상세 02 와 같은 계산) */
+/* 고정 위치: GNB(72) 아래 보이는 영역의 세로 가운데 */
 .wd2-story.is-ready .wd2-story-stage {
   position: sticky;
-  top: calc((100vh - var(--stage-h)) / 2 + 36px);
+  top: max(0px, calc((100vh - var(--stage-h)) / 2 + 36px));
   height: var(--stage-h);
 }
 
@@ -90,30 +91,35 @@
   transition: opacity 0.6s ease, visibility 0s;
 }
 
-.wd2-story.is-ready .wd2-collage {
-  translate: 0 min(2.0833vw, 40px);
-  transition: translate 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+.wd2-story.is-ready .wd2-step-section .wd2-steps {
+  display: none;
 }
 
-.wd2-story.is-ready .is-current .wd2-collage {
+.wd2-story.is-ready .wdm-card {
+  translate: 0 min(3.125vw, 60px);
+  transition: translate 1.1s var(--mo-magnet);
+}
+
+.wd2-story.is-ready .is-current .wdm-card {
   translate: 0 0;
 }
 
-.wd2-story.is-ready .wd2-step-section .wd2-steps {
-  visibility: hidden;
+.wd2-story.is-ready .is-current .wdm-card:nth-child(2) {
+  transition-delay: 0.08s;
+}
+
+.wd2-story.is-ready .is-current .wdm-card:nth-child(3) {
+  transition-delay: 0.16s;
 }
 
 .wd2-story-list {
   position: absolute;
   top: 50%;
-  left: 64.583%; /* 1240 / 1920 */
+  left: 60.4167%; /* 1160 / 1920 */
   z-index: 1;
-  width: 32.292%; /* 620 / 1920 */
+  width: 34.375%; /* 660 / 1920 */
+  gap: min(1.5625vw, 30px);
   translate: 0 -50%;
-}
-
-.wd2-story-list .wd2-step-head {
-  transition: color 0.5s ease;
 }
 
 .wd2-story-desc {
@@ -147,7 +153,7 @@
   .wd2-story-desc,
   .wd2-story-list .wd2-step-head,
   .wd2-story.is-ready .wd2-step-section,
-  .wd2-story.is-ready .wd2-collage {
+  .wd2-story.is-ready .wdm-card {
     transition: none;
   }
 }
@@ -159,7 +165,7 @@
 
 /* ══ 모바일 (수정사항_11.06, 피그마 3_MO 3865:11395, 390 폭) ══════════════════
    - From Field to Table: 헤더 ↔ 이미지 60, 이미지 390x160.
-   - 01 Grow → 05 Feast: 고정 스크롤 없이 위에서 아래로 쌓는다 (wd-magnet-story.js 가 모바일에서는 켜지 않는다).
+   - 01 Grow → 05 Feast: 고정 스크롤 없이 위에서 아래로 쌓는다 (wd13-chapters.js 가 모바일에서는 켜지 않는다).
      단계마다 [번호 + 이름 Tannakone 26/28 · 설명 Light 13/24] → 60 → 390x220 캐러셀 (점 2~3개), 단계 사이 200.
    - 캠페인 필름 390x220 + 재생 버튼.
    구조·값은 상세 02 의 모바일 단계(works-detail-02.css)와 같다. */
@@ -196,7 +202,11 @@
   }
 
   .wd2-story.is-ready .wd2-step-section .wd2-steps {
-    visibility: visible;
+    display: block;
+  }
+
+  .wd2-story.is-ready .wdm-card {
+    translate: none;
   }
 
   .wd2-story-list,

@@ -36,6 +36,40 @@
   object-fit: cover;
 }
 
+/* ══ 6. 텍스처 행 4개 (수정사항_11.11 #337) ══
+   원본 2880x1134 를 y 0·281·569·857·1134 에서 잘라 행마다 창을 둔다.
+   창 높이 = 폭 x 행높이/2880, 이미지는 창 폭만큼 그리고 행 시작점만큼 끌어올린다 (margin % 는 폭 기준). */
+.wd9-tex-row {
+  overflow: hidden;
+}
+
+.wd9-tex-row img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.wd9-tex-row--1 { aspect-ratio: 2880 / 281; }
+.wd9-tex-row--2 { aspect-ratio: 2880 / 288; }
+.wd9-tex-row--2 img { margin-top: -9.7569%; } /* 281 / 2880 */
+.wd9-tex-row--3 { aspect-ratio: 2880 / 288; }
+.wd9-tex-row--3 img { margin-top: -19.7569%; } /* 569 / 2880 */
+.wd9-tex-row--4 { aspect-ratio: 2880 / 277; }
+.wd9-tex-row--4 img { margin-top: -29.7569%; } /* 857 / 2880 */
+
+/* ══ 4. 제품 라인 스크롤 고정 (수정사항_11.11 #336, PC 전용) ══
+   캐러셀을 화면 가운데 세워 두고 200vh 스크롤 동안 3장을 한 장씩 넘긴다 (wd9-carousel.js) */
+@media (min-width: 600px) and (prefers-reduced-motion: no-preference) {
+  .wd9-carousel-scroll {
+    height: calc(100vw * 860 / 1920 + 200vh);
+  }
+
+  .wd9-carousel-scroll .wd9-carousel {
+    position: sticky;
+    top: max(0px, calc((100vh - 100vw * 860 / 1920) / 2));
+  }
+}
+
 /* ══ 4. 제품 라인 캐러셀 (PC 피드백_0930, 피그마 Frame 2116929521) ══
    1920x860 틀 안에 Back 1558x860 (x 181) 고정 + 박스 창 301x295 (x 1189, y 225, r 4)
    + 점 3개 (8x8, 간격 8, 아래에서 16). 좌표는 모두 틀 기준 % 라 화면 폭에 비례한다. */

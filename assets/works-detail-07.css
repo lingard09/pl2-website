@@ -104,6 +104,73 @@
   object-fit: cover;
 }
 
+/* 코드 에디터 Light → Dark (수정사항_11.11 #330). PC 는 이미지 두 장, 모바일은 영상 */
+.wd7-code {
+  --code-band: calc(100vw * 827 / 1920);
+}
+
+.wd7-code .wd7-badges {
+  display: none;
+}
+
+.wd7-code-pin {
+  position: relative;
+  aspect-ratio: 1920 / 827;
+  overflow: hidden;
+}
+
+.wd7-code-img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wd7-code-img--dark {
+  opacity: 0;
+}
+
+@media (min-width: 600px) and (prefers-reduced-motion: no-preference) {
+  /* 띠를 화면 가운데 세워 두고 120vh 동안 스크롤에 맞춰 바꾼다 (wd7-code.js) */
+  .wd7-code {
+    height: calc(var(--code-band) + 120vh);
+  }
+
+  .wd7-code-pin {
+    position: sticky;
+    top: max(0px, calc((100vh - var(--code-band)) / 2));
+  }
+}
+
+/* 동작 줄이기: 고정 없이 Light · Dark 를 위아래로 둘 다 보여 준다 */
+@media (min-width: 600px) and (prefers-reduced-motion: reduce) {
+  .wd7-code-pin {
+    aspect-ratio: auto;
+  }
+
+  .wd7-code-img {
+    position: static;
+    height: auto;
+    aspect-ratio: 1920 / 827;
+  }
+
+  .wd7-code-img--dark {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 599.98px) {
+  .wd7-code-pin {
+    display: none;
+  }
+
+  .wd7-code .wd7-badges {
+    display: block;
+  }
+}
+
 /* ══ 4. 개발 도구 3컷 ══════════════════════════════════ */
 /* Structure 창 1558x898 = 바 38 + 영상 860, 가운데 정렬 */
 .wd7-doc-01 {

@@ -32,15 +32,15 @@ const PAGES = {
   'works.html': 5137, // 2026-10-07 레이아웃 교체 (피그마 3024:13288)
   'about.html': 8112,
   'contact.html': null, // 100dvh 라 뷰포트에 따라 달라진다
-  'works-detail-01.html': 17013,
+  'works-detail-01.html': 23061, // 2026-11-11 레이어 스택 300→500vh, 아이스크림 띠 고정 +360vh
   'works-detail-02.html': 11385, // 2026-11-10 4-H 와 같은 스크롤 모션으로 교체 (챕터를 차례로 쌓는다)
   'works-detail-03.html': 12321,
   'works-detail-04.html': 9887,
   'works-detail-05.html': 14340,
   'works-detail-06.html': 17102,
-  'works-detail-07.html': 17013,
+  'works-detail-07.html': 18220, // 2026-11-11 코드 Light→Dark 고정 구간 추가
   'works-detail-08.html': 11670,
-  'works-detail-09.html': 18092,
+  'works-detail-09.html': 20252, // 2026-11-11 제품 슬라이더 스크롤 고정 +200vh
   'works-detail-10.html': 13844,
   'works-detail-11.html': 11232, // 2026-10-07 신규 (피그마 3032:14308). 2026-11-10 한글 강제 줄바꿈 제거로 -68
 };
