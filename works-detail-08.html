@@ -263,20 +263,17 @@
           </video>
         </section>
 
-        <!-- ══ 7. 영상 ══ -->
-        <!-- 피그마 fill 이 영상뿐이라 포스터가 없다 (첫 프레임이 완전 검정이라 의미가 없다).
-             assets/wd8-video.mp4 = 1105_SmartThings_CES_final.mp4 본편 120초 전체.
-             딤(검정 60%) + 재생 삼각형은 피그마 정지 시안 그대로이고, 버튼을 누르면
-             딤이 걷히면서 재생된다 (assets/works-detail-08.js). 그래서 autoplay 가 없다. -->
-        <section class="wd8-video" data-playing="false">
-          <video muted loop playsinline preload="metadata">
-            <source src="assets/wd8-video.mp4" type="video/mp4" />
-          </video>
-          <button
-            type="button"
-            class="wd8-video-play"
-            aria-label="영상 재생"
-          ></button>
+        <!-- ══ 풀필름 (수정사항_11.11 #341, 공용 양식 .wd-film — assets/works-detail.css) ══
+             assets/wd8-video.mp4 = SmartThings CES 본편 120초. 포스터는 32초 프레임 (첫 프레임이 검정이라).
+             재생 버튼을 누르면 딤이 걷히며 재생된다 (assets/video-play.js). -->
+        <section class="wd-film">
+          <h2 class="wd-head-title wd-film-title">Experience the Full Story</h2>
+          <div class="wd-film-frame" data-playing="false">
+            <video muted loop playsinline preload="metadata" poster="assets/wd8-film-poster.webp">
+              <source src="assets/wd8-video.mp4" type="video/mp4" />
+            </video>
+            <button type="button" class="wd-film-play" aria-label="영상 재생"></button>
+          </div>
         </section>
       </div>
     </main>

@@ -157,15 +157,17 @@
             <img class="wdx-item" style="--x: 966; --y: 366; --w: 954; --hh: 580" src="assets/wd14-people-02.webp" alt="" data-reveal />
         </section>
 
-        <!-- ══ 필름 (피그마 Video 3658:21463, 1920x1080 + 재생 버튼, 소리 있음) ══ -->
-        <section class="wdx-stage" style="--h: 1080">
-            <!-- 브랜드 필름 (VIDEO fill 0c5d74) -->
-            <div class="wdx-item wdx-video" style="--x: 0; --y: 0; --w: 1920; --hh: 1080" data-playing="false" data-reveal>
-              <video playsinline preload="metadata" poster="assets/wd14-film-poster.webp">
-                <source src="assets/wd14-film.mp4" type="video/mp4" />
-              </video>
-              <button type="button" class="wdx-video-play" aria-label="영상 재생"></button>
-            </div>
+        <!-- ══ 풀필름 (수정사항_11.11 #341, 공용 양식 .wd-film — assets/works-detail.css) ══
+             브랜드 필름 (소리 있음).
+             재생 버튼을 누르면 딤이 걷히며 재생된다 (assets/video-play.js). -->
+        <section class="wd-film">
+          <h2 class="wd-head-title wd-film-title">Experience the Full Story</h2>
+          <div class="wd-film-frame" data-playing="false">
+            <video playsinline preload="metadata" poster="assets/wd14-film-poster.webp">
+              <source src="assets/wd14-film.mp4" type="video/mp4" />
+            </video>
+            <button type="button" class="wd-film-play" aria-label="영상 재생"></button>
+          </div>
         </section>
       </div>
     </main>

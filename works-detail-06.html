@@ -237,21 +237,17 @@
           </div>
         </section>
 
-        <!-- ══ 9. 영상 ══ -->
-        <section class="wd6-video" data-playing="false">
-          <video
-            poster="assets/wd6-video.webp"
-            loop
-            playsinline
-            preload="none"
-          >
-            <source src="assets/wd6-video.mp4" type="video/mp4" />
-          </video>
-          <button
-            type="button"
-            class="wd6-video-play"
-            aria-label="영상 재생"
-          ></button>
+        <!-- ══ 풀필름 (수정사항_11.11 #341, 공용 양식 .wd-film — assets/works-detail.css) ══
+             포스터는 피그마 양식(4170:27253)과 같은 영상 0.6초 프레임 (예전 wd6-video.webp 는 딤이 구워져 있어 CSS 딤과 겹쳤다).
+             재생 버튼을 누르면 딤이 걷히며 재생된다 (assets/video-play.js). -->
+        <section class="wd-film">
+          <h2 class="wd-head-title wd-film-title">Experience the Full Story</h2>
+          <div class="wd-film-frame" data-playing="false">
+            <video loop playsinline preload="none" poster="assets/wd6-film-poster.webp">
+              <source src="assets/wd6-video.mp4" type="video/mp4" />
+            </video>
+            <button type="button" class="wd-film-play" aria-label="영상 재생"></button>
+          </div>
         </section>
       </div>
     </main>

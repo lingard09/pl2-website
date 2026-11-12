@@ -301,15 +301,17 @@
           </div>
         </div>
 
-        <!-- ══ 캠페인 필름 (피그마 Video 3658:21342, 1920x1080 + 재생 버튼, 소리 있음) ══ -->
-        <section class="wdx-stage" style="--h: 1080">
-            <!-- 캠페인 필름 (VIDEO fill 2e0765) -->
-            <div class="wdx-item wdx-video" style="--x: 0; --y: 0; --w: 1920; --hh: 1080" data-playing="false" data-reveal>
-              <video playsinline preload="metadata" poster="assets/wd13-film-poster.webp">
-                <source src="assets/wd13-film.mp4" type="video/mp4" />
-              </video>
-              <button type="button" class="wdx-video-play" aria-label="영상 재생"></button>
-            </div>
+        <!-- ══ 풀필름 (수정사항_11.11 #341, 공용 양식 .wd-film — assets/works-detail.css) ══
+             캠페인 필름 (소리 있음).
+             재생 버튼을 누르면 딤이 걷히며 재생된다 (assets/video-play.js). -->
+        <section class="wd-film">
+          <h2 class="wd-head-title wd-film-title">Experience the Full Story</h2>
+          <div class="wd-film-frame" data-playing="false">
+            <video playsinline preload="metadata" poster="assets/wd13-film-poster.webp">
+              <source src="assets/wd13-film.mp4" type="video/mp4" />
+            </video>
+            <button type="button" class="wd-film-play" aria-label="영상 재생"></button>
+          </div>
         </section>
       </div>
     </main>

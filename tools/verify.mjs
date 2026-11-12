@@ -30,16 +30,16 @@ const BASE = process.env.BASE || 'http://localhost:8765';
 const PAGES = {
   'index.html': 1080,
   'works.html': 5137, // 2026-10-07 레이아웃 교체 (피그마 3024:13288)
-  'about.html': 8112,
+  'about.html': 7328, // 2026-11-12 PL 로고 구간 삭제 (#339)
   'contact.html': null, // 100dvh 라 뷰포트에 따라 달라진다
   'works-detail-01.html': 23061, // 2026-11-11 레이어 스택 300→500vh, 아이스크림 띠 고정 +360vh
-  'works-detail-02.html': 11385, // 2026-11-10 4-H 와 같은 스크롤 모션으로 교체 (챕터를 차례로 쌓는다)
+  'works-detail-02.html': 11511, // 2026-11-12 풀필름 양식 Experience the Full Story (+126)
   'works-detail-03.html': 12321,
   'works-detail-04.html': 9887,
   'works-detail-05.html': 14340,
-  'works-detail-06.html': 17102,
-  'works-detail-07.html': 18220, // 2026-11-11 코드 Light→Dark 고정 구간 추가
-  'works-detail-08.html': 11670,
+  'works-detail-06.html': 17228, // 2026-11-12 풀필름 양식 (+126)
+  'works-detail-07.html': 18152, // 2026-11-12 코드 Light→Dark 고정, 영상 제목 바 제거, 서비스 라벨
+  'works-detail-08.html': 11796, // 2026-11-12 풀필름 양식 (+126)
   'works-detail-09.html': 20252, // 2026-11-11 제품 슬라이더 스크롤 고정 +200vh
   'works-detail-10.html': 13844,
   'works-detail-11.html': 11232, // 2026-10-07 신규 (피그마 3032:14308). 2026-11-10 한글 강제 줄바꿈 제거로 -68

@@ -335,17 +335,17 @@
           </div>
         </section>
 
-        <!-- ══ 8. 영상 ══ -->
-        <!-- 브랜드 필름 (2026-10-15 피드백, 소리 있음). 버튼을 누르면 재생된다 (assets/video-play.js) -->
-        <section class="wd2-video" data-playing="false">
-          <video playsinline preload="metadata" poster="assets/wd2-video.webp">
-            <source src="assets/wd2-film.mp4" type="video/mp4" />
-          </video>
-          <button
-            type="button"
-            class="wd2-video-play"
-            aria-label="영상 재생"
-          ></button>
+        <!-- ══ 풀필름 (수정사항_11.11 #341, 공용 양식 .wd-film — assets/works-detail.css) ══
+             브랜드 필름 (2026-10-15 피드백, 소리 있음).
+             재생 버튼을 누르면 딤이 걷히며 재생된다 (assets/video-play.js). -->
+        <section class="wd-film">
+          <h2 class="wd-head-title wd-film-title">Experience the Full Story</h2>
+          <div class="wd-film-frame" data-playing="false">
+            <video playsinline preload="metadata" poster="assets/wd2-video.webp">
+              <source src="assets/wd2-film.mp4" type="video/mp4" />
+            </video>
+            <button type="button" class="wd-film-play" aria-label="영상 재생"></button>
+          </div>
         </section>
       </div>
     </main>

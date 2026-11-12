@@ -134,8 +134,9 @@
 .wd-hero-brand {
   padding: 0.3646cqw 0.625cqw 0.1042cqw; /* 7 12 2 */
   border-radius: 0.2083cqw; /* 4 */
-  background: rgba(255, 255, 255, 0.24);
-  color: var(--pl2-neutral-90);
+  /* 수정사항_11.11 #342 (피그마 HeroSection 4170:27304): 불투명 #303030 / 글자 #F5F5F5, 모든 테마 공통 */
+  background: #303030;
+  color: #f5f5f5;
   font-size: 1.4583cqw; /* 28 */
   font-weight: 500;
   line-height: 1.6667cqw; /* 32 */
@@ -174,8 +175,9 @@
 .wd-tag {
   padding: 0.2083cqw 0.3125cqw; /* 4 6 */
   border-radius: 0.2083cqw; /* 4 */
-  background: rgba(255, 255, 255, 0.12);
-  color: var(--pl2-neutral-80);
+  /* 수정사항_11.11 #342: 불투명 #777777 / 글자 #F5F5F5, 모든 테마 공통 */
+  background: #777777;
+  color: #f5f5f5;
   font-size: 0.7813cqw; /* 15 */
   font-weight: 400;
   line-height: 1.2;
@@ -296,18 +298,8 @@
   object-fit: contain;
 }
 
-.wd-body--light .wd-hero-brand {
-  background: rgba(0, 0, 0, 0.12);
-  color: var(--pl2-neutral-20);
-}
-
 .wd-body--light .wd-hero-h1 {
   color: var(--pl2-black);
-}
-
-.wd-body--light .wd-tag {
-  background: rgba(0, 0, 0, 0.06);
-  color: var(--pl2-neutral-30);
 }
 
 .wd-body--light .wd-intro-title,
@@ -329,18 +321,8 @@
   object-fit: cover;
 }
 
-.wd-body--light .wd-hero--dark .wd-hero-brand {
-  background: rgba(255, 255, 255, 0.24);
-  color: var(--pl2-neutral-90);
-}
-
 .wd-body--light .wd-hero--dark .wd-hero-h1 {
   color: var(--pl2-white);
-}
-
-.wd-body--light .wd-hero--dark .wd-tag {
-  background: rgba(255, 255, 255, 0.12);
-  color: var(--pl2-neutral-80);
 }
 
 /* ══ 자유 배치 스테이지 (추가 전달_10.29 상세 12·13·14) ═══════════════
@@ -439,6 +421,105 @@
 .wdx-video-play:focus-visible {
   outline: min(0.1042vw, 2px) solid var(--pl2-white);
   outline-offset: max(-0.2083vw, -4px);
+}
+
+/* ══ 풀필름 (수정사항_11.11 #341, 피그마 4170:27253 "Experience the Full Story") ══════════
+   상세 페이지 맨 아래 본편 영상 공용 양식 (상세 02·06·08·13·14).
+   제목(.wd-head-title 32/46 그대로, 가운데) → 80 → 영상 1920x1080.
+   재생 전에는 포스터 위에 검정 60% 딤 + 재생 삼각형, 재생하면 딤과 삼각형이 걷힌다 (video-play.js 가
+   .wd-film-frame[data-playing] 만 바꾼다). 나중에 Vimeo 로 옮길 때는 .wd-film-frame 안의
+   <video> + <button> 을 <iframe> 하나로 바꾸고 data-playing 을 빼면 된다. */
+.wd-film {
+  display: flex;
+  flex-direction: column;
+  gap: min(4.1667vw, 80px); /* 80 */
+}
+
+.wd-film-title {
+  padding: 0 3.125%; /* 60 / 1920 */
+  text-align: center;
+}
+
+.wd-film-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1920 / 1080;
+  overflow: hidden;
+  background: #000;
+}
+
+.wd-film-frame video,
+.wd-film-frame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  object-fit: cover;
+}
+
+.wd-film-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--pl2-alpha-60); /* 피그마 Rectangle 4237: VIDEO + #000 60% */
+  transition: opacity 300ms ease;
+  pointer-events: none;
+}
+
+.wd-film-frame[data-playing="true"]::after {
+  opacity: 0;
+}
+
+/* 클릭 영역은 영상 전체, 삼각형은 ::before (PlayBTN 30x54, 그림자 50) */
+.wd-film-play {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.wd-film-play::before {
+  content: "";
+  width: min(1.5625vw, 30px);
+  height: min(2.8125vw, 54px);
+  background: url("icon-play.svg") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 0 min(1.3021vw, 25px) rgba(0, 0, 0, 0.3));
+  transition: opacity 300ms ease;
+}
+
+.wd-film-frame[data-playing="true"] .wd-film-play::before {
+  opacity: 0;
+}
+
+.wd-film-play:focus-visible {
+  outline: min(0.1042vw, 2px) solid var(--pl2-white);
+  outline-offset: max(-0.2083vw, -4px);
+}
+
+@media (max-width: 599.98px) {
+  .wd-film {
+    gap: 24px;
+  }
+
+  .wd-film-title {
+    padding: 0 20px;
+  }
+
+  .wd-film-frame {
+    aspect-ratio: 390 / 220;
+  }
+
+  .wd-film-play::before {
+    width: 20px;
+    height: 36px;
+    filter: drop-shadow(0 0 17px rgba(0, 0, 0, 0.3));
+  }
 }
 
 /* ══ 영문판 글자 (html.is-en, 피그마 텍스트 스타일 Works-About/PC/*-eng) ══════════
@@ -542,22 +623,14 @@
     -webkit-text-stroke: 0.5px currentColor;
   }
 
-  .wd-body--light .wd-hero-brand {
-    background: rgba(255, 255, 255, 0.24);
-    color: var(--pl2-neutral-90);
-  }
-
   .wd-hero-tags {
     gap: 6px;
     overflow: hidden;
   }
 
-  .wd-tag,
-  .wd-body--light .wd-tag {
+  .wd-tag {
     padding: 4px 6px;
     border-radius: 4px;
-    background: rgba(255, 255, 255, 0.12);
-    color: var(--pl2-neutral-80);
     font-size: 12px;
     line-height: 12px;
   }

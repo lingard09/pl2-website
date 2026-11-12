@@ -111,30 +111,32 @@
             </p>
           </div>
 
-          <!-- 이미지 3장은 data-reveal 로 하나씩 따로 등장한다 (PC 피드백_0930) -->
+          <!-- 이미지 3장은 data-reveal 로 하나씩 따로 등장한다 (PC 피드백_0930).
+               수정사항_11.11 #329 (피그마 4170:25286): PC 에도 이미지 위에 페이지 이름(Medium 20/32 #555, 아래 20)을 붙인다.
+               캡션이 이미지와 같이 올라오도록 data-reveal 은 figure 에 둔다. -->
           <div class="wd7-services">
             <!-- 모바일(6_MO 3875:25373)은 Main → Forum → Support 순 390x390 정사각 + 캡션 (순서는 CSS order) -->
             <div class="wd7-services-col">
-              <figure class="wd7-fig wd7-fig--main">
+              <figure class="wd7-fig wd7-fig--main" data-reveal>
                 <picture>
                   <source media="(max-width: 599.98px)" srcset="assets/wd7-service-main-mo.webp" />
-                  <img src="assets/wd7-service-01.webp" alt="" data-reveal />
+                  <img src="assets/wd7-service-01.webp" alt="" />
                 </picture>
                 <figcaption class="wd7-cap">Main Page</figcaption>
               </figure>
-              <figure class="wd7-fig wd7-fig--support">
+              <figure class="wd7-fig wd7-fig--support" data-reveal>
                 <picture>
                   <source media="(max-width: 599.98px)" srcset="assets/wd7-service-support-mo.webp" />
-                  <img src="assets/wd7-service-02.webp" alt="" data-reveal />
+                  <img src="assets/wd7-service-02.webp" alt="" />
                 </picture>
                 <figcaption class="wd7-cap">Support Page</figcaption>
               </figure>
             </div>
             <div class="wd7-services-col wd7-services-col--center">
-              <figure class="wd7-fig wd7-fig--forum">
+              <figure class="wd7-fig wd7-fig--forum" data-reveal>
                 <picture>
                   <source media="(max-width: 599.98px)" srcset="assets/wd7-service-forum-mo.webp" />
-                  <img src="assets/wd7-service-03.webp" alt="" data-reveal />
+                  <img src="assets/wd7-service-03.webp" alt="" />
                 </picture>
                 <figcaption class="wd7-cap">Forum Page</figcaption>
               </figure>
@@ -210,10 +212,10 @@
           </div>
 
           <div class="wd7-stack120">
-            <!-- Documentation 구조 창 (2026-10-15 피드백, 피그마 1558x898 = 바 38 + 영상 860) -->
+            <!-- Documentation 구조 (피그마 4170:27159, 영상 1558x860).
+                 수정사항_11.11 #331: 영상 위 창 제목 바(글자 "Structure")를 뺐다. 세 영상 모두 같다 -->
             <figure class="wd7-fig">
             <div class="wd7-doc-01 wd7-window">
-              <img class="wd7-window-bar" src="assets/wd7-structure-bar.webp" alt="" />
               <video
                 poster="assets/wd7-structure-poster.webp"
                 autoplay
@@ -227,11 +229,9 @@
             </div>
             <figcaption class="wd7-cap">Structure</figcaption>
             </figure>
-            <!-- 커버 화면 팝업 창 (2026-10-13 피드백, 피그마 Frame 1428752994 1208x657).
-                 위 44 는 창 제목 바(이미지), 아래 1208x613 이 영상이다 -->
+            <!-- 커버 화면 팝업 (피그마 4170:27165, 영상 1208x613) -->
             <figure class="wd7-fig">
             <div class="wd7-doc-02 wd7-window">
-              <img class="wd7-window-bar" src="assets/wd7-popup-bar.webp" alt="" />
               <video
                 poster="assets/wd7-popup-poster.webp"
                 autoplay
@@ -245,10 +245,9 @@
             </div>
             <figcaption class="wd7-cap">Pop-ups on the cover screen</figcaption>
             </figure>
-            <!-- Remote Test Lab 창 (피그마 1558x892 = 바 32 + 영상 860, 영상은 PC 피드백_1026 Rectangle 34628193) -->
+            <!-- Remote Test Lab (피그마 4170:27172, 영상 1558x860) -->
             <figure class="wd7-fig">
             <div class="wd7-doc-03 wd7-window">
-              <img class="wd7-window-bar" src="assets/wd7-rtl-bar.webp" alt="" />
               <video
                 poster="assets/wd7-rtl-poster.webp"
                 autoplay

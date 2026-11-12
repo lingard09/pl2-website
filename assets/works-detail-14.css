@@ -10,8 +10,7 @@
    - 마지막 필름도 390x220, 재생 버튼 36 */
 @media (max-width: 599.98px) {
   .wdx-stage > video.wdx-item,
-  .wdx-stage > img.wdx-item,
-  .wdx-video {
+  .wdx-stage > img.wdx-item {
     aspect-ratio: 390 / 220;
     object-fit: cover;
   }
@@ -28,12 +27,5 @@
   .wdx-caption {
     margin-top: -4px; /* 20 - 4 = 16 */
     font-weight: 400;
-  }
-
-  /* PlayBTN 36 (피그마 Video 3875:28913) — 삼각형 비율 30:54 유지 */
-  .wdx-video-play::before {
-    width: 20px;
-    height: 36px;
-    filter: drop-shadow(0 0 25px rgba(0, 0, 0, 0.3));
   }
 }

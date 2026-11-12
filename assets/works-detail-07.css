@@ -60,9 +60,47 @@
 }
 
 .wd7-services-col img {
+  display: block;
   width: 100%;
-  aspect-ratio: 888 / 829;
+  aspect-ratio: 888 / 800;
   object-fit: cover;
+}
+
+/* 수정사항_11.11 #329 (피그마 4170:25286): 이미지 위에 페이지 이름 (Medium 20/32 #555, 아래 20).
+   한 묶음 852 = 이름 32 + 20 + 이미지 800, 묶음 사이 120. 오른쪽 열은 세로 가운데.
+   이미지는 radius 12 + 안쪽 선 rgba(0,0,0,.2) — 예전엔 이미지에 그려져 있었다 */
+@media (min-width: 600px) {
+  .wd7-services .wd7-fig {
+    display: flex;
+    flex-direction: column;
+    gap: min(1.0417vw, 20px);
+  }
+
+  .wd7-services .wd7-cap {
+    display: block;
+    order: -1;
+    color: var(--pl2-neutral-30, #555);
+    font-size: min(1.0417vw, 20px);
+    font-weight: 500;
+    line-height: min(1.6667vw, 32px);
+  }
+
+  /* 아래 PC 기본값(.wd7-services picture { display: contents })보다 우선하도록 .wd7-fig 를 붙인다 */
+  .wd7-services .wd7-fig picture {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: min(0.625vw, 12px);
+  }
+
+  .wd7-services .wd7-fig picture::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: inherit;
+    pointer-events: none;
+  }
 }
 
 /* ══ 3. 디자인 시스템 ══════════════════════════════════ */
@@ -172,7 +210,8 @@
 }
 
 /* ══ 4. 개발 도구 3컷 ══════════════════════════════════ */
-/* Structure 창 1558x898 = 바 38 + 영상 860, 가운데 정렬 */
+/* Structure 영상 1558x860, 가운데 정렬.
+   수정사항_11.11 #331: 영상 위 창 제목 바(글자)를 뺐다 (피그마 4170:27154) */
 .wd7-doc-01 {
   width: 81.146%; /* 1558 / 1920 */
   margin: 0 auto;
@@ -183,31 +222,28 @@
   margin-left: 3.125%; /* x=60 */
 }
 
-/* 창 = 제목 바 이미지(1208x44) + 영상(1208x613). 피그마 Frame 1428752994 radius 12 */
+/* 영상 칸. 피그마 radius 12 (01·03 은 10.53) + 선 rgba(5,40,80,.1) */
 .wd7-window {
   display: flex;
   flex-direction: column;
   overflow: hidden;
   border-radius: min(0.625vw, 12px);
+  box-shadow: 0 0 0 1px rgba(5, 40, 80, 0.1);
 }
 
-.wd7-window-bar,
 .wd7-window video {
   display: block;
   width: 100%;
   object-fit: cover;
 }
 
-.wd7-doc-02 .wd7-window-bar { aspect-ratio: 1208 / 44; }
 .wd7-doc-02 video { aspect-ratio: 1208 / 613; }
-.wd7-doc-01 .wd7-window-bar { aspect-ratio: 1558 / 38; }
-.wd7-doc-03 .wd7-window-bar { aspect-ratio: 1558 / 32; }
 .wd7-doc-01 video,
 .wd7-doc-03 video { aspect-ratio: 1558 / 860; }
 .wd7-doc-01,
 .wd7-doc-03 { border-radius: min(0.5483vw, 10.527px); }
 
-/* Remote Test Lab 창 1558x892 = 바 32 + 영상 860 */
+/* Remote Test Lab 영상 1558x860 */
 .wd7-doc-03 {
   width: 81.146%; /* 1558 / 1920 */
   margin: 0 auto;
@@ -365,11 +401,7 @@
     height: 220px;
     margin: 0;
     border-radius: 0;
-  }
-
-  /* 모바일 프레임에는 창 제목 바가 없다 (390 폭에선 글자도 안 읽힌다) → 영상만 꽉 채운다 */
-  .wd7-window-bar {
-    display: none;
+    box-shadow: none;
   }
 
   .wd7-doc-01 video,

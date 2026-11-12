@@ -116,57 +116,6 @@
   object-fit: cover;
 }
 
-/* ══ 9. 영상 ═══════════════════════════════════════════ */
-.wd6-video {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1920 / 1080;
-  overflow: hidden;
-}
-
-.wd6-video img,
-.wd6-video video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* 이 페이지 재생 삼각형은 76x66 (상세 02·05 는 95x82) */
-.wd6-video-play {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-}
-
-.wd6-video-play::before {
-  content: "";
-  /* PlayBTN (PC 피드백_0930, 피그마 2930:35707): 흰 삼각형 30x54, 모서리 1.5,
-     그림자 0 0 50 #000@30%. 상세 02·05·06·08·10 공통 아이콘 */
-  width: min(1.5625vw, 30px);
-  height: min(2.8125vw, 54px);
-  background: url("icon-play.svg") center / 100% 100% no-repeat;
-  filter: drop-shadow(0 0 min(1.3021vw, 25px) rgba(0, 0, 0, 0.3));
-  transition: opacity 300ms ease;
-}
-
-/* poster jpg 에 딤(검정 60%)이 이미 구워져 있어서 재생 중에는
-   video 프레임이 그대로 밝아진다 — CSS 딤은 상세 08 에만 있다. */
-.wd6-video[data-playing="true"] .wd6-video-play::before {
-  opacity: 0;
-}
-
-.wd6-video-play:focus-visible {
-  outline: min(0.1042vw, 2px) solid var(--pl2-white);
-  outline-offset: min(-0.2083vw, -4px);
-}
-
 /* 모바일 전용 크롭용 <picture> 와 캐러셀 묶음은 PC 배치에 끼지 않는다 (img 가 그대로 flex 항목).
    점(wd-mo-carousel.js 가 넣는다)도 PC 에서는 숨긴다 — 안 숨기면 flex gap 이 한 칸 더 생긴다 */
 .wd6-skincare picture,
@@ -301,16 +250,6 @@
     order: 4;
   }
 
-  /* ── 영상 390x220, 재생 삼각형 17x30 (피그마 MO PlayBTN 36 칸 안) ── */
-  .wd6-video {
-    aspect-ratio: 390 / 220;
-  }
-
-  .wd6-video-play::before {
-    width: 17px;
-    height: 30px;
-    filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.3));
-  }
 
   /* 점: 5px · 간격 4 · 아래 12, 사진 위라 흰색 (#F5F5F5 / 흰 40%) */
   .wd-mo-dots {
