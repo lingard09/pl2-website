@@ -3,7 +3,7 @@
    가운데(0) 칸에 들어오는 이미지는 커지고, 나가는 이미지는 작아진다.
 
    PC (수정사항_11.11 #325): 띠를 화면에 고정해 두고 스크롤 양에 맞춰 이미지를 왼쪽 → 오른쪽으로
-   한 칸씩 굴린다. 칸마다 잠깐 머물도록 칸 사이 이동에 가속·감속을 준다. 아홉 칸을 다 굴리면
+   한 칸씩 굴린다. 수정사항_11.12: 스크롤 양을 따라 끌려가지 않고 구간이 바뀔 때마다 한 장씩 탁 넘어간다. 아홉 칸을 다 굴리면
    (모든 이미지가 한 번씩 가운데에 온다) 고정이 풀리고 아래로 이어진다.
    양끝(-5, +5 칸)은 화면 밖이라 그 사이에서 반대편 끝으로 넘어가도 보이지 않는다.
    모바일(수정사항_11.06)은 손으로 넘기는 가로 스크롤이라 여기서 아무것도 하지 않는다.
@@ -32,10 +32,6 @@
     return [left, 440, 200, 300];
   }
 
-  function ease(p) {
-    return p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
-  }
-
   function clamp(v) {
     return v < 0 ? 0 : v > 1 ? 1 : v;
   }
@@ -43,10 +39,7 @@
   var on = false;
   var u = 1;
 
-  function render(progress) {
-    var t = STEPS * progress;
-    var whole = Math.floor(t);
-    var shift = whole + ease(t - whole); // 칸 사이만 움직이고 칸에서는 머문다
+  function render(shift) {
     imgs.forEach(function (img, i) {
       // 왼쪽 → 오른쪽: 칸 번호가 커지는 쪽으로 민다
       var s = base[i] + shift;
@@ -73,7 +66,33 @@
     var top = parseFloat(getComputedStyle(pin).top) || 0;
     var dist = section.offsetHeight - pin.offsetHeight;
     var r = section.getBoundingClientRect();
-    render(dist > 0 ? clamp((top - r.top) / dist) : 0);
+    var p = dist > 0 ? clamp((top - r.top) / dist) : 0;
+    // 스크롤 구간을 (STEPS + 1) 칸으로 나눠 칸마다 한 장. 스크롤 양을 따라 끌려가지 않고
+    // 칸이 바뀌는 순간 한 장이 탁 넘어간다 (수정사항_11.12 "스크롤시 탁.탁. 하나씩")
+    goTo(Math.min(STEPS, Math.floor(p * (STEPS + 1))));
+  }
+
+  var MOVE_MS = 520;
+  var cur = 0; // 지금 그려진 위치 (칸 단위, 넘어가는 중이면 소수)
+  var target = 0;
+  var from = 0;
+  var t0 = 0;
+  var raf = 0;
+
+  function goTo(next) {
+    if (next === target) return;
+    from = cur;
+    target = next;
+    t0 = performance.now();
+    if (!raf) raf = requestAnimationFrame(tick);
+  }
+
+  function tick(now) {
+    var k = clamp((now - t0) / MOVE_MS);
+    // 빠르게 출발해 칸에 붙는다
+    cur = from + (target - from) * (1 - Math.pow(1 - k, 3));
+    render(cur);
+    raf = k < 1 ? requestAnimationFrame(tick) : 0;
   }
 
   function setMode() {
@@ -88,6 +107,11 @@
     }
     measure();
     onScroll();
+    // 처음 열 때(또는 크기 바꿀 때)는 넘기는 모션 없이 제자리에 둔다
+    if (raf) cancelAnimationFrame(raf);
+    raf = 0;
+    cur = target;
+    render(cur);
   }
 
   var queued = false;

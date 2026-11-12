@@ -457,6 +457,21 @@
   object-fit: cover;
 }
 
+/* 데스크톱 (수정사항_11.12 디스플레이 테스트): 브라우저 창이 16:9 보다 납작하면(주소창·탭 때문에
+   거의 항상 그렇다) 폭 100% 영상은 위아래가 화면 밖으로 넘쳤다. 프레임 높이를 화면 높이로 묶어
+   영상이 화면 위아래에 딱 맞게 들어오고, 남는 양옆은 검정으로 둔다. 영상은 잘리지 않는다. */
+@media (min-width: 600px) {
+  .wd-film-frame {
+    aspect-ratio: auto;
+    height: min(56.25vw, 100vh);
+  }
+
+  .wd-film-frame video,
+  .wd-film-frame iframe {
+    object-fit: contain;
+  }
+}
+
 .wd-film-frame::after {
   content: "";
   position: absolute;

@@ -24,6 +24,15 @@
 
     button.addEventListener("click", function () {
       if (video.paused) {
+        // 하단 풀필름은 재생하면 영상이 화면 위아래에 딱 맞게 오도록 맞춰 준다 (수정사항_11.12, PC)
+        if (slot.classList.contains("wd-film-frame") && window.innerWidth >= 600) {
+          var r = slot.getBoundingClientRect();
+          var y = window.scrollY + r.top - (window.innerHeight - r.height) / 2;
+          // 관성 스크롤(Lenis, 상세 02·13)이 켜진 페이지는 Lenis 로 움직여야 서로 당기지 않는다
+          var lenis = window.PL2Space && window.PL2Space.lenis;
+          if (lenis) lenis.scrollTo(Math.round(y));
+          else window.scrollTo({ top: Math.round(y), behavior: "smooth" });
+        }
         var played = video.play();
         if (played && played.catch) played.catch(function () {});
       } else {

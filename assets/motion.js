@@ -222,9 +222,10 @@
     // 문서 높이가 늘지 않는다 (base.css 의 .ft 등장 규칙).
     ".ft",
   ].join(",");
-  var STAGGER = 130; // 하나씩 차례로 출발하는 간격
-  var STAGGER_MAX = 880; // 한꺼번에 많이 들어올 때 뒤쪽이 너무 늦지 않게
-  var DURATION = 1600; // base.css .mo-anim transition 과 맞춘다
+  // 수정사항_11.12: 올라오는 타이밍을 빠르게 (1.6초 → 1초, 시차 130 → 90)
+  var STAGGER = 90; // 하나씩 차례로 출발하는 간격
+  var STAGGER_MAX = 540; // 한꺼번에 많이 들어올 때 뒤쪽이 너무 늦지 않게
+  var DURATION = 1000; // base.css .mo-anim transition 과 맞춘다
 
   function initReveal(startDelay, skipFirstScreen) {
     if (!("IntersectionObserver" in window)) return;
@@ -295,6 +296,9 @@
       // 2열이면 자연히 좌 → 우 → 좌 → 우로 번갈아 나온다. 한번 출발하면 CSS 전환이라 끝까지 정착한다.
       queue.forEach(function (el, i) {
         var delay = Math.min(i * STAGGER, STAGGER_MAX);
+        // data-reveal-delay="ms" 는 함께 들어와도 정해 둔 간격으로 하나씩 (상세 01 일러스트 4장, 수정사항_11.12)
+        var fixed = el.getAttribute("data-reveal-delay");
+        if (fixed !== null) delay = parseInt(fixed, 10) || 0;
         el.style.transitionDelay = delay + "ms";
         el.classList.add("mo-anim");
         el.classList.remove("mo-out");
@@ -308,21 +312,43 @@
       queue = [];
     }
 
-    // 등장: 아래쪽 8% 는 빼서 화면 안으로 조금 들어온 뒤에 움직이게 한다
-    var enterIO = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          var el = entry.target;
-          if (!entry.isIntersecting || !el.classList.contains("mo-out")) return;
-          if (queue.indexOf(el) === -1) queue.push(el);
+    // 등장 판정은 요소의 "제자리" 기준 (수정사항_11.12, 신세계 시퀀스).
+    // 숨은 요소는 출발 거리(base.css .mo-out, PC 최대 320 / 모바일 120)만큼 밀려 있어서, 밀린 위치로
+    // 판정하면 제자리가 이미 화면에 보이는데도 한참 비어 있다가 늦게 올라왔다 (글은 올라왔는데 영상은 빈 칸).
+    // 판정 영역을 출발 거리만큼 넓혀 제자리가 화면 아래 4% 선을 넘는 순간 출발하게 한다.
+    // 같은 화면에 함께 보이는 글과 이미지는 그래서 한 묶음으로 같이 올라온다.
+    // 출발 거리는 요소마다 다를 수 있어서(상세 02 파이프라인은 짧게) 실제 거리별로 관찰자를 따로 둔다.
+    var vh = window.innerHeight;
+    function onEnter(entries) {
+      entries.forEach(function (entry) {
+        var el = entry.target;
+        if (!entry.isIntersecting || !el.classList.contains("mo-out")) return;
+        if (queue.indexOf(el) === -1) queue.push(el);
+      });
+      if (queue.length && !flushing) {
+        flushing = true;
+        requestAnimationFrame(flush);
+      }
+    }
+    var enterIOs = {};
+    function enterIOFor(el) {
+      var travel = 0;
+      if (!early) {
+        // .mo-out 이 붙은 상태의 세로 이동 거리 ("0px 320px" → 320)
+        var parts = (getComputedStyle(el).translate || "").split(" ");
+        travel = Math.abs(parseFloat(parts[1]) || 0);
+      }
+      var key = early ? "early" : String(Math.round(travel));
+      if (!enterIOs[key]) {
+        enterIOs[key] = new IntersectionObserver(onEnter, {
+          rootMargin: early
+            ? "25% 0px 25% 0px"
+            : Math.round(travel) + "px 0px " + Math.round(travel - vh * 0.04) + "px 0px",
+          threshold: 0,
         });
-        if (queue.length && !flushing) {
-          flushing = true;
-          requestAnimationFrame(flush);
-        }
-      },
-      { rootMargin: early ? "25% 0px 25% 0px" : "0px 0px -8% 0px", threshold: 0 }
-    );
+      }
+      return enterIOs[key];
+    }
 
     // 퇴장: 화면 밖으로 완전히 나갔을 때만 되돌린다 (보이는 채로 사라지지 않게)
     var exitIO = new IntersectionObserver(
@@ -354,7 +380,7 @@
 
     setTimeout(function () {
       els.forEach(function (el) {
-        enterIO.observe(el);
+        enterIOFor(el).observe(el);
         exitIO.observe(el);
       });
     }, startDelay);

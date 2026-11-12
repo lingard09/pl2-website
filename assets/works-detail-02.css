@@ -145,6 +145,12 @@
   background: var(--pl2-neutral-70);
 }
 
+/* 수정사항_11.12: 점·레이블이 하나씩 올라오되 출발 거리를 짧게 (320 → 60).
+   길게 올라오면 파이프라인이 화면 가운데에 왔을 때 아직 움직이는 중이라 줄이 딱 맞지 않았다 */
+.mo-on .wd2-pipe .mo-reveal.mo-out {
+  translate: 0 calc(var(--mo-dir, 1) * 60px);
+}
+
 /* 마지막 점 빼고 아래로 연결선 */
 .wd2-pipe-dot:not(:last-of-type)::after {
   content: "";
