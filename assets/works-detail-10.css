@@ -43,6 +43,18 @@
   gap: min(6.25vw, 120px);
 }
 
+/* 11.13: 제목 + 첫 이미지 묶음 (한 번에 등장). 제목 ↔ 이미지 80 은 블록 간격 그대로,
+   첫 이미지 ↔ 다음 행 120 은 블록 간격 80 + 40 */
+.wd10-intro {
+  display: flex;
+  flex-direction: column;
+  gap: min(4.1667vw, 80px);
+}
+
+.wd10-intro + .wd10-stack {
+  margin-top: min(2.0833vw, 40px);
+}
+
 .wd10-row {
   display: flex;
 }
@@ -234,8 +246,13 @@
   }
 
   .wd10-block,
-  .wd10-stack {
+  .wd10-stack,
+  .wd10-intro {
     gap: 60px;
+  }
+
+  .wd10-intro + .wd10-stack {
+    margin-top: 0;
   }
 
   .wd10-w1244,
