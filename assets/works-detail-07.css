@@ -236,10 +236,49 @@
 }
 
 /* ══ 5. 반응형 영상 (1920x920) ═══════════════════════ */
+/* 11.13: 배경 영상 위에 화면 영상을 얹는다. 화면 크기·테두리는 띠 높이(cqh) 기준이라
+   PC(1920x920)·모바일(390x220) 모두 피그마 비율 그대로 줄어든다 */
 .wd7-band {
-  display: block;
+  position: relative;
   width: 100%;
   aspect-ratio: 1920 / 920;
+  overflow: hidden;
+  container-type: size;
+}
+
+.wd7-band-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wd7-band-screen {
+  position: absolute;
+  top: 11.957%; /* 110 / 920 */
+  left: 50%;
+  height: 76.087%; /* 700 / 920 */
+  aspect-ratio: 1200 / 700;
+  overflow: hidden;
+  border-radius: 2.609cqh; /* 24 / 920 */
+  translate: -50% 0;
+}
+
+/* 테두리는 영상 위에 안쪽으로 그린다 (피그마 stroke INSIDE 6) */
+.wd7-band-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 0.6525cqh solid #000; /* 6 / 920 (0.652 는 5.998 이라 5 로 내림돼 살짝 올림) */
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.wd7-band-screen video {
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 

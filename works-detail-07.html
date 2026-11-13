@@ -276,17 +276,19 @@
             </p>
           </div>
 
-          <!-- 반응형 영상 (2026-10-15 피드백, 피그마 Frame 2116929530 1920x920). 화면 컷까지 영상에 들어 있다 -->
-          <video class="wd7-band"
-            poster="assets/wd7-band-poster.webp"
-            autoplay
-            muted
-            loop
-            playsinline
-            preload="metadata"
-          >
-            <source src="assets/wd7-band.mp4" type="video/mp4" />
-          </video>
+          <!-- 반응형 영상 띠 (11.13 최종, 피그마 4327:48255 1920x920): 두 겹.
+               뒤: 그라데이션 배경 영상 / 앞: 1200x700 화면(라운드 24 · 검은 테두리 6) 안에서 홈페이지가 스크롤되는 영상.
+               모바일 시안은 빈 칸이라 PC 구성을 같은 비율로 줄여 쓴다 -->
+          <div class="wd7-band">
+            <video class="wd7-band-bg" poster="assets/wd7-band-bg-poster.webp" autoplay muted loop playsinline preload="metadata">
+              <source src="assets/wd7-band-bg.mp4" type="video/mp4" />
+            </video>
+            <div class="wd7-band-screen">
+              <video poster="assets/wd7-band-scroll-poster.webp" autoplay muted loop playsinline preload="metadata">
+                <source src="assets/wd7-band-scroll.mp4" type="video/mp4" />
+              </video>
+            </div>
+          </div>
           <!-- 모바일 전용 화면 모음 (6_MO 3875:26765 · 26811 · 26833): 390x690 폰 화면 4장씩 가로 스와이프 3묶음.
                PC 의 6. 화면 모음(가로 컷 + 폰 4장)을 대신한다. PC 에서는 숨겨 lazy 라 받지 않는다 -->
           <div class="wd7-screens-list">
