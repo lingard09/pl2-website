@@ -201,6 +201,18 @@
           </div>
         </section>
 
+        <!-- ══ 5-1. 풀필름 (11.13 최종, 피그마 4333:67970): 제목 → 40 (MO 20) → 1920x1080 영상.
+             용량이 크지 않아 사이트 안에서 재생 (재생 버튼, video-play.js) ══ -->
+        <section class="wd-film wd-film--tight">
+          <h2 class="wd-head-title wd-film-title">Watch the Full Film</h2>
+          <div class="wd-film-frame" data-playing="false">
+            <video playsinline preload="metadata" poster="assets/wd3-film-poster.webp">
+              <source src="assets/wd3-film.mp4" type="video/mp4" />
+            </video>
+            <button type="button" class="wd-film-play" aria-label="영상 재생"></button>
+          </div>
+        </section>
+
         <!-- ══ 6. 모델 ══ -->
         <section class="wd3-section">
           <div class="wd-head wd-head--right">
@@ -259,5 +271,6 @@
 
     <script src="assets/gnb.js"></script>
     <script src="assets/top-btn.js"></script>
+    <script src="assets/video-play.js"></script>
   </body>
 </html>

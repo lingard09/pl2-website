@@ -34,7 +34,7 @@ const PAGES = {
   'contact.html': null, // 100dvh 라 뷰포트에 따라 달라진다
   'works-detail-01.html': 23097, // 2026-11-11 레이어 스택 300→500vh, 아이스크림 띠 고정 +360vh. 2026-11-13 최종 문구
   'works-detail-02.html': 11647, // 2026-11-12 풀필름 양식 Experience the Full Story (+126). 2026-11-13 최종 문구
-  'works-detail-03.html': 12321,
+  'works-detail-03.html': 13807, // 2026-11-13 풀필름 (제목 46 + 40 + 1080 + 320)
   'works-detail-04.html': 9887,
   'works-detail-05.html': 14226, // 2026-11-13 상단 텍스트 삭제 + 풀필름 제목
   'works-detail-06.html': 17512, // 2026-11-12 풀필름 양식 (+126). 2026-11-13 셀차저 사진 3장
@@ -103,9 +103,13 @@ for (const [name, wantHeight] of targets) {
         }
         const t0 = v.currentTime;
         await new Promise((r) => setTimeout(r, 900));
+        // 홈 원통처럼 스크롤로 못 데려오는 영상은 화면 밖이면 멈춰 두는 게 정상이다 (11.13 자동 회전)
+        const r = v.getBoundingClientRect();
+        const offscreen = r.bottom <= 0 || r.top >= innerHeight || getComputedStyle(v).visibility === 'hidden'
+          || (v.closest('.hm-row') && v.closest('.hm-row').style.visibility === 'hidden');
         return {
           src: (v.currentSrc || '').split('/').pop() || 'MISSING',
-          playing: !v.paused || v.currentTime !== t0,
+          playing: !v.paused || v.currentTime !== t0 || offscreen,
           // 눌러서 재생되는 자리는 딤이 실제로 걷혔는지도 같이 본다
           dimCleared: play ? section.getAttribute('data-playing') === 'true' : null,
         };
