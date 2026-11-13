@@ -50,6 +50,33 @@
   color: var(--pl2-neutral-10); /* 활성 #212121 */
 }
 
+/* 11.13 소제목 (SemiBold 32/46 #303030, 제목 아래 24) → 16 → 설명 */
+.wd2-step-body {
+  margin-top: min(1.25vw, 24px);
+}
+
+.wd2-step-sub {
+  color: #303030;
+  font-size: min(1.6667vw, 32px) /* 32 */;
+  font-weight: 600;
+  line-height: min(2.3958vw, 46px) /* 46 */;
+  letter-spacing: -0.02em;
+  word-break: keep-all;
+}
+
+.wd2-step-body > .wd2-step-desc {
+  margin-top: min(0.8333vw, 16px);
+}
+
+/* 11.13: 챕터마다 900x496 한 장 (x=60, 1920x960 프레임 세로 가운데) */
+.wd13-media .wdm-card {
+  top: 24.0625%; /* 231 / 960 */
+  left: 3.125%; /* 60 / 1920 */
+  width: 46.875%; /* 900 / 1920 */
+  aspect-ratio: 900 / 496;
+  object-fit: cover;
+}
+
 .wd2-step-desc {
   margin-top: min(1.25vw, 24px);
   color: var(--pl2-neutral-30); /* #555555 */
@@ -130,16 +157,23 @@
     opacity 0.4s ease;
 }
 
-.wd2-story-desc > .wd2-step-desc {
+.wd2-story-desc > .wd2-step-desc,
+.wd2-story-desc > .wd2-step-body {
   overflow: hidden;
   min-height: 0;
   margin-top: 0;
 }
 
-.wd2-story-desc > .wd2-step-desc::before {
+.wd2-story-desc > .wd2-step-desc::before,
+.wd2-story-desc > .wd2-step-body::before {
   content: "";
   display: block;
   height: min(1.25vw, 24px);
+}
+
+/* 활성 제목은 scale 1.1538 로 커져 아래로 4.8 넘친다 → 소제목까지 화면상 24 가 되도록 29 */
+.wd2-story-desc > .wd2-step-body::before {
+  height: min(1.5104vw, 29px);
 }
 
 .wd2-story-list .wd2-step[data-active="true"] .wd2-story-desc {
@@ -247,6 +281,33 @@
     line-height: 24px;
     letter-spacing: -0.02em;
     word-break: keep-all;
+  }
+
+  /* 11.13 소제목 SemiBold 20/28 (제목 아래 20) → 12 → 설명 */
+  .wd2-step-body {
+    margin-top: 20px;
+  }
+
+  .wd2-step-sub {
+    font-size: 20px;
+    line-height: 28px;
+  }
+
+  .wd2-step-body > .wd2-step-desc,
+  .is-en .wd2-step-body > .wd2-step-desc {
+    margin-top: 12px;
+  }
+
+  /* 사진 한 장 390x220 (피그마 4333:62416) */
+  .wdm-cards.wd13-media {
+    display: block;
+    aspect-ratio: auto;
+  }
+
+  .wd13-media .wdm-card {
+    position: static;
+    width: 100%;
+    aspect-ratio: 390 / 220;
   }
 
   .wd2-step-desc br:not(.br-mo) {

@@ -31,7 +31,8 @@
     var items = sections.map(function (s) {
       var item = s.querySelector('.wd2-step[data-active="true"]').cloneNode(true);
       item.setAttribute("data-active", "false");
-      var desc = item.querySelector(".wd2-step-desc");
+      // 11.13: 소제목 + 설명 묶음(.wd2-step-body)이 같이 펼쳐진다
+      var desc = item.querySelector(".wd2-step-body") || item.querySelector(".wd2-step-desc");
       if (desc) {
         var wrap = document.createElement("div");
         wrap.className = "wd2-story-desc";
