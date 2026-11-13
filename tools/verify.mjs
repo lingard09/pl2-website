@@ -30,19 +30,19 @@ const BASE = process.env.BASE || 'http://localhost:8765';
 const PAGES = {
   'index.html': 1080,
   'works.html': 5137, // 2026-10-07 레이아웃 교체 (피그마 3024:13288)
-  'about.html': 7328, // 2026-11-12 PL 로고 구간 삭제 (#339)
+  'about.html': 7360, // 2026-11-12 PL 로고 구간 삭제 (#339). 2026-11-13 최종 문구
   'contact.html': null, // 100dvh 라 뷰포트에 따라 달라진다
-  'works-detail-01.html': 23061, // 2026-11-11 레이어 스택 300→500vh, 아이스크림 띠 고정 +360vh
-  'works-detail-02.html': 11511, // 2026-11-12 풀필름 양식 Experience the Full Story (+126)
+  'works-detail-01.html': 23097, // 2026-11-11 레이어 스택 300→500vh, 아이스크림 띠 고정 +360vh. 2026-11-13 최종 문구
+  'works-detail-02.html': 11647, // 2026-11-12 풀필름 양식 Experience the Full Story (+126). 2026-11-13 최종 문구
   'works-detail-03.html': 12321,
   'works-detail-04.html': 9887,
-  'works-detail-05.html': 14340,
-  'works-detail-06.html': 17228, // 2026-11-12 풀필름 양식 (+126)
-  'works-detail-07.html': 18152, // 2026-11-12 코드 Light→Dark 고정, 영상 제목 바 제거, 서비스 라벨
+  'works-detail-05.html': 14226, // 2026-11-13 상단 텍스트 삭제 + 풀필름 제목
+  'works-detail-06.html': 17512, // 2026-11-12 풀필름 양식 (+126). 2026-11-13 셀차저 사진 3장
+  'works-detail-07.html': 18768, // 2026-11-12 코드 Light→Dark 고정, 영상 제목 바 제거, 서비스 라벨. 2026-11-13 캡션 추가 · 정사각 서비스 컷
   'works-detail-08.html': 11796, // 2026-11-12 풀필름 양식 (+126)
-  'works-detail-09.html': 20252, // 2026-11-11 제품 슬라이더 스크롤 고정 +200vh
-  'works-detail-10.html': 13844,
-  'works-detail-11.html': 11232, // 2026-10-07 신규 (피그마 3032:14308). 2026-11-10 한글 강제 줄바꿈 제거로 -68
+  'works-detail-09.html': 20348, // 2026-11-11 제품 슬라이더 스크롤 고정 +200vh. 2026-11-13 최종 문구
+  'works-detail-10.html': 14514, // 2026-11-13 풀필름 섹션 분리 + Watch Video
+  'works-detail-11.html': 11257, // 2026-10-07 신규 (피그마 3032:14308). 2026-11-10 한글 강제 줄바꿈 제거로 -68. 2026-11-13 고가도로 1558x860
 };
 
 // 아직 원본을 못 받은 영상 — 404 가 나도 정상이다 (NOTES "남은 것" 참고)
