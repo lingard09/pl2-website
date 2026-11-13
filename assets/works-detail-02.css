@@ -102,7 +102,8 @@
    레이블은 좌우 교대 (피그마 374x524). */
 .wd2-pipe {
   display: grid;
-  grid-template-columns: min(6.25vw, 120px) min(1.25vw, 24px) min(7.8125vw, 150px);
+  /* 11.13: 왼쪽 칸 142 ("Nano banana 2.0" 141 + 글꼴 여유 1), 점 24, 오른쪽 150 — 피그마 4327:56928 x=315~710 */
+  grid-template-columns: min(7.3958vw, 142px) min(1.25vw, 24px) min(7.8125vw, 150px);
   column-gap: min(2.0833vw, 40px);
   row-gap: min(3.9583vw, 76px);
   grid-auto-rows: min(1.25vw, 24px);
@@ -492,8 +493,8 @@
   }
 
   .wd2-pipe {
-    grid-template-columns: 120px 24px 120px;
-    column-gap: 42px;
+    grid-template-columns: 142px 24px 142px;
+    column-gap: 36px;
     row-gap: 80px;
     grid-auto-rows: 24px;
   }
