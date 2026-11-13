@@ -109,21 +109,19 @@
           </div>
 
           <!-- 이미지 3장은 data-reveal 로 하나씩 따로 등장한다 (PC 피드백_0930).
-               수정사항_11.11 #329 (피그마 4170:25286): PC 에도 이미지 위에 페이지 이름(Medium 20/32 #555, 아래 20)을 붙인다.
+               11.13 최종 (피그마 4327:48070): 888 정사각(라운드 12, 안쪽 선 #eee) + 아래 가운데 캡션(Medium 20/32 #777, 위 32).
                캡션이 이미지와 같이 올라오도록 data-reveal 은 figure 에 둔다. -->
           <div class="wd7-services">
-            <!-- 모바일(6_MO 3875:25373)은 Main → Forum → Support 순 390x390 정사각 + 캡션 (순서는 CSS order) -->
+            <!-- 모바일(4333:62141)은 Main → Forum → Support 순 390x390 정사각 + 캡션 (순서는 CSS order). 이미지는 PC 와 같은 원본 -->
             <div class="wd7-services-col">
               <figure class="wd7-fig wd7-fig--main" data-reveal>
                 <picture>
-                  <source media="(max-width: 599.98px)" srcset="assets/wd7-service-main-mo.webp" />
                   <img src="assets/wd7-service-01.webp" alt="" />
                 </picture>
                 <figcaption class="wd7-cap">Main Page</figcaption>
               </figure>
               <figure class="wd7-fig wd7-fig--support" data-reveal>
                 <picture>
-                  <source media="(max-width: 599.98px)" srcset="assets/wd7-service-support-mo.webp" />
                   <img src="assets/wd7-service-02.webp" alt="" />
                 </picture>
                 <figcaption class="wd7-cap">Support Page</figcaption>
@@ -132,7 +130,6 @@
             <div class="wd7-services-col wd7-services-col--center">
               <figure class="wd7-fig wd7-fig--forum" data-reveal>
                 <picture>
-                  <source media="(max-width: 599.98px)" srcset="assets/wd7-service-forum-mo.webp" />
                   <img src="assets/wd7-service-03.webp" alt="" />
                 </picture>
                 <figcaption class="wd7-cap">Forum Page</figcaption>
@@ -151,17 +148,25 @@
           </div>
 
           <div class="wd7-stack120">
+            <!-- 11.13: 디자인 시스템 컷마다 아래 가운데 캡션 (피그마 표기 "Typogrphy" 는 오타라 바로잡음) -->
+            <figure class="wd7-fig" data-reveal>
             <div class="wd7-band-blue">
               <img src="assets/wd7-typography.webp" alt="" />
             </div>
+            <figcaption class="wd7-cap">Typography</figcaption>
+            </figure>
+            <figure class="wd7-fig" data-reveal>
             <img
               class="wd7-components"
               src="assets/wd7-components.webp"
               alt=""
             />
+            <figcaption class="wd7-cap">Badge</figcaption>
+            </figure>
             <!-- 코드 에디터 (수정사항_11.11 #330, 피그마 4170:27153). 아이콘보다 앞에 온다.
                  PC: Light · Dark 두 장(1920x827)을 화면에 고정해 두고 스크롤에 맞춰 Light → Dark 로 바꾼 뒤 내려간다 (wd7-code.js).
                  모바일: 지금처럼 영상 한 편 (PC 에서는 source 가 맞지 않아 받지 않는다) -->
+            <figure class="wd7-fig" data-reveal>
             <div class="wd7-code" data-wd7-code>
               <div class="wd7-code-pin">
                 <img class="wd7-code-img" src="assets/wd7-code-light.webp" alt="" loading="lazy" />
@@ -178,7 +183,10 @@
                 <source media="(max-width: 599.98px)" src="assets/wd7-code.mp4" type="video/mp4" />
               </video>
             </div>
+            <figcaption class="wd7-cap">Light/Dark Theme</figcaption>
+            </figure>
             <!-- 아이콘 그리드 영상 (2026-10-13 피드백, 피그마 Rectangle 34628192 1920x954) -->
+            <figure class="wd7-fig" data-reveal>
             <video
               class="wd7-icons"
               poster="assets/wd7-icons-poster.webp"
@@ -190,6 +198,8 @@
             >
               <source src="assets/wd7-icons.mp4" type="video/mp4" />
             </video>
+            <figcaption class="wd7-cap">Icons</figcaption>
+            </figure>
           </div>
         </section>
 
@@ -205,7 +215,7 @@
           <div class="wd7-stack120">
             <!-- Documentation 구조 (피그마 4170:27159, 영상 1558x860).
                  수정사항_11.11 #331: 영상 위 창 제목 바(글자 "Structure")를 뺐다. 세 영상 모두 같다 -->
-            <figure class="wd7-fig">
+            <figure class="wd7-fig" data-reveal>
             <div class="wd7-doc-01 wd7-window">
               <video
                 poster="assets/wd7-structure-poster.webp"
@@ -218,10 +228,10 @@
                 <source src="assets/wd7-structure.mp4" type="video/mp4" />
               </video>
             </div>
-            <figcaption class="wd7-cap">Structure</figcaption>
+            <figcaption class="wd7-cap">Layers</figcaption>
             </figure>
             <!-- 커버 화면 팝업 (피그마 4170:27165, 영상 1208x613) -->
-            <figure class="wd7-fig">
+            <figure class="wd7-fig wd7-fig--doc02" data-reveal>
             <div class="wd7-doc-02 wd7-window">
               <video
                 poster="assets/wd7-popup-poster.webp"
@@ -234,10 +244,10 @@
                 <source src="assets/wd7-popup.mp4" type="video/mp4" />
               </video>
             </div>
-            <figcaption class="wd7-cap">Pop-ups on the cover screen</figcaption>
+            <figcaption class="wd7-cap">Pop-up</figcaption>
             </figure>
             <!-- Remote Test Lab (피그마 4170:27172, 영상 1558x860) -->
-            <figure class="wd7-fig">
+            <figure class="wd7-fig" data-reveal>
             <div class="wd7-doc-03 wd7-window">
               <video
                 poster="assets/wd7-rtl-poster.webp"
@@ -250,7 +260,7 @@
                 <source src="assets/wd7-rtl.mp4" type="video/mp4" />
               </video>
             </div>
-            <figcaption class="wd7-cap">Remote Test Lab</figcaption>
+            <figcaption class="wd7-cap">Test Mode</figcaption>
             </figure>
           </div>
         </section>
@@ -312,10 +322,17 @@
 
         <!-- ══ 6. 화면 모음 ══ -->
         <section class="wd7-stack120 wd7-gallery">
-          <!-- 수정사항_11.11 #333: 폰 프레임 컷마다 따로 하나씩 올라온다 (data-reveal → motion.js 시차) -->
+          <!-- 수정사항_11.11 #333 · 11.13: 폰 한 대마다 따로 하나씩 올라온다 (data-reveal → motion.js 시차).
+               두 대씩 묶여 있던 페어 컷을 폰 한 대씩(피그마 340x680 렌더)으로 나눴다 -->
           <div class="wd7-pair">
-            <img src="assets/wd7-pair-01.webp" alt="" data-reveal />
-            <img src="assets/wd7-pair-02.webp" alt="" data-reveal />
+            <div class="wd7-pair-cell">
+              <img class="wd7-ph wd7-ph--a" src="assets/wd7-ph-1a.webp" alt="" data-reveal />
+              <img class="wd7-ph wd7-ph--b" src="assets/wd7-ph-1b.webp" alt="" data-reveal />
+            </div>
+            <div class="wd7-pair-cell wd7-pair-cell--low">
+              <img class="wd7-ph wd7-ph--a" src="assets/wd7-ph-2a.webp" alt="" data-reveal />
+              <img class="wd7-ph wd7-ph--b" src="assets/wd7-ph-2b.webp" alt="" data-reveal />
+            </div>
           </div>
 
           <div class="wd7-phones">
@@ -326,8 +343,14 @@
           </div>
 
           <div class="wd7-pair">
-            <img src="assets/wd7-pair-03.webp" alt="" data-reveal />
-            <img src="assets/wd7-pair-04.webp" alt="" data-reveal />
+            <div class="wd7-pair-cell">
+              <img class="wd7-ph wd7-ph--a" src="assets/wd7-ph-3a.webp" alt="" data-reveal />
+              <img class="wd7-ph wd7-ph--b" src="assets/wd7-ph-3b.webp" alt="" data-reveal />
+            </div>
+            <div class="wd7-pair-cell wd7-pair-cell--low">
+              <img class="wd7-ph wd7-ph--a" src="assets/wd7-ph-4a.webp" alt="" data-reveal />
+              <img class="wd7-ph wd7-ph--b" src="assets/wd7-ph-4b.webp" alt="" data-reveal />
+            </div>
           </div>
         </section>
       </div>

@@ -62,28 +62,14 @@
 .wd7-services-col img {
   display: block;
   width: 100%;
-  aspect-ratio: 888 / 800;
+  aspect-ratio: 1;
   object-fit: cover;
 }
 
-/* 수정사항_11.11 #329 (피그마 4170:25286): 이미지 위에 페이지 이름 (Medium 20/32 #555, 아래 20).
-   한 묶음 852 = 이름 32 + 20 + 이미지 800, 묶음 사이 120. 오른쪽 열은 세로 가운데.
-   이미지는 radius 12 + 안쪽 선 rgba(0,0,0,.2) — 예전엔 이미지에 그려져 있었다 */
+/* 11.13 최종 (피그마 4327:48070): 888 정사각 + 아래 가운데 캡션 (공통 .wd7-fig/.wd7-cap).
+   한 묶음 952 = 이미지 888 + 32 + 캡션 32, 묶음 사이 120. 오른쪽 열은 세로 가운데.
+   이미지는 radius 12 + 안쪽 선 1px #eee */
 @media (min-width: 600px) {
-  .wd7-services .wd7-fig {
-    display: flex;
-    flex-direction: column;
-    gap: min(1.0417vw, 20px);
-  }
-
-  .wd7-services .wd7-cap {
-    display: block;
-    order: -1;
-    color: var(--pl2-neutral-30, #555);
-    font-size: min(1.0417vw, 20px);
-    font-weight: 500;
-    line-height: min(1.6667vw, 32px);
-  }
 
   /* 아래 PC 기본값(.wd7-services picture { display: contents })보다 우선하도록 .wd7-fig 를 붙인다 */
   .wd7-services .wd7-fig picture {
@@ -97,7 +83,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    border: 1px solid rgba(0, 0, 0, 0.2);
+    border: 1px solid #eee;
     border-radius: inherit;
     pointer-events: none;
   }
@@ -266,17 +252,30 @@
   padding-left: 1.25%; /* x=24 */
 }
 
-.wd7-pair img:first-child {
+/* 페어 칸 930x680 (오른쪽은 930x920, 폰이 240 아래). 폰 340x680 이 x=105 · 485 에 */
+.wd7-pair-cell {
+  position: relative;
   width: 49.051%; /* 930 / 1896 */
   aspect-ratio: 930 / 680;
-  object-fit: cover;
 }
 
-.wd7-pair img:last-child {
-  width: 49.051%; /* 930 / 1896 */
+.wd7-pair-cell--low {
   aspect-ratio: 930 / 920;
-  object-fit: cover;
 }
+
+.wd7-ph {
+  position: absolute;
+  top: 0;
+  width: 36.559%; /* 340 / 930 */
+  aspect-ratio: 340 / 680;
+}
+
+.wd7-pair-cell--low .wd7-ph {
+  top: 26.087%; /* 240 / 920 */
+}
+
+.wd7-ph--a { left: 11.29%; /* 105 / 930 */ }
+.wd7-ph--b { left: 52.151%; /* 485 / 930 */ }
 
 .wd7-phones {
   display: flex;
@@ -290,10 +289,34 @@
   object-fit: cover;
 }
 
-/* 모바일 전용 요소의 PC 기본값: 캡션·화면 모음 캐러셀은 숨기고, 캡션 묶음(figure)은 레이아웃에서 빠진다 */
+/* 캡션 묶음 (11.13): 미디어 아래 32, 가운데 캡션 Medium 20/32 #777 */
 .wd7-fig {
-  display: contents;
+  display: flex;
+  flex-direction: column;
+  gap: min(1.6667vw, 32px);
+  margin: 0;
 }
+
+.wd7-cap {
+  color: var(--pl2-neutral-40, #777);
+  font-size: min(1.0417vw, 20px);
+  font-weight: 500;
+  line-height: min(1.6667vw, 32px);
+  text-align: center;
+}
+
+/* Pop-up 은 x=60 의 1208 칸 — 캡션도 그 칸 가운데 */
+.wd7-fig--doc02 {
+  width: 62.917%; /* 1208 / 1920 */
+  margin-left: 3.125%; /* x=60 */
+}
+
+.wd7-fig--doc02 .wd7-doc-02 {
+  width: 100%;
+  margin-left: 0;
+}
+
+/* 모바일 전용: 화면 모음 캐러셀 */
 
 .wd7-services picture {
   display: contents;
@@ -304,7 +327,6 @@
   display: none;
 }
 
-.wd7-cap,
 .wd7-screens-list {
   display: none;
 }
@@ -328,20 +350,20 @@
     gap: 60px;
   }
 
+  /* 캡션은 미디어 아래 16, Regular 15/25 #777 가운데 (4333:62141) */
   .wd7-fig {
-    display: flex;
-    flex-direction: column;
     gap: 16px;
-    margin: 0;
   }
 
   .wd7-cap {
-    display: block;
-    color: var(--pl2-neutral-40, #777);
-    font-size: 11px;
+    font-size: 15px;
     font-weight: 400;
-    line-height: 16px;
-    text-align: center;
+    line-height: 25px;
+  }
+
+  .wd7-fig--doc02 {
+    width: 100%;
+    margin-left: 0;
   }
 
   /* ── 2. 서비스 3컷: 한 줄로 쌓고 Main → Forum → Support (3875:25603 · 25633 · 25649) ── */
