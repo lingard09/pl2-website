@@ -303,13 +303,11 @@
 
         <!-- ══ 풀필름 (수정사항_11.11 #341, 공용 양식 .wd-film — assets/works-detail.css) ══
              캠페인 필름 (소리 있음).
-             재생 버튼을 누르면 딤이 걷히며 재생된다 (assets/video-play.js). -->
+             재생 버튼을 누르면 딤이 걷히고 그 자리에 비메오 플레이어가 들어와 재생된다 (assets/video-play.js, 11.13). -->
         <section class="wd-film">
           <h2 class="wd-head-title wd-film-title">Watch the Full Film</h2>
-          <div class="wd-film-frame" data-playing="false">
-            <video playsinline preload="metadata" poster="assets/wd13-film-poster.webp">
-              <source src="assets/wd13-film.mp4" type="video/mp4" />
-            </video>
+          <div class="wd-film-frame" data-playing="false" data-vimeo="1232289166">
+            <img src="assets/wd13-film-poster.webp" alt="" />
             <button type="button" class="wd-film-play" aria-label="영상 재생"></button>
           </div>
         </section>

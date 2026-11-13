@@ -458,6 +458,7 @@
 }
 
 .wd-film-frame video,
+.wd-film-frame img,
 .wd-film-frame iframe {
   display: block;
   width: 100%;
@@ -476,6 +477,7 @@
   }
 
   .wd-film-frame video,
+  .wd-film-frame img,
   .wd-film-frame iframe {
     object-fit: contain;
   }
@@ -492,6 +494,17 @@
 
 .wd-film-frame[data-playing="true"]::after {
   opacity: 0;
+}
+
+/* 비메오: 플레이어가 포스터 자리를 그대로 덮는다 */
+.wd-film-frame iframe {
+  position: absolute;
+  inset: 0;
+}
+
+/* 상세 05 는 제목 ↔ 영상 40 (피그마 4327:46574) */
+.wd-film--tight {
+  gap: min(2.0833vw, 40px);
 }
 
 /* 클릭 영역은 영상 전체, 삼각형은 ::before (PlayBTN 30x54, 그림자 50) */
@@ -527,8 +540,10 @@
 }
 
 @media (max-width: 599.98px) {
-  .wd-film {
-    gap: 24px;
+  /* 11.13 최종: 제목 ↔ 영상 20 (모든 상세 공통) */
+  .wd-film,
+  .wd-film--tight {
+    gap: 20px;
   }
 
   .wd-film-title {
