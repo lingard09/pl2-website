@@ -7,7 +7,10 @@
    - 행은 가로축 둘레 원통 위에 있어서 위아래로 갈수록 뒤로 눕는다 (rotateX + 깊이).
      원근 때문에 생기는 축소·쏠림은 거꾸로 보정해서, 멈췄을 때 위치·크기는 피그마 프레임과 같다.
    - 끝이 없다 (14개가 원통 둘레를 돈다). 화면 전체가 Works 링크인 것은 그대로다 — 끌었을 때만 이동을 막는다.
-   - 동작 줄이기 설정이면 따라가는 애니메이션 없이 바로 그 자리로 간다. */
+   - 동작 줄이기 설정이면 따라가는 애니메이션 없이 바로 그 자리로 간다.
+   - 11.13 최종: 기존 모션은 그대로 두고, 가만히 있으면 3초마다 한 칸씩 아래에서 위로 천천히 올라와
+     스크롤되는 화면임을 알게 한다. 휠·끌기·키보드를 쓰면 쉬었다가 4초 뒤 다시 돈다.
+     가운데 항목에 커서를 올려 두었을 때·탭이 숨겨졌을 때·동작 줄이기 설정이면 돌지 않는다. */
 (function () {
   var hero = document.querySelector(".hm-hero");
   var stage = hero && hero.querySelector(".hm-stage");
@@ -32,6 +35,8 @@
   };
   var STEP = 10; // 원통 한 칸 각도 (도)
   var FOLLOW = 0.08; // 프레임마다 목표로 다가가는 비율 (60fps 기준)
+  var AUTO_FOLLOW = 0.03; // 자동으로 넘어갈 때는 더 천천히 (약 1.5초에 걸쳐 올라온다)
+  var follow = FOLLOW;
   var SNAP_DELAY = 150; // 휠이 멈추고 이만큼 지나면 맞춰 멈춘다
 
   var mode, u, R, PER, limit;
@@ -114,7 +119,7 @@
     var dt = last ? Math.min(now - last, 64) : 16.7;
     last = now;
     var diff = target - pos;
-    pos += diff * (1 - Math.pow(1 - FOLLOW, dt / 16.7));
+    pos += diff * (1 - Math.pow(1 - follow, dt / 16.7));
     if (Math.abs(target - pos) < 0.0005) {
       pos = target;
       paint(pos);
@@ -232,6 +237,34 @@
   });
   // 폰트가 늦게 들어와도 위치는 transform 이라 다시 잴 필요는 없다
 
+  // ── 자동으로 한 칸씩 (11.13) ─────────────────────────
+  var AUTO_EVERY = 3000;
+  var AUTO_FIRST = 2000;
+  var AUTO_RESUME = 4000;
+  var autoTimer = null;
+  var autoHold = false; // 가운데 항목 호버 중
+  function autoStep() {
+    autoTimer = null;
+    if (!reduce && !drag && !autoHold && !document.hidden) {
+      follow = AUTO_FOLLOW;
+      target = Math.round(target) + 1;
+      run();
+    }
+    autoTimer = setTimeout(autoStep, AUTO_EVERY);
+  }
+  function autoRestart(delay) {
+    if (reduce) return;
+    clearTimeout(autoTimer);
+    autoTimer = setTimeout(autoStep, delay);
+  }
+  ["wheel", "pointerdown", "keydown", "touchstart"].forEach(function (type) {
+    window.addEventListener(type, function () {
+      follow = FOLLOW;
+      autoRestart(AUTO_RESUME);
+    }, { passive: true });
+  });
+  autoRestart(AUTO_FIRST);
+
   measure();
   paint(pos);
 
@@ -279,6 +312,7 @@
     }
 
     function release() {
+      autoHold = false;
       if (!hot) return;
       var m = hot;
       hot = null;
@@ -313,6 +347,7 @@
       }
       if (!it.mag) it.mag = { el: el, it: it, x: 0, y: 0, tx: 0, ty: 0 };
       hot = it.mag;
+      autoHold = true;
       hot.tx = (e.clientX - cx) / STRENGTH;
       hot.ty = (e.clientY - cy) / STRENGTH;
       if (!it.tile) el.classList.add("is-gradient");
