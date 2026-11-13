@@ -71,28 +71,45 @@
   }
 
   var pin = root.querySelector(".wd-stack-pin");
-  var queued = false;
 
-  function onScroll() {
-    queued = false;
+  // 11.13 "좀 더 부드럽게 쓰윽 얹혀지게": 스크롤 위치를 바로 그리지 않고, 보이는 시점(cur)이
+  // 스크롤이 가리키는 시점(target)을 매 프레임 일정 비율로 따라가게 한다.
+  // 휠이 한 칸씩 끊겨 들어와도 이미지는 미끄러지듯 이어서 올라온다.
+  var FOLLOW = 0.12; // 프레임당 남은 거리의 12% (약 0.4초에 거의 따라잡음)
+  var cur = -1;
+  var target = 0;
+  var raf = 0;
+
+  function readTarget() {
     var r = root.getBoundingClientRect();
     var top = parseFloat(getComputedStyle(pin).top) || 0;
     var dist = root.offsetHeight - pin.offsetHeight;
-    render(SCROLL_END * clamp((top - r.top) / dist));
+    target = SCROLL_END * clamp((top - r.top) / dist);
+  }
+
+  function tick() {
+    raf = 0;
+    var d = target - cur;
+    if (Math.abs(d) < 0.002) cur = target;
+    else cur += d * FOLLOW;
+    render(cur);
+    if (cur !== target) raf = requestAnimationFrame(tick);
+  }
+
+  function onScroll() {
+    readTarget();
+    if (cur < 0) {
+      cur = target; // 처음(새로고침 위치)은 바로 맞춘다
+      render(cur);
+      return;
+    }
+    if (!raf) raf = requestAnimationFrame(tick);
   }
 
   window.addEventListener("resize", function () {
     unit = Math.min(window.innerWidth / 1920, 1);
     onScroll();
   });
-  window.addEventListener(
-    "scroll",
-    function () {
-      if (queued) return;
-      queued = true;
-      requestAnimationFrame(onScroll);
-    },
-    { passive: true }
-  );
+  window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
 })();
