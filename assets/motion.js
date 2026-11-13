@@ -236,6 +236,25 @@
     // 그걸 품은 상위 덩어리와 그 안쪽 요소는 대상에서 빼야 이동이 겹치지 않는다.
     // data-reveal="pc" 는 PC 에서만 개별 등장한다 (모바일에서 가로 슬라이더가 되는 묶음, 상세 10 폰 4장)
     var twoCol = window.matchMedia("(min-width: 600px)").matches;
+    // 모바일 가로 캐러셀(손가락으로 넘기는 줄) 안쪽 칸은 개별 등장에서 뺀다 (11.13 05 MO 코멘트).
+    // 옆에 숨어 있는 칸은 화면에 안 들어와 내려간 채로 남았다가, 넘기는 순간 아래에서 올라와
+    // "이미지가 손 움직임에 따라 이동"했다. 캐러셀은 통째로 한 번에 올라온다.
+    if (!twoCol) {
+      // data-reveal-mo: 모바일에서만 그 묶음 전체가 한 번에 올라온다 (11.13 Contact MO: 지도 + 정보 같이)
+      Array.prototype.forEach.call(document.querySelectorAll("[data-reveal-mo]"), function (el) {
+        el.setAttribute("data-reveal", "");
+      });
+      Array.prototype.forEach.call(document.querySelectorAll("[data-reveal]"), function (el) {
+        for (var a = el.parentElement; a && a !== document.body; a = a.parentElement) {
+          var ox = getComputedStyle(a).overflowX;
+          if (ox === "auto" || ox === "scroll") {
+            el.setAttribute("data-reveal", "pc");
+            if (!a.hasAttribute("data-reveal")) a.setAttribute("data-reveal", "");
+            return;
+          }
+        }
+      });
+    }
     var SINGLE = twoCol ? "[data-reveal]" : "[data-reveal]:not([data-reveal=pc])";
     var singles = document.querySelectorAll(SINGLE);
     // 모바일 Works 는 화면에 들어오기 전에 미리 출발해서 빈 화면이 보이지 않게 한다 (수정사항_11.10)
