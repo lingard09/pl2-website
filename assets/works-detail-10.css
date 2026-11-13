@@ -122,6 +122,23 @@
   left: 75.573%; /* 1451 / 1920 */
 }
 
+/* ══ 풀필름 + 공식 영상 링크 (11.13 최종) ═══════════════════════
+   제목 → 40 → 영상 → 40 → "Watch Video" (Medium 20/32 #C8C8C8, 가운데, 유튜브 새 창). 모바일 20 · 20, 11/16 */
+.wd10-watch {
+  align-self: center;
+  color: var(--pl2-neutral-60, #c8c8c8);
+  font-size: min(1.0417vw, 20px);
+  font-weight: 500;
+  line-height: min(1.6667vw, 32px);
+  text-decoration: none;
+  text-underline-offset: 0.2em;
+}
+
+.wd10-watch:hover,
+.wd10-watch:focus-visible {
+  text-decoration: underline;
+}
+
 /* ══ 영상 ═════════════════════════════════════════════════
    포스터에 피그마 Dim(검정 60%)이 이미 구워져 있어 별도 오버레이를 두지 않는다.
    (실측: poster 평균 밝기가 원본 영상의 0.4배 = 1 - 0.6) */
@@ -287,8 +304,14 @@
     background: var(--pl2-white);
   }
 
+  .wd10-watch {
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 16px;
+  }
+
+  /* 11.13: 영상은 따로 섹션(.wd10-film)이 되어 섹션 간격 200 · 제목 아래 20 이 공통 규칙으로 잡힌다 */
   .wd10-video {
-    margin-top: 140px; /* 스택 간격 60 + 140 = 피그마 200 */
     aspect-ratio: 390 / 220;
   }
 
