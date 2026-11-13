@@ -91,7 +91,7 @@
 
 .wd2-step-desc {
   margin-top: min(1.25vw, 24px);
-  color: var(--pl2-neutral-80); /* 수정사항_11.11 본문 #EFEFEF · Regular 18/32 */
+  color: var(--pl2-desc-dark); /* 11.13 본문 #DFDFDF · Regular 18/32 */
   font-size: min(0.9375vw, 18px) /* 18 */;
   font-weight: 400;
   line-height: min(1.6667vw, 32px) /* 32 */;

@@ -202,7 +202,7 @@
 }
 
 .wd-intro-desc {
-  color: var(--pl2-neutral-80); /* 수정사항_11.11: 본문 #EFEFEF · Regular */
+  color: var(--pl2-desc-dark); /* 11.13: 본문 #DFDFDF · Regular */
   font-size: min(1.0417vw, 20px) /* 20 */;
   font-weight: 400;
   line-height: min(1.875vw, 36px) /* 36 */;
@@ -232,7 +232,7 @@
 }
 
 .wd-head-desc {
-  color: var(--pl2-neutral-80);
+  color: var(--pl2-desc-dark); /* 11.13: #EFEFEF → #DFDFDF */
   font-size: min(0.9375vw, 18px) /* 18 */;
   font-weight: 400;
   line-height: min(1.6667vw, 32px) /* 32 — 수정사항_11.11 본문(pc) 한글 18/32 */;
@@ -260,6 +260,15 @@
 
 .wd-head--center .wd-head-desc {
   line-height: min(1.6667vw, 32px) /* 32 */;
+}
+
+/* 11.13: 피그마가 줄을 모두 손으로 끊은 문단(.l-fix)은 피그마 글상자처럼 칸(736)보다 넓어질 수 있다.
+   폭을 가장 긴 줄에 맞춰 두면 가운데 정렬 헤더에서 양쪽으로 고르게 넘친다 (오른쪽으로만 밀리지 않게) */
+@media (min-width: 600px) {
+  :root:not(.is-en) .wd-head--center > :has(> [data-l="ko"].l-fix),
+  .is-en .wd-head--center > :has(> [data-l="en"].l-fix) {
+    width: max-content;
+  }
 }
 
 /* 왼쪽 정렬 헤더 (피그마 x=60, gap 24) */

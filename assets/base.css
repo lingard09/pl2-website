@@ -65,6 +65,8 @@
   --pl2-neutral-60: #c8c8c8;
   --pl2-neutral-70: #dfdfdf;
   --pl2-neutral-80: #efefef;
+  /* 최종 전달(11.13): 블랙 배경 타이틀 아래 본문 #EFEFEF 가 너무 밝아 #DFDFDF 로 */
+  --pl2-desc-dark: #dfdfdf;
   --pl2-neutral-90: #f5f5f5;
   --pl2-neutral-95: #fcfcfc;
   --pl2-white: #ffffff; /* Neutral/100 */
@@ -90,6 +92,13 @@
   /* 형태 */
   --pl2-radius: min(0.625vw, 12px);
   --pl2-shadow-card: 0 min(0.2083vw, 4px) min(1.0417vw, 20px) rgba(0, 0, 0, 0.04); /* DROP_SHADOW r20 y4 4% */
+}
+
+/* 모바일 블랙 배경 본문은 피그마 MO(11.13) 가 #C8C8C8 */
+@media (max-width: 599.98px) {
+  :root {
+    --pl2-desc-dark: #c8c8c8;
+  }
 }
 
 *,
@@ -1139,6 +1148,15 @@ html.lenis body {
 @media (max-width: 599.98px) {
   br.br-pc-only {
     display: none;
+  }
+}
+
+/* 최종 원고 (11.13_PC_전달): 피그마가 모든 줄을 손으로 끊은 문단은 그 줄 그대로 둔다.
+   피그마 글상자가 사이트 칸보다 조금 넓어서, 영문은 칸 폭에서 한 단어씩 먼저 넘어가 줄이 늘었다.
+   글자 크기가 화면 폭에 비례(min(vw, px))해서 좁은 PC 화면에서도 줄 길이가 같이 줄어든다. */
+@media (min-width: 600px) {
+  [data-l].l-fix {
+    white-space: nowrap;
   }
 }
 
