@@ -56,11 +56,11 @@
   text-align: center;
 }
 
-/* ══ 3. 고가도로 전광판 (1558x835 가운데) ═══════════════ */
+/* ══ 3. 고가도로 전광판 (1558x860 가운데, 11.13) ═══════════════ */
 .wd11-highway {
   width: 81.146%; /* 1558 / 1920 */
   margin: 0 auto;
-  aspect-ratio: 1558 / 835;
+  aspect-ratio: 1558 / 860;
   object-fit: cover;
 }
 
