@@ -8,6 +8,27 @@
   if (!story) return;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+  // 11.13: 챕터마다 무음 영상 (data-chapter-video). 공통 자동재생(motion.js)에 맡기지 않고 여기서 관리한다.
+  // 모바일(쌓인 배치)은 화면에 보이는 영상만 재생, PC 고정 프레임은 지금 챕터 영상만 재생.
+  var chapterVideos = Array.prototype.slice.call(story.querySelectorAll("video[data-chapter-video]"));
+  function playV(v) {
+    var p = v.play();
+    if (p && p.catch) p.catch(function () {});
+  }
+  var pinned = false;
+  if (chapterVideos.length && "IntersectionObserver" in window) {
+    var seen = new IntersectionObserver(function (entries) {
+      if (pinned) return;
+      entries.forEach(function (e) {
+        if (e.isIntersecting) playV(e.target);
+        else e.target.pause();
+      });
+    }, { rootMargin: "100px 0px" });
+    chapterVideos.forEach(function (v) {
+      seen.observe(v);
+    });
+  }
+
   var mobile = window.matchMedia("(max-width: 599.98px)");
   if (mobile.matches) {
     var onChange = function () {
@@ -59,12 +80,29 @@
     }
 
     var current = -1;
+    var inView = true;
+    pinned = true;
+    function syncVideos() {
+      sections.forEach(function (s, n) {
+        var v = s.querySelector("video[data-chapter-video]");
+        if (!v) return;
+        if (n === current && inView) playV(v);
+        else v.pause();
+      });
+    }
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        inView = entries[0].isIntersecting;
+        syncVideos();
+      }).observe(story);
+    }
     function setActive(i) {
       if (i === current) return;
       current = i;
       sections.forEach(function (s, n) {
         s.classList.toggle("is-current", n === i);
       });
+      syncVideos();
       items.forEach(function (it, n) {
         it.setAttribute("data-active", n === i ? "true" : "false");
       });
