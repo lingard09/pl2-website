@@ -21,7 +21,7 @@ html:has(.wk-body) {
 /* GNB: 스크롤해도 상단에 붙어 있게 fixed (피그마는 프레임 최상단 y=12 에 배치) */
 .wk-body .gnb {
   position: fixed;
-  top: 12px; /* 12 — GNB 는 화면 폭과 상관없이 고정 크기 (PC 피드백_1007) */
+  top: 20px; /* 20 — 11.16 수정사항: 위에서 조금 더 떨어지게 (원래 12). 화면 폭과 상관없이 고정 크기 */
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;

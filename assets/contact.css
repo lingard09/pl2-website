@@ -11,7 +11,7 @@
 /* GNB: 상단 중앙 고정 (피그마 좌표 760,12) */
 .ct-body .gnb {
   position: fixed;
-  top: 12px; /* 12 — GNB 는 화면 폭과 상관없이 고정 크기 (PC 피드백_1007) */
+  top: 20px; /* 20 — 11.16 수정사항: 위에서 조금 더 떨어지게 (원래 12). 화면 폭과 상관없이 고정 크기 */
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;

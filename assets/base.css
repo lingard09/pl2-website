@@ -159,12 +159,12 @@ button {
   /* 크기는 화면 폭과 상관없이 고정이다 (PC 피드백_1007).
      원래 vw 로 비례 축소했지만, 태블릿에서도 PC 와 같은 400x60 을 유지하라는 코멘트로
      GNB 안쪽 모든 치수를 px 로 되돌렸다. 모바일(599 이하)만 아래에서 따로 잡는다. */
-  width: 400px; /* 400 */
+  width: 360px; /* 360 — 11.16 수정사항 GNB(4399:75752/75768), 원래 400 */
   max-width: calc(100% - 40px);
-  /* 드롭다운이 아래로 쓸 수 있는 높이. 기본값은 바를 화면 위(top 12)에 고정하는
-     페이지 기준이다 — 패널 위쪽 12+60+12=84 와 아래 여백 12 를 합쳐 96.
+  /* 드롭다운이 아래로 쓸 수 있는 높이. 기본값은 바를 화면 위(top 20)에 고정하는
+     페이지 기준이다 — 패널 위쪽 20+60+8=88 과 아래 여백 12 를 합쳐 100.
      바를 화면 중앙에 두는 Home 은 index.css 가 이 값을 덮는다. */
-  --gnb-drop-space: calc(100dvh - 96px);
+  --gnb-drop-space: calc(100dvh - 100px);
 }
 
 .gnb-bar {
@@ -312,7 +312,8 @@ button {
      4개 항목이 어떤 창 높이에서도 전부 보인다.
      120px(피그마 값) / 세로 여유 중 작은 값을 고른다 — 폭으로는 줄지 않고
      창 높이가 모자랄 때만 줄어든다 (PC 피드백_1007). */
-  --gnb-row: min(120px, calc(var(--gnb-drop-space) / 4));
+  /* 11.16 수정사항: "드롭다운이 너무 가린다"는 의견으로 행 120 → 100 (패널 400) */
+  --gnb-row: min(100px, calc(var(--gnb-drop-space) / 4));
   /* 화면 밖으로 나가지 않게 하는 마지막 안전장치.
      ⚠ overflow-y: auto 를 여기 다시 넣으면 스크롤바가 항상 생긴다 —
        행 높이 합(480)은 딱 맞지만 110px 글자의 라인박스가 8px 넘쳐서
@@ -374,17 +375,18 @@ button {
   /* 행 120 = 위아래 패딩 24 + 텍스트 72. 패널 480 = 120 x 4 다.
      구분선이 그 120 안에 그려져야 하므로 높이를 고정한다 (auto 면 121 이 된다). */
   flex: none; /* 패널이 max-height 로 잘릴 때 행이 눌리지 않게 */
-  /* 행 높이는 --gnb-row 하나가 정하고 글자·행간이 같은 비율(60/120, 72/120)로 따라간다.
+  /* 행 높이는 --gnb-row 하나가 정하고 글자·행간이 같은 비율(50/100, 60/100)로 따라간다.
+     11.16 수정사항: 100 / 50 / 60 (GNB/Dropdown/Action, 패딩 24·20). 그 전 값은 120 / 60 / 72.
      1920 에서 120 / 60 / 72 = 피그마 컴포넌트(GNB/Dropdown/Action) 값.
      2026-08-29 에 숨은 안(110px/행간 100)을 쓰다가 디자인피드백_0918 로 되돌렸다. */
-  height: var(--gnb-row, 120px);
+  height: var(--gnb-row, 100px);
   padding: 0 24px; /* 24 */
   border-bottom: 1px solid var(--pl2-white); /* 헤어라인은 스케일하지 않는다 */
   color: var(--pl2-neutral-10); /* #212121 */
   font-family: var(--pl2-font-display);
-  font-size: calc(var(--gnb-row, 120px) * 60 / 120); /* 60 */
+  font-size: calc(var(--gnb-row, 100px) * 50 / 100); /* 50 — 11.16 (원래 60) */
   font-weight: 500;
-  line-height: calc(var(--gnb-row, 120px) * 72 / 120); /* 72 */
+  line-height: calc(var(--gnb-row, 100px) * 60 / 100); /* 60 */
   text-decoration: none;
   white-space: nowrap;
 }

@@ -12,7 +12,7 @@
 /* GNB: 피그마 Type=T/W (어두운 히어로 위) */
 .wd-body .gnb {
   position: fixed;
-  top: 12px; /* 12 — GNB 는 화면 폭과 상관없이 고정 크기 (PC 피드백_1007) */
+  top: 20px; /* 20 — 11.16 수정사항: 위에서 조금 더 떨어지게 (원래 12). 화면 폭과 상관없이 고정 크기 */
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
@@ -70,6 +70,17 @@
   overflow: hidden;
 }
 
+/* 11.16 수정사항 (피그마 HeroSection 4399:69144): 히어로가 화면 위아래에 꼭 맞게 보인다.
+   가로로 넓은 창(가로 >= 세로)에서는 1920x1080 비율 대신 보이는 화면 높이를 다 쓰고,
+   이미지·영상은 object-fit: cover 로 채운다. 세로로 긴 태블릿은 예전처럼 16:9 를 유지한다
+   (화면 높이를 다 쓰면 좌우가 너무 많이 잘려서). */
+@media (min-width: 600px) and (orientation: landscape) {
+  .wd-hero {
+    aspect-ratio: auto;
+    height: 100svh;
+  }
+}
+
 .wd-hero-media {
   position: absolute;
   inset: 0;
@@ -100,28 +111,17 @@
   );
 }
 
-/* 피그마 Hero Title: x=77, y=389, w=883 (세로 중앙 기준 +14)
-   세로 위치 (PC 피드백_0930, 참고 neonrated.com):
-   - 1280 이상: 히어로가 화면보다 길면(가로로 넓고 세로가 짧은 창) 타이틀이 화면 밖
-     아래쪽으로 밀리므로, "보이는 화면"의 세로 중앙에 둔다 = min(히어로 50%, 화면 50%).
-     히어로가 화면 안에 다 들어오면 둘이 같아서 1920x1080 구도 그대로다.
-   - 1280 미만: 화면 기준을 버리고 1920x1080 히어로 안의 원래 위치(히어로 50%)를
-     기준으로 이미지와 함께 비율대로 줄어든다. */
+/* 피그마 Hero Title (11.16 수정사항 HeroSection 4399:69144): x=72, w=890, 아래에서 120.
+   "텍스트가 이미지를 너무 가린다"는 의견으로 세로 중앙 → 아래쪽으로 내려갔다.
+   히어로 높이가 화면 높이를 따르므로 위치는 히어로 아래 기준으로 잡고, 간격은 폭 비례(cqw)다. */
 .wd-hero-title {
   position: absolute;
-  top: min(50%, 50svh);
-  left: 4.01%; /* 77 / 1920 */
+  bottom: 6.25cqw; /* 120 */
+  left: 3.75%; /* 72 / 1920 */
   display: flex;
   flex-direction: column;
   gap: 2.0833cqw; /* 40 */
-  width: 46.0%; /* 883 / 1920 */
-  transform: translateY(calc(-50% + 0.7292cqw)); /* +14 */
-}
-
-@media (max-width: 1279.98px) {
-  .wd-hero-title {
-    top: 50%;
-  }
+  width: 46.3542%; /* 890 / 1920 */
 }
 
 .wd-hero-head {
@@ -132,14 +132,13 @@
 }
 
 .wd-hero-brand {
-  padding: 0.3646cqw 0.625cqw 0.1042cqw; /* 7 12 2 */
-  border-radius: 0.2083cqw; /* 4 */
-  /* 수정사항_11.11 #342 (피그마 HeroSection 4170:27304): 불투명 #303030 / 글자 #F5F5F5, 모든 테마 공통 */
-  background: #303030;
+  /* 11.16 수정사항: 박스를 뺐다 (피그마 Brand 프레임 fill 없음, 왼쪽 패딩 6 만 남음).
+     글자 Medium 36/36 #F5F5F5 */
+  padding-left: 0.3125cqw; /* 6 */
   color: #f5f5f5;
-  font-size: 1.4583cqw; /* 28 */
+  font-size: 1.875cqw; /* 36 */
   font-weight: 500;
-  line-height: 1.6667cqw; /* 32 */
+  line-height: 1.875cqw; /* 36 */
   letter-spacing: -0.02em;
   white-space: nowrap;
 }
@@ -175,8 +174,8 @@
 .wd-tag {
   padding: 0.2083cqw 0.3125cqw; /* 4 6 */
   border-radius: 0.2083cqw; /* 4 */
-  /* 수정사항_11.11 #342: 불투명 #777777 / 글자 #F5F5F5, 모든 테마 공통 */
-  background: #777777;
+  /* 11.16 수정사항: 태그 박스 #303030 (원래 #777777) / 글자 #F5F5F5, 모든 테마 공통 */
+  background: #303030;
   color: #f5f5f5;
   font-size: 0.7813cqw; /* 15 */
   font-weight: 400;
@@ -467,19 +466,15 @@
   object-fit: cover;
 }
 
-/* 데스크톱 (수정사항_11.12 디스플레이 테스트): 브라우저 창이 16:9 보다 납작하면(주소창·탭 때문에
-   거의 항상 그렇다) 폭 100% 영상은 위아래가 화면 밖으로 넘쳤다. 프레임 높이를 화면 높이로 묶어
-   영상이 화면 위아래에 딱 맞게 들어오고, 남는 양옆은 검정으로 둔다. 영상은 잘리지 않는다. */
+/* 데스크톱: 프레임은 폭 100% x 화면 높이 (16:9 보다 길어지지는 않는다).
+   수정사항_11.12 에는 영상이 잘리지 않게 contain 으로 넣고 양옆을 검정으로 남겼는데,
+   11.16 코멘트("좌우 검은 영역 안 보이게", 참고 neonrated.com)로 화면을 꽉 채우고(cover)
+   넘치는 위아래를 잘라낸다. 창이 16:9 보다 납작할수록 위아래가 조금씩 잘린다. */
 @media (min-width: 600px) {
   .wd-film-frame {
+    container-type: size;
     aspect-ratio: auto;
-    height: min(56.25vw, 100vh);
-  }
-
-  .wd-film-frame video,
-  .wd-film-frame img,
-  .wd-film-frame iframe {
-    object-fit: contain;
+    height: min(56.25vw, 100svh);
   }
 }
 
@@ -500,6 +495,17 @@
 .wd-film-frame iframe {
   position: absolute;
   inset: 0;
+}
+
+@media (min-width: 600px) {
+  /* 비메오 플레이어는 object-fit 이 안 먹으므로 16:9 iframe 을 프레임보다 크게 만들어 덮는다 (11.16).
+     잘리는 쪽은 위로만 보낸다 — 아래에 있는 비메오 재생바·시크바가 잘리지 않게 아래 기준으로 붙인다. */
+  .wd-film-frame iframe {
+    inset: auto auto 0 50%;
+    width: max(100cqw, 177.7778cqh);
+    height: max(100cqh, 56.25cqw);
+    translate: -50% 0;
+  }
 }
 
 /* 상세 05 는 제목 ↔ 영상 40 (피그마 4327:46574) */
@@ -616,10 +622,13 @@
     object-fit: cover;
   }
 
+  /* 11.16 수정사항 (피그마 MO HeroSection 4399:75726): 제목이 바뀌면서 아래 딤이 진해졌다.
+     Dim_Bottom = 검정 60%, 아래에서 21% 까지 꽉 차 있다가 40% 에서 투명 (원래 30%, 23.6→41.6%).
+     Dim_Top(위쪽 16%) 은 그대로. */
   .wd-hero-dim,
   .wd-hero-dim--dark {
     background:
-      linear-gradient(to top, rgba(0, 0, 0, 0.3) 23.59%, rgba(0, 0, 0, 0) 41.61%),
+      linear-gradient(to top, rgba(0, 0, 0, 0.6) 21%, rgba(0, 0, 0, 0) 40%),
       linear-gradient(to top, rgba(0, 0, 0, 0) 79.76%, rgba(0, 0, 0, 0.16) 89.02%);
   }
 
@@ -629,28 +638,27 @@
   .wd-hero--fade-black .wd-hero-dim {
     background:
       linear-gradient(to top, #000 18%, rgba(0, 0, 0, 0) 28.35%),
-      linear-gradient(to top, rgba(0, 0, 0, 0.3) 23.59%, rgba(0, 0, 0, 0) 41.61%),
+      linear-gradient(to top, rgba(0, 0, 0, 0.6) 21%, rgba(0, 0, 0, 0) 40%),
       linear-gradient(to top, rgba(0, 0, 0, 0) 79.76%, rgba(0, 0, 0, 0.16) 89.02%);
   }
 
+  /* 11.16: 제목 묶음 아래 여백 49 (760 - 711) */
   .wd-hero-title {
-    top: auto;
-    bottom: 60px;
+    bottom: 49px;
     left: 20px;
     gap: 30px;
     width: calc(100% - 40px);
-    transform: none;
   }
 
   .wd-hero-head {
     gap: 16px;
   }
 
+  /* 11.16: 박스 없이 Medium 18 (피그마 프레임 높이 13, 왼쪽 패딩 2) */
   .wd-hero-brand {
-    padding: 8px;
-    border-radius: 4px;
-    font-size: 16px;
-    line-height: 11px;
+    padding-left: 2px;
+    font-size: 18px;
+    line-height: 13px;
   }
 
   /* 모바일 히어로 글자는 모두 흰색 (라이트 테마도 사진·영상 위) */
@@ -711,6 +719,12 @@
   .wd-head--left .wd-head-desc,
   .wd-head--center .wd-head-desc {
     width: auto;
+  }
+
+  /* 11.16 MO 코멘트: PC 가운데 헤더 중 질문·문구형 4곳은 모바일에서도 가운데
+     (상세 03 브랜드 필름 · 02 질문 · 10 캠페인 개요 · 09 질문) */
+  .wd-head--mo-center {
+    text-align: center;
   }
 
   .wd-head-title {

@@ -368,15 +368,4 @@
 
 }
 
-/* 수정사항_11.09 모바일 썸네일: 아래쪽이 짙은 녹색으로 이어진다 (피그마 Image fill 위 그라데이션) */
-@media (max-width: 599.98px) {
-  .wd-hero .wd-hero-dim,
-  .wd-hero .wd-hero-dim--dark {
-    background:
-      linear-gradient(to top, rgb(21, 43, 7) 0%, rgba(21, 43, 7, 0) 34.5%),
-      linear-gradient(to top, rgba(0, 0, 0, 0.3) 23.59%, rgba(0, 0, 0, 0) 41.61%),
-      linear-gradient(to top, rgba(0, 0, 0, 0) 79.76%, rgba(0, 0, 0, 0.16) 89.02%);
-  }
-}
-
-
+/* 수정사항_11.09 의 모바일 녹색 그라데이션은 11.16 히어로(4399:75726)에서 빠져 공통 딤을 쓴다. */
