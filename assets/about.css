@@ -182,6 +182,15 @@
   height: min(50vw, 960px, 100svh - 100px);
 }
 
+/* 데스크톱 공간 모션(sp-on)은 영상을 .sp-frame 틀로 감싸서, 블록의 왼쪽(오른쪽) 칸은 영상이 아니라 틀이다.
+   틀에 폭이 없으면 영상 원본 크기를 따라가는데, Safari 는 원본 폭(1190px)을 그대로 써서
+   창을 줄여도 영상이 줄지 않고 오른쪽 글이 화면 밖으로 밀렸다 (11.17 코멘트 "영상 프레임도 같이 줄어들어서").
+   크롬은 높이 × 영상 비율로 잡아 Motion·UI/UX 칸이 디자인(1190/1920)보다 좁았다. 영상 자리와 같은 폭을 준다. */
+.ab-service > .sp-frame {
+  width: 61.979%; /* 1190 / 1920 */
+  height: 100%;
+}
+
 .ab-service-head {
   display: flex;
   flex-direction: column;
@@ -474,6 +483,21 @@ html[class*="translated-"] .ab-service-sub {
 
   .ab-service:nth-child(4) .ab-service-media {
     height: 220px; /* AI */
+  }
+
+  /* 데스크톱에서 열고 창을 모바일 폭으로 줄인 경우: 틀이 영상 자리를 대신한다 */
+  .ab-service > .sp-frame {
+    order: -1;
+    width: 100%;
+    height: 290px;
+  }
+
+  .ab-service:nth-child(3) > .sp-frame {
+    height: 390px;
+  }
+
+  .ab-service:nth-child(4) > .sp-frame {
+    height: 220px;
   }
 
   .ab-service-body {
