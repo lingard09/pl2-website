@@ -111,12 +111,13 @@
   );
 }
 
-/* 피그마 Hero Title (11.16 수정사항 HeroSection 4399:69144): x=72, w=890, 아래에서 120.
+/* 피그마 Hero Title (11.16 수정사항 HeroSection 4399:69144): x=72, w=890, 아래에서 100
+   (11.16 은 120 이었는데 11.17 "생각보다 위에 있다"로 100, HeroSection 4470:40222).
    "텍스트가 이미지를 너무 가린다"는 의견으로 세로 중앙 → 아래쪽으로 내려갔다.
    히어로 높이가 화면 높이를 따르므로 위치는 히어로 아래 기준으로 잡고, 간격은 폭 비례(cqw)다. */
 .wd-hero-title {
   position: absolute;
-  bottom: 6.25cqw; /* 120 */
+  bottom: 5.2083cqw; /* 100 */
   left: 3.75%; /* 72 / 1920 */
   display: flex;
   flex-direction: column;
@@ -440,7 +441,8 @@
 .wd-film {
   display: flex;
   flex-direction: column;
-  gap: min(4.1667vw, 80px); /* 80 */
+  /* 11.17 수정사항 (4470:46732): 제목 ↔ 영상 40 으로 통일 (원래 80, 상세 05 만 40) */
+  gap: min(2.0833vw, 40px); /* 40 */
 }
 
 .wd-film-title {
@@ -830,6 +832,11 @@
     gap: 20px;
     padding: 0 20px;
     text-align: left;
+  }
+
+  /* 11.17 MO 코멘트: 상세 12 "콘텐츠가 실제 공간과 만나는 순간" 은 모바일에서도 가운데 (4471:46767) */
+  .wdx-head.wd-head--mo-center {
+    text-align: center;
   }
 
   /* 캡션: Regular 11/16 가운데 */

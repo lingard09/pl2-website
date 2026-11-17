@@ -211,7 +211,9 @@
         </section>
 
         <!-- ── 브랜드 마퀴 ──────────────────────────────── -->
-        <section class="ab-brands" aria-label="함께한 브랜드">
+        <!-- data-reveal-mo: 모바일은 띠 전체가 한 번에 올라온다. 줄마다 따로 올리면 아래 줄이
+             출발 위치(120 아래)에서 .ab-brands 의 overflow 에 잘려 화면 진입이 감지되지 않고 영영 안 나왔다 (11.17 MO 코멘트) -->
+        <section class="ab-brands" aria-label="함께한 브랜드" data-reveal-mo>
           <!-- 로고 18개 (PC 피드백_1015, 수정사항_11.11 한화생명·한국콘텐츠진흥원·adidas 추가): 윗줄 9 / 아랫줄 9. 줄마다 같은 목록을 한 벌 더 붙여 무한 루프 -->
           <div class="ab-brands-row">
             <div class="ab-brand">

@@ -586,8 +586,10 @@ button {
     inset 0 0 min(0.3125vw, 6px) rgba(255, 255, 255, 0.18);
 }
 
-/* 유리 테두리: 오른쪽·왼쪽 옆구리가 가장 밝고(빛 반사) 왼쪽 위는 거의 사라지는 흰 링 1px (피그마 렌더 기준).
-   원형 그라디언트(conic)를 깔고 가운데를 mask 로 뚫는다 (GNB 윤곽선과 같은 방식) */
+/* 유리 테두리 흰 링 1px. 원형 그라디언트(conic)를 깔고 가운데를 mask 로 뚫는다 (GNB 윤곽선과 같은 방식).
+   11.17 수정사항 BTN_TOP(4470:46690) "빛 방향이 다르다": 피그마 렌더를 각도별로 재면
+   왼쪽 위(300~345°)가 가장 밝고 오른쪽 아래(105~165°)가 그다음, 오른쪽 위·왼쪽 아래(45°·225°)가 가장 어둡다.
+   (그 전엔 오른쪽 70° · 왼쪽 아래 235° 가 밝았다) */
 .top-btn::after {
   content: "";
   position: absolute;
@@ -596,14 +598,19 @@ button {
   border-radius: inherit;
   background: conic-gradient(
     from 0deg,
-    rgba(255, 255, 255, 0.35) 0deg,
-    rgba(255, 255, 255, 1) 70deg,
-    rgba(255, 255, 255, 0.75) 125deg,
-    rgba(255, 255, 255, 0.5) 165deg,
-    rgba(255, 255, 255, 1) 235deg,
-    rgba(255, 255, 255, 0.8) 280deg,
-    rgba(255, 255, 255, 0.12) 325deg,
-    rgba(255, 255, 255, 0.35) 360deg
+    rgba(255, 255, 255, 0.69) 0deg,
+    rgba(255, 255, 255, 0.32) 30deg,
+    rgba(255, 255, 255, 0.32) 60deg,
+    rgba(255, 255, 255, 0.57) 90deg,
+    rgba(255, 255, 255, 0.8) 120deg,
+    rgba(255, 255, 255, 0.8) 150deg,
+    rgba(255, 255, 255, 0.57) 180deg,
+    rgba(255, 255, 255, 0.33) 210deg,
+    rgba(255, 255, 255, 0.32) 240deg,
+    rgba(255, 255, 255, 0.69) 270deg,
+    rgba(255, 255, 255, 1) 300deg,
+    rgba(255, 255, 255, 1) 330deg,
+    rgba(255, 255, 255, 0.69) 360deg
   );
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;

@@ -171,9 +171,10 @@
   height: min(1.25vw, 24px);
 }
 
-/* 활성 제목은 scale 1.1538 로 커져 아래로 4.8 넘친다 → 소제목까지 화면상 24 가 되도록 29 */
+/* 활성 제목은 scale 1.1538 로 커져 아래로 4.8 넘친다 → 소제목까지 화면상 12 가 되도록 17
+   (11.17 수정사항: 제목 ↔ 소제목 24 → 12, 피그마 4470:46718 gap 12) */
 .wd2-story-desc > .wd2-step-body::before {
-  height: min(1.5104vw, 29px);
+  height: min(0.8854vw, 17px);
 }
 
 .wd2-story-list .wd2-step[data-active="true"] .wd2-story-desc {

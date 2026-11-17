@@ -243,11 +243,12 @@
   margin-top: 0;
 }
 
-/* 패딩·마진은 높이 0 으로 안 접히므로 안쪽 빈 블록으로 간격을 만든다 */
+/* 패딩·마진은 높이 0 으로 안 접히므로 안쪽 빈 블록으로 간격을 만든다.
+   11.17 수정사항 ("AI film 도 마찬가지로"): 제목 ↔ 설명 24 → 12. 활성 제목이 scale 로 4.8 넘치므로 17 */
 .wd2-story-desc > .wd2-step-desc::before {
   content: "";
   display: block;
-  height: min(1.25vw, 24px);
+  height: min(0.8854vw, 17px);
 }
 
 .wd2-story-list .wd2-step[data-active="true"] .wd2-story-desc {
