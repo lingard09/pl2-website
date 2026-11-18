@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pl2std.com/sitemap.xml
