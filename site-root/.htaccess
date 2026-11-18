@@ -1,0 +1,26 @@
+# 옛 워드프레스(2016) 주소 → 새 사이트 (2026-11-18 루트 이전)
+# 주소 목록은 옛 DB(wp_posts, 고유주소 /%postname%/)에서 뽑았다. 데모·쇼핑몰 샘플 페이지가 대부분이라
+# 의미 있는 것만 맞는 페이지로, 나머지는 메인으로 영구 이동(301)한다.
+# 새 사이트의 실제 파일·폴더(about/, works/, contact/, assets/ …)는 아래 조건 때문에 건드리지 않는다.
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+
+# ?p=123, ?page_id=45 같은 옛 짧은 주소
+RewriteCond %{QUERY_STRING} (^|&)(p|page_id|portfolio|product|attachment_id|cat)= [NC]
+RewriteRule ^$ /? [R=301,L]
+
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# 소개·상담
+RewriteRule ^(about_us|about-us|about-me)(/.*)?$ /about/ [R=301,L]
+RewriteRule ^(contacts|contact-2)(/.*)?$ /contact/ [R=301,L]
+
+# 포트폴리오·프로젝트 (photography-portfolio/pet/petmain/pet-1/ 처럼 하위 페이지 포함)
+RewriteRule ^(photography-portfolio|project|portfolio|portfolio-[^/]+|gallery-[^/]+)(/.*)?$ /works/ [R=301,L]
+
+# 나머지 옛 페이지·쇼핑몰 데모·글 목록
+RewriteRule ^(blog|cart|checkout|my-account|shop|product|plstudio|sample-page|home[^/]*|category|tag|author|feed|comments|[0-9]{4})(/.*)?$ / [R=301,L]
+</IfModule>
