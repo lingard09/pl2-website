@@ -53,6 +53,8 @@ cp assets/*.webp assets/*.png assets/*.svg dist/assets/
 cp -r assets/og dist/assets/ # 공유 미리보기 이미지 (jpg — 메신저 호환 때문에 webp 가 아니다)
 cp assets/*.mp4 dist/assets/
 cp fonts/* dist/fonts/
+# 서버 루트에 그대로 있어야 하는 파일 (구글·네이버 서치콘솔 소유 확인, 2026-11-17 루트 이전 때 옛 서버에서 가져옴)
+cp site-root/* dist/
 
 # 원본 jpg 가 섞여 들어가지 않았는지 확인 (webp 로 대체했으므로 있으면 안 된다)
 if ls dist/assets/*.jpg >/dev/null 2>&1; then

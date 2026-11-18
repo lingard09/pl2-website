@@ -17,14 +17,14 @@
 # 비밀번호는 인자로 받지 않는다 — 명령 히스토리와 프로세스 목록에 남지 않게
 # 실행 중에 입력받아 lftp 에 stdin 으로만 넘긴다.
 #
-# ⚠️ 기존 워드프레스를 건드리지 않으려고 하위 경로(/www/new)에만 올린다.
+# 2026-11-18 부터 사이트 루트(/www)에 올린다. 옛 워드프레스는 웹 루트 밖 /old-site-20261118-005149 로 옮겼다.
 #    --delete 는 쓰지 않는다. 서버에 있는 파일을 지우지 않는다.
 set -e
 cd "$(dirname "$0")/.."
 
 HOST="${FTP_HOST:-pl2std.com}"
 USER="${FTP_USER:-pl2studio}"
-DIR="${FTP_DIR:-/www/new}"
+DIR="${FTP_DIR:-/www}" # 2026-11-18 루트 이전 뒤로는 /www (옛 /www/new 는 서버에 그대로 남아 있다)
 
 EXCLUDE=""
 MODE="전체"
