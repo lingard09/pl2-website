@@ -95,6 +95,10 @@ function cms_handle_upload()
     }
     $needResize = $w > $maxw;
 
+    // 서버 GD 가 webp 를 못 읽으면(카페24 PHP 5.5 확인: imagecreatefromwebp 없음) 줄이지 않고 원본 그대로 쓴다
+    if ($isWebp && $needResize && !function_exists('imagecreatefromwebp')) {
+        $needResize = false;
+    }
     if ($isWebp && !$needResize) {
         $name = cms_new_name('webp');
         if (!move_uploaded_file($f['tmp_name'], CMS_UPLOADS . '/' . $name)) {

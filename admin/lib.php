@@ -91,12 +91,15 @@ function cms_ensure_dirs()
     if (!file_exists(CMS_PRIV . '/.htaccess')) {
         @file_put_contents(CMS_PRIV . '/.htaccess', $deny);
     }
-    // 올린 파일은 실행되지 않게: 이미지·영상 확장자만 열어 주고 PHP 처리기를 뗀다
-    $up = "RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .phar\nRemoveType .php .phtml .php3 .php4 .php5 .php7 .phar\n"
-        . "<FilesMatch \"\\.(?i:php\\d?|phtml|phar|html?|svg|js)$\">\n"
+    // 올린 파일은 실행되지 않게: 이미지·영상 말고 실행될 수 있는 확장자는 열어 주지 않는다.
+    // 2026-11-19: RemoveHandler/RemoveType 을 넣었더니 카페24(AllowOverride 제한)에서 폴더 전체가 500 이 됐다.
+    // 비밀 폴더에서 동작이 확인된 Order/Deny · Require 만 쓴다. 표시 문자열(v2)이 없는 옛 파일은 새로 쓴다.
+    $up = "# pl2cms-v2\n"
+        . "<FilesMatch \"\\.([Pp][Hh][Pp][0-9]?|[Pp][Hh][Tt][Mm][Ll]|[Pp][Hh][Aa][Rr]|[Hh][Tt][Mm][Ll]?|[Ss][Vv][Gg]|[Jj][Ss])$\">\n"
         . "<IfModule mod_authz_core.c>\nRequire all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\nOrder allow,deny\nDeny from all\n</IfModule>\n</FilesMatch>\n";
-    if (!file_exists(CMS_UPLOADS . '/.htaccess')) {
-        @file_put_contents(CMS_UPLOADS . '/.htaccess', $up);
+    $f = CMS_UPLOADS . '/.htaccess';
+    if (!file_exists($f) || strpos((string)@file_get_contents($f), 'pl2cms-v2') === false) {
+        @file_put_contents($f, $up);
     }
 }
 
