@@ -537,14 +537,35 @@
         info.textContent = "지금 영상: " + vid.videoWidth + "×" + vid.videoHeight + " · " + Math.round(vid.duration) + "초";
       });
       body.appendChild(info);
+      // 같은 <video> 의 포스터(재생 전 정지 화면). 영상만 바꾸면 옛 장면이 남으므로 첫 장면으로 같이 바꾼다 (11.19)
+      var videoEl = el && el.parentNode && el.parentNode.tagName === "VIDEO" ? el.parentNode : null;
+      var posterId = videoEl && videoEl.getAttribute("data-cms");
+      var posterOk = posterId && meta(posterId) && meta(posterId).base.poster !== undefined;
+      var bake = posterOk && needsBakedDim(videoEl);
+      var posterBox = null;
+      if (posterOk) {
+        posterBox = h("input", { type: "checkbox", checked: true });
+        body.appendChild(h("label", { class: "check" }, posterBox,
+          h("span", { text: "첫 장면으로 포스터(재생 전 화면)도 같이 바꾸기" + (bake ? " — 이 자리는 포스터에 어두운 막(60%)을 입힙니다" : "") })));
+      }
       body.appendChild(fileButton("영상 바꾸기 (mp4, 100MB 이하)", "video/mp4", function (file, bar) {
         if (file.size > 100 * 1024 * 1024) { toast("영상이 100MB 보다 큽니다. 줄여서 올려 주세요.", "err"); return; }
         if (file.size > 40 * 1024 * 1024) toast("영상이 큽니다 (" + Math.round(file.size / 1048576) + "MB). 방문자 화면에서 늦게 뜰 수 있어요.");
+        var withPoster = posterBox && posterBox.checked;
         return upload(file, "video", 0, bar).then(function (r) {
           var it = {}; it[key] = r.url;
           setPending(id, it);
-          renderPanel();
-        });
+          if (!withPoster) return;
+          return makePoster(file, bake).then(function (blob) {
+            var pf = new File([blob], "poster.jpg", { type: "image/jpeg" });
+            return upload(pf, "image", 1920, null).then(function (r2) {
+              setPending(posterId, { poster: r2.url });
+              toast("영상과 포스터를 바꿨어요. 저장하면 사이트에 반영됩니다.");
+            });
+          }).catch(function () {
+            toast("영상은 바꿨지만 포스터를 자동으로 만들지 못했어요. 영상 포스터 칸에서 이미지를 직접 올려 주세요.", "err");
+          });
+        }).then(function () { renderPanel(); });
       }));
       body.appendChild(h("p", { class: "hint", text: "소리가 필요 없는 영상은 소리를 빼고, 가로 1920px · 20MB 안팎으로 줄여서 올리면 빨리 뜹니다." }));
     } else {
@@ -568,6 +589,68 @@
     }
     return h("section", { class: "card" + (Object.prototype.hasOwnProperty.call(S.pending, id) ? " is-pending" : "") },
       head(id), body, actions(id, function () {}));
+  }
+
+  // 재생 버튼 자리인데 CSS 가 어두운 막(::after)을 씌우지 않는 곳 = 포스터 이미지에 막이 구워져 있는 곳 (상세 10 CJ)
+  function needsBakedDim(videoEl) {
+    var slot = videoEl.closest("[data-playing]");
+    if (!slot) return false;
+    var bg = slot.ownerDocument.defaultView.getComputedStyle(slot, "::after").backgroundColor || "";
+    var m = /rgba?\(([^)]+)\)/.exec(bg);
+    if (!m) return true;
+    var parts = m[1].split(",");
+    return parts.length === 4 && parseFloat(parts[3]) === 0;
+  }
+
+  // 올린 영상 파일에서 포스터(jpg)를 만든다. 첫 장면이 거의 검으면(페이드인) 1초 · 3초 장면으로 넘어간다.
+  function makePoster(file, dim) {
+    return new Promise(function (resolve, reject) {
+      var url = URL.createObjectURL(file);
+      var v = document.createElement("video");
+      v.muted = true;
+      v.playsInline = true;
+      v.preload = "auto";
+      v.src = url;
+      var times = [0.05, 1, 3];
+      var step = 0;
+      var done = function (err, blob) {
+        URL.revokeObjectURL(url);
+        if (err) reject(err); else resolve(blob);
+      };
+      var timer = setTimeout(function () { done(new Error("timeout")); }, 20000);
+      v.addEventListener("error", function () { clearTimeout(timer); done(new Error("decode")); });
+      v.addEventListener("loadedmetadata", function () {
+        v.currentTime = Math.min(times[0], v.duration || 0);
+      });
+      v.addEventListener("seeked", function () {
+        var w = v.videoWidth, hh = v.videoHeight;
+        if (!w || !hh) { clearTimeout(timer); done(new Error("size")); return; }
+        var scale = Math.min(1, 1920 / w);
+        var c = document.createElement("canvas");
+        c.width = Math.round(w * scale);
+        c.height = Math.round(hh * scale);
+        var g = c.getContext("2d");
+        g.drawImage(v, 0, 0, c.width, c.height);
+        // 밝기 확인 (작게 줄여서 평균)
+        var s = document.createElement("canvas");
+        s.width = 32; s.height = 18;
+        s.getContext("2d").drawImage(c, 0, 0, 32, 18);
+        var px = s.getContext("2d").getImageData(0, 0, 32, 18).data, sum = 0;
+        for (var i = 0; i < px.length; i += 4) sum += px[i] + px[i + 1] + px[i + 2];
+        var avg = sum / (px.length / 4) / 3;
+        if (avg < 14 && step < times.length - 1 && v.duration > times[step + 1]) {
+          step++;
+          v.currentTime = times[step];
+          return;
+        }
+        if (dim) {
+          g.fillStyle = "rgba(0,0,0,0.6)";
+          g.fillRect(0, 0, c.width, c.height);
+        }
+        clearTimeout(timer);
+        c.toBlob(function (b) { if (b) done(null, b); else done(new Error("blob")); }, "image/jpeg", 0.88);
+      });
+    });
   }
 
   function fileButton(label, accept, onFile) {

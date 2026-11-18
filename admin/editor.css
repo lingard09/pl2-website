@@ -510,3 +510,14 @@ button.ghost {
     border-top: 1px solid var(--line);
   }
 }
+
+.check {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: 13px;
+}
+
+.check input {
+  margin-top: 3px;
+}
