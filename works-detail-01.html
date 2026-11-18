@@ -37,7 +37,7 @@
     <!-- 피그마 GNB Type=T/W (어두운 배경용) -->
     <nav class="gnb gnb--tw" data-dropdown="off" data-pinned>
       <div class="gnb-bar">
-        <span class="gnb-brand" translate="no">PL2 Creative Studio</span>
+        <span data-cms="g-001" class="gnb-brand" translate="no">PL2 Creative Studio</span>
         <button
           type="button"
           class="gnb-toggle"
@@ -47,10 +47,10 @@
         ></button>
       </div>
       <div class="gnb-panel" id="gnb-panel">
-        <a class="gnb-item" href="index.html">Home</a>
-        <a class="gnb-item" href="works.html" aria-current="page">Works</a>
-        <a class="gnb-item" href="about.html">About</a>
-        <a class="gnb-item" href="contact.html">Contact</a>
+        <a data-cms="g-002" class="gnb-item" href="index.html">Home</a>
+        <a data-cms="g-003" class="gnb-item" href="works.html" aria-current="page">Works</a>
+        <a data-cms="g-004" class="gnb-item" href="about.html">About</a>
+        <a data-cms="g-005" class="gnb-item" href="contact.html">Contact</a>
       </div>
     </nav>
 
@@ -61,7 +61,7 @@
           <div class="wd-hero">
             <!-- 피그마 히어로는 영상(이미지 fill 이 아래에 깔려 poster 로 씀).
                  영상 파일은 assets/wd1-hero.mp4 로 넣는다. -->
-            <video
+            <video data-cms="d01-001"
               class="wd-hero-media"
               poster="assets/wd1-hero-poster.webp"
               autoplay
@@ -70,32 +70,32 @@
               playsinline
               preload="metadata"
             >
-              <source media="(min-width: 600px)" src="assets/wd1-hero.mp4" type="video/mp4" />
+              <source data-cms="d01-002" media="(min-width: 600px)" src="assets/wd1-hero.mp4" type="video/mp4" />
             </video>
             <!-- 모바일은 영상 대신 피그마 썸네일 이미지 (수정사항_11.09) -->
-            <img class="wd-hero-media wd-hero-media--mo" src="assets/wd1-hero-mo.webp" alt="" />
+            <img data-cms="d01-003" class="wd-hero-media wd-hero-media--mo" src="assets/wd1-hero-mo.webp" alt="" />
             <div class="wd-hero-dim wd-hero-dim--dark" aria-hidden="true"></div>
 
             <div class="wd-hero-title">
               <div class="wd-hero-head">
-                <span class="wd-hero-brand">Samsung</span>
-                <h1 class="wd-hero-h1">Generative AI<br />Image Sample Project</h1>
+                <span data-cms="d01-004" class="wd-hero-brand">Samsung</span>
+                <h1 data-cms="d01-005" class="wd-hero-h1">Generative AI<br />Image Sample Project</h1>
               </div>
               <!-- 태그: 피그마 PC 피드백_1007 HeroSection -->
               <div class="wd-hero-tags">
-                <span class="wd-tag">Planning</span>
-                <span class="wd-tag">Generative AI</span>
-                <span class="wd-tag">Image</span>
+                <span data-cms="d01-006" class="wd-tag">Planning</span>
+                <span data-cms="d01-007" class="wd-tag">Generative AI</span>
+                <span data-cms="d01-008" class="wd-tag">Image</span>
               </div>
             </div>
           </div>
 
           <div class="wd-intro">
-            <p class="wd-intro-title">
+            <p data-cms="d01-009" class="wd-intro-title">
               Samsung Generative<br class="br-mo br-pc" />AI Image Sample Project
             </p>
             <p class="wd-intro-desc">
-              <span data-l="ko" class="l-fix">PL2는 삼성 디바이스 서비스의 <br class="br-mo" />생성형 AI 이미지 기능을 위한 <br class="br-mo" />비주얼 샘플과 프롬프트를 제작했습니다. <br class="br-mo br-pc" />Drawing Assist와 PENUP을 중심으로, <br class="br-mo" />각 기능의 스타일과 사용 맥락에 맞춘 <br class="br-mo br-pc" />10가지 테마의 프롬프트와 이미지를 <br class="br-mo" />기획·제작했습니다. <br class="br-mo br-pc" />또한 다양한 테마의 스티커 세트를 <br class="br-mo" />직접 제작해 생성형 AI 기능의 <br class="br-mo" />활용 가능성을 시각적으로 제안했으며, <br class="br-mo br-pc" />이 콘텐츠는 현재 실제 서비스에 <br class="br-mo" />적용되어 있습니다.</span><span data-l="en" lang="en" class="l-fix"><span class="wd-t-pc">PL2 created visual samples and prompts for Samsung’s generative AI image features. <br class="br-mo br-pc" />Focusing on Drawing Assist and PENUP, we produced prompts and images in 10 themes, <br class="br-mo br-pc" />each tailored to the style and use context of its feature. We also designed themed <br class="br-mo br-pc" />sticker sets to show what the AI features can do, and this content is now live.</span><span class="wd-t-mo">PL2 created visual samples <br class="br-mo br-pc" />and prompts for Samsung’s <br class="br-mo br-pc" />generative AI image features. <br class="br-mo br-pc" />Focusing on Drawing Assist <br class="br-mo br-pc" />and PENUP, we produced prompts <br class="br-mo br-pc" />and images in 10 themes, <br class="br-mo br-pc" />each tailored to its feature. <br class="br-mo br-pc" />We also designed themed <br class="br-mo br-pc" />sticker sets to show what <br class="br-mo br-pc" />the AI features can do, <br class="br-mo br-pc" />and this content is now live.</span></span>
+              <span data-cms="d01-010" data-l="ko" class="l-fix">PL2는 삼성 디바이스 서비스의 <br class="br-mo" />생성형 AI 이미지 기능을 위한 <br class="br-mo" />비주얼 샘플과 프롬프트를 제작했습니다. <br class="br-mo br-pc" />Drawing Assist와 PENUP을 중심으로, <br class="br-mo" />각 기능의 스타일과 사용 맥락에 맞춘 <br class="br-mo br-pc" />10가지 테마의 프롬프트와 이미지를 <br class="br-mo" />기획·제작했습니다. <br class="br-mo br-pc" />또한 다양한 테마의 스티커 세트를 <br class="br-mo" />직접 제작해 생성형 AI 기능의 <br class="br-mo" />활용 가능성을 시각적으로 제안했으며, <br class="br-mo br-pc" />이 콘텐츠는 현재 실제 서비스에 <br class="br-mo" />적용되어 있습니다.</span><span data-l="en" lang="en" class="l-fix"><span data-cms="d01-011" class="wd-t-pc">PL2 created visual samples and prompts for Samsung’s generative AI image features. <br class="br-mo br-pc" />Focusing on Drawing Assist and PENUP, we produced prompts and images in 10 themes, <br class="br-mo br-pc" />each tailored to the style and use context of its feature. We also designed themed <br class="br-mo br-pc" />sticker sets to show what the AI features can do, and this content is now live.</span><span data-cms="d01-012" class="wd-t-mo">PL2 created visual samples <br class="br-mo br-pc" />and prompts for Samsung’s <br class="br-mo br-pc" />generative AI image features. <br class="br-mo br-pc" />Focusing on Drawing Assist <br class="br-mo br-pc" />and PENUP, we produced prompts <br class="br-mo br-pc" />and images in 10 themes, <br class="br-mo br-pc" />each tailored to its feature. <br class="br-mo br-pc" />We also designed themed <br class="br-mo br-pc" />sticker sets to show what <br class="br-mo br-pc" />the AI features can do, <br class="br-mo br-pc" />and this content is now live.</span></span>
             </p>
           </div>
         </section>
@@ -104,17 +104,17 @@
         <section class="wd-style">
           <div class="wd-head wd-head--center">
             <h2 class="wd-head-title wd-head-title--bold">
-              <span data-l="ko" class="l-fix">하나의 대상을 유지하면서도 <br class="br-mo br-pc" />표현 양식만 바뀔 수 있을까?</span><span data-l="en" lang="en" class="l-fix">Can the Same Subject Be <br class="br-mo br-pc" />Expressed in Different Styles?</span>
+              <span data-cms="d01-013" data-l="ko" class="l-fix">하나의 대상을 유지하면서도 <br class="br-mo br-pc" />표현 양식만 바뀔 수 있을까?</span><span data-cms="d01-014" data-l="en" lang="en" class="l-fix">Can the Same Subject Be <br class="br-mo br-pc" />Expressed in Different Styles?</span>
             </h2>
             <p class="wd-head-desc">
-              <span data-l="ko" class="l-fix"><span class="wd-t-pc">다양한 스타일의 특징을 언어로 정의하고, <br class="br-mo br-pc" />AI가 이를 안정적이고 효과적으로 재현할 수 있도록 프롬프트를 설계했습니다.</span><span class="wd-t-mo">다양한 스타일의 특징을 언어로 정의하고, <br class="br-mo br-pc" />AI가 이를 안정적으로 재현할 수 있도록 프롬프트를 설계했습니다.</span></span><span data-l="en" lang="en" class="l-fix">We defined the traits of each style in words and <br class="br-mo" />designed prompts <br class="br-pc-only" />that let the AI reproduce them <br class="br-mo" />reliably and effectively.</span>
+              <span data-l="ko" class="l-fix"><span data-cms="d01-015" class="wd-t-pc">다양한 스타일의 특징을 언어로 정의하고, <br class="br-mo br-pc" />AI가 이를 안정적이고 효과적으로 재현할 수 있도록 프롬프트를 설계했습니다.</span><span data-cms="d01-016" class="wd-t-mo">다양한 스타일의 특징을 언어로 정의하고, <br class="br-mo br-pc" />AI가 이를 안정적으로 재현할 수 있도록 프롬프트를 설계했습니다.</span></span><span data-cms="d01-017" data-l="en" lang="en" class="l-fix">We defined the traits of each style in words and <br class="br-mo" />designed prompts <br class="br-pc-only" />that let the AI reproduce them <br class="br-mo" />reliably and effectively.</span>
             </p>
           </div>
 
           <!-- 스타일 전환 영상 (2026-10-13 피드백, 피그마 Rectangle 34628191 1920x928).
                이미지 + 프롬프트 카드였던 자리를 영상 하나로 바꿨다 — 프롬프트 입력부터
                스타일이 바뀌는 과정이 영상 안에 들어 있다. -->
-          <video
+          <video data-cms="d01-018"
             class="wd-style-video"
             poster="assets/wd1-prompt-poster.webp"
             autoplay
@@ -123,7 +123,7 @@
             playsinline
             preload="metadata"
           >
-            <source src="assets/wd1-prompt.mp4" type="video/mp4" />
+            <source data-cms="d01-019" src="assets/wd1-prompt.mp4" type="video/mp4" />
           </video>
         </section>
 
@@ -135,20 +135,20 @@
           <div class="wd-strip-pin" data-reveal>
             <div class="wd-strip">
               <div class="wd-strip-track">
-                <img data-slot="-5" src="assets/wd1-strip-01.webp" alt="" />
-                <img data-slot="-4" src="assets/wd1-strip-02.webp" alt="" />
-                <img data-slot="-3" src="assets/wd1-strip-03.webp" alt="" />
-                <img data-slot="-2" src="assets/wd1-strip-04.webp" alt="" />
-                <img data-slot="-1" src="assets/wd1-strip-05.webp" alt="" />
-                <img data-slot="0" src="assets/wd1-strip-06.webp" alt="" />
-                <img data-slot="1" src="assets/wd1-strip-07.webp" alt="" />
-                <img data-slot="2" src="assets/wd1-strip-08.webp" alt="" />
-                <img data-slot="3" src="assets/wd1-strip-09.webp" alt="" />
-                <img data-slot="4" src="assets/wd1-strip-11.webp" alt="" />
+                <img data-cms="d01-020" data-slot="-5" src="assets/wd1-strip-01.webp" alt="" />
+                <img data-cms="d01-021" data-slot="-4" src="assets/wd1-strip-02.webp" alt="" />
+                <img data-cms="d01-022" data-slot="-3" src="assets/wd1-strip-03.webp" alt="" />
+                <img data-cms="d01-023" data-slot="-2" src="assets/wd1-strip-04.webp" alt="" />
+                <img data-cms="d01-024" data-slot="-1" src="assets/wd1-strip-05.webp" alt="" />
+                <img data-cms="d01-025" data-slot="0" src="assets/wd1-strip-06.webp" alt="" />
+                <img data-cms="d01-026" data-slot="1" src="assets/wd1-strip-07.webp" alt="" />
+                <img data-cms="d01-027" data-slot="2" src="assets/wd1-strip-08.webp" alt="" />
+                <img data-cms="d01-028" data-slot="3" src="assets/wd1-strip-09.webp" alt="" />
+                <img data-cms="d01-029" data-slot="4" src="assets/wd1-strip-11.webp" alt="" />
               </div>
             </div>
             <p class="wd-strip-caption">
-              <span data-l="ko">[Prompt] Childhood Sketchbook 안정성 테스트</span><span data-l="en" lang="en">[Prompt] Childhood Sketchbook Stability Test</span>
+              <span data-cms="d01-030" data-l="ko">[Prompt] Childhood Sketchbook 안정성 테스트</span><span data-cms="d01-031" data-l="en" lang="en">[Prompt] Childhood Sketchbook Stability Test</span>
             </p>
           </div>
         </section>
@@ -157,16 +157,16 @@
         <section class="wd-layer">
           <div class="wd-head wd-head--left">
             <h2 class="wd-head-title wd-head-title--bold">
-              <span data-l="ko" class="l-fix"><span class="wd-t-pc">완성된 이미지를 나누고, <br class="br-mo br-pc" />움직이고, 다시 편집할 수 있다면 <br class="br-mo br-pc" />끝이 아닌 새로운 시작이 됩니다.</span><span class="wd-t-mo">완성된 이미지를 다시 나누고, <br class="br-mo br-pc" />움직이고, 다시 편집할 수 있다면 <br class="br-mo br-pc" />끝이 아닌 새로운 시작이 됩니다.</span></span><span data-l="en" lang="en">Layer Separation for New Creations</span>
+              <span data-l="ko" class="l-fix"><span data-cms="d01-032" class="wd-t-pc">완성된 이미지를 나누고, <br class="br-mo br-pc" />움직이고, 다시 편집할 수 있다면 <br class="br-mo br-pc" />끝이 아닌 새로운 시작이 됩니다.</span><span data-cms="d01-033" class="wd-t-mo">완성된 이미지를 다시 나누고, <br class="br-mo br-pc" />움직이고, 다시 편집할 수 있다면 <br class="br-mo br-pc" />끝이 아닌 새로운 시작이 됩니다.</span></span><span data-cms="d01-034" data-l="en" lang="en">Layer Separation for New Creations</span>
             </h2>
             <p class="wd-head-desc">
-              <span data-l="ko" class="l-fix">PENUP의 자동 레이어 분리 기능으로 하나의 이미지를 <br class="br-pc-only" />여러 레이어로 나누고, 각 요소를 따로 편집하거나 자유롭게 조합할 수 있도록 <br class="br-mo" />설계했습니다. <br class="br-pc-only" />완성된 이미지도 다양하게 재구성해 새로운 창작으로 <br class="br-mo" />이어 갈 수 있습니다.</span><span data-l="en" lang="en" class="l-fix">PENUP’s automatic layer separation splits a single image into layers, <br class="br-pc-only" />so each element can be edited on its own or freely recombined. <br class="br-pc-only" />Even a finished image can be reshaped and become a new starting point.</span>
+              <span data-cms="d01-035" data-l="ko" class="l-fix">PENUP의 자동 레이어 분리 기능으로 하나의 이미지를 <br class="br-pc-only" />여러 레이어로 나누고, 각 요소를 따로 편집하거나 자유롭게 조합할 수 있도록 <br class="br-mo" />설계했습니다. <br class="br-pc-only" />완성된 이미지도 다양하게 재구성해 새로운 창작으로 <br class="br-mo" />이어 갈 수 있습니다.</span><span data-cms="d01-036" data-l="en" lang="en" class="l-fix">PENUP’s automatic layer separation splits a single image into layers, <br class="br-pc-only" />so each element can be edited on its own or freely recombined. <br class="br-pc-only" />Even a finished image can be reshaped and become a new starting point.</span>
             </p>
           </div>
 
           <!-- 레이어 분리 영상 (2026-10-13 피드백, 피그마 Frame 2116929241 1920x960 VIDEO).
                어두운 띠 배경(#1E2123)까지 영상에 들어 있다 -->
-          <video
+          <video data-cms="d01-037"
             class="wd-band-video"
             poster="assets/wd1-layer-poster.webp"
             autoplay
@@ -175,7 +175,7 @@
             playsinline
             preload="metadata"
           >
-            <source media="(max-width: 599.98px)" src="assets/wd1-layer.mp4" type="video/mp4" />
+            <source data-cms="d01-038" media="(max-width: 599.98px)" src="assets/wd1-layer.mp4" type="video/mp4" />
           </video>
 
           <!-- 레이어가 한 장씩 얹히는 모션 (수정사항_11.10, 피그마 4084:28907). PC 전용, 모바일은 위 영상 그대로.
@@ -184,19 +184,19 @@
             <div class="wd-stack-pin">
               <div class="wd-stack-stage">
                 <div class="wd-stack-set">
-                  <img src="assets/wd1-stack-1-1.webp" alt="" decoding="async" />
-                  <img src="assets/wd1-stack-1-2.webp" alt="" decoding="async" />
-                  <img src="assets/wd1-stack-1-3.webp" alt="" decoding="async" />
+                  <img data-cms="d01-039" src="assets/wd1-stack-1-1.webp" alt="" decoding="async" />
+                  <img data-cms="d01-040" src="assets/wd1-stack-1-2.webp" alt="" decoding="async" />
+                  <img data-cms="d01-041" src="assets/wd1-stack-1-3.webp" alt="" decoding="async" />
                 </div>
                 <div class="wd-stack-set wd-stack-set--up">
-                  <img src="assets/wd1-stack-2-1.webp" alt="" decoding="async" />
-                  <img src="assets/wd1-stack-2-2.webp" alt="" decoding="async" />
-                  <img src="assets/wd1-stack-2-3.webp" alt="" decoding="async" />
+                  <img data-cms="d01-042" src="assets/wd1-stack-2-1.webp" alt="" decoding="async" />
+                  <img data-cms="d01-043" src="assets/wd1-stack-2-2.webp" alt="" decoding="async" />
+                  <img data-cms="d01-044" src="assets/wd1-stack-2-3.webp" alt="" decoding="async" />
                 </div>
                 <div class="wd-stack-set wd-stack-set--up">
-                  <img src="assets/wd1-stack-3-1.webp" alt="" decoding="async" />
-                  <img src="assets/wd1-stack-3-2.webp" alt="" decoding="async" />
-                  <img src="assets/wd1-stack-3-3.webp" alt="" decoding="async" />
+                  <img data-cms="d01-045" src="assets/wd1-stack-3-1.webp" alt="" decoding="async" />
+                  <img data-cms="d01-046" src="assets/wd1-stack-3-2.webp" alt="" decoding="async" />
+                  <img data-cms="d01-047" src="assets/wd1-stack-3-3.webp" alt="" decoding="async" />
                 </div>
               </div>
             </div>
@@ -209,12 +209,12 @@
         <section class="wd-illust" data-mo-carousel>
           <div class="wd-illust-track" data-mo-track>
           <div class="wd-illust-half">
-            <picture><source media="(max-width: 599.98px)" srcset="assets/wd1-illust-01-mo.webp" /><img class="wd-illust-1" src="assets/wd1-illust-01.webp" alt="" data-reveal="pc" data-reveal-delay="0" /></picture>
-            <picture><source media="(max-width: 599.98px)" srcset="assets/wd1-illust-02-mo.webp" /><img class="wd-illust-2" src="assets/wd1-illust-02.webp" alt="" data-reveal="pc" data-reveal-delay="180" /></picture>
+            <picture><source data-cms="d01-048" media="(max-width: 599.98px)" srcset="assets/wd1-illust-01-mo.webp" /><img data-cms="d01-049" class="wd-illust-1" src="assets/wd1-illust-01.webp" alt="" data-reveal="pc" data-reveal-delay="0" /></picture>
+            <picture><source data-cms="d01-050" media="(max-width: 599.98px)" srcset="assets/wd1-illust-02-mo.webp" /><img data-cms="d01-051" class="wd-illust-2" src="assets/wd1-illust-02.webp" alt="" data-reveal="pc" data-reveal-delay="180" /></picture>
           </div>
           <div class="wd-illust-half">
-            <picture><source media="(max-width: 599.98px)" srcset="assets/wd1-illust-03-mo.webp" /><img class="wd-illust-3" src="assets/wd1-illust-03.webp" alt="" data-reveal="pc" data-reveal-delay="360" /></picture>
-            <picture><source media="(max-width: 599.98px)" srcset="assets/wd1-illust-04-mo.webp" /><img class="wd-illust-4" src="assets/wd1-illust-04.webp" alt="" data-reveal="pc" data-reveal-delay="540" /></picture>
+            <picture><source data-cms="d01-052" media="(max-width: 599.98px)" srcset="assets/wd1-illust-03-mo.webp" /><img data-cms="d01-053" class="wd-illust-3" src="assets/wd1-illust-03.webp" alt="" data-reveal="pc" data-reveal-delay="360" /></picture>
+            <picture><source data-cms="d01-054" media="(max-width: 599.98px)" srcset="assets/wd1-illust-04-mo.webp" /><img data-cms="d01-055" class="wd-illust-4" src="assets/wd1-illust-04.webp" alt="" data-reveal="pc" data-reveal-delay="540" /></picture>
           </div>
           </div>
         </section>
@@ -223,75 +223,75 @@
         <section class="wd-stickers">
           <div class="wd-head wd-head--right">
             <h2 class="wd-head-title wd-head-title--bold">
-              <span data-l="ko" class="l-fix"><span class="wd-t-pc">하나의 기준을 다양한 주제의 스타일로 <br class="br-mo br-pc" />확장하여 대규모 그래픽 에셋 제작</span><span class="wd-t-mo">하나의 기준을 다양한 주제의 스타일로 <br class="br-mo br-pc" />확장하여 대규모 그래픽 에셋을 제작</span></span><span data-l="en" lang="en">One Visual Style, Multiple Themes</span>
+              <span data-l="ko" class="l-fix"><span data-cms="d01-056" class="wd-t-pc">하나의 기준을 다양한 주제의 스타일로 <br class="br-mo br-pc" />확장하여 대규모 그래픽 에셋 제작</span><span data-cms="d01-057" class="wd-t-mo">하나의 기준을 다양한 주제의 스타일로 <br class="br-mo br-pc" />확장하여 대규모 그래픽 에셋을 제작</span></span><span data-cms="d01-058" data-l="en" lang="en">One Visual Style, Multiple Themes</span>
             </h2>
             <p class="wd-head-desc">
-              <span data-l="ko" class="l-fix">동물·식물·음식·동화·다이어리, 5가지 카테고리로 총 100종의 스티커를 제작했습니다. <br class="br-pc-only" />카테고리마다 특징을 살린 그래픽 요소를 더하고, <br class="br-mo" />같은 톤을 유지하며 여러 주제로 확장해 <br class="br-pc-only" />컬렉션 전체가 다양하면서도 <br class="br-mo" />하나로 보이도록 했습니다.</span><span data-l="en" lang="en" class="l-fix">We created 100 stickers across five categories: animals, plants, food, fairy tales, <br class="br-pc-only" />and diary. Each category gets <br class="br-mo" />its own graphic details, while one shared tone <br class="br-pc-only" />carries across every theme, so the collection feels varied yet clearly one set.</span>
+              <span data-cms="d01-059" data-l="ko" class="l-fix">동물·식물·음식·동화·다이어리, 5가지 카테고리로 총 100종의 스티커를 제작했습니다. <br class="br-pc-only" />카테고리마다 특징을 살린 그래픽 요소를 더하고, <br class="br-mo" />같은 톤을 유지하며 여러 주제로 확장해 <br class="br-pc-only" />컬렉션 전체가 다양하면서도 <br class="br-mo" />하나로 보이도록 했습니다.</span><span data-cms="d01-060" data-l="en" lang="en" class="l-fix">We created 100 stickers across five categories: animals, plants, food, fairy tales, <br class="br-pc-only" />and diary. Each category gets <br class="br-mo" />its own graphic details, while one shared tone <br class="br-pc-only" />carries across every theme, so the collection feels varied yet clearly one set.</span>
             </p>
           </div>
 
           <!-- 스티커 5행은 동물 → 식물 → 음식 → 동화 → 다꾸 순서로 스크롤에 맞춰 하나씩 등장 -->
           <div class="wd-sticker-rows">
           <div class="wd-sticker-row" data-reveal>
-            <img
+            <img data-cms="d01-061"
               class="wd-sticker-grid"
               src="assets/wd1-sticker-01.webp"
               alt="동물+동화풍 감성 일러스트 ‘나만의 동물의 왕국'"
             />
             <div class="wd-sticker-caption">
-              <h3><span data-l="ko">동물+동화풍 감성 일러스트 ‘나만의 동물의 왕국'</span><span data-l="en" lang="en">My Animal Kingdom</span></h3>
-              <p><span data-l="ko" class="l-fix">강아지, 고양이, 많은 사랑을 받는 카피바라까지 <br class="br-mo br-pc" />친숙한 동물들을 동화 일러스트 스타일로 그려 냈습니다.</span><span data-l="en" lang="en" class="l-fix">From puppies and cats to the much-loved capybara, <br class="br-mo br-pc" />familiar animals drawn in a fairy-tale illustration style.</span></p>
+              <h3><span data-cms="d01-062" data-l="ko">동물+동화풍 감성 일러스트 ‘나만의 동물의 왕국'</span><span data-cms="d01-063" data-l="en" lang="en">My Animal Kingdom</span></h3>
+              <p><span data-cms="d01-064" data-l="ko" class="l-fix">강아지, 고양이, 많은 사랑을 받는 카피바라까지 <br class="br-mo br-pc" />친숙한 동물들을 동화 일러스트 스타일로 그려 냈습니다.</span><span data-cms="d01-065" data-l="en" lang="en" class="l-fix">From puppies and cats to the much-loved capybara, <br class="br-mo br-pc" />familiar animals drawn in a fairy-tale illustration style.</span></p>
             </div>
           </div>
           <div class="wd-sticker-row wd-sticker-row--reverse" data-reveal>
-            <img
+            <img data-cms="d01-066"
               class="wd-sticker-grid"
               src="assets/wd1-sticker-02.webp"
               alt="식물+동화풍 감성 일러스트 ‘리틀포레스트'"
             />
             <div class="wd-sticker-caption">
-              <h3><span data-l="ko">식물+동화풍 감성 일러스트 ‘리틀포레스트'</span><span data-l="en" lang="en">Little Forest</span></h3>
-              <p><span data-l="ko" class="l-fix">스티커로 쓰기 좋은 둥글고 귀여운 비율로 디자인하고, <br class="br-mo br-pc" />파스텔 색감에 색연필과 도화지 질감을 살려 채색했습니다.</span><span data-l="en" lang="en" class="l-fix">Designed with round, cute proportions that work well as stickers, <br class="br-mo br-pc" />colored in soft pastels with the texture of colored pencil on drawing paper.</span></p>
+              <h3><span data-cms="d01-067" data-l="ko">식물+동화풍 감성 일러스트 ‘리틀포레스트'</span><span data-cms="d01-068" data-l="en" lang="en">Little Forest</span></h3>
+              <p><span data-cms="d01-069" data-l="ko" class="l-fix">스티커로 쓰기 좋은 둥글고 귀여운 비율로 디자인하고, <br class="br-mo br-pc" />파스텔 색감에 색연필과 도화지 질감을 살려 채색했습니다.</span><span data-cms="d01-070" data-l="en" lang="en" class="l-fix">Designed with round, cute proportions that work well as stickers, <br class="br-mo br-pc" />colored in soft pastels with the texture of colored pencil on drawing paper.</span></p>
             </div>
           </div>
           <div class="wd-sticker-row" data-reveal>
-            <img
+            <img data-cms="d01-071"
               class="wd-sticker-grid"
               src="assets/wd1-sticker-03.webp"
               alt="음식들+동화풍 감성 일러스트 ‘나만의 쿠킹'"
             />
             <div class="wd-sticker-caption">
-              <h3><span data-l="ko">음식들+동화풍 감성 일러스트 ‘나만의 쿠킹'</span><span data-l="en" lang="en">My Little Kitchen</span></h3>
-              <p><span data-l="ko" class="l-fix">일상에서 가장 친숙한 소재인 음식을 스티커로 담았습니다. <br class="br-mo br-pc" />빵, 디저트, 식재료, 조리도구까지 폭넓게 활용하도록 디자인했습니다.</span><span data-l="en" lang="en" class="l-fix">Food, one of the most familiar parts of everyday life, <br class="br-mo" />turned into stickers. <br class="br-pc-only" />From bread and desserts to ingredients <br class="br-mo" />and kitchen tools, made for all kinds of use.</span></p>
+              <h3><span data-cms="d01-072" data-l="ko">음식들+동화풍 감성 일러스트 ‘나만의 쿠킹'</span><span data-cms="d01-073" data-l="en" lang="en">My Little Kitchen</span></h3>
+              <p><span data-cms="d01-074" data-l="ko" class="l-fix">일상에서 가장 친숙한 소재인 음식을 스티커로 담았습니다. <br class="br-mo br-pc" />빵, 디저트, 식재료, 조리도구까지 폭넓게 활용하도록 디자인했습니다.</span><span data-cms="d01-075" data-l="en" lang="en" class="l-fix">Food, one of the most familiar parts of everyday life, <br class="br-mo" />turned into stickers. <br class="br-pc-only" />From bread and desserts to ingredients <br class="br-mo" />and kitchen tools, made for all kinds of use.</span></p>
             </div>
           </div>
           <div class="wd-sticker-row wd-sticker-row--reverse" data-reveal>
-            <img
+            <img data-cms="d01-076"
               class="wd-sticker-grid"
               src="assets/wd1-sticker-05.webp"
               alt="동화 일러스트 ‘어린날의 꿈'"
             />
             <div class="wd-sticker-caption">
-              <h3><span data-l="ko">동화 일러스트 ‘어린날의 꿈'</span><span data-l="en" lang="en">Childhood Dreams</span></h3>
-              <p><span data-l="ko" class="l-fix">시계, 인형, 화분, 무지개 같은 소재를 어린이 그림체로 그려, <br class="br-mo br-pc" />누구나 간직한 동심과 순수한 감정을 떠올리게 했습니다.</span><span data-l="en" lang="en" class="l-fix">Clocks, dolls, flower pots, and rainbows drawn in a child-like style, <br class="br-mo br-pc" />bringing back the innocence and wonder we all carry from childhood.</span></p>
+              <h3><span data-cms="d01-077" data-l="ko">동화 일러스트 ‘어린날의 꿈'</span><span data-cms="d01-078" data-l="en" lang="en">Childhood Dreams</span></h3>
+              <p><span data-cms="d01-079" data-l="ko" class="l-fix">시계, 인형, 화분, 무지개 같은 소재를 어린이 그림체로 그려, <br class="br-mo br-pc" />누구나 간직한 동심과 순수한 감정을 떠올리게 했습니다.</span><span data-cms="d01-080" data-l="en" lang="en" class="l-fix">Clocks, dolls, flower pots, and rainbows drawn in a child-like style, <br class="br-mo br-pc" />bringing back the innocence and wonder we all carry from childhood.</span></p>
             </div>
           </div>
           <div class="wd-sticker-row" data-reveal>
-            <img
+            <img data-cms="d01-081"
               class="wd-sticker-grid"
               src="assets/wd1-sticker-04.webp"
               alt="다꾸 컨셉의 스티커 ‘나만의 비밀 다이어리'"
             />
             <div class="wd-sticker-caption">
-              <h3><span data-l="ko">다꾸 컨셉의 스티커 ‘나만의 비밀 다이어리'</span><span data-l="en" lang="en">My Secret Diary</span></h3>
-              <p><span data-l="ko" class="l-fix">다이어리 꾸미기의 가장 기본이 되면서도 <br class="br-mo br-pc" />어디에나 두루 어울리는 활용도 높은 스티커입니다.</span><span data-l="en" lang="en" class="l-fix">The essentials of diary decorating: <br class="br-mo br-pc" />simple, versatile, and easy to use anywhere.</span></p>
+              <h3><span data-cms="d01-082" data-l="ko">다꾸 컨셉의 스티커 ‘나만의 비밀 다이어리'</span><span data-cms="d01-083" data-l="en" lang="en">My Secret Diary</span></h3>
+              <p><span data-cms="d01-084" data-l="ko" class="l-fix">다이어리 꾸미기의 가장 기본이 되면서도 <br class="br-mo br-pc" />어디에나 두루 어울리는 활용도 높은 스티커입니다.</span><span data-cms="d01-085" data-l="en" lang="en" class="l-fix">The essentials of diary decorating: <br class="br-mo br-pc" />simple, versatile, and easy to use anywhere.</span></p>
             </div>
           </div>
           </div>
 
           <!-- 마무리 영상 (PC 피드백_1007, 피그마 3109:16233 VIDEO fill 1920x960).
                2026-10-13 스티커가 다 붙는 5초 버전으로 교체. poster 는 영상 첫 프레임 -->
-          <video
+          <video data-cms="d01-086"
             class="wd-final"
             poster="assets/wd1-final-poster.webp"
             autoplay
@@ -300,7 +300,7 @@
             playsinline
             preload="metadata"
           >
-            <source src="assets/wd1-final.mp4" type="video/mp4" />
+            <source data-cms="d01-087" src="assets/wd1-final.mp4" type="video/mp4" />
           </video>
         </section>
       </div>
@@ -309,37 +309,37 @@
     <footer class="ft">
       <div class="ft-hero">
         <div class="ft-hero-content">
-          <p class="ft-wordmark" translate="no">PL2 Creative Studio</p>
+          <p data-cms="g-006" class="ft-wordmark" translate="no">PL2 Creative Studio</p>
         </div>
       </div>
       <div class="ft-bar">
         <div class="ft-bar-left">
-          <img class="ft-logo" src="assets/logo-pl2.svg" alt="PL2" />
-          <p class="ft-copy">© 2026 PL2 All Rights Reserved.</p>
+          <img data-cms="g-007" class="ft-logo" src="assets/logo-pl2.svg" alt="PL2" />
+          <p data-cms="g-008" class="ft-copy">© 2026 PL2 All Rights Reserved.</p>
         </div>
         <!-- 모바일 전용 (수정사항_11.06 MO Footer 3857:32790). PC 하단 바에는 없다 -->
         <div class="ft-contact">
-          <p class="ft-title">Contact</p>
+          <p data-cms="g-009" class="ft-title">Contact</p>
           <ul class="ft-contact-list">
-            <li><a href="tel:+821012345678">+82 10-1234-5678</a></li>
-            <li><a class="ft-mail" href="mailto:PL2std@PL2.com">PL2std@PL2.com</a></li>
-            <li class="ft-addr">04563<br />서울특별시 중구 장충단로 13길 20, 현대시티타워 12층<br />12F, 20, Jangchungdan-ro 13-gil, Jung-gu, Seoul, Republic of Korea</li>
+            <li><a data-cms="g-010" href="tel:+821012345678">+82 10-1234-5678</a></li>
+            <li><a data-cms="g-011" class="ft-mail" href="mailto:PL2std@PL2.com">PL2std@PL2.com</a></li>
+            <li data-cms="g-012" class="ft-addr">04563<br />서울특별시 중구 장충단로 13길 20, 현대시티타워 12층<br />12F, 20, Jangchungdan-ro 13-gil, Jung-gu, Seoul, Republic of Korea</li>
           </ul>
         </div>
         <nav class="ft-links">
-          <p class="ft-title">Legal</p>
-          <a href="privacy.html">Privacy Policy</a>
+          <p data-cms="g-013" class="ft-title">Legal</p>
+          <a data-cms="g-014" href="privacy.html">Privacy Policy</a>
           <span class="ft-divider" aria-hidden="true"></span>
-          <a href="terms.html">Terms of Use</a>
+          <a data-cms="g-015" href="terms.html">Terms of Use</a>
           <span class="ft-divider" aria-hidden="true"></span>
-          <a href="contact.html">Contact</a>
+          <a data-cms="g-016" href="contact.html">Contact</a>
         </nav>
       </div>
     </footer>
 
     <button type="button" class="top-btn" aria-label="맨 위로">
       <!-- 피그마 Top (추가 전달_10.29): 투명 글라스 + Difference 화살표 -->
-      <img class="top-btn-arrow" src="assets/icon-top-arrow-thin.svg" alt="" />
+      <img data-cms="d01-088" class="top-btn-arrow" src="assets/icon-top-arrow-thin.svg" alt="" />
     </button>
 
     <script src="assets/gnb.js"></script>

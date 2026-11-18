@@ -31,7 +31,7 @@
     <div class="wk-statusbar" aria-hidden="true"></div>
     <nav class="gnb" data-dropdown="off" data-pinned>
       <div class="gnb-bar">
-        <span class="gnb-brand" translate="no">PL2 Creative Studio</span>
+        <span data-cms="g-001" class="gnb-brand" translate="no">PL2 Creative Studio</span>
         <button
           type="button"
           class="gnb-toggle"
@@ -41,15 +41,15 @@
         ></button>
       </div>
       <div class="gnb-panel" id="gnb-panel">
-        <a class="gnb-item" href="index.html">Home</a>
-        <a class="gnb-item" href="works.html" aria-current="page">Works</a>
-        <a class="gnb-item" href="about.html">About</a>
-        <a class="gnb-item" href="contact.html">Contact</a>
+        <a data-cms="g-002" class="gnb-item" href="index.html">Home</a>
+        <a data-cms="g-003" class="gnb-item" href="works.html" aria-current="page">Works</a>
+        <a data-cms="g-004" class="gnb-item" href="about.html">About</a>
+        <a data-cms="g-005" class="gnb-item" href="contact.html">Contact</a>
       </div>
     </nav>
 
     <main class="wk-main">
-      <h1 class="sr-only">Works</h1>
+      <h1 data-cms="works-001" class="sr-only">Works</h1>
 
       <!-- 카드 영상은 카드 크기(942)에 맞춘 1280x720 판을 쓴다 (works-07 / works-gen-ai / works-smartthings / works-haruharu,
            상세 히어로 1920 원본을 그대로 쓰면 다섯 장이 동시에 디코딩돼 스크롤이 끊겼다). -->
@@ -60,23 +60,23 @@
         <div class="wk-col">
           <!-- 신규 (피그마 3025:13625) → 상세 11 (한화생명) -->
           <a class="wk-card wk-card--l" href="works-detail-11.html">
-            <img class="wk-card-media" src="assets/works-13.webp" alt="" />
+            <img data-cms="works-002" class="wk-card-media" src="assets/works-13.webp" alt="" />
             <div class="wk-card-overlay">
-              <p class="wk-card-brand">Hanwha Life</p>
-              <p class="wk-card-project">Hanwha E-sports 2026 Asian Games</p>
+              <p data-cms="works-003" class="wk-card-brand">Hanwha Life</p>
+              <p data-cms="works-004" class="wk-card-project">Hanwha E-sports 2026 Asian Games</p>
             </div>
           </a>
           <!-- 상세 13 (추가 전달_10.29) -->
           <a class="wk-card wk-card--s" href="works-detail-13.html">
-            <img class="wk-card-media" src="assets/works-14.webp" alt="" />
+            <img data-cms="works-005" class="wk-card-media" src="assets/works-14.webp" alt="" />
             <div class="wk-card-overlay">
-              <p class="wk-card-brand">경기도농업기술원</p>
-              <p class="wk-card-project">Gyeong-gi 4-H Club Campaign Film</p>
+              <p data-cms="works-006" class="wk-card-brand">경기도농업기술원</p>
+              <p data-cms="works-007" class="wk-card-project">Gyeong-gi 4-H Club Campaign Film</p>
             </div>
           </a>
           <!-- 상세 07. 피그마 VIDEO fill(a68b97baec) -->
           <a class="wk-card wk-card--l" href="works-detail-07.html">
-            <video
+            <video data-cms="works-008"
               class="wk-card-media"
               poster="assets/works-07-poster.webp"
               autoplay
@@ -85,24 +85,24 @@
               playsinline
               preload="metadata"
             >
-              <source src="assets/works-07.mp4" type="video/mp4" />
+              <source data-cms="works-009" src="assets/works-07.mp4" type="video/mp4" />
             </video>
             <div class="wk-card-overlay">
-              <p class="wk-card-brand">Samsung</p>
-              <p class="wk-card-project">Developer Platform Renewal Project</p>
+              <p data-cms="works-010" class="wk-card-brand">Samsung</p>
+              <p data-cms="works-011" class="wk-card-project">Developer Platform Renewal Project</p>
             </div>
           </a>
           <!-- 상세 10. 피그마 카드 이미지가 Cross the Line 비주얼(5672b19c67)로 바뀌었다 -->
           <a class="wk-card wk-card--s" href="works-detail-10.html">
-            <img class="wk-card-media" src="assets/works-15.webp" alt="" />
+            <img data-cms="works-012" class="wk-card-media" src="assets/works-15.webp" alt="" />
             <div class="wk-card-overlay">
-              <p class="wk-card-brand">CJ</p>
-              <p class="wk-card-project">CJ Milano Winter Olympics Campaign</p>
+              <p data-cms="works-013" class="wk-card-brand">CJ</p>
+              <p data-cms="works-014" class="wk-card-project">CJ Milano Winter Olympics Campaign</p>
             </div>
           </a>
           <!-- 상세 14 (추가 전달_10.29). 피그마 VIDEO fill(28fb25) = 상세 14 히어로 24초 하이라이트의 카드 크기 판 -->
           <a class="wk-card wk-card--m" href="works-detail-14.html">
-            <video
+            <video data-cms="works-015"
               class="wk-card-media"
               poster="assets/wd14-hero-poster.webp"
               autoplay
@@ -111,32 +111,32 @@
               playsinline
               preload="metadata"
             >
-              <source src="assets/works-slbs.mp4" type="video/mp4" />
+              <source data-cms="works-016" src="assets/works-slbs.mp4" type="video/mp4" />
             </video>
             <div class="wk-card-overlay">
-              <p class="wk-card-brand">Samsung</p>
-              <p class="wk-card-project">SLBS Studio x Samsung Gangnam Film</p>
+              <p data-cms="works-017" class="wk-card-brand">Samsung</p>
+              <p data-cms="works-018" class="wk-card-project">SLBS Studio x Samsung Gangnam Film</p>
             </div>
           </a>
           <!-- 상세 09. S → M 으로 커져 원본(bef869db9d)에서 다시 잘랐다 -->
           <a class="wk-card wk-card--m" href="works-detail-09.html">
-            <img class="wk-card-media" src="assets/works-05.webp" alt="" />
+            <img data-cms="works-019" class="wk-card-media" src="assets/works-05.webp" alt="" />
             <div class="wk-card-overlay">
-              <p class="wk-card-brand">Matièr</p>
-              <p class="wk-card-project">Product &amp; Brand Film Production</p>
+              <p data-cms="works-020" class="wk-card-brand">Matièr</p>
+              <p data-cms="works-021" class="wk-card-project">Product &amp; Brand Film Production</p>
             </div>
           </a>
           <!-- 상세 04 -->
           <a class="wk-card wk-card--s" href="works-detail-04.html">
-            <img class="wk-card-media" src="assets/works-01.webp" alt="Samsung Internet" />
+            <img data-cms="works-022" class="wk-card-media" src="assets/works-01.webp" alt="Samsung Internet" />
             <div class="wk-card-overlay">
-              <p class="wk-card-brand">Samsung</p>
-              <p class="wk-card-project">Samsung Internet Website Renewal</p>
+              <p data-cms="works-023" class="wk-card-brand">Samsung</p>
+              <p data-cms="works-024" class="wk-card-project">Samsung Internet Website Renewal</p>
             </div>
           </a>
           <!-- 상세 08. 애니메이션 GIF(fffaef1ff0) → 상세 08 히어로 mp4 공유 -->
           <a class="wk-card wk-card--m" href="works-detail-08.html">
-            <video
+            <video data-cms="works-025"
               class="wk-card-media"
               poster="assets/wd8-hero-poster.webp"
               autoplay
@@ -145,11 +145,11 @@
               playsinline
               preload="metadata"
             >
-              <source src="assets/works-smartthings.mp4" type="video/mp4" />
+              <source data-cms="works-026" src="assets/works-smartthings.mp4" type="video/mp4" />
             </video>
             <div class="wk-card-overlay">
-              <p class="wk-card-brand">Samsung</p>
-              <p class="wk-card-project">SmartThings 2D Motion Project</p>
+              <p data-cms="works-027" class="wk-card-brand">Samsung</p>
+              <p data-cms="works-028" class="wk-card-project">SmartThings 2D Motion Project</p>
             </div>
           </a>
         </div>
@@ -159,7 +159,7 @@
           <!-- 상세 12 (추가 전달_10.29). 썸네일 영상: 수정사항_11.06 에서 짧은 판(ST_Concept_web, 14초)으로 교체
                — 1280x720 crf 23 무음 (원본 1920x1080 58Mbps 100MB), 포스터는 첫 프레임 -->
           <a class="wk-card wk-card--s" href="works-detail-12.html">
-            <video
+            <video data-cms="works-029"
               class="wk-card-media"
               poster="assets/works-16-poster.webp"
               autoplay
@@ -168,16 +168,16 @@
               playsinline
               preload="metadata"
             >
-              <source src="assets/works-16.mp4" type="video/mp4" />
+              <source data-cms="works-030" src="assets/works-16.mp4" type="video/mp4" />
             </video>
             <div class="wk-card-overlay">
-              <p class="wk-card-brand">JYP Entertainment</p>
-              <p class="wk-card-project">Stray Kids Pop-up Content Production</p>
+              <p data-cms="works-031" class="wk-card-brand">JYP Entertainment</p>
+              <p data-cms="works-032" class="wk-card-project">Stray Kids Pop-up Content Production</p>
             </div>
           </a>
           <!-- 상세 01. VIDEO fill(5a495963d6) = 상세 01 히어로 -->
           <a class="wk-card wk-card--m" href="works-detail-01.html">
-            <video
+            <video data-cms="works-033"
               class="wk-card-media"
               poster="assets/wd1-hero-poster.webp"
               autoplay
@@ -186,40 +186,40 @@
               playsinline
               preload="metadata"
             >
-              <source src="assets/works-gen-ai.mp4" type="video/mp4" />
+              <source data-cms="works-034" src="assets/works-gen-ai.mp4" type="video/mp4" />
             </video>
             <div class="wk-card-overlay">
-              <p class="wk-card-brand">Samsung</p>
-              <p class="wk-card-project">Generative AI Image Sample Project</p>
+              <p data-cms="works-035" class="wk-card-brand">Samsung</p>
+              <p data-cms="works-036" class="wk-card-project">Generative AI Image Sample Project</p>
             </div>
           </a>
           <!-- 상세 05 -->
           <a class="wk-card wk-card--l" href="works-detail-05.html">
-            <img class="wk-card-media" src="assets/works-09.webp" alt="" />
+            <img data-cms="works-037" class="wk-card-media" src="assets/works-09.webp" alt="" />
             <div class="wk-card-overlay">
-              <p class="wk-card-brand">SHINSEGAE</p>
-              <p class="wk-card-project">Shinsegae Duty Free Content Production</p>
+              <p data-cms="works-038" class="wk-card-brand">SHINSEGAE</p>
+              <p data-cms="works-039" class="wk-card-project">Shinsegae Duty Free Content Production</p>
             </div>
           </a>
           <!-- 신규 (추가 전달_10.29, 이미지 a27a8c). 상세 페이지 없음 -->
           <article class="wk-card wk-card--m">
-            <img class="wk-card-media" src="assets/works-17.webp" alt="" />
+            <img data-cms="works-040" class="wk-card-media" src="assets/works-17.webp" alt="" />
             <div class="wk-card-overlay">
-              <p class="wk-card-brand">Samsung × Maison Margiela</p>
-              <p class="wk-card-project">Galaxy Z Flip4 Maison Margiela Edition</p>
+              <p data-cms="works-041" class="wk-card-brand">Samsung × Maison Margiela</p>
+              <p data-cms="works-042" class="wk-card-project">Galaxy Z Flip4 Maison Margiela Edition</p>
             </div>
           </article>
           <!-- 상세 02 -->
           <a class="wk-card wk-card--s" href="works-detail-02.html">
-            <img class="wk-card-media" src="assets/works-10.webp" alt="" />
+            <img data-cms="works-043" class="wk-card-media" src="assets/works-10.webp" alt="" />
             <div class="wk-card-overlay">
-              <p class="wk-card-brand">AI Film</p>
-              <p class="wk-card-project">Last Delivery AI Film Project</p>
+              <p data-cms="works-044" class="wk-card-brand">AI Film</p>
+              <p data-cms="works-045" class="wk-card-project">Last Delivery AI Film Project</p>
             </div>
           </a>
           <!-- 상세 03. 애니메이션 GIF(e358780883) → 상세 03 히어로 mp4 공유 -->
           <a class="wk-card wk-card--m" href="works-detail-03.html">
-            <video
+            <video data-cms="works-046"
               class="wk-card-media"
               poster="assets/wd3-hero-poster.webp"
               autoplay
@@ -228,27 +228,27 @@
               playsinline
               preload="metadata"
             >
-              <source src="assets/works-haruharu.mp4" type="video/mp4" />
+              <source data-cms="works-047" src="assets/works-haruharu.mp4" type="video/mp4" />
             </video>
             <div class="wk-card-overlay">
-              <p class="wk-card-brand">DFS</p>
-              <p class="wk-card-project">haruharu Product Production</p>
+              <p data-cms="works-048" class="wk-card-brand">DFS</p>
+              <p data-cms="works-049" class="wk-card-project">haruharu Product Production</p>
             </div>
           </a>
           <!-- 상세 06 -->
           <a class="wk-card wk-card--l" href="works-detail-06.html">
-            <img class="wk-card-media" src="assets/works-12.webp" alt="" />
+            <img data-cms="works-050" class="wk-card-media" src="assets/works-12.webp" alt="" />
             <div class="wk-card-overlay">
-              <p class="wk-card-brand">evercell</p>
-              <p class="wk-card-project">evercell Product Photography Campaign</p>
+              <p data-cms="works-051" class="wk-card-brand">evercell</p>
+              <p data-cms="works-052" class="wk-card-project">evercell Product Photography Campaign</p>
             </div>
           </a>
           <!-- Blur=true (PC 피드백_0930). 공개 전 프로젝트라 블러 처리하고 링크 없이 둔다 -->
           <article class="wk-card wk-card--m wk-card--blur">
-            <img class="wk-card-media" src="assets/works-06.webp" alt="" />
+            <img data-cms="works-053" class="wk-card-media" src="assets/works-06.webp" alt="" />
             <div class="wk-card-overlay">
-              <p class="wk-card-brand">Samsung</p>
-              <p class="wk-card-project">Fluidic Project</p>
+              <p data-cms="works-054" class="wk-card-brand">Samsung</p>
+              <p data-cms="works-055" class="wk-card-project">Fluidic Project</p>
             </div>
           </article>
         </div>
@@ -257,7 +257,7 @@
 
     <button type="button" class="top-btn" aria-label="맨 위로">
       <!-- 피그마 Top (추가 전달_10.29): 투명 글라스 + Difference 화살표 -->
-      <img class="top-btn-arrow" src="assets/icon-top-arrow-thin.svg" alt="" />
+      <img data-cms="works-056" class="top-btn-arrow" src="assets/icon-top-arrow-thin.svg" alt="" />
     </button>
 
     <script src="assets/gnb.js"></script>

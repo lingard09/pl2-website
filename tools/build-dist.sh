@@ -44,6 +44,9 @@ if [ "${SKIP_GIT_CHECK:-}" != "1" ]; then
   echo
 fi
 
+# CMS: 편집 단위마다 data-cms id 가 붙어 있어야 고객사 수정값이 제자리에 들어간다 (2026-11-19, tools/cms.py)
+python3 tools/cms.py check
+
 rm -rf dist
 mkdir -p dist/assets dist/fonts
 
@@ -78,6 +81,32 @@ if [ "${PRETTY_URLS:-1}" != "0" ]; then
       while read -r p; do echo "  <url><loc>${SITE}${p}</loc></url>"; done
     echo '</urlset>'
   } > dist/sitemap.xml
+fi
+
+# CMS (2026-11-19) — 관리자 화면(/admin/)과, 고객사가 서버에서 고친 내용 반영.
+#   고객사가 /admin/ 에서 저장하면 서버의 /cms-data/content.json 과 해당 html 이 바뀐다.
+#   우리가 새로 배포할 때 그 html 을 덮어쓰지 않도록, 빌드할 때 서버의 content.json 을 받아 dist 에 먼저 적용한다.
+#   - cms-index.json 은 적용 "전" 원래 값으로 만든다 (관리자 화면의 '원래대로' 기준)
+#   - 받은 content.json 은 .cms-last-build.json 에 남긴다 → ftp-deploy.sh 가 배포 뒤 서버 것과 같은지 비교
+#   - 서버에 접속이 안 되면 멈춘다 (수정값 없이 배포하면 고객사 수정이 지워진다). 일부러 건너뛰려면 CMS_OFFLINE=1
+cp -R admin dist/admin
+python3 tools/cms.py index dist
+SITE_CMS="${SITE_URL:-https://pl2std.com/}"
+SITE_CMS="${SITE_CMS%/}/cms-data/content.json"
+rm -f .cms-last-build.json
+if [ "${CMS_OFFLINE:-}" = "1" ]; then
+  echo "CMS 수정값: 받지 않음 (CMS_OFFLINE=1)"
+else
+  code=$(curl -sS -o .cms-last-build.json -w '%{http_code}' --max-time 30 "$SITE_CMS") ||
+    { echo "빌드 중단: $SITE_CMS 를 받지 못했다 (네트워크 확인, 일부러 건너뛰려면 CMS_OFFLINE=1)"; exit 1; }
+  if [ "$code" = "200" ]; then
+    python3 tools/cms.py apply dist .cms-last-build.json
+  elif [ "$code" = "404" ]; then
+    rm -f .cms-last-build.json
+    echo "CMS 수정값: 아직 없음 (서버에 content.json 이 없다)"
+  else
+    echo "빌드 중단: $SITE_CMS 응답 $code"; exit 1
+  fi
 fi
 
 # 배포본 HTML·CSS 에서 주석을 지운다 (2026-10-17). 누구나 '소스 보기'로 볼 수 있어서

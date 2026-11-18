@@ -73,6 +73,24 @@ bye
 EOF
 
 echo
+# CMS (2026-11-19): 빌드한 뒤에 고객사가 /admin/ 에서 저장했다면, 방금 올린 html 이 그 수정을 덮었을 수 있다.
+# 빌드 때 받은 content.json 과 지금 서버의 것을 비교해서 다르면 알린다.
+SITE_CMS="https://pl2std.com/cms-data/content.json"
+NOW=$(mktemp)
+code=$(curl -sS -o "$NOW" -w '%{http_code}' --max-time 30 "$SITE_CMS" || echo "000")
+if [ "$code" = "404" ] && [ ! -f .cms-last-build.json ]; then
+  echo "CMS: 고객사 수정값 없음 — 확인 끝"
+elif [ "$code" = "200" ] && [ -f .cms-last-build.json ] && cmp -s "$NOW" .cms-last-build.json; then
+  echo "CMS: 빌드 뒤로 고객사 수정 없음 — 확인 끝"
+elif [ "$code" = "200" ] || [ "$code" = "404" ]; then
+  echo "주의: 빌드한 뒤에 고객사가 관리자 화면에서 내용을 바꿨다."
+  echo "      방금 올린 페이지가 그 수정을 덮었을 수 있다 → ./tools/build-dist.sh 후 다시 배포하세요."
+else
+  echo "주의: $SITE_CMS 를 확인하지 못했다 (응답 $code). 고객사 수정이 덮이지 않았는지 직접 확인하세요."
+fi
+rm -f "$NOW"
+
+echo
 echo "업로드 완료. 확인:"
 echo "  http://$HOST${DIR#/www}/index.html"
 echo

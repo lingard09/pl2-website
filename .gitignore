@@ -20,3 +20,9 @@ NOTES.md
 
 # 배포용 산출물 (tools/build-dist.sh)
 dist/
+
+# CMS: 빌드 때 서버에서 받은 고객사 수정값 (ftp-deploy.sh 가 배포 뒤 비교)
+.cms-last-build.json
+
+# Python
+__pycache__/
