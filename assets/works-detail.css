@@ -510,6 +510,17 @@
   }
 }
 
+/* 비메오 전체화면 버튼을 누르면 이 iframe 자체가 전체화면이 된다. 브라우저는 전체화면에서 위치·크기·transform 은
+   초기화하지만 translate 는 따로라 남아서, 영상이 화면 절반만큼 왼쪽으로 밀렸다 (11.18 고객 문의, Safari·Chrome 둘 다).
+   선택자를 나눠 둔 건 :-webkit-full-screen 을 모르는 브라우저가 규칙 전체를 버리지 않게 하려는 것 */
+.wd-film-frame iframe:fullscreen {
+  translate: none;
+}
+
+.wd-film-frame iframe:-webkit-full-screen {
+  translate: none;
+}
+
 /* 상세 05 는 제목 ↔ 영상 40 (피그마 4327:46574) */
 .wd-film--tight {
   gap: min(2.0833vw, 40px);
