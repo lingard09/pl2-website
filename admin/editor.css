@@ -169,6 +169,7 @@ button.ghost {
   flex: 1;
   min-width: 0;
   overflow: hidden;
+  overflow: clip; /* 프로그램으로도 스크롤되지 않게 (지원하는 브라우저) */
   padding: 16px;
   position: relative;
 }

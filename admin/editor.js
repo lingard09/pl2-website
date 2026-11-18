@@ -280,7 +280,13 @@
       });
     });
     if (scroll && first) {
-      first.scrollIntoView({ block: "center" });
+      // scrollIntoView 는 바깥(관리자 화면의 미리보기 틀)까지 스크롤해서 미리보기가 밀렸다 → iframe 안에서만 움직인다
+      var win = d.defaultView;
+      var r = first.getBoundingClientRect();
+      var y = Math.max(0, win.scrollY + r.top - (win.innerHeight - r.height) / 2);
+      var lenis = win.PL2Space && win.PL2Space.lenis;
+      if (lenis && lenis.scrollTo) lenis.scrollTo(y, { immediate: true });
+      else win.scrollTo(0, y);
       first.classList.remove("cms-flash");
       void first.offsetWidth;
       first.classList.add("cms-flash");
@@ -843,6 +849,10 @@
     );
     frame = h("iframe", { class: "frame", title: "미리보기" });
     frameWrap = h("div", { class: "stage" }, frame);
+    // PC 화면 틀은 스크롤되면 안 된다 (iframe 안 요소로 스크롤할 때 브라우저가 바깥 틀까지 밀던 문제)
+    frameWrap.addEventListener("scroll", function () {
+      if (S.view !== "mo") { frameWrap.scrollTop = 0; frameWrap.scrollLeft = 0; }
+    });
     panel = h("aside", { class: "panel" });
     app.appendChild(bar);
     app.appendChild(h("main", { class: "work" }, frameWrap, panel));
