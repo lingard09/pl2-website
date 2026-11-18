@@ -529,6 +529,12 @@
   cursor: pointer;
 }
 
+/* 비메오가 들어오면 video-play.js 가 버튼에 hidden 을 건다. 위의 display:flex 가 기본 [hidden] 을 이겨서
+   투명 버튼이 플레이어를 계속 덮고 클릭을 가로챘다 — 재생·정지·시크가 안 되던 원인 (11.18 고객 문의) */
+.wd-film-play[hidden] {
+  display: none;
+}
+
 .wd-film-play::before {
   content: "";
   width: min(1.5625vw, 30px);
