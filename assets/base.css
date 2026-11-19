@@ -1204,3 +1204,9 @@ html.lenis body {
     pointer-events: none;
   }
 }
+
+/* CMS 이미지 ↔ 영상 교체 (11.19): 이미지 자리를 영상으로 바꾸면 브라우저 기본값(영상 contain)이 아니라
+   이미지 기본값(fill)을 쓴다. :where 로 우선순위 0 — 페이지 CSS 가 object-fit 을 정해 두었으면 늘 그쪽이 이긴다 */
+:where(video[data-cms-swap]) {
+  object-fit: fill;
+}

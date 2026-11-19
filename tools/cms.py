@@ -11,6 +11,9 @@
   각각 따로 된 요소라 각자 편집 단위가 된다.
 - 이미지: <img src>, <picture><source srcset> (모바일 이미지)
 - 영상: <video poster>, <video><source src>, 비메오 자리 [data-vimeo]
+- 이미지 ↔ 영상 교체 (11.19): 본문의 <img>·자동재생 <video> 는 서로 바꿀 수 있다 (swap_ok 의 예외 자리와
+  tools/cms-noswap.json 에 적힌 자리 제외). 목록에 원래 태그의 속성을 넣어 두고, 바꾸면 그 속성을 옮긴 새 태그를
+  만든다 (swap_html). 값: {"as": "video", "src", "poster"} 또는 {"as": "img", "src"}.
 - 로고 목록: data-cms-list="logos" 가 달린 요소 (About 로고 띠) 하나가 통째로 한 단위. 안의 로고는 따로 단위가 아니다.
   값 {"rows": [[{"src", "alt"}, ...], [...]]} — 저장하면 두 줄을 새로 만든다 (logos_html).
 
@@ -29,6 +32,14 @@ import sys
 from html.parser import HTMLParser
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# 이미지 ↔ 영상으로 바꾸면 크기·위치가 달라지는 자리 (tools/cms-swap-check.mjs 가 재서 적는다)
+try:
+    NOSWAP = set(json.load(open(os.path.join(ROOT, "tools", "cms-noswap.json"), encoding="utf-8"))["ids"])
+except FileNotFoundError:
+    NOSWAP = set()
+if os.environ.get("CMS_NOSWAP") == "off":  # cms-swap-check.mjs 가 후보 전부를 잴 때
+    NOSWAP = set()
 
 PAGES = {  # 소스 파일 → 페이지 코드
     "index.html": "home",
@@ -98,7 +109,11 @@ class Scan(HTMLParser):
             if tag == "source":
                 kind = "msource" if self.stack[-1]["tag"] == "picture" else "vsource"
             sig = (kind, self.chain(), a.get("src") or a.get("srcset") or a.get("poster") or a.get("data-vimeo") or "")
-            self.items.append({"kind": kind, "start": start, "raw": raw, "attrs": a, "main": self.main > 0, "sig": sig})
+            it = {"kind": kind, "start": start, "raw": raw, "attrs": a, "main": self.main > 0, "sig": sig,
+                  "swap": self.swap_ok(tag, a)}
+            if kind == "vsource":
+                it["parent"] = self.stack[-1]["attrs"].get("data-cms")
+            self.items.append(it)
         if tag in SKIP and tag not in VOID:
             self.skip = 1
             return
@@ -111,6 +126,30 @@ class Scan(HTMLParser):
                            "inlist": self.inlist > 0, "islist": islist})
         if islist:
             self.inlist += 1
+
+    def swap_ok(self, tag, a):
+        """이미지 ↔ 영상으로 바꿔도 되는 자리인가. JS 가 태그나 위치를 직접 다루는 곳은 뺀다."""
+        if self.inlist or self.main <= 0:
+            return False  # 로고 목록 · 메뉴 · 바닥글
+        if tag == "img":
+            if any(e["tag"] == "picture" for e in self.stack):
+                return False  # 모바일 이미지가 따로 있는 자리
+            if (a.get("src") or "").lower().endswith(".svg") or "data-slot" in a:
+                return False  # 아이콘·로고, 상세 01 이미지 띠(wd1-strip.js)
+        elif tag == "video":
+            if "autoplay" not in a or "data-chapter-video" in a:
+                return False  # 재생 버튼·챕터 영상 (video-play.js · wd13-chapters.js)
+        else:
+            return False
+        if "data-pin-media" in a:
+            return False
+        for e in self.stack:
+            ea = e["attrs"]
+            cls = (ea.get("class") or "").split()
+            if "data-pin" in ea or "data-playing" in ea or "wd-film-frame" in cls or "wd-stack-set" in cls \
+                    or any(c.startswith("wd7-code") for c in cls):
+                return False  # About 고정 구간 · 재생 버튼 자리 · 상세 01 쌓이는 카드 · 상세 07 코드 화면
+        return True
 
     def handle_startendtag(self, tag, attrs):
         self.handle_starttag(tag, attrs)
@@ -271,14 +310,55 @@ def logos_html(item):
     return "".join(out)
 
 
+ATTR_RE = re.compile(r'\s([^\s"\'>/=]+)(?:="([^"]*)")?')
+IMG_ONLY = {"src", "alt", "loading", "decoding", "draggable", "srcset", "sizes", "width", "height"}
+VIDEO_ONLY = {"poster", "preload", "autoplay", "muted", "loop", "playsinline", "controls", "width", "height"}
+
+
+def raw_attrs(raw):
+    """시작 태그 → [[이름, 값(원문 그대로) 또는 None], ...] (data-cms 제외)"""
+    body = re.sub(r"^<[a-zA-Z0-9]+", "", raw).rstrip(">").rstrip("/")
+    return [[m.group(1), m.group(2)] for m in ATTR_RE.finditer(body) if m.group(1) != "data-cms"]
+
+
+def attrs_html(attrs, drop=()):
+    return "".join(f' {n}="{v}"' if v is not None else f" {n}" for n, v in attrs if n not in drop)
+
+
+def swap_html(cid, sw, item):
+    """원래 태그 정보(sw)와 값(item)으로 요소 하나를 통째로 만든다. admin/lib.php cms_swap_html 과 같은 결과"""
+    form = item.get("as") or sw["tag"]
+    if form == sw["tag"]:
+        s = f'<{form} data-cms="{cid}"' + attrs_html(sw["attrs"])
+        return s + " />" if form == "img" else s + ">" + sw["inner"] + "</video>"
+    # data-cms-swap: 배포본 CSS(tools/css-swap.py)가 원래 태그의 규칙을 여기에도 건다.
+    # width/height 속성은 넣지 않는다 — CSS 가 폭만 정하는 자리에서 속성 높이가 그대로 박힌다
+    head = f'<{form} data-cms="{cid}" data-cms-swap'
+    if form == "video":
+        return (head + attrs_html(sw["attrs"], IMG_ONLY) + f' poster="{esc_attr(item.get("poster") or "")}"'
+                + ' autoplay muted loop playsinline preload="metadata"><source src="' + esc_attr(item.get("src") or "")
+                + '" type="video/mp4" /></video>')
+    return head + attrs_html(sw["attrs"], VIDEO_ONLY) + f' src="{esc_attr(item.get("src") or "")}" alt="" />'
+
+
 def tel_href(t):
     return "tel:" + re.sub(r"[^0-9+]", "", t)
 
 
-def apply_one(doc, cid, item):
+def apply_one(doc, cid, item, meta=None):
     """doc 안의 data-cms="cid" 요소에 item 을 적용한다. 바뀐 doc 과 적용 횟수를 돌려준다."""
     q = re.escape(cid)
     count = 0
+    sw = (meta or {}).get("swap")
+    if sw:
+        cur = re.search(r'<(img|video) data-cms="' + q + '"', doc)
+        if item.get("as") or (cur and cur.group(1) != sw["tag"]):
+            # 바꾼 모양으로, 또는 바꿨던 것을 원래 태그로 되돌린다
+            pat = re.compile(r'<img data-cms="' + q + r'"[^>]*>|<video data-cms="' + q + r'"[^>]*>.*?</video>', re.S)
+            new = swap_html(cid, sw, item)
+            doc, count = pat.subn(lambda _: new, doc)
+            if item.get("as"):
+                return doc, count
     if "rows" in item:
         pat = re.compile(r'(<([a-zA-Z0-9]+) data-cms="' + q + r'"[^>]*>)(.*?)(</\2>)', re.S)
 
@@ -383,6 +463,15 @@ def cmd_index(dist):
                 if href and re.match(r"^https?://", href):
                     e["base"]["href"] = href
             else:
+                if it.get("swap") and cid not in NOSWAP:
+                    tag = re.match(r"<([a-zA-Z0-9]+)", it["raw"]).group(1).lower()
+                    sw = {"tag": tag, "attrs": raw_attrs(it["raw"])}
+                    if tag == "video":
+                        st = it["start"] + len(it["raw"])
+                        sw["inner"] = text[st:text.index("</video>", st)]
+                    e["swap"] = sw
+                if it.get("parent"):
+                    e["parent"] = it["parent"]
                 a = it["attrs"]
                 base = {}
                 for k in ("src", "srcset", "poster", "data-vimeo"):
@@ -392,6 +481,9 @@ def cmd_index(dist):
                             v = "/" + posixpath.normpath(posixpath.join(posixpath.dirname(rel), v)).lstrip("./")
                         base[k] = v
                 e["base"] = base
+    for cid, e in ids.items():
+        if e.get("parent") in ids:
+            ids[e["parent"]].setdefault("children", []).append(cid)
     # 관리자 화면의 페이지 목록 순서: 홈 → Works → About → Contact → 상세 01~14 (pretty-urls.py 의 ROUTES 순서)
     order = {}
     try:
@@ -435,8 +527,10 @@ def cmd_apply(dist, content_path):
     for rel, lst in byfile.items():
         path = os.path.join(dist, rel)
         doc = open(path, encoding="utf-8").read()
+        # 이미지↔영상 자리를 먼저 (원래 태그로 되돌린 뒤에 안쪽 <source> 의 고친 값이 다시 들어가야 한다)
+        lst.sort(key=lambda x: 0 if idx[x[0]].get("swap") else 1)
         for cid, item in lst:
-            doc, n = apply_one(doc, cid, item)
+            doc, n = apply_one(doc, cid, item, idx[cid])
             changed += n
         with open(path, "w", encoding="utf-8") as fh:
             fh.write(doc)

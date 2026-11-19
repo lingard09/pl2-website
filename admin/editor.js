@@ -390,8 +390,43 @@
     var d = frameDoc();
     return d ? Array.prototype.slice.call(d.querySelectorAll('[data-cms="' + id + '"]')) : [];
   }
+  // 이미지 ↔ 영상 (11.19). tools/cms.py swap_html · lib.php cms_swap_html 과 같은 모양 (미리보기용)
+  var IMG_ONLY = ["src", "alt", "loading", "decoding", "draggable", "srcset", "sizes", "width", "height"];
+  var VIDEO_ONLY = ["poster", "preload", "autoplay", "muted", "loop", "playsinline", "controls", "width", "height"];
+  function swapHtml(id, sw, item) {
+    var form = item.as || sw.tag;
+    function attrs(drop) {
+      return sw.attrs.filter(function (a) { return drop.indexOf(a[0]) < 0; }).map(function (a) {
+        return a[1] === null ? " " + a[0] : " " + a[0] + '="' + a[1] + '"';
+      }).join("");
+    }
+    if (form === sw.tag) {
+      var s0 = "<" + form + ' data-cms="' + id + '"' + attrs([]);
+      return form === "img" ? s0 + " />" : s0 + ">" + sw.inner + "</video>";
+    }
+    var head = "<" + form + ' data-cms="' + id + '" data-cms-swap';
+    if (form === "video") {
+      return head + attrs(IMG_ONLY) + ' poster="' + esc(item.poster || "") + '" autoplay muted loop playsinline preload="metadata"><source src="' + esc(item.src || "") + '" type="video/mp4" /></video>';
+    }
+    return head + attrs(VIDEO_ONLY) + ' src="' + esc(item.src || "") + '" alt="" />';
+  }
+  function swapForm(id) {
+    var el = frameEls(id)[0];
+    return el ? el.tagName.toLowerCase() : null;
+  }
+
   function previewValue(id, item) {
     var m = meta(id);
+    if (m.swap) {
+      var want = item.as || m.swap.tag;
+      var now = swapForm(id);
+      if (now && (item.as || now !== want)) {
+        frameEls(id).forEach(function (el) { el.outerHTML = swapHtml(id, m.swap, item); });
+        if (!item.as) (m.children || []).forEach(function (c) { previewValue(c, currentValue(c)); });
+        markSelected();
+        if (item.as) return;
+      }
+    }
     frameEls(id).forEach(function (el) {
       if (m.kind === "logos") {
         el.innerHTML = logosHtml(item);
@@ -561,6 +596,7 @@
       else kind = c || "글";
     }
     if (m.kind === "img" && el && el.closest("picture") && el.closest("picture").querySelector("source")) kind = "PC 이미지";
+    if (m.swap && el && el.tagName.toLowerCase() !== m.swap.tag) kind = m.swap.tag === "img" ? "영상 (원래 이미지 자리)" : "이미지 (원래 영상 자리)";
     bits.push(kind);
     if (el) {
       var l = el.closest("[data-l]");
@@ -835,9 +871,65 @@
   }
 
   // ── 패널: 이미지·영상 ─────────────────────────────
+  // 이미지 ↔ 영상 바꾸기 버튼. target = 바꿀 자리 id (영상 파일 카드에서는 부모 <video> 의 id)
+  function swapButton(target) {
+    var tm = meta(target);
+    if (!tm || !tm.swap) return null;
+    if (tm.swap.tag === "img") {
+      return fileButton("영상으로 바꾸기 (mp4)", "video/mp4", function (file, bar) {
+        if (file.size > 100 * 1024 * 1024) { toast("영상이 100MB 보다 큽니다. 줄여서 올려 주세요.", "err"); return; }
+        return upload(file, "video", 0, bar).then(function (r) {
+          return makePoster(file, false).then(function (blob) {
+            return upload(new File([blob], "poster.jpg", { type: "image/jpeg" }), "image", 1920, null);
+          }).then(function (r2) {
+            setPending(target, { as: "video", src: r.url, poster: r2.url });
+            toast("영상으로 바꿨어요. 저장하면 사이트에 반영됩니다.");
+            renderPanel();
+          });
+        });
+      });
+    }
+    return fileButton("이미지로 바꾸기 (jpg · png · webp)", "image/jpeg,image/png,image/webp", function (file, bar) {
+      return upload(file, "image", 1920, bar).then(function (r) {
+        setPending(target, { as: "img", src: r.url });
+        toast("이미지로 바꿨어요. 저장하면 사이트에 반영됩니다.");
+        renderPanel();
+      });
+    });
+  }
+
+  // 바꾼 자리(이미지 자리의 영상, 영상 자리의 이미지)
+  function swappedEditor(id, item) {
+    var m = meta(id);
+    var body = h("div", { class: "media" });
+    if (item.as === "video") {
+      body.appendChild(h("video", { src: item.src, poster: item.poster, controls: true, muted: true, preload: "metadata", class: "thumb" }));
+      body.appendChild(fileButton("다른 영상으로 바꾸기 (mp4)", "video/mp4", function (file, bar) {
+        return upload(file, "video", 0, bar).then(function (r) {
+          return makePoster(file, false).then(function (blob) {
+            return upload(new File([blob], "poster.jpg", { type: "image/jpeg" }), "image", 1920, null);
+          }).then(function (r2) { setPending(id, { as: "video", src: r.url, poster: r2.url }); renderPanel(); });
+        });
+      }));
+    } else {
+      body.appendChild(h("img", { src: item.src, class: "thumb", alt: "" }));
+      body.appendChild(fileButton("다른 이미지로 바꾸기", "image/jpeg,image/png,image/webp", function (file, bar) {
+        return upload(file, "image", 1920, bar).then(function (r) { setPending(id, { as: "img", src: r.url }); renderPanel(); });
+      }));
+    }
+    body.appendChild(h("button", { class: "ghost", text: m.swap.tag === "img" ? "원래 이미지로 되돌리기" : "원래 영상으로 되돌리기", onclick: function () {
+      setPending(id, null);
+      renderPanel();
+    } }));
+    body.appendChild(h("p", { class: "hint", text: "자리 크기는 그대로이고, 영상·이미지는 그 자리에 맞춰 채워집니다. 원래와 같은 비율로 올리면 잘리는 곳이 없어요." }));
+    return h("section", { class: "card" + (Object.prototype.hasOwnProperty.call(S.pending, id) ? " is-pending" : "") },
+      head(id), body, actions(id, function () {}));
+  }
+
   function mediaEditor(id) {
     var m = meta(id);
     var item = currentValue(id);
+    if (item.as) return swappedEditor(id, item);
     var key = { img: "src", msource: "srcset", video: "poster", vsource: "src", vimeo: "data-vimeo" }[m.kind];
     var val = item[key] !== undefined ? item[key] : m.base[key];
     var body = h("div", { class: "media" });
@@ -912,6 +1004,12 @@
           renderPanel();
         });
       }));
+    }
+    var swapTarget = m.kind === "img" ? id : m.kind === "vsource" ? m.parent : null;
+    var sb = swapTarget ? swapButton(swapTarget) : null;
+    if (sb) {
+      body.appendChild(h("p", { class: "hint", text: m.kind === "img" ? "이 자리는 영상으로도 바꿀 수 있어요 (소리 없이 자동 반복 재생)." : "이 자리는 이미지로도 바꿀 수 있어요." }));
+      body.appendChild(sb);
     }
     return h("section", { class: "card" + (Object.prototype.hasOwnProperty.call(S.pending, id) ? " is-pending" : "") },
       head(id), body, actions(id, function () {}));

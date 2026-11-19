@@ -52,6 +52,8 @@ mkdir -p dist/assets dist/fonts
 
 cp *.html dist/
 cp assets/*.css assets/*.js dist/assets/
+# CMS 이미지↔영상 교체: img/video 태그로 모양을 잡는 규칙을 바꿔 넣은 요소에도 (tools/css-swap.py)
+python3 tools/css-swap.py dist/assets/*.css
 cp assets/*.webp assets/*.png assets/*.svg dist/assets/
 cp -r assets/og dist/assets/ # 공유 미리보기 이미지 (jpg — 메신저 호환 때문에 webp 가 아니다)
 cp assets/*.mp4 dist/assets/

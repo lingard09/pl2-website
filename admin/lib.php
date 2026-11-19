@@ -372,10 +372,60 @@ function cms_logos_html($item)
     return $out . '        ';
 }
 
-function cms_apply_one($doc, $id, $item, &$count)
+// 이미지 ↔ 영상 교체 — tools/cms.py swap_html 과 바이트까지 같은 결과
+function cms_attrs_html($attrs, $drop)
+{
+    $s = '';
+    foreach ($attrs as $a) {
+        if (in_array($a[0], $drop, true)) {
+            continue;
+        }
+        $s .= $a[1] === null ? ' ' . $a[0] : ' ' . $a[0] . '="' . $a[1] . '"';
+    }
+    return $s;
+}
+
+function cms_swap_html($id, $sw, $item)
+{
+    $as = cms_get($item, 'as');
+    $form = $as ? $as : $sw['tag'];
+    if ($form === $sw['tag']) {
+        $s = '<' . $form . ' data-cms="' . $id . '"' . cms_attrs_html($sw['attrs'], array());
+        return $form === 'img' ? $s . ' />' : $s . '>' . $sw['inner'] . '</video>';
+    }
+    $head = '<' . $form . ' data-cms="' . $id . '" data-cms-swap';
+    if ($form === 'video') {
+        $drop = array('src', 'alt', 'loading', 'decoding', 'draggable', 'srcset', 'sizes', 'width', 'height');
+        return $head . cms_attrs_html($sw['attrs'], $drop) . ' poster="' . cms_esc_attr(cms_get($item, 'poster', '')) . '"'
+            . ' autoplay muted loop playsinline preload="metadata"><source src="' . cms_esc_attr(cms_get($item, 'src', ''))
+            . '" type="video/mp4" /></video>';
+    }
+    $drop = array('poster', 'preload', 'autoplay', 'muted', 'loop', 'playsinline', 'controls', 'width', 'height');
+    return $head . cms_attrs_html($sw['attrs'], $drop) . ' src="' . cms_esc_attr(cms_get($item, 'src', '')) . '" alt="" />';
+}
+
+function cms_apply_one($doc, $id, $item, &$count, $meta = null)
 {
     $q = preg_quote($id, '/');
     $count = 0;
+    $sw = is_array($meta) ? cms_get($meta, 'swap') : null;
+    if ($sw) {
+        $cur = preg_match('/<(img|video) data-cms="' . $q . '"/', $doc, $cm) ? $cm[1] : null;
+        if (cms_get($item, 'as') || ($cur !== null && $cur !== $sw['tag'])) {
+            // 바꾼 모양으로, 또는 바꿨던 것을 원래 태그로 되돌린다
+            $new = cms_swap_html($id, $sw, $item);
+            $doc = preg_replace_callback('/<img data-cms="' . $q . '"[^>]*>|<video data-cms="' . $q . '"[^>]*>.*?<\/video>/s',
+                function ($m) use ($new) {
+                    return $new;
+                }, $doc, -1, $count);
+            if ($doc === null) {
+                cms_fail('적용 중 오류 (정규식)', 500);
+            }
+            if (cms_get($item, 'as')) {
+                return $doc;
+            }
+        }
+    }
     if (array_key_exists('rows', $item)) {
         $pat = '/(<([a-zA-Z0-9]+) data-cms="' . $q . '"[^>]*>)(.*?)(<\/\2>)/s';
         $cb = function ($m) use ($item, &$count) {
@@ -447,6 +497,16 @@ function cms_apply_ids($ids, $content)
 {
     $idx = cms_load_index();
     $byfile = array();
+    // 이미지↔영상 자리를 원래 태그로 되돌리면 안쪽 <source> 의 고친 값도 다시 넣어야 한다
+    foreach ($ids as $id) {
+        if (isset($idx['ids'][$id]['children'])) {
+            foreach ($idx['ids'][$id]['children'] as $c) {
+                if (!in_array($c, $ids, true)) {
+                    $ids[] = $c;
+                }
+            }
+        }
+    }
     foreach ($ids as $id) {
         if (!isset($idx['ids'][$id])) {
             continue;
@@ -462,9 +522,16 @@ function cms_apply_ids($ids, $content)
             continue;
         }
         $doc = file_get_contents($path);
-        foreach ($list as $id) {
+        // 교체 자리를 먼저 (안정 정렬: PHP 5.5 usort 는 안정적이지 않아 번호를 같이 쓴다)
+        $order = array();
+        foreach ($list as $i => $id) {
+            $order[] = array(isset($idx['ids'][$id]['swap']) ? 0 : 1, $i, $id);
+        }
+        sort($order);
+        foreach ($order as $o) {
+            $id = $o[2];
             $n = 0;
-            $doc = cms_apply_one($doc, $id, cms_effective($idx, $content, $id), $n);
+            $doc = cms_apply_one($doc, $id, cms_effective($idx, $content, $id), $n, $idx['ids'][$id]);
             $total += $n;
         }
         if (!cms_write_file($path, $doc)) {
@@ -561,6 +628,26 @@ function cms_clean_item($id, $item)
             }
         }
         return $out;
+    }
+    $as = cms_get($item, 'as');
+    if ($as !== null) {
+        $sw = cms_get($meta, 'swap');
+        if (!$sw || !in_array($as, array('img', 'video'), true) || $as === $sw['tag']) {
+            return '이 자리는 이미지와 영상을 서로 바꿀 수 없습니다';
+        }
+        $up = '#^/cms-data/uploads/[A-Za-z0-9._-]+$#';
+        $src = cms_get($item, 'src');
+        if (!is_string($src) || !preg_match($up, $src)) {
+            return '파일 주소가 올바르지 않습니다: ' . $id;
+        }
+        if ($as === 'img') {
+            return array('as' => 'img', 'src' => $src);
+        }
+        $poster = cms_get($item, 'poster');
+        if (!is_string($poster) || !preg_match($up, $poster)) {
+            return '영상 포스터 주소가 올바르지 않습니다: ' . $id;
+        }
+        return array('as' => 'video', 'src' => $src, 'poster' => $poster);
     }
     $out = array();
     foreach ($base as $k => $v) {
