@@ -495,6 +495,33 @@
   }
 })();
 
+/* 상세 영상 히어로: 영상이 실제로 재생되기 시작하면 위에 덮인 모바일 썸네일을 걷는다 (11.19).
+   PC 는 썸네일이 CSS 로 숨겨져 있어 클래스가 붙어도 달라지는 게 없다. */
+(function () {
+  function init() {
+    var videos = document.querySelectorAll(".wd-hero video.wd-hero-media");
+    Array.prototype.forEach.call(videos, function (v) {
+      var hero = v.parentNode;
+      function on() {
+        if (v.paused || v.currentTime <= 0) return;
+        hero.classList.add("is-playing");
+        v.removeEventListener("playing", on);
+        v.removeEventListener("timeupdate", on);
+      }
+      // playing 이 이 코드보다 먼저 지나갔을 수 있어 timeupdate 도 같이 본다
+      v.addEventListener("playing", on);
+      v.addEventListener("timeupdate", on);
+      on();
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+
 /* 모바일 가로 슬라이드 자동 넘김 (수정사항_11.10)
    손으로 넘기는 scroll-snap 칸은 그대로 두고, 화면에 보이는 동안 3초마다 다음 장으로 넘긴다.
    손을 대면 멈추고 뗀 뒤 5초가 지나면 이어 간다. 마지막 장 다음은 처음으로 돌아간다. */

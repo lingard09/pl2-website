@@ -863,8 +863,9 @@
   }
 }
 
-/* 영상 히어로 8개의 모바일 썸네일 (수정사항_11.09: 모바일은 영상 없이 피그마 이미지).
-   <source media> 로 모바일에서는 영상을 받지도 않는다 */
+/* 영상 히어로 8개의 모바일 썸네일 (수정사항_11.09 이미지 → 11.19 CMS 피드백: 모바일도 영상 재생).
+   모바일은 영상 위에 피그마 썸네일을 덮어 두고, 영상이 실제로 재생되면 motion.js 가
+   .is-playing 을 붙여 썸네일을 걷는다. 자동재생이 막힌 폰(저전력 모드 등)은 썸네일이 남는다. */
 .wd-hero .wd-hero-media--mo {
   display: none;
 }
@@ -872,10 +873,11 @@
 @media (max-width: 599.98px) {
   .wd-hero .wd-hero-media--mo {
     display: block;
+    transition: opacity 0.4s;
   }
 
-  .wd-hero video.wd-hero-media {
-    display: none;
+  .wd-hero.is-playing .wd-hero-media--mo {
+    opacity: 0;
   }
 }
 
