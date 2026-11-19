@@ -89,6 +89,19 @@ else
   echo "주의: $SITE_CMS 를 확인하지 못했다 (응답 $code). 고객사 수정이 덮이지 않았는지 직접 확인하세요."
 fi
 rm -f "$NOW"
+# 새 페이지(pages.json)도 같은 식으로 (빌드 뒤에 만들거나 지운 페이지가 있으면 Works 목록·페이지가 덮였을 수 있다)
+SITE_PAGES="https://pl2std.com/cms-data/pages.json"
+NOW=$(mktemp)
+code=$(curl -sS -o "$NOW" -w '%{http_code}' --max-time 30 "$SITE_PAGES" || echo "000")
+if { [ "$code" = "404" ] && [ ! -f .cms-pages-last-build.json ]; } ||
+  { [ "$code" = "200" ] && [ -f .cms-pages-last-build.json ] && cmp -s "$NOW" .cms-pages-last-build.json; }; then
+  echo "CMS 새 페이지: 빌드 뒤로 바뀐 것 없음 — 확인 끝"
+elif [ "$code" = "200" ] || [ "$code" = "404" ]; then
+  echo "주의: 빌드한 뒤에 고객사가 새 페이지를 만들거나 고쳤다 → ./tools/build-dist.sh 후 다시 배포하세요."
+else
+  echo "주의: $SITE_PAGES 를 확인하지 못했다 (응답 $code)."
+fi
+rm -f "$NOW"
 
 echo
 echo "업로드 완료. 확인:"

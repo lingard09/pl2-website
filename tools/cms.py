@@ -14,6 +14,9 @@
 - 이미지 ↔ 영상 교체 (11.19): 본문의 <img>·자동재생 <video> 는 서로 바꿀 수 있다 (swap_ok 의 예외 자리와
   tools/cms-noswap.json 에 적힌 자리 제외). 목록에 원래 태그의 속성을 넣어 두고, 바꾸면 그 속성을 옮긴 새 태그를
   만든다 (swap_html). 값: {"as": "video", "src", "poster"} 또는 {"as": "img", "src"}.
+- 새 페이지 (11.19): 고객사가 관리자에서 만든 상세 페이지. 서버 /cms-data/pages.json 이 원본이고,
+  서버(admin/pages.php)와 빌드(cmd_pages)가 같은 틀로 /works/<slug>/index.html 과 Works 목록 카드를 만든다.
+  바깥 틀(head·메뉴·바닥글)은 빌드가 상세 11 배포본에서 뽑아 admin/page-skeleton.html 로 둔다 (cmd_skeleton).
 - 로고 목록: data-cms-list="logos" 가 달린 요소 (About 로고 띠) 하나가 통째로 한 단위. 안의 로고는 따로 단위가 아니다.
   값 {"rows": [[{"src", "alt"}, ...], [...]]} — 저장하면 두 줄을 새로 만든다 (logos_html).
 
@@ -446,6 +449,203 @@ def apply_one(doc, cid, item, meta=None):
     return doc, count
 
 
+# ── 새 페이지 (admin/pages.php 와 같은 결과) ─────────────────────────────
+
+SKELETON_FROM = "11"  # 바깥 틀을 뽑을 상세 페이지 번호 (어두운 테마 · 히어로 fade-black)
+
+
+def ptext(t):
+    return html.escape(norm(t), quote=False)
+
+
+def plines(t):
+    """여러 줄 글 → 줄마다 이스케이프, 줄 사이 <br /> (상세 개요·헤더는 모바일에서 맨 <br> 을 끈다 = 자동 줄바꿈)"""
+    return " <br />".join(ptext(x) for x in str(t or "").replace("\r", "").split("\n"))
+
+
+def pkoen(ko, en):
+    if norm(en or ""):
+        return f'<span data-l="ko">{plines(ko)}</span><span data-l="en" lang="en">{plines(en)}</span>'
+    return plines(ko)
+
+
+def pmedia(m, cls="", extra=""):
+    c = f' class="{cls}"' if cls else ""
+    if m.get("type") == "video":
+        return (f'<video{c}{extra} poster="{esc_attr(m.get("poster") or "")}" autoplay muted loop playsinline preload="metadata">'
+                f'<source src="{esc_attr(m.get("src") or "")}" type="video/mp4" /></video>')
+    return f'<img{c}{extra} src="{esc_attr(m.get("src") or "")}" alt="" />'
+
+
+def page_main(p):
+    out = ['<div class="wd-container">', '<section class="wd-top">', '<div class="wd-hero wd-hero--fade-black">']
+    out.append(pmedia(p.get("hero") or {}, "wd-hero-media"))
+    out.append('<div class="wd-hero-dim" aria-hidden="true"></div>')
+    head = '<div class="wd-hero-title"><div class="wd-hero-head">'
+    if norm(p.get("brand") or ""):
+        head += f'<span class="wd-hero-brand">{ptext(p["brand"])}</span>'
+    head += f'<h1 class="wd-hero-h1">{plines(p.get("title"))}</h1></div>'
+    tags = [t for t in (p.get("tags") or []) if norm(t)]
+    if tags:
+        head += '<div class="wd-hero-tags">' + "".join(f'<span class="wd-tag">{ptext(t)}</span>' for t in tags) + "</div>"
+    out.append(head + "</div>")
+    out.append("</div>")
+    intro = p.get("intro") or {}
+    if norm(intro.get("title") or "") or norm(intro.get("ko") or ""):
+        x = '<div class="wd-intro">'
+        if norm(intro.get("title") or ""):
+            x += f'<p class="wd-intro-title">{ptext(intro["title"])}</p>'
+        if norm(intro.get("ko") or ""):
+            x += f'<p class="wd-intro-desc">{pkoen(intro.get("ko"), intro.get("en"))}</p>'
+        out.append(x + "</div>")
+    out.append("</section>")
+    inlist = False
+    for b in p.get("blocks") or []:
+        t = b.get("type")
+        if t == "media":
+            items = [m for m in (b.get("items") or []) if m and m.get("src")][:2]
+            if not items:
+                continue
+            if not inlist:
+                out.append('<section class="wdc-list">')
+                inlist = True
+            out.append(f'<div class="wdc-row wdc-row--{len(items)}">' + "".join(pmedia(m, "", " data-reveal") for m in items) + "</div>")
+            continue
+        if inlist:
+            out.append("</section>")
+            inlist = False
+        if t == "text":
+            x = '<section class="wdc-text"><div class="wd-head wd-head--center">'
+            if norm(b.get("title") or ""):
+                x += f'<h2 class="wd-head-title">{ptext(b["title"])}</h2>'
+            if norm(b.get("ko") or ""):
+                x += f'<p class="wd-head-desc">{pkoen(b.get("ko"), b.get("en"))}</p>'
+            out.append(x + "</div></section>")
+        elif t == "film" and re.match(r"^[0-9]{5,12}$", str(b.get("vimeo") or "")):
+            out.append('<section class="wd-film">'
+                       f'<h2 class="wd-head-title wd-film-title">{ptext(b.get("title") or "Watch the Full Film")}</h2>'
+                       f'<div class="wd-film-frame" data-playing="false" data-vimeo="{b["vimeo"]}">'
+                       f'<img src="{esc_attr(b.get("poster") or "")}" alt="" />'
+                       '<button type="button" class="wd-film-play" aria-label="영상 재생"></button></div></section>')
+    if inlist:
+        out.append("</section>")
+    out.append("</div>")
+    return "\n".join(out)
+
+
+def page_title_plain(p):
+    return " ".join(norm(x) for x in str(p.get("title") or "").replace("\r", "").split("\n") if norm(x))
+
+
+def page_html(p, skeleton):
+    title = page_title_plain(p)
+    desc = norm(p.get("desc") or "") or norm(str((p.get("intro") or {}).get("ko") or "").replace("\n", " "))[:120] or title
+    hero = p.get("hero") or {}
+    og = hero.get("poster") if hero.get("type") == "video" else hero.get("src")
+    rep_ = {
+        "{{TITLE}}": esc_attr(title),
+        "{{DESC}}": esc_attr(desc),
+        "{{OG}}": esc_attr("https://pl2std.com" + (og or "/assets/og/og-default.jpg")),
+        "{{SLUG}}": p["slug"],
+        "{{MAIN}}": page_main(p),
+    }
+    # 한 번에 바꾼다 (넣은 글에 {{...}} 가 있어도 다시 바뀌지 않게)
+    return re.sub(r"\{\{(TITLE|DESC|OG|SLUG|MAIN)\}\}", lambda m: rep_[m.group(0)], skeleton)
+
+
+def card_html(p):
+    c = p.get("card") or {}
+    m = c.get("media") or p.get("hero") or {}
+    size = c.get("size") if c.get("size") in ("s", "m", "l") else "m"
+    brand = f'<p class="wk-card-brand">{ptext(p["brand"])}</p>' if norm(p.get("brand") or "") else ""
+    return (f'<a class="wk-card wk-card--{size}" data-cms-page="{p["id"]}" href="{p["slug"]}/">'
+            + pmedia(m, "wk-card-media")
+            + f'<div class="wk-card-overlay">{brand}<p class="wk-card-project">{ptext(page_title_plain(p))}</p></div></a>')
+
+
+def public_pages(pages):
+    """Works 목록에 나갈 페이지 — 공개된 것, 새로 만든 순서(최신 먼저)"""
+    lst = [p for p in (pages or []) if p.get("status") == "public"]
+    return sorted(lst, key=lambda p: str(p.get("created") or ""), reverse=True)
+
+
+CARD_RE = re.compile(r'\s*<a class="wk-card[^"]*" data-cms-page="[^"]*".*?</a>', re.S)
+
+
+def works_with_cards(doc, pages):
+    """Works 목록 html 에 새 페이지 카드를 넣는다 (먼저 있던 카드는 지우고). 최신이 왼쪽 열 맨 위, 다음이 오른쪽 열 맨 위 …"""
+    doc = CARD_RE.sub("", doc)
+    pub = public_pages(pages)
+    cols = ["", ""]
+    for i, p in enumerate(pub):
+        cols[i % 2] += "\n" + card_html(p)
+    parts = doc.split('<div class="wk-col">')
+    if len(parts) != 3:
+        return doc
+    return parts[0] + '<div class="wk-col">' + cols[0] + parts[1] + '<div class="wk-col">' + cols[1] + parts[2]
+
+
+def cmd_skeleton(dist):
+    """상세 11 배포본(적용 전)에서 바깥 틀을 뽑아 admin/page-skeleton.html 로 둔다"""
+    pages = json.load(open(os.path.join(dist, "admin", "cms-index.json"), encoding="utf-8"))["pages"]
+    src = next(p for p in pages if p.get("num") == SKELETON_FROM)
+    t = open(os.path.join(dist, src["file"]), encoding="utf-8").read()
+    t = re.sub(r"<!--.*?-->\s*", "", t, flags=re.S)
+    def sub(pat, new, flags=0):
+        nonlocal t
+        t2, n = re.subn(pat, lambda _: new, t, flags=flags)
+        assert n >= 1, pat
+        t = t2
+    sub(r"<title>.*?</title>", "<title>{{TITLE}} | PL2 Creative Studio</title>", re.S)
+    t = re.sub(r'(<meta\s+name="description"\s+content=")[^"]*"', r'\g<1>{{DESC}}"', t, flags=re.S)
+    t = re.sub(r'(<meta\s+property="og:title"\s+content=")[^"]*"', r'\g<1>{{TITLE}} | PL2 Creative Studio"', t, flags=re.S)
+    t = re.sub(r'(<meta\s+property="og:description"\s+content=")[^"]*"', r'\g<1>{{DESC}}"', t, flags=re.S)
+    t = re.sub(r'(<meta property="og:url" content=")[^"]*"', r'\g<1>https://pl2std.com/works/{{SLUG}}/"', t)
+    t = re.sub(r'(<meta (?:property="og:image"|name="twitter:image") content=")[^"]*"', r'\g<1>{{OG}}"', t)
+    sub(r'\s*<link rel="stylesheet" href="[^"]*works-detail-' + SKELETON_FROM + r'\.css" />', "")
+    sub(r'<main class="wd-main">.*?</main>', '<main class="wd-main">\n{{MAIN}}\n</main>', re.S)
+    sub(r'<script src="([^"]*)wd' + str(int(SKELETON_FROM)) + r'-slider\.js"></script>', "")
+    t = re.sub(r'<script src="([^"]*)top-btn\.js"></script>', r'<script src="\1top-btn.js"></script>\n    <script src="\1video-play.js"></script>', t)
+    t = re.sub(r'(<img) data-cms="d' + SKELETON_FROM + r'-[0-9]+"( class="top-btn-arrow")', r"\1\2", t)
+    assert "{{MAIN}}" in t and "{{TITLE}}" in t and "{{DESC}}" in t and "{{OG}}" in t and "{{SLUG}}" in t
+    assert not re.search(r'data-cms="d[0-9]', t)
+    with open(os.path.join(dist, "admin", "page-skeleton.html"), "w", encoding="utf-8") as fh:
+        fh.write(t)
+    print("새 페이지 틀: admin/page-skeleton.html")
+
+
+def cmd_pages(dist, pages_path, content_path=None):
+    """서버의 pages.json 으로 새 페이지 html 과 Works 카드를 dist 에 만든다 (메뉴·바닥글 고친 값도 적용)"""
+    pages = json.load(open(pages_path, encoding="utf-8")).get("pages") or []
+    skeleton = open(os.path.join(dist, "admin", "page-skeleton.html"), encoding="utf-8").read()
+    items = {}
+    if content_path and os.path.exists(content_path):
+        items = json.load(open(content_path, encoding="utf-8")).get("items") or {}
+    idx = json.load(open(os.path.join(dist, "admin", "cms-index.json"), encoding="utf-8"))["ids"]
+    made = []
+    for p in public_pages(pages):
+        doc = page_html(p, skeleton)
+        for cid in dict.fromkeys(re.findall(r'data-cms="(g-[0-9]+)"', doc)):
+            if cid in items and cid in idx:
+                doc, _ = apply_one(doc, cid, items[cid], idx[cid])
+        d = os.path.join(dist, "works", p["slug"])
+        os.makedirs(d, exist_ok=True)
+        with open(os.path.join(d, "index.html"), "w", encoding="utf-8") as fh:
+            fh.write(doc)
+        made.append(p["slug"])
+    wp = os.path.join(dist, "works", "index.html")
+    w = open(wp, encoding="utf-8").read()
+    with open(wp, "w", encoding="utf-8") as fh:
+        fh.write(works_with_cards(w, pages))
+    sm = os.path.join(dist, "sitemap.xml")
+    if made and os.path.exists(sm):
+        x = open(sm, encoding="utf-8").read()
+        add = "".join(f"  <url><loc>https://pl2std.com/works/{s}/</loc></url>\n" for s in made if f"/works/{s}/<" not in x)
+        with open(sm, "w", encoding="utf-8") as fh:
+            fh.write(x.replace("</urlset>", add + "</urlset>"))
+    print(f"새 페이지: {len(made)}개" + (f" ({', '.join(made)})" if made else ""))
+
+
 def html_files(dist):
     for d, _, fs in os.walk(dist):
         if os.path.relpath(d, dist).split(os.sep)[0] in ("admin", "cms-data"):
@@ -603,6 +803,10 @@ if __name__ == "__main__":
         cmd_index(sys.argv[2])
     elif cmd == "apply":
         cmd_apply(sys.argv[2], sys.argv[3])
+    elif cmd == "skeleton":
+        cmd_skeleton(sys.argv[2])
+    elif cmd == "pages":
+        cmd_pages(sys.argv[2], sys.argv[3], sys.argv[4] if len(sys.argv) > 4 else None)
     else:
         print(__doc__)
         sys.exit(2)

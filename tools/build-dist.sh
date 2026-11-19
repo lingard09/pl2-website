@@ -93,6 +93,7 @@ fi
 #   - 서버에 접속이 안 되면 멈춘다 (수정값 없이 배포하면 고객사 수정이 지워진다). 일부러 건너뛰려면 CMS_OFFLINE=1
 cp -R admin dist/admin
 python3 tools/cms.py index dist
+python3 tools/cms.py skeleton dist # 새 페이지 바깥 틀 (상세 11 에서, 적용 전)
 SITE_CMS="${SITE_URL:-https://pl2std.com/}"
 SITE_CMS="${SITE_CMS%/}/cms-data/content.json"
 rm -f .cms-last-build.json
@@ -109,6 +110,19 @@ else
   else
     echo "빌드 중단: $SITE_CMS 응답 $code"; exit 1
   fi
+  # 고객사가 만든 새 페이지 (/cms-data/pages.json) → dist 의 /works/<slug>/ 와 Works 카드. 받은 것은 .cms-pages-last-build.json
+  SITE_PAGES="${SITE_CMS%content.json}pages.json"
+  rm -f .cms-pages-last-build.json
+  code=$(curl -sS -o .cms-pages-last-build.json -w '%{http_code}' --max-time 30 "$SITE_PAGES") ||
+    { echo "빌드 중단: $SITE_PAGES 를 받지 못했다"; exit 1; }
+  if [ "$code" = "200" ]; then
+    python3 tools/cms.py pages dist .cms-pages-last-build.json .cms-last-build.json
+  elif [ "$code" = "404" ]; then
+    rm -f .cms-pages-last-build.json
+    echo "새 페이지: 아직 없음"
+  else
+    echo "빌드 중단: $SITE_PAGES 응답 $code"; exit 1
+  fi
 fi
 
 # 배포본 HTML·CSS 에서 주석을 지운다 (2026-10-17). 누구나 '소스 보기'로 볼 수 있어서
@@ -122,13 +136,14 @@ while read -r f; do
   while read -r ref; do
     case "$ref" in */) ref="${ref}index.html" ;; esac
     case "$ref" in privacy.html|terms.html|*/privacy.html|*/terms.html) continue ;; esac # 아직 없는 페이지
+    case "$ref" in /cms-data/*) continue ;; esac # 관리자에서 올린 파일 (서버에만 있다)
     [ -e "$dir/$ref" ] || { echo "빠짐: $ref (${f#dist/})"; missing=$((missing + 1)); }
   done < <({
     grep -ohE '(src|href|poster)="[^"#:]*"' "$f" | sed -E 's/^[a-z]*="//; s/"$//'
     # <picture> 의 srcset 도 본다 (2026-11-07: 여기서 빠져 모바일 전용 이미지 404 를 못 잡았다)
     grep -ohE 'srcset="[^"]*"' "$f" | sed -E 's/^srcset="//; s/"$//' | tr ',' '\n' | awk '{print $1}'
   } | grep -v '^$' | sort -u)
-done < <(find dist -name '*.html')
+done < <(find dist -name '*.html' -not -path 'dist/admin/*') # admin/page-skeleton.html 은 /works/<slug>/ 기준 경로라 뺀다
 [ "$missing" -gt 0 ] && { echo "참조 누락 ${missing}건"; exit 1; }
 
 echo "dist/ 준비 완료 — 참조 누락 0건"

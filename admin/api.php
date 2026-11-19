@@ -7,8 +7,13 @@
  *   POST ?a=upload    (multipart: file, kind=image|video, maxw)
  *   GET  ?a=history                   → 이전 판 목록
  *   POST ?a=restore   {name}          → 그 판으로 되돌리기
+ *   GET  ?a=pages                     → 새 페이지 목록 (pages.php)
+ *   POST ?a=page_preview {id, page}   → 미리보기 html
+ *   POST ?a=page_save    {id, page}   → 저장 (공개면 /works/<slug>/ 와 Works 카드까지)
+ *   POST ?a=page_delete  {id}
  */
 require __DIR__ . '/lib.php';
+require __DIR__ . '/pages.php';
 
 $a = cms_get($_GET, 'a', '');
 $method = cms_get($_SERVER, 'REQUEST_METHOD', 'GET');
@@ -50,8 +55,12 @@ if ($a === 'state') {
     cms_json_out(array('ok' => true, 'index' => cms_load_index(), 'content' => cms_load_content()));
 }
 
-if ($method !== 'POST' && $a !== 'history') {
+if ($method !== 'POST' && $a !== 'history' && $a !== 'pages') {
     cms_fail('POST 만', 405);
+}
+
+if (in_array($a, array('pages', 'page_preview', 'page_save', 'page_delete'), true)) {
+    cms_pages_api($a, cms_body());
 }
 
 if ($a === 'save') {

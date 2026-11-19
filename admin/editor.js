@@ -479,10 +479,12 @@
   }
 
   function loadFrame(keepScroll) {
+    if (S.mode === "pages") { pagePreview(true); return; }
     var y = 0;
     var d = frameDoc();
     if (keepScroll && d && d.defaultView) y = d.defaultView.scrollY;
     frame.onload = function () { onFrameLoad(y); };
+    frame.removeAttribute("srcdoc"); // 새 페이지 미리보기(srcdoc)가 남아 있으면 src 보다 앞선다
     frame.src = frameUrl();
     fitFrame();
   }
@@ -1346,6 +1348,7 @@
   // ── 패널 ─────────────────────────────────────────
   function renderPanel() {
     if (!panel) return;
+    if (S.mode === "pages") { pagesPanel(); return; }
     panel.innerHTML = "";
     var tabs = h("div", { class: "tabs" },
       h("button", { class: S.tab === "item" ? "on" : "", text: "선택한 항목", onclick: function () { S.tab = "item"; renderPanel(); } }),
@@ -1473,12 +1476,28 @@
     app.innerHTML = "";
     var pageSel = h("select", { class: "page-sel" });
     S.index.pages.forEach(function (p, i) {
-      pageSel.appendChild(h("option", { value: i, text: pageLabel(p), selected: p === S.page }));
+      pageSel.appendChild(h("option", { value: i, text: pageLabel(p), selected: S.mode !== "pages" && p === S.page }));
     });
+    pageSel.appendChild(h("option", { value: "pages", text: "＋ 새 페이지 만들기 · 관리", selected: S.mode === "pages" }));
     pageSel.addEventListener("change", function () {
+      if (pageSel.value === "pages") {
+        if (pendingCount()) toast("저장 안 한 글·이미지 변경은 그대로 남아 있어요. 페이지로 돌아가 저장해 주세요.");
+        S.mode = "pages";
+        bar.classList.add("is-pages");
+        openPages();
+        return;
+      }
+      if (S.mode === "pages" && S.pe && S.peDirty && !confirm("새 페이지에 저장 안 한 내용이 있습니다. 나갈까요?")) {
+        pageSel.value = "pages";
+        return;
+      }
+      S.mode = "site";
+      S.pe = null;
+      bar.classList.remove("is-pages");
       S.page = S.index.pages[+pageSel.value];
       S.selected = [];
       loadFrame(false);
+      renderPanel();
     });
     function seg(name, opts, cur, onPick) {
       var w = h("div", { class: "seg", "data-name": name });
@@ -1556,7 +1575,272 @@
     }).catch(function (e) { if (e.message !== "login") showLogin(e.message); });
   }
 
+  // ── 새 페이지 (11.19) ─────────────────────────────
+  // 고객사가 직접 만드는 상세 페이지. 서버 admin/pages.php 가 /works/<slug>/ 와 Works 카드를 만든다.
+  // 미리보기는 서버가 실제와 같은 틀로 만들어 준 html 을 그대로 보여 준다.
+  function blankPage() {
+    return { slug: "", status: "draft", brand: "", title: "", tags: [], desc: "", hero: null,
+      intro: { title: "", ko: "", en: "" }, card: { size: "m" }, blocks: [{ type: "media", items: [null] }] };
+  }
+  function openPages() {
+    return api("pages").then(function (r) {
+      S.pages = r.pages;
+      if (!Array.isArray(S.pages.pages)) S.pages.pages = [];
+      renderPanel();
+      pagePreview(true);
+    }).catch(function (e) { toast(e.message, "err"); });
+  }
+  function peChanged(redraw) {
+    S.peDirty = true;
+    if (redraw) {
+      var body = panel.querySelector(".panel-body");
+      var y = body ? body.scrollTop : 0;
+      renderPanel();
+      var b2 = panel.querySelector(".panel-body");
+      if (b2) b2.scrollTop = y;
+    }
+    clearTimeout(S.pvTimer);
+    S.pvTimer = setTimeout(function () { pagePreview(false); }, 700);
+  }
+  // 미리보기용: 빈 칸은 빼고 보낸다
+  function previewCopy(p) {
+    var c = clone(p);
+    c.blocks = (c.blocks || []).map(function (b) {
+      if (b.type === "media") return { type: "media", items: (b.items || []).filter(function (m) { return m && m.src; }) };
+      return b;
+    }).filter(function (b) {
+      if (b.type === "media") return b.items.length > 0;
+      if (b.type === "film") return /^[0-9]{5,12}$/.test(b.vimeo || "") && b.poster;
+      return true;
+    });
+    if (c.card && !c.card.media) delete c.card.media;
+    return c;
+  }
+  function stageMessage(msg) {
+    frame.onload = null;
+    frame.removeAttribute("src");
+    frame.srcdoc = '<!doctype html><meta charset="utf-8"><body style="margin:0;display:grid;place-items:center;height:100vh;font:15px/1.6 -apple-system,sans-serif;color:#6d6d68;background:#f4f4f2;text-align:center;padding:24px">' + esc(msg) + "</body>";
+    fitFrame();
+  }
+  function pagePreview(force) {
+    if (S.mode !== "pages") return;
+    if (!S.pe) {
+      stageMessage("오른쪽에서 새 페이지를 만들거나, 만든 페이지를 골라 고치세요.");
+      return;
+    }
+    var p = S.pe.page;
+    if (!p.hero || !p.hero.src || !String(p.title || "").trim()) {
+      stageMessage("제목과 첫 화면(히어로) 이미지·영상을 넣으면 여기에 미리보기가 나옵니다.");
+      return;
+    }
+    var seq = (S.pvSeq || 0) + 1;
+    S.pvSeq = seq;
+    api("page_preview", { id: S.pe.id || "", page: previewCopy(p) }).then(function (r) {
+      if (seq !== S.pvSeq) return;
+      var d = frameDoc();
+      var y = !force && d && d.defaultView ? d.defaultView.scrollY : 0;
+      frame.onload = function () { if (y) try { frame.contentWindow.scrollTo(0, y); } catch (e) {} };
+      frame.removeAttribute("src");
+      frame.srcdoc = r.html;
+      fitFrame();
+    }).catch(function (e) { if (seq === S.pvSeq) stageMessage(e.message); });
+  }
+
+  function mediaThumb(m) {
+    if (!m || !m.src) return h("div", { class: "pm-empty", text: "비어 있음" });
+    return m.type === "video"
+      ? h("video", { src: m.src, poster: m.poster, muted: true, preload: "metadata", class: "pm-thumb" })
+      : h("img", { src: m.src, alt: "", class: "pm-thumb" });
+  }
+  // 이미지·영상 한 칸 고르기. onSet(새 값 | null)
+  function mediaPick(cur, onSet, optional) {
+    var box = h("div", { class: "pm" }, mediaThumb(cur));
+    var btns = h("div", { class: "pm-btns" });
+    btns.appendChild(fileButton(cur && cur.src ? "이미지로 바꾸기" : "이미지 올리기", "image/jpeg,image/png,image/webp", function (file, bar) {
+      return upload(file, "image", 1920, bar).then(function (r) { onSet({ type: "img", src: r.url }); });
+    }));
+    btns.appendChild(fileButton(cur && cur.src ? "영상으로 바꾸기" : "영상 올리기 (mp4)", "video/mp4", function (file, bar) {
+      if (file.size > 100 * 1024 * 1024) { toast("영상이 100MB 보다 큽니다. 줄여서 올려 주세요.", "err"); return; }
+      return upload(file, "video", 0, bar).then(function (r) {
+        return makePoster(file, false).then(function (blob) {
+          return upload(new File([blob], "poster.jpg", { type: "image/jpeg" }), "image", 1920, null);
+        }).then(function (r2) { onSet({ type: "video", src: r.url, poster: r2.url }); });
+      });
+    }));
+    if (optional && cur && cur.src) btns.appendChild(h("button", { class: "ghost", text: "비우기", onclick: function () { onSet(null); } }));
+    box.appendChild(btns);
+    return box;
+  }
+  function field(label, input, hint) {
+    return h("label", { class: "field" }, h("span", { text: label }), input, hint ? h("small", { class: "hint", text: hint }) : null);
+  }
+  function textIn(obj, key, multi, ph) {
+    var el = h(multi ? "textarea" : "input", multi ? { rows: 3, class: "pe-ta", placeholder: ph || "" } : { type: "text", placeholder: ph || "" });
+    el.value = obj[key] || "";
+    el.addEventListener("input", function () { obj[key] = el.value; peChanged(false); });
+    return el;
+  }
+
+  function pagesPanel() {
+    panel.innerHTML = "";
+    var body = h("div", { class: "panel-body" });
+    panel.appendChild(h("div", { class: "tabs" }, h("button", { class: "on", text: S.pe ? (S.pe.id ? "페이지 고치기" : "새 페이지") : "직접 만든 페이지" })));
+    panel.appendChild(body);
+    if (!S.pe) {
+      body.appendChild(h("p", { class: "hint", text: "이미지·영상을 차례로 나열하는 상세 페이지를 직접 만들 수 있어요. 공개로 저장하면 Works 목록 맨 앞에 카드가 생깁니다." }));
+      body.appendChild(h("button", { class: "primary", text: "＋ 새 페이지 만들기", onclick: function () {
+        S.pe = { id: "", page: blankPage() };
+        S.peDirty = false;
+        renderPanel();
+        pagePreview(true);
+      } }));
+      var list = (S.pages && S.pages.pages) || [];
+      if (!list.length) body.appendChild(h("p", { class: "empty", text: "아직 만든 페이지가 없습니다." }));
+      list.forEach(function (pg) {
+        body.appendChild(h("div", { class: "card pe-row" },
+          h("div", { class: "card-head" }, h("b", { text: String(pg.title || "").split("\n").join(" ") }),
+            h("span", { class: "tag" + (pg.status === "public" ? "" : " tag-draft"), text: pg.status === "public" ? "공개" : "임시 저장" })),
+          h("small", { class: "hint", text: "/works/" + pg.slug + "/" }),
+          h("div", { class: "actions" },
+            h("button", { text: "고치기", onclick: function () {
+              S.pe = { id: pg.id, page: clone(pg) };
+              S.peDirty = false;
+              renderPanel();
+              pagePreview(true);
+            } }),
+            pg.status === "public" ? h("button", { class: "ghost", text: "사이트에서 보기", onclick: function () { window.open("/works/" + pg.slug + "/", "_blank"); } }) : null,
+            h("button", { class: "ghost danger", text: "지우기", onclick: function () {
+              if (!confirm("‘" + String(pg.title || "").split("\n").join(" ") + "’ 페이지를 지울까요? 사이트와 Works 목록에서 바로 사라집니다.")) return;
+              api("page_delete", { id: pg.id }).then(function (r) { S.pages = r.pages; toast("지웠습니다."); renderPanel(); })
+                .catch(function (e) { toast(e.message, "err"); });
+            } })
+          )));
+      });
+      return;
+    }
+    var p = S.pe.page;
+    // 기본 정보
+    var slug = h("input", { type: "text", value: p.slug, placeholder: "예: samsung-new-film" });
+    slug.addEventListener("input", function () {
+      slug.value = slug.value.toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-{2,}/g, "-");
+      p.slug = slug.value.replace(/^-+|-+$/g, "");
+      S.peDirty = true;
+    });
+    var status = h("select", {});
+    [["draft", "임시 저장 (사이트에 안 보임)"], ["public", "공개 (사이트와 Works 목록에 보임)"]].forEach(function (o) {
+      status.appendChild(h("option", { value: o[0], text: o[1], selected: p.status === o[0] }));
+    });
+    status.addEventListener("change", function () { p.status = status.value; S.peDirty = true; });
+    var tags = h("input", { type: "text", value: (p.tags || []).join(", "), placeholder: "예: Campaign, Film, Photography" });
+    tags.addEventListener("input", function () { p.tags = tags.value.split(",").map(function (t) { return t.trim(); }).filter(Boolean); peChanged(false); });
+    body.appendChild(h("section", { class: "card" },
+      h("b", { text: "기본 정보" }),
+      field("페이지 주소  pl2std.com/works/…/", slug, "영문 소문자·숫자·하이픈(-)만"),
+      field("공개 여부", status),
+      field("브랜드", textIn(p, "brand", false, "예: Samsung")),
+      field("제목 (Enter 로 줄을 나눕니다)", textIn(p, "title", true, "프로젝트 제목")),
+      field("태그 (쉼표로 구분)", tags),
+      field("검색·공유 설명 (비우면 개요 앞부분)", textIn(p, "desc", false, ""))
+    ));
+    body.appendChild(h("section", { class: "card" },
+      h("b", { text: "첫 화면 (히어로)" }),
+      mediaPick(p.hero, function (m) { p.hero = m; peChanged(true); }, false)
+    ));
+    var intro = p.intro || (p.intro = { title: "", ko: "", en: "" });
+    body.appendChild(h("section", { class: "card" },
+      h("b", { text: "개요" }),
+      field("개요 제목", textIn(intro, "title", false, "예: One Team, Multiple Scenes")),
+      field("한글", textIn(intro, "ko", true, "PC 에서 줄을 나눌 곳에 Enter (모바일은 자동 줄바꿈)")),
+      field("영문 (비우면 영문 화면에서도 한글)", textIn(intro, "en", true, ""))
+    ));
+    // 내용 칸
+    var blocksBox = h("section", { class: "card" }, h("b", { text: "내용 (위에서부터 차례로)" }));
+    (p.blocks || []).forEach(function (b, i) {
+      var label = { media: "이미지·영상 줄", text: "글", film: "풀필름 (비메오)" }[b.type];
+      var row = h("div", { class: "pe-block" },
+        h("div", { class: "pe-block-head" }, h("b", { text: (i + 1) + ". " + label }),
+          h("span", { class: "spacer" }),
+          h("button", { class: "ghost", text: "↑", disabled: i === 0, onclick: function () { p.blocks.splice(i - 1, 0, p.blocks.splice(i, 1)[0]); peChanged(true); } }),
+          h("button", { class: "ghost", text: "↓", disabled: i === p.blocks.length - 1, onclick: function () { p.blocks.splice(i + 1, 0, p.blocks.splice(i, 1)[0]); peChanged(true); } }),
+          h("button", { class: "ghost danger", text: "빼기", onclick: function () { p.blocks.splice(i, 1); peChanged(true); } })));
+      if (b.type === "media") {
+        var cells = h("div", { class: "pe-cells" + (b.items.length === 2 ? " two" : "") });
+        b.items.forEach(function (m, k) {
+          var cell = h("div", { class: "pe-cell" }, mediaPick(m, function (v) { b.items[k] = v; peChanged(true); }, false));
+          if (b.items.length === 2) cell.appendChild(h("button", { class: "ghost", text: "이 칸 빼기", onclick: function () { b.items.splice(k, 1); peChanged(true); } }));
+          cells.appendChild(cell);
+        });
+        row.appendChild(cells);
+        if (b.items.length === 1) row.appendChild(h("button", { class: "ghost", text: "＋ 옆에 한 칸 더 (한 줄에 2개)", onclick: function () { b.items.push(null); peChanged(true); } }));
+      } else if (b.type === "text") {
+        row.appendChild(field("제목", textIn(b, "title", false, "")));
+        row.appendChild(field("한글", textIn(b, "ko", true, "")));
+        row.appendChild(field("영문 (선택)", textIn(b, "en", true, "")));
+      } else {
+        var vim = h("input", { type: "text", value: b.vimeo || "", placeholder: "https://vimeo.com/123456789" });
+        vim.addEventListener("input", function () {
+          var mm = /vimeo\.com\/(?:video\/)?(\d{5,12})/.exec(vim.value) || /^\s*(\d{5,12})\s*$/.exec(vim.value);
+          vim.classList.toggle("bad", !mm);
+          b.vimeo = mm ? mm[1] : "";
+          peChanged(false);
+        });
+        row.appendChild(field("제목", textIn(b, "title", false, "Watch the Full Film")));
+        row.appendChild(field("비메오 주소", vim));
+        row.appendChild(h("small", { class: "hint", text: "재생 전 이미지" }));
+        row.appendChild(mediaPick(b.poster ? { type: "img", src: b.poster } : null, function (m) {
+          b.poster = m ? (m.type === "video" ? m.poster : m.src) : "";
+          peChanged(true);
+        }, false));
+      }
+      blocksBox.appendChild(row);
+    });
+    blocksBox.appendChild(h("div", { class: "actions" },
+      h("button", { text: "＋ 이미지·영상 줄", onclick: function () { p.blocks.push({ type: "media", items: [null] }); peChanged(true); } }),
+      h("button", { text: "＋ 글", onclick: function () { p.blocks.push({ type: "text", title: "", ko: "", en: "" }); peChanged(true); } }),
+      h("button", { text: "＋ 풀필름", onclick: function () { p.blocks.push({ type: "film", title: "", vimeo: "", poster: "" }); peChanged(true); } })));
+    body.appendChild(blocksBox);
+    // Works 카드
+    var card = p.card || (p.card = { size: "m" });
+    var size = h("select", {});
+    [["s", "작게 (가로로 긴 카드)"], ["m", "보통"], ["l", "크게 (정사각형)"]].forEach(function (o) {
+      size.appendChild(h("option", { value: o[0], text: o[1], selected: (card.size || "m") === o[0] }));
+    });
+    size.addEventListener("change", function () { card.size = size.value; S.peDirty = true; });
+    body.appendChild(h("section", { class: "card" },
+      h("b", { text: "Works 목록 카드" }),
+      field("카드 크기", size),
+      h("small", { class: "hint", text: "카드 이미지·영상 (비우면 첫 화면과 같은 것)" }),
+      mediaPick(card.media, function (m) { if (m) card.media = m; else delete card.media; peChanged(true); }, true)
+    ));
+    // 저장
+    body.appendChild(h("div", { class: "actions pe-save" },
+      h("button", { class: "primary", text: "이 페이지 저장", onclick: function () {
+        var btn = this;
+        btn.disabled = true;
+        api("page_save", { id: S.pe.id || "", page: p }).then(function (r) {
+          S.pages = r.pages;
+          S.pe = { id: r.page.id, page: clone(r.page) };
+          S.peDirty = false;
+          toast(r.page.status === "public" ? "저장했습니다. 사이트와 Works 목록에 반영됐어요." : "임시 저장했습니다 (사이트에는 아직 안 보여요).");
+          renderPanel();
+          pagePreview(false);
+        }).catch(function (e) { toast(e.message, "err"); btn.disabled = false; });
+      } }),
+      h("button", { class: "ghost", text: "목록으로", onclick: function () {
+        if (S.peDirty && !confirm("저장 안 한 내용이 있습니다. 목록으로 갈까요?")) return;
+        S.pe = null;
+        S.peDirty = false;
+        renderPanel();
+        pagePreview(true);
+      } })
+    ));
+  }
+
   window.addEventListener("beforeunload", function (e) {
+    if (S.mode === "pages" && S.pe && S.peDirty) {
+      e.preventDefault();
+      e.returnValue = "";
+    }
     if (S.index && pendingCount()) {
       e.preventDefault();
       e.returnValue = "";

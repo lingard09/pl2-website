@@ -983,3 +983,54 @@
     transition: none;
   }
 }
+
+/* ══ CMS 새 페이지 (11.19, tools/cms.py page_main · admin/pages.php) ══════════════════
+   히어로·개요·헤더·풀필름은 위의 공용 양식을 그대로 쓰고, 이미지·영상 나열만 여기서 정한다.
+   이어진 줄은 한 묶음(.wdc-list)이라 섹션 간격(320) 대신 12 로 붙는다. 한 줄에 1개 또는 2개, 모바일은 1열 */
+.wdc-list {
+  display: flex;
+  flex-direction: column;
+  gap: min(0.625vw, 12px);
+}
+
+.wdc-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: min(0.625vw, 12px);
+}
+
+.wdc-row--2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* 나란한 두 칸은 높이를 맞춘다: 줄 높이 = 더 긴 쪽, 짧은 쪽은 칸을 채우고(cover) 넘치는 만큼 잘린다 */
+.wdc-row--2 > img,
+.wdc-row--2 > video {
+  align-self: stretch; /* 그림·영상은 기본이 위 정렬이라 줄 높이까지 늘리려면 따로 준다 */
+  height: auto;
+  min-height: 100%;
+  object-fit: cover;
+}
+
+.wdc-row img,
+.wdc-row video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 599.98px) {
+  .wdc-list,
+  .wdc-row {
+    gap: 8px;
+  }
+
+  .wdc-row--2 {
+    grid-template-columns: 1fr;
+  }
+
+  .wdc-row--2 > img,
+  .wdc-row--2 > video {
+    min-height: 0;
+  }
+}

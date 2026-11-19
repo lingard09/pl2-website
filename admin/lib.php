@@ -564,11 +564,16 @@ function cms_apply_ids($ids, $content)
             }
         }
     }
+    $custom = function_exists('cms_custom_page_files') ? cms_custom_page_files() : array();
     foreach ($ids as $id) {
         if (!isset($idx['ids'][$id])) {
             continue;
         }
-        foreach ($idx['ids'][$id]['files'] as $rel) {
+        $files = $idx['ids'][$id]['files'];
+        if (strpos($id, 'g-') === 0) {
+            $files = array_merge($files, $custom); // 메뉴·바닥글은 새 페이지에도
+        }
+        foreach ($files as $rel) {
             $byfile[$rel][] = $id;
         }
     }

@@ -641,3 +641,120 @@ button.danger {
   max-width: 180px;
   align-self: flex-start;
 }
+
+/* 새 페이지 (11.19) */
+.bar.is-pages .seg[data-name="lang"],
+.bar.is-pages .seg[data-name="mode"] {
+  display: none;
+}
+
+.pm {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pm-thumb,
+.pm-empty {
+  width: 100%;
+  max-height: 160px;
+  object-fit: contain;
+  background: repeating-conic-gradient(#eee 0 25%, #fff 0 50%) 0 0 / 16px 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.pm-empty {
+  display: grid;
+  place-items: center;
+  height: 80px;
+  color: var(--muted);
+  font-size: 12.5px;
+  background: #fafaf8;
+  border-style: dashed;
+}
+
+.pm-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pm-btns .file {
+  flex: 1 1 140px;
+}
+
+.pm-btns .file button {
+  width: 100%;
+}
+
+.pe-ta {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.field select,
+.field input[type="text"] {
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.field small.hint {
+  font-size: 11.5px;
+}
+
+.pe-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px;
+  background: #fcfcfb;
+}
+
+.pe-block-head {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pe-block-head button {
+  padding: 2px 8px;
+  font-size: 12px;
+}
+
+.pe-cells {
+  display: grid;
+  gap: 8px;
+}
+
+.pe-cells.two {
+  grid-template-columns: 1fr 1fr;
+}
+
+.pe-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.tag-draft {
+  background: #f1f1ee;
+  color: var(--muted);
+}
+
+.pe-save {
+  position: sticky;
+  bottom: 0;
+  background: var(--panel);
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
