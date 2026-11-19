@@ -1210,3 +1210,16 @@ html.lenis body {
 :where(video[data-cms-swap]) {
   object-fit: fill;
 }
+
+/* CMS 크기 설정 (11.19). 관리자에서 고른 자리에만 붙는다 (tools/cms.py size_attrs).
+   높이를 올린 파일 비율에 맞춤: 폭은 디자인 그대로, 높이 = 폭 ÷ 비율. 모바일 파일이 따로 있으면 그 비율 */
+[data-cms-fit] {
+  aspect-ratio: var(--cms-ar) !important;
+  height: auto !important;
+}
+
+@media (max-width: 599.98px) {
+  [data-cms-fit] {
+    aspect-ratio: var(--cms-ar-mo, var(--cms-ar)) !important;
+  }
+}

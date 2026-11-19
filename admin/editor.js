@@ -393,22 +393,49 @@
   // 이미지 ↔ 영상 (11.19). tools/cms.py swap_html · lib.php cms_swap_html 과 같은 모양 (미리보기용)
   var IMG_ONLY = ["src", "alt", "loading", "decoding", "draggable", "srcset", "sizes", "width", "height"];
   var VIDEO_ONLY = ["poster", "preload", "autoplay", "muted", "loop", "playsinline", "controls", "width", "height"];
-  function swapHtml(id, sw, item) {
-    var form = item.as || sw.tag;
-    function attrs(drop) {
-      return sw.attrs.filter(function (a) { return drop.indexOf(a[0]) < 0; }).map(function (a) {
-        return a[1] === null ? " " + a[0] : " " + a[0] + '="' + a[1] + '"';
-      }).join("");
+  function attrsHtml(list) {
+    return list.map(function (a) { return a[1] === null ? " " + a[0] : " " + a[0] + '="' + a[1] + '"'; }).join("");
+  }
+  var SCALES = [70, 80, 90];
+  function sizeAttrs(attrs, item, drop) {
+    var keep = attrs.filter(function (a) { return (drop || []).indexOf(a[0]) < 0; });
+    var parts = [], flags = "";
+    var fit = item.fit;
+    if (fit && fit.w > 0 && fit.h > 0) {
+      parts.push("--cms-ar: " + fit.w + " / " + fit.h);
+      if (fit.mw > 0 && fit.mh > 0) parts.push("--cms-ar-mo: " + fit.mw + " / " + fit.mh);
+      flags += " data-cms-fit";
     }
+    if (SCALES.indexOf(item.scale) >= 0) {
+      parts.push("scale: " + item.scale + "%");
+      flags += " data-cms-scale";
+    }
+    if (!parts.length) return attrsHtml(keep);
+    var style = null;
+    keep.forEach(function (a) { if (a[0] === "style" && style === null) style = a[1]; });
+    var rest = keep.filter(function (a) { return a[0] !== "style"; });
+    var st = (style ? style.replace(/[ ;]+$/, "") + "; " : "") + parts.join("; ");
+    return attrsHtml(rest) + flags + ' style="' + st + '"';
+  }
+  function elementHtml(id, sw, item) {
+    var form = item.as || sw.tag;
     if (form === sw.tag) {
-      var s0 = "<" + form + ' data-cms="' + id + '"' + attrs([]);
+      var s0 = "<" + form + ' data-cms="' + id + '"' + sizeAttrs(sw.attrs, item);
       return form === "img" ? s0 + " />" : s0 + ">" + sw.inner + "</video>";
     }
     var head = "<" + form + ' data-cms="' + id + '" data-cms-swap';
     if (form === "video") {
-      return head + attrs(IMG_ONLY) + ' poster="' + esc(item.poster || "") + '" autoplay muted loop playsinline preload="metadata"><source src="' + esc(item.src || "") + '" type="video/mp4" /></video>';
+      var srcs = (item.msrc ? '<source media="(max-width: 599.98px)" src="' + esc(item.msrc) + '" type="video/mp4" />' : "") +
+        '<source src="' + esc(item.src || "") + '" type="video/mp4" />';
+      return head + sizeAttrs(sw.attrs, item, IMG_ONLY) + ' poster="' + esc(item.poster || "") + '" autoplay muted loop playsinline preload="metadata">' + srcs + "</video>";
     }
-    return head + attrs(VIDEO_ONLY) + ' src="' + esc(item.src || "") + '" alt="" />';
+    return head + sizeAttrs(sw.attrs, item, VIDEO_ONLY) + ' src="' + esc(item.src || "") + '" alt="" />';
+  }
+  function swapHtml(id, sw, item) {
+    var el = elementHtml(id, sw, item);
+    if (!sw.wrap) return el;
+    var inner = (item.as || sw.tag) === sw.tag ? sw.wrap.pre + el + sw.wrap.post : el;
+    return "<picture" + attrsHtml(sw.wrap.attrs) + ">" + inner + "</picture>";
   }
   function swapForm(id) {
     var el = frameEls(id)[0];
@@ -418,14 +445,13 @@
   function previewValue(id, item) {
     var m = meta(id);
     if (m.swap) {
-      var want = item.as || m.swap.tag;
-      var now = swapForm(id);
-      if (now && (item.as || now !== want)) {
-        frameEls(id).forEach(function (el) { el.outerHTML = swapHtml(id, m.swap, item); });
-        if (!item.as) (m.children || []).forEach(function (c) { previewValue(c, currentValue(c)); });
-        markSelected();
-        if (item.as) return;
-      }
+      frameEls(id).forEach(function (el) {
+        var box = m.swap.wrap ? el.closest("picture") : el;
+        if (box) box.outerHTML = swapHtml(id, m.swap, item);
+      });
+      if (!item.as) (m.children || []).forEach(function (c) { previewValue(c, currentValue(c)); });
+      markSelected();
+      if (item.as) return;
     }
     frameEls(id).forEach(function (el) {
       if (m.kind === "logos") {
@@ -870,6 +896,104 @@
     return row;
   }
 
+  // ── 크기 설정 (11.19): 높이를 파일 비율에 맞춤(fit) · 크기 단계(scale). 자리 id 의 값에 붙는다 ──
+  function sizeOwner(id) {
+    var m = meta(id);
+    if (m.swap) return id;
+    return m.parent && meta(m.parent) && meta(m.parent).swap ? m.parent : null;
+  }
+  // 파일만 바꿀 때 그 자리의 크기 설정이 지워지지 않게
+  function withSize(id, it) {
+    var cur = currentValue(id);
+    if (cur.fit && it.fit === undefined) it.fit = cur.fit;
+    if (cur.scale && it.scale === undefined) it.scale = cur.scale;
+    return it;
+  }
+  function mediaSize(url, video) {
+    return new Promise(function (resolve) {
+      if (!url) return resolve(null);
+      var el = document.createElement(video ? "video" : "img");
+      var t = setTimeout(function () { resolve(null); }, 15000);
+      if (video) {
+        el.preload = "metadata"; el.muted = true;
+        el.onloadedmetadata = function () { clearTimeout(t); resolve(el.videoWidth ? [el.videoWidth, el.videoHeight] : null); };
+      } else {
+        el.onload = function () { clearTimeout(t); resolve(el.naturalWidth ? [el.naturalWidth, el.naturalHeight] : null); };
+      }
+      el.onerror = function () { clearTimeout(t); resolve(null); };
+      el.src = url;
+    });
+  }
+  // 지금 값의 파일 크기 → {w, h, mw, mh}
+  function fileDims(owner) {
+    var m = meta(owner), it = currentValue(owner), kids = m.children || [];
+    var pc, mo = null;
+    if (it.as === "video") { pc = mediaSize(it.src, true); if (it.msrc) mo = mediaSize(it.msrc, true); }
+    else if (it.as === "img") pc = mediaSize(it.src, false);
+    else if (m.swap.tag === "img") {
+      pc = mediaSize(it.src || m.base.src, false);
+      kids.forEach(function (k) { if (meta(k).kind === "msource") { var v = currentValue(k); mo = mediaSize(v.srcset || meta(k).base.srcset, false); } });
+    } else {
+      var vs = kids.filter(function (k) { return meta(k).kind === "vsource"; })[0];
+      pc = vs ? mediaSize(currentValue(vs).src || meta(vs).base.src, true) : mediaSize(it.poster || m.base.poster, false);
+    }
+    return Promise.all([pc, mo]).then(function (r) {
+      if (!r[0]) return null;
+      var f = { w: r[0][0], h: r[0][1] };
+      if (r[1]) { f.mw = r[1][0]; f.mh = r[1][1]; }
+      return f;
+    });
+  }
+  function refreshFit(owner) {
+    if (!currentValue(owner).fit) return Promise.resolve();
+    return fileDims(owner).then(function (f) {
+      var it = currentValue(owner);
+      if (!it.fit) return;
+      if (f) it.fit = f;
+      setPending(owner, it);
+      if (S.tab === "item") renderPanel();
+    });
+  }
+  // 이 항목의 파일이 바뀐 뒤: 높이 맞춤이 켜진 자리면 비율을 다시 잰다
+  function afterFileChange(id) {
+    var o = sizeOwner(id);
+    if (o) refreshFit(o);
+  }
+
+  function sizeControls(owner) {
+    var m = meta(owner);
+    if (!m || !m.swap || (!m.fit && !m.scale)) return null;
+    var it = currentValue(owner);
+    var box = h("div", { class: "size-box" }, h("b", { text: "크기" }));
+    if (m.fit) {
+      var cb = h("input", { type: "checkbox", checked: !!it.fit });
+      cb.addEventListener("change", function () {
+        cb.disabled = true;
+        if (!cb.checked) {
+          var v = currentValue(owner); delete v.fit; setPending(owner, v); renderPanel(); return;
+        }
+        fileDims(owner).then(function (f) {
+          if (!f) { toast("파일 크기를 읽지 못했어요. 잠시 뒤 다시 해 주세요.", "err"); renderPanel(); return; }
+          var v = currentValue(owner); v.fit = f; setPending(owner, v); renderPanel();
+        });
+      });
+      box.appendChild(h("label", { class: "check" }, cb, h("span", { text: "자리 높이를 올린 파일 비율에 맞추기" + (it.fit ? " (지금 " + it.fit.w + "×" + it.fit.h + (it.fit.mw ? ", 모바일 " + it.fit.mw + "×" + it.fit.mh : "") + ")" : "") })));
+      box.appendChild(h("p", { class: "hint", text: "폭은 디자인 그대로, 높이만 파일 비율대로 바뀌어 잘리는 곳이 없어집니다. 아래 내용은 그만큼 밀리거나 당겨집니다." }));
+    }
+    if (m.scale) {
+      var sel = h("select", { class: "scale-sel" });
+      [100, 90, 80, 70].forEach(function (v) { sel.appendChild(h("option", { value: v, text: v + "%" + (v === 100 ? " (원래 크기)" : ""), selected: (it.scale || 100) === v })); });
+      sel.addEventListener("change", function () {
+        var v = currentValue(owner), n = parseInt(sel.value, 10);
+        if (n === 100) delete v.scale; else v.scale = n;
+        setPending(owner, v);
+        renderPanel();
+      });
+      box.appendChild(h("label", { class: "field" }, h("span", { text: "보이는 크기 (가운데 기준으로 줄어듭니다)" }), sel));
+    }
+    return box;
+  }
+
   // ── 패널: 이미지·영상 ─────────────────────────────
   // 이미지 ↔ 영상 바꾸기 버튼. target = 바꿀 자리 id (영상 파일 카드에서는 부모 <video> 의 id)
   function swapButton(target) {
@@ -882,8 +1006,9 @@
           return makePoster(file, false).then(function (blob) {
             return upload(new File([blob], "poster.jpg", { type: "image/jpeg" }), "image", 1920, null);
           }).then(function (r2) {
-            setPending(target, { as: "video", src: r.url, poster: r2.url });
+            setPending(target, withSize(target, { as: "video", src: r.url, poster: r2.url }));
             toast("영상으로 바꿨어요. 저장하면 사이트에 반영됩니다.");
+            afterFileChange(target);
             renderPanel();
           });
         });
@@ -891,8 +1016,9 @@
     }
     return fileButton("이미지로 바꾸기 (jpg · png · webp)", "image/jpeg,image/png,image/webp", function (file, bar) {
       return upload(file, "image", 1920, bar).then(function (r) {
-        setPending(target, { as: "img", src: r.url });
+        setPending(target, withSize(target, { as: "img", src: r.url }));
         toast("이미지로 바꿨어요. 저장하면 사이트에 반영됩니다.");
+        afterFileChange(target);
         renderPanel();
       });
     });
@@ -908,20 +1034,44 @@
         return upload(file, "video", 0, bar).then(function (r) {
           return makePoster(file, false).then(function (blob) {
             return upload(new File([blob], "poster.jpg", { type: "image/jpeg" }), "image", 1920, null);
-          }).then(function (r2) { setPending(id, { as: "video", src: r.url, poster: r2.url }); renderPanel(); });
+          }).then(function (r2) {
+            var v = withSize(id, { as: "video", src: r.url, poster: r2.url });
+            if (item.msrc) v.msrc = item.msrc;
+            setPending(id, v); afterFileChange(id); renderPanel();
+          });
         });
       }));
+      if (m.swap.wrap) {
+        // PC·모바일 이미지가 따로 있던 자리: 모바일 영상도 따로 (없으면 PC 영상을 모바일에서도)
+        if (item.msrc) {
+          body.appendChild(h("video", { src: item.msrc, controls: true, muted: true, preload: "metadata", class: "thumb thumb-mo" }));
+          body.appendChild(h("button", { class: "ghost", text: "모바일 영상 빼기 (모바일에서도 PC 영상)", onclick: function () {
+            var v = currentValue(id); delete v.msrc; setPending(id, v); afterFileChange(id); renderPanel();
+          } }));
+        }
+        body.appendChild(fileButton(item.msrc ? "다른 모바일 영상으로 바꾸기" : "모바일 영상 따로 올리기 (선택)", "video/mp4", function (file, bar) {
+          return upload(file, "video", 0, bar).then(function (r) {
+            var v = currentValue(id); v.msrc = r.url; setPending(id, v); afterFileChange(id); renderPanel();
+          });
+        }));
+      }
     } else {
       body.appendChild(h("img", { src: item.src, class: "thumb", alt: "" }));
       body.appendChild(fileButton("다른 이미지로 바꾸기", "image/jpeg,image/png,image/webp", function (file, bar) {
-        return upload(file, "image", 1920, bar).then(function (r) { setPending(id, { as: "img", src: r.url }); renderPanel(); });
+        return upload(file, "image", 1920, bar).then(function (r) { setPending(id, withSize(id, { as: "img", src: r.url })); afterFileChange(id); renderPanel(); });
       }));
     }
     body.appendChild(h("button", { class: "ghost", text: m.swap.tag === "img" ? "원래 이미지로 되돌리기" : "원래 영상으로 되돌리기", onclick: function () {
-      setPending(id, null);
+      var cur = currentValue(id), v = {};
+      if (cur.fit) v.fit = cur.fit;
+      if (cur.scale) v.scale = cur.scale;
+      setPending(id, Object.keys(v).length ? v : null);
+      afterFileChange(id);
       renderPanel();
     } }));
     body.appendChild(h("p", { class: "hint", text: "자리 크기는 그대로이고, 영상·이미지는 그 자리에 맞춰 채워집니다. 원래와 같은 비율로 올리면 잘리는 곳이 없어요." }));
+    var sc = sizeControls(id);
+    if (sc) body.appendChild(sc);
     return h("section", { class: "card" + (Object.prototype.hasOwnProperty.call(S.pending, id) ? " is-pending" : "") },
       head(id), body, actions(id, function () {}));
   }
@@ -973,11 +1123,12 @@
         return upload(file, "video", 0, bar).then(function (r) {
           var it = {}; it[key] = r.url;
           setPending(id, it);
+          afterFileChange(id);
           if (!withPoster) return;
           return makePoster(file, bake).then(function (blob) {
             var pf = new File([blob], "poster.jpg", { type: "image/jpeg" });
             return upload(pf, "image", 1920, null).then(function (r2) {
-              setPending(posterId, { poster: r2.url });
+              setPending(posterId, meta(posterId).swap ? withSize(posterId, { poster: r2.url }) : { poster: r2.url });
               toast("영상과 포스터를 바꿨어요. 저장하면 사이트에 반영됩니다.");
             });
           }).catch(function () {
@@ -1000,7 +1151,8 @@
         maxw = Math.min(3840, Math.max(maxw, 400));
         return upload(file, "image", maxw, bar).then(function (r) {
           var it = {}; it[key] = r.url;
-          setPending(id, it);
+          setPending(id, m.swap ? withSize(id, it) : it);
+          afterFileChange(id);
           renderPanel();
         });
       }));
@@ -1011,6 +1163,8 @@
       body.appendChild(h("p", { class: "hint", text: m.kind === "img" ? "이 자리는 영상으로도 바꿀 수 있어요 (소리 없이 자동 반복 재생)." : "이 자리는 이미지로도 바꿀 수 있어요." }));
       body.appendChild(sb);
     }
+    var szc = swapTarget ? sizeControls(swapTarget) : null;
+    if (szc) body.appendChild(szc);
     return h("section", { class: "card" + (Object.prototype.hasOwnProperty.call(S.pending, id) ? " is-pending" : "") },
       head(id), body, actions(id, function () {}));
   }

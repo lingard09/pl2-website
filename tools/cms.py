@@ -33,13 +33,16 @@ from html.parser import HTMLParser
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# 이미지 ↔ 영상으로 바꾸면 크기·위치가 달라지는 자리 (tools/cms-swap-check.mjs 가 재서 적는다)
+# 자리별 허용 목록 (tools/cms-swap-check.mjs 가 실제로 바꿔 보고 적는다)
+#   noswap: 이미지↔영상으로 바꾸면 모양이 달라지는 자리 / nofit: 높이를 파일 비율에 맞출 수 없는 자리
+#   noscale: 크기 단계를 줄 수 없는 자리 (한 줄에 다른 그림과 나란히 있는 칸 등)
 try:
-    NOSWAP = set(json.load(open(os.path.join(ROOT, "tools", "cms-noswap.json"), encoding="utf-8"))["ids"])
+    SLOTS = json.load(open(os.path.join(ROOT, "tools", "cms-slots.json"), encoding="utf-8"))
 except FileNotFoundError:
-    NOSWAP = set()
+    SLOTS = {}
 if os.environ.get("CMS_NOSWAP") == "off":  # cms-swap-check.mjs 가 후보 전부를 잴 때
-    NOSWAP = set()
+    SLOTS = {}
+NOSWAP, NOFIT, NOSCALE = (set(SLOTS.get(k) or []) for k in ("noswap", "nofit", "noscale"))
 
 PAGES = {  # 소스 파일 → 페이지 코드
     "index.html": "home",
@@ -110,7 +113,7 @@ class Scan(HTMLParser):
                 kind = "msource" if self.stack[-1]["tag"] == "picture" else "vsource"
             sig = (kind, self.chain(), a.get("src") or a.get("srcset") or a.get("poster") or a.get("data-vimeo") or "")
             it = {"kind": kind, "start": start, "raw": raw, "attrs": a, "main": self.main > 0, "sig": sig,
-                  "swap": self.swap_ok(tag, a)}
+                  "swap": self.swap_ok(tag, a), "inpic": bool(self.stack) and self.stack[-1]["tag"] == "picture"}
             if kind == "vsource":
                 it["parent"] = self.stack[-1]["attrs"].get("data-cms")
             self.items.append(it)
@@ -132,8 +135,6 @@ class Scan(HTMLParser):
         if self.inlist or self.main <= 0:
             return False  # 로고 목록 · 메뉴 · 바닥글
         if tag == "img":
-            if any(e["tag"] == "picture" for e in self.stack):
-                return False  # 모바일 이미지가 따로 있는 자리
             if (a.get("src") or "").lower().endswith(".svg") or "data-slot" in a:
                 return False  # 아이콘·로고, 상세 01 이미지 띠(wd1-strip.js)
         elif tag == "video":
@@ -325,20 +326,58 @@ def attrs_html(attrs, drop=()):
     return "".join(f' {n}="{v}"' if v is not None else f" {n}" for n, v in attrs if n not in drop)
 
 
-def swap_html(cid, sw, item):
-    """원래 태그 정보(sw)와 값(item)으로 요소 하나를 통째로 만든다. admin/lib.php cms_swap_html 과 같은 결과"""
+SCALES = (70, 80, 90)
+
+
+def size_attrs(attrs, item, drop=()):
+    """원래 속성 + 크기 설정. fit = 높이를 파일 비율에 맞춤 (base.css [data-cms-fit]),
+    scale = 크기 단계 (CSS scale 속성 — 모션이 쓰는 transform 과 따로 논다, 줄이기만 하므로 남을 덮지 않는다)"""
+    attrs = [a for a in attrs if a[0] not in drop]
+    parts, flags = [], ""
+    fit = item.get("fit")
+    if isinstance(fit, dict) and int(fit.get("w") or 0) > 0 and int(fit.get("h") or 0) > 0:
+        parts.append(f"--cms-ar: {int(fit['w'])} / {int(fit['h'])}")
+        if int(fit.get("mw") or 0) > 0 and int(fit.get("mh") or 0) > 0:
+            parts.append(f"--cms-ar-mo: {int(fit['mw'])} / {int(fit['mh'])}")
+        flags += " data-cms-fit"
+    sc = item.get("scale")
+    if sc in SCALES:
+        parts.append(f"scale: {sc}%")
+        flags += " data-cms-scale"
+    if not parts:
+        return attrs_html(attrs)
+    style = next((v for n, v in attrs if n == "style"), None)
+    attrs = [a for a in attrs if a[0] != "style"]
+    st = (style.rstrip(" ;") + "; " if style else "") + "; ".join(parts)
+    return attrs_html(attrs) + flags + f' style="{st}"'
+
+
+def element_html(cid, sw, item):
     form = item.get("as") or sw["tag"]
     if form == sw["tag"]:
-        s = f'<{form} data-cms="{cid}"' + attrs_html(sw["attrs"])
+        s = f'<{form} data-cms="{cid}"' + size_attrs(sw["attrs"], item)
         return s + " />" if form == "img" else s + ">" + sw["inner"] + "</video>"
     # data-cms-swap: 배포본 CSS(tools/css-swap.py)가 원래 태그의 규칙을 여기에도 건다.
     # width/height 속성은 넣지 않는다 — CSS 가 폭만 정하는 자리에서 속성 높이가 그대로 박힌다
     head = f'<{form} data-cms="{cid}" data-cms-swap'
     if form == "video":
-        return (head + attrs_html(sw["attrs"], IMG_ONLY) + f' poster="{esc_attr(item.get("poster") or "")}"'
-                + ' autoplay muted loop playsinline preload="metadata"><source src="' + esc_attr(item.get("src") or "")
-                + '" type="video/mp4" /></video>')
-    return head + attrs_html(sw["attrs"], VIDEO_ONLY) + f' src="{esc_attr(item.get("src") or "")}" alt="" />'
+        msrc = item.get("msrc")
+        srcs = (f'<source media="(max-width: 599.98px)" src="{esc_attr(msrc)}" type="video/mp4" />' if msrc else "") \
+            + f'<source src="{esc_attr(item.get("src") or "")}" type="video/mp4" />'
+        return (head + size_attrs(sw["attrs"], item, IMG_ONLY) + f' poster="{esc_attr(item.get("poster") or "")}"'
+                + ' autoplay muted loop playsinline preload="metadata">' + srcs + "</video>")
+    return head + size_attrs(sw["attrs"], item, VIDEO_ONLY) + f' src="{esc_attr(item.get("src") or "")}" alt="" />'
+
+
+def swap_html(cid, sw, item):
+    """원래 태그 정보(sw)와 값(item)으로 자리를 통째로 만든다. admin/lib.php cms_swap_html 과 같은 결과.
+    <picture> 안의 이미지는 <picture> 틀을 남기고, 영상으로 바꾸면 안쪽(모바일 <source> 포함)을 영상 하나로."""
+    el = element_html(cid, sw, item)
+    w = sw.get("wrap")
+    if not w:
+        return el
+    inner = w["pre"] + el + w["post"] if (item.get("as") or sw["tag"]) == sw["tag"] else el
+    return "<picture" + attrs_html(w["attrs"]) + ">" + inner + "</picture>"
 
 
 def tel_href(t):
@@ -351,14 +390,15 @@ def apply_one(doc, cid, item, meta=None):
     count = 0
     sw = (meta or {}).get("swap")
     if sw:
-        cur = re.search(r'<(img|video) data-cms="' + q + '"', doc)
-        if item.get("as") or (cur and cur.group(1) != sw["tag"]):
-            # 바꾼 모양으로, 또는 바꿨던 것을 원래 태그로 되돌린다
+        # 교체·크기 설정이 있는 자리는 원래 태그 정보로 자리를 통째로 다시 만든다 (되돌릴 때도)
+        if sw.get("wrap"):
+            pat = re.compile(r'<picture\b[^>]*>(?:(?!</picture>).)*?data-cms="' + q + r'"(?:(?!</picture>).)*?</picture>', re.S)
+        else:
             pat = re.compile(r'<img data-cms="' + q + r'"[^>]*>|<video data-cms="' + q + r'"[^>]*>.*?</video>', re.S)
-            new = swap_html(cid, sw, item)
-            doc, count = pat.subn(lambda _: new, doc)
-            if item.get("as"):
-                return doc, count
+        new = swap_html(cid, sw, item)
+        doc, count = pat.subn(lambda _: new, doc)
+        if item.get("as"):
+            return doc, count
     if "rows" in item:
         pat = re.compile(r'(<([a-zA-Z0-9]+) data-cms="' + q + r'"[^>]*>)(.*?)(</\2>)', re.S)
 
@@ -466,10 +506,20 @@ def cmd_index(dist):
                 if it.get("swap") and cid not in NOSWAP:
                     tag = re.match(r"<([a-zA-Z0-9]+)", it["raw"]).group(1).lower()
                     sw = {"tag": tag, "attrs": raw_attrs(it["raw"])}
+                    st = it["start"] + len(it["raw"])
                     if tag == "video":
-                        st = it["start"] + len(it["raw"])
                         sw["inner"] = text[st:text.index("</video>", st)]
+                    if it.get("inpic"):
+                        ps = text.rindex("<picture", 0, it["start"])
+                        pe = text.index(">", ps) + 1
+                        pc = text.index("</picture>", st)
+                        sw["wrap"] = {"attrs": raw_attrs(text[ps:pe]), "pre": text[pe:it["start"]], "post": text[st:pc]}
+                        for kid in re.findall(r'data-cms="([^"]+)"', sw["wrap"]["pre"] + sw["wrap"]["post"]):
+                            e.setdefault("children", []).append(kid)
+                            ids.setdefault(kid, {"files": [rel], "kind": "msource"})["parent"] = cid
                     e["swap"] = sw
+                    e["fit"] = cid not in NOFIT
+                    e["scale"] = cid not in NOSCALE
                 if it.get("parent"):
                     e["parent"] = it["parent"]
                 a = it["attrs"]
@@ -482,7 +532,7 @@ def cmd_index(dist):
                         base[k] = v
                 e["base"] = base
     for cid, e in ids.items():
-        if e.get("parent") in ids:
+        if e.get("parent") in ids and cid not in ids[e["parent"]].get("children", []):
             ids[e["parent"]].setdefault("children", []).append(cid)
     # 관리자 화면의 페이지 목록 순서: 홈 → Works → About → Contact → 상세 01~14 (pretty-urls.py 의 ROUTES 순서)
     order = {}

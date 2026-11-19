@@ -385,23 +385,79 @@ function cms_attrs_html($attrs, $drop)
     return $s;
 }
 
-function cms_swap_html($id, $sw, $item)
+// 원래 속성 + 크기 설정 (tools/cms.py size_attrs 와 같은 결과)
+function cms_size_attrs($attrs, $item, $drop)
+{
+    $keep = array();
+    foreach ($attrs as $a) {
+        if (!in_array($a[0], $drop, true)) {
+            $keep[] = $a;
+        }
+    }
+    $parts = array();
+    $flags = '';
+    $fit = cms_get($item, 'fit');
+    if (is_array($fit) && (int)cms_get($fit, 'w', 0) > 0 && (int)cms_get($fit, 'h', 0) > 0) {
+        $parts[] = '--cms-ar: ' . (int)$fit['w'] . ' / ' . (int)$fit['h'];
+        if ((int)cms_get($fit, 'mw', 0) > 0 && (int)cms_get($fit, 'mh', 0) > 0) {
+            $parts[] = '--cms-ar-mo: ' . (int)$fit['mw'] . ' / ' . (int)$fit['mh'];
+        }
+        $flags .= ' data-cms-fit';
+    }
+    $sc = cms_get($item, 'scale');
+    if (in_array($sc, array(70, 80, 90), true)) {
+        $parts[] = 'scale: ' . $sc . '%';
+        $flags .= ' data-cms-scale';
+    }
+    if (!$parts) {
+        return cms_attrs_html($keep, array());
+    }
+    $style = null;
+    $rest = array();
+    foreach ($keep as $a) {
+        if ($a[0] === 'style') {
+            if ($style === null) {
+                $style = $a[1];
+            }
+        } else {
+            $rest[] = $a;
+        }
+    }
+    $st = ($style !== null && $style !== '' ? rtrim($style, ' ;') . '; ' : '') . implode('; ', $parts);
+    return cms_attrs_html($rest, array()) . $flags . ' style="' . $st . '"';
+}
+
+function cms_element_html($id, $sw, $item)
 {
     $as = cms_get($item, 'as');
     $form = $as ? $as : $sw['tag'];
     if ($form === $sw['tag']) {
-        $s = '<' . $form . ' data-cms="' . $id . '"' . cms_attrs_html($sw['attrs'], array());
+        $s = '<' . $form . ' data-cms="' . $id . '"' . cms_size_attrs($sw['attrs'], $item, array());
         return $form === 'img' ? $s . ' />' : $s . '>' . $sw['inner'] . '</video>';
     }
     $head = '<' . $form . ' data-cms="' . $id . '" data-cms-swap';
     if ($form === 'video') {
         $drop = array('src', 'alt', 'loading', 'decoding', 'draggable', 'srcset', 'sizes', 'width', 'height');
-        return $head . cms_attrs_html($sw['attrs'], $drop) . ' poster="' . cms_esc_attr(cms_get($item, 'poster', '')) . '"'
-            . ' autoplay muted loop playsinline preload="metadata"><source src="' . cms_esc_attr(cms_get($item, 'src', ''))
-            . '" type="video/mp4" /></video>';
+        $msrc = cms_get($item, 'msrc');
+        $srcs = ($msrc ? '<source media="(max-width: 599.98px)" src="' . cms_esc_attr($msrc) . '" type="video/mp4" />' : '')
+            . '<source src="' . cms_esc_attr(cms_get($item, 'src', '')) . '" type="video/mp4" />';
+        return $head . cms_size_attrs($sw['attrs'], $item, $drop) . ' poster="' . cms_esc_attr(cms_get($item, 'poster', '')) . '"'
+            . ' autoplay muted loop playsinline preload="metadata">' . $srcs . '</video>';
     }
     $drop = array('poster', 'preload', 'autoplay', 'muted', 'loop', 'playsinline', 'controls', 'width', 'height');
-    return $head . cms_attrs_html($sw['attrs'], $drop) . ' src="' . cms_esc_attr(cms_get($item, 'src', '')) . '" alt="" />';
+    return $head . cms_size_attrs($sw['attrs'], $item, $drop) . ' src="' . cms_esc_attr(cms_get($item, 'src', '')) . '" alt="" />';
+}
+
+function cms_swap_html($id, $sw, $item)
+{
+    $el = cms_element_html($id, $sw, $item);
+    $w = cms_get($sw, 'wrap');
+    if (!$w) {
+        return $el;
+    }
+    $as = cms_get($item, 'as');
+    $inner = (!$as || $as === $sw['tag']) ? $w['pre'] . $el . $w['post'] : $el;
+    return '<picture' . cms_attrs_html($w['attrs'], array()) . '>' . $inner . '</picture>';
 }
 
 function cms_apply_one($doc, $id, $item, &$count, $meta = null)
@@ -410,20 +466,21 @@ function cms_apply_one($doc, $id, $item, &$count, $meta = null)
     $count = 0;
     $sw = is_array($meta) ? cms_get($meta, 'swap') : null;
     if ($sw) {
-        $cur = preg_match('/<(img|video) data-cms="' . $q . '"/', $doc, $cm) ? $cm[1] : null;
-        if (cms_get($item, 'as') || ($cur !== null && $cur !== $sw['tag'])) {
-            // 바꾼 모양으로, 또는 바꿨던 것을 원래 태그로 되돌린다
-            $new = cms_swap_html($id, $sw, $item);
-            $doc = preg_replace_callback('/<img data-cms="' . $q . '"[^>]*>|<video data-cms="' . $q . '"[^>]*>.*?<\/video>/s',
-                function ($m) use ($new) {
-                    return $new;
-                }, $doc, -1, $count);
-            if ($doc === null) {
-                cms_fail('적용 중 오류 (정규식)', 500);
-            }
-            if (cms_get($item, 'as')) {
-                return $doc;
-            }
+        // 교체·크기 설정이 있는 자리는 원래 태그 정보로 자리를 통째로 다시 만든다 (되돌릴 때도)
+        if (cms_get($sw, 'wrap')) {
+            $pat = '/<picture\b[^>]*>(?:(?!<\/picture>).)*?data-cms="' . $q . '"(?:(?!<\/picture>).)*?<\/picture>/s';
+        } else {
+            $pat = '/<img data-cms="' . $q . '"[^>]*>|<video data-cms="' . $q . '"[^>]*>.*?<\/video>/s';
+        }
+        $new = cms_swap_html($id, $sw, $item);
+        $doc = preg_replace_callback($pat, function ($m) use ($new) {
+            return $new;
+        }, $doc, -1, $count);
+        if ($doc === null) {
+            cms_fail('적용 중 오류 (정규식)', 500);
+        }
+        if (cms_get($item, 'as')) {
+            return $doc;
         }
     }
     if (array_key_exists('rows', $item)) {
@@ -629,6 +686,36 @@ function cms_clean_item($id, $item)
         }
         return $out;
     }
+    // 크기 설정 (높이 비율 맞춤 · 크기 단계) — 허용된 자리만
+    $size = array();
+    $fit = cms_get($item, 'fit');
+    if ($fit !== null) {
+        if (!cms_get($meta, 'fit') || !is_array($fit)) {
+            return '이 자리는 높이를 파일 비율에 맞출 수 없습니다';
+        }
+        $f = array();
+        foreach (array('w', 'h', 'mw', 'mh') as $k) {
+            $v = cms_get($fit, $k);
+            if ($v === null) {
+                continue;
+            }
+            if (!is_int($v) || $v < 1 || $v > 20000) {
+                return '파일 크기 값이 올바르지 않습니다';
+            }
+            $f[$k] = $v;
+        }
+        if (!isset($f['w']) || !isset($f['h'])) {
+            return '파일 크기 값이 올바르지 않습니다';
+        }
+        $size['fit'] = $f;
+    }
+    $sc = cms_get($item, 'scale');
+    if ($sc !== null) {
+        if (!cms_get($meta, 'scale') || !in_array($sc, array(70, 80, 90), true)) {
+            return '이 자리는 크기를 바꿀 수 없습니다';
+        }
+        $size['scale'] = $sc;
+    }
     $as = cms_get($item, 'as');
     if ($as !== null) {
         $sw = cms_get($meta, 'swap');
@@ -641,13 +728,21 @@ function cms_clean_item($id, $item)
             return '파일 주소가 올바르지 않습니다: ' . $id;
         }
         if ($as === 'img') {
-            return array('as' => 'img', 'src' => $src);
+            return array_merge(array('as' => 'img', 'src' => $src), $size);
         }
         $poster = cms_get($item, 'poster');
         if (!is_string($poster) || !preg_match($up, $poster)) {
             return '영상 포스터 주소가 올바르지 않습니다: ' . $id;
         }
-        return array('as' => 'video', 'src' => $src, 'poster' => $poster);
+        $out = array('as' => 'video', 'src' => $src, 'poster' => $poster);
+        $msrc = cms_get($item, 'msrc');
+        if ($msrc !== null) {
+            if (!cms_get($sw, 'wrap') || !is_string($msrc) || !preg_match($up, $msrc)) {
+                return '모바일 영상 주소가 올바르지 않습니다: ' . $id;
+            }
+            $out['msrc'] = $msrc;
+        }
+        return array_merge($out, $size);
     }
     $out = array();
     foreach ($base as $k => $v) {
@@ -666,7 +761,7 @@ function cms_clean_item($id, $item)
             $out[$k] = $val;
         }
     }
-    return $out;
+    return array_merge($out, $size);
 }
 
 // 값이 원래 값과 같은가 (같으면 content.json 에서 뺀다)
