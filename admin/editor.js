@@ -31,6 +31,8 @@
     selected: [], // 선택한 id 들
     tab: "item",
     uploading: 0,
+    brvis: {}, // 파일 → id → 클래스 → [PC, 모바일] 보임 (measurePage)
+    measuring: {},
   };
 
   // ── 작은 도구 ─────────────────────────────────────
@@ -156,6 +158,228 @@
     return item.lines.join("").replace(/\s/g, "").length;
   }
 
+  // ── 줄바꿈 측정 (11.19: PC칸 / 모바일칸 따로 편집) ─────────────
+  // 줄바꿈이 실제로 보이는지는 클래스만으로 정해지지 않는다. 문단마다 CSS 가 다르다
+  // (About 소개·상세 4/10 제목은 모바일에서 줄바꿈을 전부 끄고, 상세 개요는 맨 <br> 만 끈다 등).
+  // 그래서 페이지를 PC(1440)·모바일(390) 폭의 숨은 창에 열고, 글 항목마다 줄바꿈 종류별로
+  // 시험용 <br> 을 넣어 보이는지 잰다. 결과: S.brvis[파일][id][클래스] = [PC에 보임, 모바일에 보임]
+  var STD_BR = ["br-mo br-pc", "br-pc-only", "br-mo", ""];
+  var allBrCache = null;
+  function allBrClasses() {
+    if (allBrCache) return allBrCache;
+    var set = {};
+    STD_BR.forEach(function (c) { set[c] = 1; });
+    Object.keys(S.index.ids).forEach(function (id) {
+      var b = S.index.ids[id].base;
+      if (b && b.breaks) b.breaks.forEach(function (c) { set[c || ""] = 1; });
+    });
+    allBrCache = Object.keys(set);
+    return allBrCache;
+  }
+
+  function probeDoc(d) {
+    var classes = allBrClasses();
+    var probes = [];
+    Array.prototype.forEach.call(d.querySelectorAll("[data-cms]"), function (el) {
+      var id = el.getAttribute("data-cms");
+      var m = meta(id);
+      if (!m || m.kind !== "text" || probes.some(function (p) { return p.id === id; })) return;
+      var brs = classes.map(function (c) {
+        var br = d.createElement("br");
+        if (c) br.className = c;
+        el.appendChild(br);
+        return br;
+      });
+      probes.push({ id: id, brs: brs });
+    });
+    var win = d.defaultView;
+    var out = {};
+    probes.forEach(function (p) {
+      var t = {};
+      p.brs.forEach(function (br, i) { t[classes[i]] = win.getComputedStyle(br).display !== "none"; });
+      out[p.id] = t;
+    });
+    probes.forEach(function (p) { p.brs.forEach(function (br) { br.remove(); }); });
+    return out;
+  }
+
+  function measureAt(url, w, hgt) {
+    return new Promise(function (resolve) {
+      var f = h("iframe", { src: url, tabindex: "-1", "aria-hidden": "true" });
+      f.style.cssText = "position:fixed;left:-30000px;top:0;border:0;visibility:hidden;width:" + w + "px;height:" + hgt + "px";
+      var done = false;
+      var started = Date.now();
+      function finish(r) {
+        if (done) return;
+        done = true;
+        f.remove();
+        resolve(r);
+      }
+      function poll() {
+        if (done) return;
+        var d = null;
+        try { d = f.contentDocument; } catch (e) { return finish(null); }
+        var ready = d && d.readyState !== "loading" && d.body &&
+          Array.prototype.every.call(d.querySelectorAll('link[rel="stylesheet"]'), function (l) { return !!l.sheet; });
+        if (ready && d.location.href !== "about:blank") {
+          var r = null;
+          try { r = probeDoc(d); } catch (e) { r = null; }
+          return finish(r);
+        }
+        if (Date.now() - started > 20000) return finish(null);
+        setTimeout(poll, 150);
+      }
+      document.body.appendChild(f);
+      setTimeout(poll, 150);
+    });
+  }
+
+  function measurePage(retry) {
+    var file = S.page.file;
+    if (S.brvis[file] || S.measuring[file]) return;
+    var url = "/" + S.page.route + "?lang=ko&cms=" + Date.now();
+    S.measuring[file] = Promise.all([measureAt(url, 1440, 900), measureAt(url, 390, 800)]).then(function (rs) {
+      var pc = rs[0], mo = rs[1], out = {};
+      if (pc && mo) {
+        Object.keys(pc).forEach(function (id) {
+          if (!mo[id]) return;
+          var t = {};
+          Object.keys(pc[id]).forEach(function (c) { t[c] = [pc[id][c], mo[id][c]]; });
+          out[id] = t;
+        });
+      }
+      delete S.measuring[file];
+      if (!(pc && mo) && !retry) {
+        // 한 번 더 재 본다 (느린 망에서 시간 초과 등)
+        if (S.page.file === file) measurePage(true);
+        return;
+      }
+      S.brvis[file] = out; // 그래도 실패하면 빈 표 → 예전 편집기로
+      if (S.page.file === file && S.tab === "item") renderPanel();
+    });
+  }
+
+  function brTable(id) {
+    var f = S.brvis[S.page.file];
+    if (!f) return undefined; // 아직 재는 중
+    return f[id] || null; // null: 잴 수 없음
+  }
+
+  // 두 칸 모델: 낱말 목록 + 낱말 사이마다 {pc, mo, cls}. cls 는 원래 있던 <br> 클래스(없으면 null)
+  var SEP = /[\x20\x09\x0A\x0B\x0C\x0D]+/;
+  function toModel(item, tab) {
+    var words = [], gaps = [], pendingCls = null;
+    (item.lines || []).forEach(function (line, li) {
+      if (li > 0 && pendingCls === null) pendingCls = (item.breaks && item.breaks[li - 1]) || "";
+      line.split(SEP).filter(Boolean).forEach(function (w) {
+        if (words.length) {
+          if (pendingCls !== null) {
+            var v = tab[pendingCls] || [true, true];
+            gaps.push({ pc: v[0], mo: v[1], cls: pendingCls });
+          } else {
+            gaps.push({ pc: false, mo: false, cls: null });
+          }
+        }
+        pendingCls = null;
+        words.push(w);
+      });
+    });
+    return { words: words, gaps: gaps };
+  }
+
+  function modelText(model, side) {
+    var s = "";
+    model.words.forEach(function (w, k) {
+      s += w;
+      if (k < model.gaps.length) s += model.gaps[k][side] ? "\n" : " ";
+    });
+    return s;
+  }
+
+  function tokenize(s) {
+    var parts = s.split(/([\x20\x09\x0A\x0B\x0C\x0D]+)/);
+    var words = [], nl = [], sep = "";
+    parts.forEach(function (p, i) {
+      if (i % 2 === 1) { sep += p; return; }
+      if (!p) return;
+      if (words.length) nl.push(/[\n\r]/.test(sep));
+      words.push(p);
+      sep = "";
+    });
+    return { words: words, nl: nl };
+  }
+
+  // 새 낱말 j → 옛 낱말 번호 (없으면 -1). 최장 공통 부분열
+  function alignWords(a, b) {
+    var n = a.length, m = b.length, i, j;
+    var L = [];
+    for (i = 0; i <= n; i++) { L.push(new Array(m + 1).fill(0)); }
+    for (i = n - 1; i >= 0; i--) {
+      for (j = m - 1; j >= 0; j--) {
+        L[i][j] = a[i] === b[j] ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+      }
+    }
+    var map = new Array(m).fill(-1);
+    i = 0; j = 0;
+    while (i < n && j < m) {
+      if (a[i] === b[j]) { map[j] = i; i++; j++; }
+      else if (L[i + 1][j] >= L[i][j + 1]) i++;
+      else j++;
+    }
+    return map;
+  }
+
+  // 한쪽 칸(side)에서 고친 글을 모델에 반영한다. 다른 칸의 줄바꿈은 같은 낱말 사이에 그대로 남긴다
+  function applySide(model, side, text) {
+    var t = tokenize(text);
+    var map = alignWords(model.words, t.words);
+    var used = {};
+    var gaps = [];
+    for (var j = 0; j < t.words.length - 1; j++) {
+      var a = map[j], b = map[j + 1], k = -1;
+      if (a >= 0 && b === a + 1) k = a;
+      else if (a >= 0 && a < model.gaps.length && b < 0) k = a;
+      else if (b > 0 && a < 0) k = b - 1;
+      var g = k >= 0 && !used[k] ? model.gaps[k] : null;
+      if (g) used[k] = 1;
+      var ng = g ? { pc: g.pc, mo: g.mo, cls: g.cls } : { pc: false, mo: false, cls: null };
+      ng[side] = t.nl[j];
+      gaps.push(ng);
+    }
+    model.words = t.words;
+    model.gaps = gaps;
+  }
+
+  function pickBr(g, tab) {
+    if (g.cls !== null && tab[g.cls] && tab[g.cls][0] === g.pc && tab[g.cls][1] === g.mo) return g.cls;
+    if (!g.pc && !g.mo) return null;
+    var i, c;
+    for (i = 0; i < STD_BR.length; i++) {
+      c = STD_BR[i];
+      if (tab[c] && tab[c][0] === g.pc && tab[c][1] === g.mo) return c;
+    }
+    // 이 문단에서 만들 수 없는 조합: 원하는 쪽에 보이는 것 중 첫 번째
+    for (i = 0; i < STD_BR.length; i++) {
+      c = STD_BR[i];
+      if (tab[c] && ((g.pc && tab[c][0]) || (g.mo && tab[c][1]))) return c;
+    }
+    return "br-mo br-pc";
+  }
+
+  function fromModel(model, tab, item) {
+    var lines = [[]], breaks = [];
+    model.words.forEach(function (w, k) {
+      lines[lines.length - 1].push(w);
+      if (k < model.gaps.length) {
+        var c = pickBr(model.gaps[k], tab);
+        if (c !== null) { breaks.push(c); lines.push([]); }
+      }
+    });
+    item.lines = lines.map(function (l) { return l.join(" "); });
+    item.breaks = breaks;
+    return item;
+  }
+
   // ── 미리보기(iframe) ─────────────────────────────
   var frameWrap, frame, panel, bar;
 
@@ -221,6 +445,7 @@
     if (y) setTimeout(function () { d.defaultView.scrollTo(0, y); }, 300);
     markSelected();
     renderPanel();
+    measurePage();
   }
 
   function onFrameClick(e) {
@@ -365,8 +590,101 @@
     return ids.slice().sort(function (a, b) { return (order[a] || 0) - (order[b] || 0); });
   }
 
-  // ── 패널: 글 편집 ─────────────────────────────────
+  // ── 패널: 글 편집 (PC칸 / 모바일칸) ─────────────────
+  // 두 칸의 글자는 늘 같고 줄을 나누는 곳만 다르다. 한 칸에서 글을 고치면 다른 칸에도 같은 글이 들어가고,
+  // 그 칸의 줄바꿈은 같은 낱말 사이에 남는다.
   function textEditor(id) {
+    var tab = brTable(id);
+    if (tab === undefined) {
+      return h("section", { class: "card" }, head(id), h("p", { class: "hint", text: "PC·모바일 줄바꿈을 확인하는 중이에요…" }));
+    }
+    if (!tab || !Object.keys(tab).length) return textEditorLines(id);
+
+    var m = meta(id);
+    var item = currentValue(id);
+    var base = m.base;
+    var model = toModel(item, tab);
+    var can = { pc: false, mo: false };
+    Object.keys(tab).forEach(function (c) { if (tab[c][0]) can.pc = true; if (tab[c][1]) can.mo = true; });
+    var count = h("div", { class: "count" });
+    var boxes = {};
+
+    function commit() {
+      fromModel(model, tab, item);
+      setPending(id, item);
+      updateCount();
+      markEdited();
+    }
+    function updateCount() {
+      var n = textLength(item);
+      var b = textLength({ lines: base.lines });
+      count.className = "count" + (n > b * 1.15 + 4 ? " warn" : "");
+      count.textContent = "글자 수 " + n + "자 (원래 " + b + "자)" + (n > b * 1.15 + 4 ? " — 원래보다 길어요. 미리보기에서 줄이 넘치지 않는지 확인해 주세요." : "");
+    }
+    function grow(ta) {
+      ta.style.height = "auto";
+      ta.style.height = ta.scrollHeight + 2 + "px";
+    }
+    function fill(side) {
+      var ta = boxes[side];
+      ta.value = can[side] ? modelText(model, side) : model.words.join(" ");
+      grow(ta);
+    }
+    function markEdited() {
+      wrap.classList.toggle("is-pending", Object.prototype.hasOwnProperty.call(S.pending, id));
+    }
+    function twin(side, label, sub) {
+      var ta = h("textarea", { class: "line twin", rows: 2, wrap: "off", spellcheck: "false", "data-side": side });
+      boxes[side] = ta;
+      if (!can[side]) ta.disabled = true;
+      ta.addEventListener("input", function () {
+        applySide(model, side, ta.value);
+        commit();
+        fill(side === "pc" ? "mo" : "pc");
+        grow(ta);
+      });
+      var note = can[side] ? sub : (side === "mo"
+        ? "이 글은 모바일에서 화면 폭에 맞춰 자동으로 줄이 바뀌어 따로 정할 수 없어요. 글은 PC 칸에서 고쳐 주세요."
+        : "이 글은 PC에서 화면 폭에 맞춰 자동으로 줄이 바뀌어 따로 정할 수 없어요. 글은 모바일 칸에서 고쳐 주세요.");
+      return h("label", { class: "twin-field" },
+        h("span", { class: "twin-label" }, h("b", { text: label }), h("small", { text: note })),
+        ta);
+    }
+
+    var pcField = twin("pc", "PC 화면", "Enter 로 PC에서 줄을 나눕니다");
+    var moField = twin("mo", "모바일 화면", "Enter 로 모바일에서 줄을 나눕니다");
+    fill("pc");
+    fill("mo");
+    setTimeout(function () { grow(boxes.pc); grow(boxes.mo); }, 0);
+    updateCount();
+
+    var hrefRow = null;
+    if (base.href) {
+      var inp = h("input", { type: "url", value: item.href || base.href, class: "href" });
+      inp.addEventListener("input", function () {
+        var v = inp.value.trim();
+        if (v === base.href || !v) delete item.href;
+        else item.href = v;
+        commit();
+      });
+      hrefRow = h("label", { class: "field" }, h("span", { text: "링크 주소" }), inp);
+    }
+
+    var wrap = h("section", { class: "card" },
+      head(id),
+      h("p", { class: "hint", text: "두 칸의 글자는 함께 바뀌고, 줄을 나누는 곳만 따로 정합니다. 한쪽에서 글을 고치면 다른 칸에도 똑같이 들어가요." }),
+      pcField,
+      moField,
+      count,
+      hrefRow,
+      actions(id, function () { item = currentValue(id); model = toModel(item, tab); fill("pc"); fill("mo"); updateCount(); markEdited(); })
+    );
+    markEdited();
+    return wrap;
+  }
+
+  // 예전 줄 편집기 (줄바꿈을 잴 수 없을 때만)
+  function textEditorLines(id) {
     var m = meta(id);
     var item = currentValue(id);
     var base = m.base;

@@ -522,3 +522,39 @@ button.ghost {
 .check input {
   margin-top: 3px;
 }
+
+/* PC칸 / 모바일칸 (11.19) */
+.twin-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.twin-label {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.twin-label b {
+  font-size: 13px;
+}
+
+.twin-label small {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* 칸 폭에서 저절로 꺾이면 진짜 줄바꿈과 구분이 안 된다: 꺾지 않고 긴 줄은 옆으로 스크롤 */
+textarea.twin {
+  min-height: 64px;
+  white-space: pre;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overflow-wrap: normal;
+}
+
+textarea.twin:disabled {
+  background: #f4f4f2;
+  color: var(--muted);
+}
