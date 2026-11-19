@@ -1472,29 +1472,56 @@
     return !!(d && d.documentElement.hasAttribute("data-en"));
   }
 
+  // 페이지 선택 상자: 사이트 페이지 → 직접 만든 페이지 → 새로 만들기·관리
+  function fillPageSel() {
+    var sel = S.pageSel;
+    if (!sel) return;
+    sel.innerHTML = "";
+    S.index.pages.forEach(function (p, i) {
+      sel.appendChild(h("option", { value: i, text: pageLabel(p), selected: S.mode !== "pages" && p === S.page }));
+    });
+    var list = (S.pages && S.pages.pages) || [];
+    if (list.length) {
+      var g = h("optgroup", { label: "직접 만든 페이지" });
+      list.forEach(function (pg) {
+        // 줄바꿈은 띄어쓰기로, 한 글자씩 끊은 한글(닌/텐/도)은 붙여서
+        var t = String(pg.title || "").split("\n").map(function (x) { return x.trim(); }).filter(Boolean)
+          .reduce(function (a, x) { return !a ? x : a + (/[가-힣]$/.test(a) && /^[가-힣]/.test(x) ? "" : " ") + x; }, "") || pg.slug;
+        g.appendChild(h("option", { value: "pe:" + pg.id, text: t + (pg.status === "public" ? "" : " (임시 저장)"),
+          selected: S.mode === "pages" && S.pe && S.pe.id === pg.id }));
+      });
+      sel.appendChild(g);
+    }
+    sel.appendChild(h("option", { value: "pages", text: "＋ 새 페이지 만들기 · 관리",
+      selected: S.mode === "pages" && !(S.pe && S.pe.id && list.some(function (pg) { return pg.id === S.pe.id; })) }));
+  }
+
   function renderEditor() {
     app.innerHTML = "";
     var pageSel = h("select", { class: "page-sel" });
-    S.index.pages.forEach(function (p, i) {
-      pageSel.appendChild(h("option", { value: i, text: pageLabel(p), selected: S.mode !== "pages" && p === S.page }));
-    });
-    pageSel.appendChild(h("option", { value: "pages", text: "＋ 새 페이지 만들기 · 관리", selected: S.mode === "pages" }));
+    S.pageSel = pageSel;
+    fillPageSel();
     pageSel.addEventListener("change", function () {
-      if (pageSel.value === "pages") {
-        if (pendingCount()) toast("저장 안 한 글·이미지 변경은 그대로 남아 있어요. 페이지로 돌아가 저장해 주세요.");
-        S.mode = "pages";
-        bar.classList.add("is-pages");
-        openPages();
+      var v = pageSel.value;
+      var leaving = S.mode === "pages" && S.pe && S.peDirty;
+      if (leaving && !confirm("새 페이지에 저장 안 한 내용이 있습니다. 나갈까요?")) {
+        fillPageSel();
         return;
       }
-      if (S.mode === "pages" && S.pe && S.peDirty && !confirm("새 페이지에 저장 안 한 내용이 있습니다. 나갈까요?")) {
-        pageSel.value = "pages";
+      if (v === "pages" || v.slice(0, 3) === "pe:") {
+        if (S.mode !== "pages" && pendingCount()) toast("저장 안 한 글·이미지 변경은 그대로 남아 있어요. 페이지로 돌아가 저장해 주세요.");
+        S.mode = "pages";
+        S.peDirty = false;
+        bar.classList.add("is-pages");
+        var id = v === "pages" ? "" : v.slice(3);
+        openPages(id);
         return;
       }
       S.mode = "site";
       S.pe = null;
+      S.peDirty = false;
       bar.classList.remove("is-pages");
-      S.page = S.index.pages[+pageSel.value];
+      S.page = S.index.pages[+v];
       S.selected = [];
       loadFrame(false);
       renderPanel();
@@ -1571,7 +1598,8 @@
       S.content = r.content;
       if (Array.isArray(S.content.items)) S.content.items = {};
       S.page = S.page || S.index.pages.filter(function (p) { return p.route === ""; })[0] || S.index.pages[0];
-      renderEditor();
+      // 직접 만든 페이지도 페이지 선택에 넣는다 (못 받아도 편집은 된다)
+      return api("pages").then(function (p) { S.pages = p.pages; }, function () {}).then(renderEditor);
     }).catch(function (e) { if (e.message !== "login") showLogin(e.message); });
   }
 
@@ -1582,13 +1610,26 @@
     return { slug: "", status: "draft", brand: "", title: "", tags: [], desc: "", hero: null,
       intro: { title: "", ko: "", en: "" }, card: { size: "m" }, blocks: [{ type: "media", items: [null] }] };
   }
-  function openPages() {
+  function openPages(id) {
     return api("pages").then(function (r) {
       S.pages = r.pages;
       if (!Array.isArray(S.pages.pages)) S.pages.pages = [];
+      var pg = id ? S.pages.pages.filter(function (x) { return x.id === id; })[0] : null;
+      S.pe = pg ? { id: pg.id, page: clone(pg) } : null;
+      S.peDirty = false;
+      fillPageSel();
       renderPanel();
       pagePreview(true);
     }).catch(function (e) { toast(e.message, "err"); });
+  }
+  // 편집 화면 → 목록
+  function peToList() {
+    if (S.peDirty && !confirm("저장 안 한 내용이 있습니다. 목록으로 갈까요?")) return;
+    S.pe = null;
+    S.peDirty = false;
+    fillPageSel();
+    renderPanel();
+    pagePreview(true);
   }
   function peChanged(redraw) {
     S.peDirty = true;
@@ -1691,6 +1732,7 @@
       body.appendChild(h("button", { class: "primary", text: "＋ 새 페이지 만들기", onclick: function () {
         S.pe = { id: "", page: blankPage() };
         S.peDirty = false;
+        fillPageSel();
         renderPanel();
         pagePreview(true);
       } }));
@@ -1705,13 +1747,14 @@
             h("button", { text: "고치기", onclick: function () {
               S.pe = { id: pg.id, page: clone(pg) };
               S.peDirty = false;
+              fillPageSel();
               renderPanel();
               pagePreview(true);
             } }),
             pg.status === "public" ? h("button", { class: "ghost", text: "사이트에서 보기", onclick: function () { window.open("/works/" + pg.slug + "/", "_blank"); } }) : null,
             h("button", { class: "ghost danger", text: "지우기", onclick: function () {
               if (!confirm("‘" + String(pg.title || "").split("\n").join(" ") + "’ 페이지를 지울까요? 사이트와 Works 목록에서 바로 사라집니다.")) return;
-              api("page_delete", { id: pg.id }).then(function (r) { S.pages = r.pages; toast("지웠습니다."); renderPanel(); })
+              api("page_delete", { id: pg.id }).then(function (r) { S.pages = r.pages; toast("지웠습니다."); fillPageSel(); renderPanel(); })
                 .catch(function (e) { toast(e.message, "err"); });
             } })
           )));
@@ -1719,6 +1762,9 @@
       return;
     }
     var p = S.pe.page;
+    body.appendChild(h("div", { class: "pe-top" },
+      h("button", { class: "ghost", text: "← 만든 페이지 목록", onclick: peToList }),
+      S.pe.id && p.status === "public" ? h("button", { class: "ghost", text: "사이트에서 보기", onclick: function () { window.open("/works/" + p.slug + "/", "_blank"); } }) : null));
     // 기본 정보
     var slug = h("input", { type: "text", value: p.slug, placeholder: "예: samsung-new-film" });
     slug.addEventListener("input", function () {
@@ -1821,18 +1867,13 @@
           S.pages = r.pages;
           S.pe = { id: r.page.id, page: clone(r.page) };
           S.peDirty = false;
+          fillPageSel();
           toast(r.page.status === "public" ? "저장했습니다. 사이트와 Works 목록에 반영됐어요." : "임시 저장했습니다 (사이트에는 아직 안 보여요).");
           renderPanel();
           pagePreview(false);
         }).catch(function (e) { toast(e.message, "err"); btn.disabled = false; });
       } }),
-      h("button", { class: "ghost", text: "목록으로", onclick: function () {
-        if (S.peDirty && !confirm("저장 안 한 내용이 있습니다. 목록으로 갈까요?")) return;
-        S.pe = null;
-        S.peDirty = false;
-        renderPanel();
-        pagePreview(true);
-      } })
+      h("button", { class: "ghost", text: "목록으로", onclick: peToList })
     ));
   }
 

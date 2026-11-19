@@ -758,3 +758,5 @@ button.danger {
   padding: 10px 0;
   border-top: 1px solid var(--line);
 }
+/* 새 페이지 편집 화면 맨 위: 목록으로 · 사이트에서 보기 */
+.pe-top { display: flex; gap: 8px; justify-content: space-between; margin-bottom: 12px; }
