@@ -6,6 +6,11 @@
 RewriteEngine On
 RewriteBase /
 
+# http → https (2026-11-19). 카페24는 nginx 뒤라 mod_rewrite 의 %{HTTPS} 가 https 로 와도 "off" 다
+# (점검 파일로 확인) → %{HTTPS} 로 조건을 걸면 무한 이동. 앞단이 붙이는 X-Forwarded-Proto 가 정확히 http 일 때만 옮긴다.
+RewriteCond %{HTTP:X-Forwarded-Proto} =http
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
 # ?p=123, ?page_id=45 같은 옛 짧은 주소
 RewriteCond %{QUERY_STRING} (^|&)(p|page_id|portfolio|product|attachment_id|cat)= [NC]
 RewriteRule ^$ /? [R=301,L]
