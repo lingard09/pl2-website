@@ -1,7 +1,8 @@
 # 2026-11-18 사이트를 pl2std.com/new → pl2std.com 루트로 옮겼다.
 # 그동안 공유된 /new/... 링크는 같은 페이지의 새 주소로 영구 이동(301)시킨다.
 # (/www/new 의 옛 파일은 서버에 남아 있지만 이 규칙 때문에 더는 보이지 않는다)
+# 대상은 https 절대 주소: 경로만 주면 카페24가 http://pl2std.com:443/... 로 보내 400 (2026-11-19)
 <IfModule mod_rewrite.c>
 RewriteEngine On
-RewriteRule ^(.*)$ /$1 [R=301,L]
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 </IfModule>

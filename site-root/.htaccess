@@ -6,6 +6,8 @@
 RewriteEngine On
 RewriteBase /
 
+# 이동 대상은 모두 https://%{HTTP_HOST}/… 절대 주소로 쓴다: 카페24 Apache 는 https 요청도 http 로 알아서,
+# /about/ 처럼 경로만 주면 http://pl2std.com:443/about/ (400) 으로 보낸다 (2026-11-19 확인).
 # http → https (2026-11-19). 카페24는 nginx 뒤라 mod_rewrite 의 %{HTTPS} 가 https 로 와도 "off" 다
 # (점검 파일로 확인) → %{HTTPS} 로 조건을 걸면 무한 이동. 앞단이 붙이는 X-Forwarded-Proto 가 정확히 http 일 때만 옮긴다.
 RewriteCond %{HTTP:X-Forwarded-Proto} =http
@@ -13,19 +15,19 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
 # ?p=123, ?page_id=45 같은 옛 짧은 주소
 RewriteCond %{QUERY_STRING} (^|&)(p|page_id|portfolio|product|attachment_id|cat)= [NC]
-RewriteRule ^$ /? [R=301,L]
+RewriteRule ^$ https://%{HTTP_HOST}/? [R=301,L]
 
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
 # 소개·상담
-RewriteRule ^(about_us|about-us|about-me)(/.*)?$ /about/ [R=301,L]
-RewriteRule ^(contacts|contact-2)(/.*)?$ /contact/ [R=301,L]
+RewriteRule ^(about_us|about-us|about-me)(/.*)?$ https://%{HTTP_HOST}/about/ [R=301,L]
+RewriteRule ^(contacts|contact-2)(/.*)?$ https://%{HTTP_HOST}/contact/ [R=301,L]
 
 # 포트폴리오·프로젝트 (photography-portfolio/pet/petmain/pet-1/ 처럼 하위 페이지 포함)
-RewriteRule ^(photography-portfolio|project|portfolio|portfolio-[^/]+|gallery-[^/]+)(/.*)?$ /works/ [R=301,L]
+RewriteRule ^(photography-portfolio|project|portfolio|portfolio-[^/]+|gallery-[^/]+)(/.*)?$ https://%{HTTP_HOST}/works/ [R=301,L]
 
 # 나머지 옛 페이지·쇼핑몰 데모·글 목록
-RewriteRule ^(blog|cart|checkout|my-account|shop|product|plstudio|sample-page|home[^/]*|category|tag|author|feed|comments|[0-9]{4})(/.*)?$ / [R=301,L]
+RewriteRule ^(blog|cart|checkout|my-account|shop|product|plstudio|sample-page|home[^/]*|category|tag|author|feed|comments|[0-9]{4})(/.*)?$ https://%{HTTP_HOST}/ [R=301,L]
 </IfModule>
