@@ -393,7 +393,9 @@
   function previewValue(id, item) {
     var m = meta(id);
     frameEls(id).forEach(function (el) {
-      if (m.kind === "text") {
+      if (m.kind === "logos") {
+        el.innerHTML = logosHtml(item);
+      } else if (m.kind === "text") {
         el.innerHTML = textHtml(item);
         if (item.href && el.tagName === "A") el.setAttribute("href", item.href);
       } else {
@@ -543,7 +545,7 @@
     var el = frameEls(id)[0];
     var bits = [];
     var kind = {
-      text: "글", img: "이미지", msource: "모바일 이미지", video: "영상 포스터", vsource: "영상 파일", vimeo: "비메오 영상",
+      text: "글", img: "이미지", msource: "모바일 이미지", video: "영상 포스터", vsource: "영상 파일", vimeo: "비메오 영상", logos: "로고 목록",
     }[m.kind];
     if (m.kind === "text" && el) {
       var t = el.tagName;
@@ -915,6 +917,95 @@
       head(id), body, actions(id, function () {}));
   }
 
+  // ── 패널: 로고 목록 (About 로고 띠, 11.19) ─────────────
+  // 서버(lib.php cms_logos_html)·빌드(cms.py logos_html)와 같은 모양. 여기서는 미리보기용
+  var LOGO_FILL = 9;
+  function logosHtml(item) {
+    var out = "\n";
+    for (var r = 0; r < 2; r++) {
+      var row = ((item.rows || [])[r] || []).filter(function (x) { return x && /^(\/[A-Za-z0-9._\/-]+|https:\/\/[A-Za-z0-9._\/-]+)$/.test(x.src || ""); });
+      out += '<div class="ab-brands-row">';
+      var half = [];
+      if (row.length) {
+        var reps = Math.max(1, Math.ceil(LOGO_FILL / row.length));
+        for (var k = 0; k < reps; k++) row.forEach(function (x) { half.push([x, k === 0]); });
+      }
+      for (var c = 0; c < 2; c++) {
+        half.forEach(function (hx) {
+          var show = hx[1] && c === 0;
+          out += '<div class="ab-brand"' + (show ? "" : ' aria-hidden="true"') + '><img src="' + esc(hx[0].src) + '" alt="' + (show ? esc(norm(hx[0].alt || "")) : "") + '" /></div>';
+        });
+      }
+      out += "</div>";
+    }
+    return out;
+  }
+
+  function logosEditor(id) {
+    var item = currentValue(id);
+    var body = h("div", { class: "logos" });
+    var wrap;
+
+    function commit() {
+      setPending(id, { rows: item.rows });
+      wrap.classList.toggle("is-pending", Object.prototype.hasOwnProperty.call(S.pending, id));
+    }
+    function draw() {
+      body.innerHTML = "";
+      ["윗줄 (왼쪽으로 흐름)", "아랫줄 (오른쪽으로 흐름)"].forEach(function (title, r) {
+        var row = item.rows[r] || (item.rows[r] = []);
+        var box = h("div", { class: "logo-row" }, h("b", { text: title + " · " + row.length + "개" }));
+        row.forEach(function (x, i) {
+          var name = h("input", { type: "text", value: x.alt || "", placeholder: "회사 이름", title: "화면에는 안 보이고, 화면 낭독기·검색엔진이 읽는 이름입니다" });
+          name.addEventListener("input", function () { x.alt = name.value; commit(); });
+          var move = function (to) {
+            row.splice(i, 1);
+            if (to === "other") item.rows[1 - r].push(x);
+            else row.splice(i + to, 0, x);
+            commit();
+            draw();
+          };
+          box.appendChild(h("div", { class: "logo-item" },
+            h("img", { src: x.src, alt: "" }),
+            name,
+            h("div", { class: "logo-btns" },
+              h("button", { class: "ghost", text: "↑", title: "앞으로", disabled: i === 0, onclick: function () { move(-1); } }),
+              h("button", { class: "ghost", text: "↓", title: "뒤로", disabled: i === row.length - 1, onclick: function () { move(1); } }),
+              h("button", { class: "ghost", text: r === 0 ? "아랫줄로" : "윗줄로", onclick: function () { move("other"); } }),
+              h("button", { class: "ghost danger", text: "빼기", onclick: function () {
+                if (!window.confirm((x.alt || "이 로고") + " 를 띠에서 뺄까요? (저장 전까지는 되돌릴 수 있어요)")) return;
+                row.splice(i, 1);
+                commit();
+                draw();
+              } })
+            )
+          ));
+        });
+        box.appendChild(fileButton("이 줄에 로고 넣기 (png · jpg · webp)", "image/png,image/jpeg,image/webp", function (file, bar) {
+          return upload(file, "image", 600, bar).then(function (res) {
+            row.push({ src: res.url, alt: file.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ") });
+            commit();
+            draw();
+            toast("로고를 넣었어요. 이름 칸을 회사 이름으로 고쳐 주세요.");
+          });
+        }));
+        if (row.length && row.length < LOGO_FILL) {
+          box.appendChild(h("p", { class: "hint", text: "로고가 " + LOGO_FILL + "개보다 적어서, 띠가 비지 않게 같은 로고를 반복해 채워요." }));
+        }
+        body.appendChild(box);
+      });
+    }
+
+    draw();
+    wrap = h("section", { class: "card" + (Object.prototype.hasOwnProperty.call(S.pending, id) ? " is-pending" : "") },
+      head(id),
+      h("p", { class: "hint", text: "로고는 이 순서대로 띠에서 흐릅니다. 배경이 투명한 png, 가로로 긴 로고(약 400×150)가 가장 잘 맞아요." }),
+      body,
+      actions(id, function () { item = currentValue(id); draw(); wrap.classList.toggle("is-pending", Object.prototype.hasOwnProperty.call(S.pending, id)); })
+    );
+    return wrap;
+  }
+
   // 재생 버튼 자리인데 CSS 가 어두운 막(::after)을 씌우지 않는 곳 = 포스터 이미지에 막이 구워져 있는 곳 (상세 10 CJ)
   function needsBakedDim(videoEl) {
     var slot = videoEl.closest("[data-playing]");
@@ -1022,7 +1113,8 @@
         return;
       }
       ids.forEach(function (id) {
-        body.appendChild(meta(id).kind === "text" ? textEditor(id) : mediaEditor(id));
+        var k = meta(id).kind;
+        body.appendChild(k === "text" ? textEditor(id) : k === "logos" ? logosEditor(id) : mediaEditor(id));
       });
       return;
     }
@@ -1039,7 +1131,8 @@
       all.forEach(function (id) {
         var m = meta(id);
         var v = currentValue(id);
-        var label = m.kind === "text" ? v.lines.join(" ⏎ ") : (v.src || v.srcset || v.poster || v["data-vimeo"] || "").split("/").pop();
+        var label = m.kind === "logos" ? "로고 " + v.rows.map(function (r) { return r.length; }).join(" + ") + "개: " + v.rows[0].concat(v.rows[1]).map(function (x) { return x.alt; }).join(", ") :
+          m.kind === "text" ? v.lines.join(" ⏎ ") : (v.src || v.srcset || v.poster || v["data-vimeo"] || "").split("/").pop();
         if (term && label.toLowerCase().indexOf(term) < 0) return;
         var row = h("button", { class: "list-row" + (Object.prototype.hasOwnProperty.call(S.pending, id) ? " is-pending" : isEdited(id) ? " is-edited" : "") + (hiddenNow(id) ? " is-hidden" : ""), onclick: function () {
           select([id], true);

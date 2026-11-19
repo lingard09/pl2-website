@@ -558,3 +558,60 @@ textarea.twin:disabled {
   background: #f4f4f2;
   color: var(--muted);
 }
+
+/* 로고 목록 (11.19) */
+.logos {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.logo-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.logo-row > b {
+  font-size: 13px;
+}
+
+.logo-item {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 4px 8px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px 8px;
+  background: #fff;
+}
+
+.logo-item img {
+  width: 72px;
+  height: 28px;
+  object-fit: contain;
+  grid-row: span 2;
+}
+
+.logo-item input {
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  min-width: 0;
+}
+
+.logo-btns {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.logo-btns button {
+  padding: 2px 8px;
+  font-size: 12px;
+}
+
+button.danger {
+  color: var(--err);
+}

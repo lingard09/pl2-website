@@ -322,11 +322,68 @@ function cms_set_href($tag, $pat, $value)
     }, $tag);
 }
 
+// 로고 띠 (About) — tools/cms.py logos_html 과 바이트까지 같은 결과
+define('CMS_LOGO_FILL', 9);
+
+function cms_safe_src($src)
+{
+    return is_string($src) && preg_match('#^(/[A-Za-z0-9._/-]+|https://[A-Za-z0-9._/-]+)$#', $src);
+}
+
+function cms_logos_html($item)
+{
+    $rows = cms_get($item, 'rows', array());
+    if (!is_array($rows)) {
+        $rows = array();
+    }
+    $rows = array_values($rows);
+    $out = "\n";
+    for ($r = 0; $r < 2; $r++) {
+        $row = array();
+        if (isset($rows[$r]) && is_array($rows[$r])) {
+            foreach ($rows[$r] as $x) {
+                if (is_array($x) && cms_safe_src(cms_get($x, 'src'))) {
+                    $row[] = $x;
+                }
+            }
+        }
+        $out .= '          <div class="ab-brands-row">' . "\n";
+        $half = array();
+        if ($row) {
+            $reps = max(1, (int)ceil(CMS_LOGO_FILL / count($row)));
+            for ($k = 0; $k < $reps; $k++) {
+                foreach ($row as $x) {
+                    $half[] = array($x, $k === 0);
+                }
+            }
+        }
+        for ($copy = 0; $copy < 2; $copy++) {
+            foreach ($half as $hx) {
+                $show = $hx[1] && $copy === 0;
+                $alt = $show ? cms_esc_attr(cms_norm(cms_get($hx[0], 'alt', ''))) : '';
+                $hidden = $show ? '' : ' aria-hidden="true"';
+                $out .= '            <div class="ab-brand"' . $hidden . '>' . "\n"
+                    . '              <img src="' . cms_esc_attr($hx[0]['src']) . '" alt="' . $alt . '" />' . "\n"
+                    . '            </div>' . "\n";
+            }
+        }
+        $out .= '          </div>' . "\n";
+    }
+    return $out . '        ';
+}
+
 function cms_apply_one($doc, $id, $item, &$count)
 {
     $q = preg_quote($id, '/');
     $count = 0;
-    if (array_key_exists('lines', $item)) {
+    if (array_key_exists('rows', $item)) {
+        $pat = '/(<([a-zA-Z0-9]+) data-cms="' . $q . '"[^>]*>)(.*?)(<\/\2>)/s';
+        $cb = function ($m) use ($item, &$count) {
+            $count++;
+            return $m[1] . cms_logos_html($item) . $m[4];
+        };
+        $doc = preg_replace_callback($pat, $cb, $doc);
+    } elseif (array_key_exists('lines', $item)) {
         $pat = '/(<([a-zA-Z0-9]+) data-cms="' . $q . '"[^>]*>)(.*?)(<\/\2>)/s';
         $cb = function ($m) use ($item, &$count) {
             $count++;
@@ -439,6 +496,39 @@ function cms_clean_item($id, $item)
     if (!is_array($item)) {
         return '형식이 잘못됐습니다: ' . $id;
     }
+    if ($meta['kind'] === 'logos') {
+        $rows = cms_get($item, 'rows');
+        if (!is_array($rows) || count($rows) !== 2) {
+            return '로고 목록 형식이 잘못됐습니다';
+        }
+        // 쓸 수 있는 그림: 원래 로고들 + 관리자에서 올린 파일
+        $known = array();
+        foreach ($base['rows'] as $brow) {
+            foreach ($brow as $bx) {
+                $known[$bx['src']] = true;
+            }
+        }
+        $out = array('rows' => array());
+        foreach (array_values($rows) as $row) {
+            if (!is_array($row) || count($row) > 40) {
+                return '로고는 한 줄에 40개까지 넣을 수 있습니다';
+            }
+            $clean = array();
+            foreach (array_values($row) as $x) {
+                $src = is_array($x) ? cms_get($x, 'src') : null;
+                $alt = is_array($x) ? cms_get($x, 'alt', '') : '';
+                if (!is_string($src) || !(isset($known[$src]) || preg_match('#^/cms-data/uploads/[A-Za-z0-9._-]+$#', $src))) {
+                    return '로고 그림 주소가 올바르지 않습니다';
+                }
+                if (!is_string($alt) || strlen($alt) > 200) {
+                    return '로고 이름이 너무 깁니다';
+                }
+                $clean[] = array('src' => $src, 'alt' => cms_norm($alt));
+            }
+            $out['rows'][] = $clean;
+        }
+        return $out;
+    }
     if ($meta['kind'] === 'text') {
         $lines = cms_get($item, 'lines');
         $breaks = cms_get($item, 'breaks', array());
@@ -497,6 +587,9 @@ function cms_is_base($id, $item)
 {
     $idx = cms_load_index();
     $base = $idx['ids'][$id]['base'];
+    if ($idx['ids'][$id]['kind'] === 'logos') {
+        return $item['rows'] === $base['rows'];
+    }
     if ($idx['ids'][$id]['kind'] === 'text') {
         return $item['lines'] === array_map('cms_norm', $base['lines'])
             && $item['breaks'] === $base['breaks'] && !isset($item['href']);

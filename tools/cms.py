@@ -11,6 +11,8 @@
   각각 따로 된 요소라 각자 편집 단위가 된다.
 - 이미지: <img src>, <picture><source srcset> (모바일 이미지)
 - 영상: <video poster>, <video><source src>, 비메오 자리 [data-vimeo]
+- 로고 목록: data-cms-list="logos" 가 달린 요소 (About 로고 띠) 하나가 통째로 한 단위. 안의 로고는 따로 단위가 아니다.
+  값 {"rows": [[{"src", "alt"}, ...], [...]]} — 저장하면 두 줄을 새로 만든다 (logos_html).
 
 id
 - 페이지 본문: 페이지 코드 + 번호 (d13-042). 번호는 한 번 붙으면 바뀌지 않는다 → 고객사 수정값이 엉뚱한 곳에 붙지 않는다.
@@ -57,6 +59,7 @@ class Scan(HTMLParser):
         self.items = []
         self.skip = 0
         self.main = 1  # 1 이상 = 페이지 고유, 0 = 메뉴·바닥글 안(공용)
+        self.inlist = 0  # 로고 목록 안 = 따로 편집 단위가 아니다
 
     def off(self):
         line, col = self.getpos()
@@ -83,7 +86,13 @@ class Scan(HTMLParser):
             return
         if self.stack:
             self.stack[-1]["kids"].append(tag)
-        if tag in ("img",) or (tag == "source" and self.stack and self.stack[-1]["tag"] in ("picture", "video")) \
+        islist = "data-cms-list" in a and tag not in VOID
+        if islist:
+            self.items.append({"kind": a["data-cms-list"], "start": start, "raw": raw, "attrs": a, "main": self.main > 0,
+                               "sig": ("list", self.chain(), a["data-cms-list"])})
+        if self.inlist:
+            pass
+        elif tag in ("img",) or (tag == "source" and self.stack and self.stack[-1]["tag"] in ("picture", "video")) \
                 or tag == "video" or (tag != "source" and "data-vimeo" in a):
             kind = {"img": "img", "source": "source", "video": "video"}.get(tag, "vimeo")
             if tag == "source":
@@ -98,7 +107,10 @@ class Scan(HTMLParser):
         if tag == "footer" or (tag == "nav" and "gnb" in (a.get("class") or "").split()):
             self.main -= 1  # 메뉴·바닥글 = 공용
         self.stack.append({"tag": tag, "attrs": a, "start": start, "raw": raw, "kids": [], "text": "",
-                           "chain": self.chain(), "main": self.main > 0, "inner_start": start + len(raw)})
+                           "chain": self.chain(), "main": self.main > 0, "inner_start": start + len(raw),
+                           "inlist": self.inlist > 0, "islist": islist})
+        if islist:
+            self.inlist += 1
 
     def handle_startendtag(self, tag, attrs):
         self.handle_starttag(tag, attrs)
@@ -123,9 +135,14 @@ class Scan(HTMLParser):
             e = self.stack.pop()
             if e["tag"] == "footer" or (e["tag"] == "nav" and "gnb" in (e["attrs"].get("class") or "").split()):
                 self.main += 1
+            if e["islist"]:
+                self.inlist -= 1
+                for it in self.items:
+                    if it["start"] == e["start"]:
+                        it["inner"] = self.text[e["inner_start"]:end]
             txt = e["text"].strip()
             others = [k for k in e["kids"] if k != "br"]
-            if txt and not others:
+            if txt and not others and not e["inlist"]:
                 inner = self.text[e["inner_start"]:end] if e["tag"] == tag else None
                 if inner is not None:
                     ntext = " ".join(html.unescape(re.sub(r"<[^>]+>", " ", inner)).split())
@@ -225,6 +242,35 @@ def text_html(item):
     return "".join(out)
 
 
+LOGO_FILL = 9  # 한 줄의 앞 절반에 로고가 이만큼은 있어야 넓은 화면에서 띠가 비지 않는다 (원래 9개씩)
+SAFE_SRC = re.compile(r"^(/[A-Za-z0-9._/-]+|https://[A-Za-z0-9._/-]+)$")
+
+
+def logos_html(item):
+    """{"rows": [[{"src", "alt"}...], [...]]} → 로고 띠 안쪽 html (두 줄). admin/lib.php cms_logos_html 과 같은 결과.
+    줄마다 [보이는 로고 + 모자라면 반복(숨김)] 한 벌 + 그 한 벌 전체 복제(숨김) → CSS 가 -50% 로 무한 루프"""
+    rows = item.get("rows") or []
+    out = ["\n"]
+    for r in range(2):
+        row = [x for x in (rows[r] if r < len(rows) and isinstance(rows[r], list) else []) if isinstance(x, dict) and SAFE_SRC.match(str(x.get("src") or ""))]
+        out.append('          <div class="ab-brands-row">\n')
+        half = []
+        if row:
+            reps = max(1, -(-LOGO_FILL // len(row)))
+            for k in range(reps):
+                for x in row:
+                    half.append((x, k == 0))
+        for copy in range(2):
+            for x, vis in half:
+                show = vis and copy == 0
+                alt = esc_attr(norm(x.get("alt") or "")) if show else ""
+                hidden = "" if show else ' aria-hidden="true"'
+                out.append(f'            <div class="ab-brand"{hidden}>\n              <img src="{esc_attr(x["src"])}" alt="{alt}" />\n            </div>\n')
+        out.append("          </div>\n")
+    out.append("        ")
+    return "".join(out)
+
+
 def tel_href(t):
     return "tel:" + re.sub(r"[^0-9+]", "", t)
 
@@ -233,7 +279,16 @@ def apply_one(doc, cid, item):
     """doc 안의 data-cms="cid" 요소에 item 을 적용한다. 바뀐 doc 과 적용 횟수를 돌려준다."""
     q = re.escape(cid)
     count = 0
-    if "lines" in item:
+    if "rows" in item:
+        pat = re.compile(r'(<([a-zA-Z0-9]+) data-cms="' + q + r'"[^>]*>)(.*?)(</\2>)', re.S)
+
+        def rep_list(m):
+            nonlocal count
+            count += 1
+            return m.group(1) + logos_html(item) + m.group(4)
+
+        doc = pat.sub(rep_list, doc)
+    elif "lines" in item:
         pat = re.compile(r'(<([a-zA-Z0-9]+) data-cms="' + q + r'"[^>]*>)(.*?)(</\2>)', re.S)
 
         def rep(m):
@@ -301,7 +356,20 @@ def cmd_index(dist):
                 e["files"].append(rel)
             if "base" in e:
                 continue
-            if it["kind"] == "text":
+            if it["kind"] == "logos":
+                rows = []
+                for part in re.split(r'<div class="ab-brands-row">', it["inner"])[1:]:
+                    row = []
+                    for m in re.finditer(r'<div class="ab-brand">\s*(<img\b[^>]*>)', part):
+                        tag = m.group(1)
+                        src = re.search(r'\ssrc="([^"]*)"', tag).group(1)
+                        alt = re.search(r'\salt="([^"]*)"', tag)
+                        if not re.match(r"^(/|https?:)", src):
+                            src = "/" + posixpath.normpath(posixpath.join(posixpath.dirname(rel), src)).lstrip("./")
+                        row.append({"src": src, "alt": html.unescape(alt.group(1)) if alt else ""})
+                    rows.append(row)
+                e["base"] = {"rows": rows}
+            elif it["kind"] == "text":
                 inner = it["inner"]
                 parts = BR_RE.split(inner)
                 # BR_RE.split 은 [글, br속성, 글, br속성, ...]
