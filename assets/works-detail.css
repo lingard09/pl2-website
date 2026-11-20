@@ -1034,3 +1034,79 @@
     min-height: 0;
   }
 }
+
+/* ── 새 페이지 배치 (11.20 CMS 피드백) ──
+   한 칸 줄의 폭(가운데 90~50%) · 두 칸 줄의 비율(2:1 · 1:2) · 캡션 · 글 칸 위아래 간격.
+   모바일은 폭·비율을 풀어 지금처럼 꽉 찬 1열로 둔다. */
+.wdc-row--90 { grid-template-columns: 90%; justify-content: center; }
+.wdc-row--80 { grid-template-columns: 80%; justify-content: center; }
+.wdc-row--70 { grid-template-columns: 70%; justify-content: center; }
+.wdc-row--60 { grid-template-columns: 60%; justify-content: center; }
+.wdc-row--50 { grid-template-columns: 50%; justify-content: center; }
+.wdc-row--2-1 { grid-template-columns: 2fr 1fr; }
+.wdc-row--1-2 { grid-template-columns: 1fr 2fr; }
+
+/* 캡션 (상세 페이지 영상 캡션 .wdx-caption 과 같은 글씨) */
+.wdc-fig {
+  display: flex;
+  flex-direction: column;
+  gap: min(0.8333vw, 16px);
+  margin: 0;
+}
+
+.wdc-cap {
+  color: var(--pl2-neutral-40);
+  font-size: min(1.0417vw, 20px) /* 20 */;
+  font-weight: 500;
+  line-height: min(1.6667vw, 32px) /* 32 */;
+  text-align: center;
+}
+
+/* 두 칸 줄에서 캡션 달린 칸도 높이를 맞춘다: 그림이 남는 높이를 채운다 */
+.wdc-row--2 > .wdc-fig > img,
+.wdc-row--2 > .wdc-fig > video {
+  flex: 1 1 auto;
+  min-height: 0;
+  object-fit: cover;
+}
+
+/* 글 칸 위·아래 간격: 기본은 섹션 간격 320, 160 · 80 · 40 으로 좁힐 수 있다 (모바일 기본 200 → 100 · 48 · 24) */
+.wdc-text--t160 { margin-top: calc(min(8.3333vw, 160px) - min(16.6667vw, 320px)); }
+.wdc-text--t80 { margin-top: calc(min(4.1667vw, 80px) - min(16.6667vw, 320px)); }
+.wdc-text--t40 { margin-top: calc(min(2.0833vw, 40px) - min(16.6667vw, 320px)); }
+.wdc-text--b160 { margin-bottom: calc(min(8.3333vw, 160px) - min(16.6667vw, 320px)); }
+.wdc-text--b80 { margin-bottom: calc(min(4.1667vw, 80px) - min(16.6667vw, 320px)); }
+.wdc-text--b40 { margin-bottom: calc(min(2.0833vw, 40px) - min(16.6667vw, 320px)); }
+
+@media (max-width: 599.98px) {
+  .wdc-row--90,
+  .wdc-row--80,
+  .wdc-row--70,
+  .wdc-row--60,
+  .wdc-row--50,
+  .wdc-row--2-1,
+  .wdc-row--1-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .wdc-fig {
+    gap: 8px;
+  }
+
+  .wdc-cap {
+    font-size: 11px;
+    line-height: 16px;
+  }
+
+  .wdc-row--2 > .wdc-fig > img,
+  .wdc-row--2 > .wdc-fig > video {
+    flex: none;
+  }
+
+  .wdc-text--t160 { margin-top: -100px; }
+  .wdc-text--t80 { margin-top: -152px; }
+  .wdc-text--t40 { margin-top: -176px; }
+  .wdc-text--b160 { margin-bottom: -100px; }
+  .wdc-text--b80 { margin-bottom: -152px; }
+  .wdc-text--b40 { margin-bottom: -176px; }
+}

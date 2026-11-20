@@ -46,6 +46,33 @@ function cms_p_media($m, $cls, $extra)
     return '<img' . $c . $extra . ' src="' . cms_esc_attr(cms_get($m, 'src', '')) . '" alt="" />';
 }
 
+// 글 칸 위·아래 간격 (기본은 섹션 간격 320) · 한 칸 줄의 폭 · 두 칸 줄의 비율 (cms.py GAPS · WIDTHS · SPLITS)
+function cms_p_gaps()
+{
+    return array(40, 80, 160);
+}
+
+function cms_p_widths()
+{
+    return array('90', '80', '70', '60', '50');
+}
+
+function cms_p_splits()
+{
+    return array('2-1', '1-2');
+}
+
+// 줄의 한 칸 — 캡션이 있으면 figure 로 감싼다 (cms.py pcell)
+function cms_p_cell($m)
+{
+    $el = cms_p_media($m, '', ' data-reveal');
+    $cap = is_string(cms_get($m, 'caption')) ? cms_norm($m['caption']) : '';
+    if ($cap !== '') {
+        return '<figure class="wdc-fig">' . $el . '<figcaption class="wdc-cap">' . cms_p_text($cap) . '</figcaption></figure>';
+    }
+    return $el;
+}
+
 function cms_page_main($p)
 {
     $out = array('<div class="wd-container">', '<section class="wd-top">', '<div class="wd-hero wd-hero--fade-black">');
@@ -99,9 +126,14 @@ function cms_page_main($p)
                 $out[] = '<section class="wdc-list">';
                 $inlist = true;
             }
-            $row = '<div class="wdc-row wdc-row--' . count($items) . '">';
+            $cls = 'wdc-row wdc-row--' . count($items);
+            $lay = cms_get($b, 'layout');
+            if ((count($items) === 1 && in_array($lay, cms_p_widths(), true)) || (count($items) === 2 && in_array($lay, cms_p_splits(), true))) {
+                $cls .= ' wdc-row--' . $lay;
+            }
+            $row = '<div class="' . $cls . '">';
             foreach ($items as $m) {
-                $row .= cms_p_media($m, '', ' data-reveal');
+                $row .= cms_p_cell($m);
             }
             $out[] = $row . '</div>';
             continue;
@@ -111,7 +143,15 @@ function cms_page_main($p)
             $inlist = false;
         }
         if ($t === 'text') {
-            $x = '<section class="wdc-text"><div class="wd-head wd-head--center">';
+            $cls = 'wdc-text';
+            foreach (array('above' => 't', 'below' => 'b') as $k => $pre) {
+                if (in_array(cms_get($b, $k), cms_p_gaps(), true)) {
+                    $cls .= ' wdc-text--' . $pre . $b[$k];
+                }
+            }
+            $al = cms_get($b, 'align');
+            $al = $al === 'l' ? 'left' : ($al === 'r' ? 'right' : 'center');
+            $x = '<section class="' . $cls . '"><div class="wd-head wd-head--' . $al . '">';
             if (cms_norm((string)cms_get($b, 'title', '')) !== '') {
                 $x .= '<h2 class="wd-head-title">' . cms_p_text($b['title']) . '</h2>';
             }
@@ -207,18 +247,151 @@ function cms_public_pages($pages)
     return $out;
 }
 
-function cms_works_with_cards($doc, $pages)
+// Works 목록 html → array(앞, array(왼쪽 카드들, 오른쪽 카드들), array(각 열 뒤)) — 모양이 다르면 null (cms.py split_cols)
+function cms_split_cols($doc)
 {
-    $doc = preg_replace('/\s*<a class="wk-card[^"]*" data-cms-page="[^"]*".*?<\/a>/s', '', $doc);
-    $cols = array('', '');
-    foreach (cms_public_pages($pages) as $i => $p) {
-        $cols[$i % 2] .= "\n" . cms_card_html($p);
-    }
     $parts = explode('<div class="wk-col">', $doc);
     if (count($parts) !== 3) {
+        return null;
+    }
+    $cols = array();
+    $rests = array();
+    for ($i = 1; $i <= 2; $i++) {
+        $part = $parts[$i];
+        $pos = 0;
+        $cards = array();
+        while (true) {
+            preg_match('/\G\s*(?:<!--.*?-->\s*)*/s', $part, $m, 0, $pos);
+            $pos += strlen($m[0]);
+            if (substr($part, $pos, 6) === '</div>') {
+                break;
+            }
+            if (!preg_match('/\G<(a|article) class="wk-card[^"]*"/', $part, $m, 0, $pos)) {
+                return null;
+            }
+            $end = strpos($part, '</' . $m[1] . '>', $pos);
+            if ($end === false) {
+                return null;
+            }
+            $end += strlen($m[1]) + 3;
+            $cards[] = substr($part, $pos, $end - $pos);
+            $pos = $end;
+        }
+        $cols[] = $cards;
+        $rests[] = substr($part, $pos);
+    }
+    return array($parts[0], $cols, $rests);
+}
+
+// 카드 이름표: 새 페이지 = p:<id>, 기존 카드 = 안에 있는 첫 data-cms id (cms.py card_key)
+function cms_card_key($c)
+{
+    if (preg_match('/data-cms-page="([^"]+)"/', $c, $m)) {
+        return 'p:' . $m[1];
+    }
+    if (preg_match('/data-cms="([^"]+)"/', $c, $m)) {
+        return $m[1];
+    }
+    return null;
+}
+
+// pages.json 의 works.cols (cms.py works_order)
+function cms_works_order($data)
+{
+    $w = is_array($data) ? cms_get($data, 'works') : null;
+    $cols = is_array($w) ? cms_get($w, 'cols') : null;
+    if (!is_array($cols) || count($cols) !== 2 || !isset($cols[0]) || !isset($cols[1]) || !is_array($cols[0]) || !is_array($cols[1])) {
+        return array(array(), array());
+    }
+    $out = array();
+    foreach (array($cols[0], $cols[1]) as $c) {
+        $o = array();
+        foreach ($c as $k) {
+            if (is_string($k)) {
+                $o[] = $k;
+            }
+        }
+        $out[] = $o;
+    }
+    return $out;
+}
+
+// 새 페이지 카드를 넣고 카드 순서를 맞춘다 (cms.py works_with_cards 와 같은 규칙)
+function cms_works_with_cards($doc, $pages, $order = null)
+{
+    $sp = cms_split_cols($doc);
+    if (!$sp) {
         return $doc;
     }
-    return $parts[0] . '<div class="wk-col">' . $cols[0] . $parts[1] . '<div class="wk-col">' . $cols[1] . $parts[2];
+    list($head, $cols, $rests) = $sp;
+    if (!$order) {
+        $order = array(array(), array());
+    }
+    $static = array(array(), array());
+    foreach ($cols as $ci => $col) {
+        foreach ($col as $c) {
+            if (!preg_match('/^<a class="wk-card[^"]*" data-cms-page="/', $c)) {
+                $static[$ci][] = $c;
+            }
+        }
+    }
+    $pub = cms_public_pages($pages);
+    $pcard = array();
+    foreach ($pub as $p) {
+        $pcard['p:' . $p['id']] = cms_card_html($p);
+    }
+    $smap = array();
+    foreach ($static as $col) {
+        foreach ($col as $c) {
+            $k = cms_card_key($c);
+            if ($k !== null && !isset($smap[$k])) {
+                $smap[$k] = $c;
+            }
+        }
+    }
+    $listed = array();
+    foreach (array_merge($order[0], $order[1]) as $k) {
+        $listed[$k] = true;
+    }
+    $out = array(array(), array());
+    $i = 0;
+    foreach ($pub as $p) {
+        if (!isset($listed['p:' . $p['id']])) {
+            $out[$i % 2][] = $pcard['p:' . $p['id']];
+            $i++;
+        }
+    }
+    $used = array();
+    foreach (array(0, 1) as $ci) {
+        foreach ($order[$ci] as $k) {
+            if (isset($used[$k])) {
+                continue;
+            }
+            $c = isset($pcard[$k]) ? $pcard[$k] : (isset($smap[$k]) ? $smap[$k] : null);
+            if ($c !== null) {
+                $out[$ci][] = $c;
+                $used[$k] = true;
+            }
+        }
+    }
+    foreach ($static as $ci => $col) {
+        foreach ($col as $c) {
+            $k = cms_card_key($c);
+            if ($k === null || !isset($used[$k])) {
+                $out[$ci][] = $c;
+                if ($k !== null) {
+                    $used[$k] = true;
+                }
+            }
+        }
+    }
+    $x = array('', '');
+    foreach (array(0, 1) as $ci) {
+        foreach ($out[$ci] as $c) {
+            $x[$ci] .= "\n" . $c;
+        }
+    }
+    return $head . '<div class="wk-col">' . $x[0] . "\n" . $rests[0] . '<div class="wk-col">' . $x[1] . "\n" . $rests[1];
 }
 
 // ── 저장소 ───────────────────────────────────────────
@@ -281,13 +454,13 @@ function cms_page_remove($slug)
     @rmdir(dirname($f));
 }
 
-function cms_works_update($pages)
+function cms_works_update($data)
 {
     $f = CMS_ROOT . '/works/index.html';
     if (!file_exists($f)) {
         return;
     }
-    if (!cms_write_file($f, cms_works_with_cards(file_get_contents($f), $pages))) {
+    if (!cms_write_file($f, cms_works_with_cards(file_get_contents($f), $data['pages'], cms_works_order($data)))) {
         cms_fail('Works 목록을 고치지 못했습니다', 500);
     }
 }
@@ -457,9 +630,21 @@ function cms_page_clean($in, $pages, $old, $preview = false)
                 if ($mm === false) {
                     return '이미지·영상 줄에 비어 있는 칸이 있습니다. 파일을 올리거나 칸을 지워 주세요';
                 }
+                $cap = cms_p_str(cms_get($m, 'caption'), 300, false);
+                if ($cap === false) {
+                    return '캡션이 너무 깁니다';
+                }
+                if ($cap !== '') {
+                    $mm['caption'] = $cap;
+                }
                 $c[] = $mm;
             }
-            $p['blocks'][] = array('type' => 'media', 'items' => $c);
+            $x = array('type' => 'media', 'items' => $c);
+            $lay = cms_get($b, 'layout');
+            if ((count($c) === 1 && in_array($lay, cms_p_widths(), true)) || (count($c) === 2 && in_array($lay, cms_p_splits(), true))) {
+                $x['layout'] = $lay;
+            }
+            $p['blocks'][] = $x;
         } elseif ($t === 'text') {
             $x = array('type' => 'text');
             foreach (array('title' => array(200, false), 'ko' => array(4000, true), 'en' => array(4000, true)) as $k => $o) {
@@ -468,6 +653,14 @@ function cms_page_clean($in, $pages, $old, $preview = false)
                     return '글이 너무 깁니다';
                 }
                 $x[$k] = $v;
+            }
+            if (in_array(cms_get($b, 'align'), array('l', 'r'), true)) {
+                $x['align'] = $b['align'];
+            }
+            foreach (array('above', 'below') as $k) {
+                if (in_array(cms_get($b, $k), cms_p_gaps(), true)) {
+                    $x[$k] = $b[$k];
+                }
             }
             $p['blocks'][] = $x;
         } elseif ($t === 'film') {
@@ -549,7 +742,7 @@ function cms_pages_api($a, $body)
         } else {
             cms_page_remove($p['slug']);
         }
-        cms_works_update($data['pages']);
+        cms_works_update($data);
         flock($lock, LOCK_UN);
         cms_json_out(array('ok' => true, 'page' => $p, 'pages' => $data));
     }
@@ -565,7 +758,33 @@ function cms_pages_api($a, $body)
         array_splice($data['pages'], $i, 1);
         $data = cms_pages_save_file($data);
         cms_page_remove($slug);
-        cms_works_update($data['pages']);
+        cms_works_update($data);
+        flock($lock, LOCK_UN);
+        cms_json_out(array('ok' => true, 'pages' => $data));
+    }
+    if ($a === 'works_order') {
+        $cols = cms_get($body, 'cols');
+        if (!is_array($cols) || count($cols) !== 2 || !isset($cols[0]) || !isset($cols[1]) || !is_array($cols[0]) || !is_array($cols[1])) {
+            cms_fail('형식이 잘못됐습니다');
+        }
+        $clean = array(array(), array());
+        $seen = array();
+        foreach (array(0, 1) as $ci) {
+            foreach ($cols[$ci] as $k) {
+                if (!is_string($k) || !preg_match('/^(?:p:[a-z0-9]{1,20}|[a-z0-9-]{1,40})$/', $k) || count($seen) >= 300) {
+                    cms_fail('카드 이름표가 올바르지 않습니다');
+                }
+                if (!isset($seen[$k])) {
+                    $seen[$k] = true;
+                    $clean[$ci][] = $k;
+                }
+            }
+        }
+        $lock = cms_lock();
+        $data = cms_load_pages();
+        $data['works'] = array('cols' => $clean);
+        $data = cms_pages_save_file($data);
+        cms_works_update($data);
         flock($lock, LOCK_UN);
         cms_json_out(array('ok' => true, 'pages' => $data));
     }

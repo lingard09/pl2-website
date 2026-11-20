@@ -11,6 +11,7 @@
  *   POST ?a=page_preview {id, page}   → 미리보기 html
  *   POST ?a=page_save    {id, page}   → 저장 (공개면 /works/<slug>/ 와 Works 카드까지)
  *   POST ?a=page_delete  {id}
+ *   POST ?a=works_order  {cols: [[왼쪽 카드 이름표…], [오른쪽 …]]} → Works 목록 카드 순서
  */
 require __DIR__ . '/lib.php';
 require __DIR__ . '/pages.php';
@@ -59,7 +60,7 @@ if ($method !== 'POST' && $a !== 'history' && $a !== 'pages') {
     cms_fail('POST 만', 405);
 }
 
-if (in_array($a, array('pages', 'page_preview', 'page_save', 'page_delete'), true)) {
+if (in_array($a, array('pages', 'page_preview', 'page_save', 'page_delete', 'works_order'), true)) {
     cms_pages_api($a, cms_body());
 }
 

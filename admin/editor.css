@@ -760,3 +760,22 @@ button.danger {
 }
 /* 새 페이지 편집 화면 맨 위: 목록으로 · 사이트에서 보기 */
 .pe-top { display: flex; gap: 8px; justify-content: space-between; margin-bottom: 12px; }
+
+/* 11.20: 새 페이지 줄 배치·캡션·글 정렬, 파일 크기, Works 카드 순서, 크기 % 입력 */
+.pm-dims { display: block; margin-top: 4px; }
+.pe-cap { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.pe-opts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.pe-opts select { width: 100%; }
+.wo-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.wo-col { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.wo-item { border: 1px solid var(--line); border-radius: 8px; padding: 6px; display: flex; flex-direction: column; gap: 4px; background: var(--panel); }
+.wo-item.is-new { border-color: var(--accent); }
+.wo-thumb { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 4px; background: var(--line); display: block; }
+.wo-name { font-size: 12px; line-height: 1.35; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.wo-btns { display: flex; gap: 4px; }
+.wo-btns button { flex: 1; padding: 4px 0; }
+.scale-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.scale-num { width: 72px; }
+.scale-quick { display: flex; gap: 4px; flex-wrap: wrap; }
+.scale-quick button { padding: 4px 8px; }
+.scale-quick button.on { background: var(--text); color: #fff; }

@@ -343,6 +343,73 @@ html:has(.wk-body) {
   .wk-col:first-child > :nth-child(8) { order: 15; }
   .wk-col:last-child > :nth-child(8) { order: 16; }
 
+  /* 11.20: 새 페이지 카드·순서 바꾸기로 한 열에 8장이 넘을 수 있다 — 9번째부터는 왼쪽·오른쪽 번갈아
+     (규칙이 없으면 order 0 이 되어 맨 위로 올라간다) */
+  .wk-col:first-child > :nth-child(9) { order: 17; }
+  .wk-col:last-child > :nth-child(9) { order: 18; }
+  .wk-col:first-child > :nth-child(10) { order: 19; }
+  .wk-col:last-child > :nth-child(10) { order: 20; }
+  .wk-col:first-child > :nth-child(11) { order: 21; }
+  .wk-col:last-child > :nth-child(11) { order: 22; }
+  .wk-col:first-child > :nth-child(12) { order: 23; }
+  .wk-col:last-child > :nth-child(12) { order: 24; }
+  .wk-col:first-child > :nth-child(13) { order: 25; }
+  .wk-col:last-child > :nth-child(13) { order: 26; }
+  .wk-col:first-child > :nth-child(14) { order: 27; }
+  .wk-col:last-child > :nth-child(14) { order: 28; }
+  .wk-col:first-child > :nth-child(15) { order: 29; }
+  .wk-col:last-child > :nth-child(15) { order: 30; }
+  .wk-col:first-child > :nth-child(16) { order: 31; }
+  .wk-col:last-child > :nth-child(16) { order: 32; }
+  .wk-col:first-child > :nth-child(17) { order: 33; }
+  .wk-col:last-child > :nth-child(17) { order: 34; }
+  .wk-col:first-child > :nth-child(18) { order: 35; }
+  .wk-col:last-child > :nth-child(18) { order: 36; }
+  .wk-col:first-child > :nth-child(19) { order: 37; }
+  .wk-col:last-child > :nth-child(19) { order: 38; }
+  .wk-col:first-child > :nth-child(20) { order: 39; }
+  .wk-col:last-child > :nth-child(20) { order: 40; }
+  .wk-col:first-child > :nth-child(21) { order: 41; }
+  .wk-col:last-child > :nth-child(21) { order: 42; }
+  .wk-col:first-child > :nth-child(22) { order: 43; }
+  .wk-col:last-child > :nth-child(22) { order: 44; }
+  .wk-col:first-child > :nth-child(23) { order: 45; }
+  .wk-col:last-child > :nth-child(23) { order: 46; }
+  .wk-col:first-child > :nth-child(24) { order: 47; }
+  .wk-col:last-child > :nth-child(24) { order: 48; }
+  .wk-col:first-child > :nth-child(25) { order: 49; }
+  .wk-col:last-child > :nth-child(25) { order: 50; }
+  .wk-col:first-child > :nth-child(26) { order: 51; }
+  .wk-col:last-child > :nth-child(26) { order: 52; }
+  .wk-col:first-child > :nth-child(27) { order: 53; }
+  .wk-col:last-child > :nth-child(27) { order: 54; }
+  .wk-col:first-child > :nth-child(28) { order: 55; }
+  .wk-col:last-child > :nth-child(28) { order: 56; }
+  .wk-col:first-child > :nth-child(29) { order: 57; }
+  .wk-col:last-child > :nth-child(29) { order: 58; }
+  .wk-col:first-child > :nth-child(30) { order: 59; }
+  .wk-col:last-child > :nth-child(30) { order: 60; }
+  .wk-col:first-child > :nth-child(31) { order: 61; }
+  .wk-col:last-child > :nth-child(31) { order: 62; }
+  .wk-col:first-child > :nth-child(32) { order: 63; }
+  .wk-col:last-child > :nth-child(32) { order: 64; }
+  .wk-col:first-child > :nth-child(33) { order: 65; }
+  .wk-col:last-child > :nth-child(33) { order: 66; }
+  .wk-col:first-child > :nth-child(34) { order: 67; }
+  .wk-col:last-child > :nth-child(34) { order: 68; }
+  .wk-col:first-child > :nth-child(35) { order: 69; }
+  .wk-col:last-child > :nth-child(35) { order: 70; }
+  .wk-col:first-child > :nth-child(36) { order: 71; }
+  .wk-col:last-child > :nth-child(36) { order: 72; }
+  .wk-col:first-child > :nth-child(37) { order: 73; }
+  .wk-col:last-child > :nth-child(37) { order: 74; }
+  .wk-col:first-child > :nth-child(38) { order: 75; }
+  .wk-col:last-child > :nth-child(38) { order: 76; }
+  .wk-col:first-child > :nth-child(39) { order: 77; }
+  .wk-col:last-child > :nth-child(39) { order: 78; }
+  .wk-col:first-child > :nth-child(40) { order: 79; }
+  .wk-col:last-child > :nth-child(40) { order: 80; }
+
   /* 수정사항_11.06 Works_MO 코멘트: 카드 사이 30 · 텍스트 좌우 4 (6 → 4) · 브랜드명 자간 -2%.
      피그마 Thumnail/Works MO: Overlay 위 16 · 좌우 4 · gap 6 / Brand 16/18 / Project SemiBold 20 */
   .wk-card-overlay,

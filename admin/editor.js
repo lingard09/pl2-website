@@ -396,7 +396,7 @@
   function attrsHtml(list) {
     return list.map(function (a) { return a[1] === null ? " " + a[0] : " " + a[0] + '="' + a[1] + '"'; }).join("");
   }
-  var SCALES = [70, 80, 90];
+  var SCALE_MIN = 30; // 크기 % 는 30~99 정수 (100 = 원래 크기라 값을 두지 않는다). cms.py scale_ok · lib.php 와 같게
   function sizeAttrs(attrs, item, drop) {
     var keep = attrs.filter(function (a) { return (drop || []).indexOf(a[0]) < 0; });
     var parts = [], flags = "";
@@ -406,7 +406,7 @@
       if (fit.mw > 0 && fit.mh > 0) parts.push("--cms-ar-mo: " + fit.mw + " / " + fit.mh);
       flags += " data-cms-fit";
     }
-    if (SCALES.indexOf(item.scale) >= 0) {
+    if (typeof item.scale === "number" && item.scale % 1 === 0 && item.scale >= SCALE_MIN && item.scale <= 99) {
       parts.push("scale: " + item.scale + "%");
       flags += " data-cms-scale";
     }
@@ -506,6 +506,7 @@
     if (langSeg) langSeg.classList.toggle("is-off", !hasEnglish());
     // 저장 전 고친 값 다시 입히기
     Object.keys(S.pending).forEach(function (id) { if (meta(id)) previewValue(id, currentValue(id)); });
+    if (S.wo && isWorks()) previewOrder();
     d.addEventListener("click", onFrameClick, true);
     if (y) setTimeout(function () { d.defaultView.scrollTo(0, y); }, 300);
     markSelected();
@@ -983,15 +984,25 @@
       box.appendChild(h("p", { class: "hint", text: "폭은 디자인 그대로, 높이만 파일 비율대로 바뀌어 잘리는 곳이 없어집니다. 아래 내용은 그만큼 밀리거나 당겨집니다." }));
     }
     if (m.scale) {
-      var sel = h("select", { class: "scale-sel" });
-      [100, 90, 80, 70].forEach(function (v) { sel.appendChild(h("option", { value: v, text: v + "%" + (v === 100 ? " (원래 크기)" : ""), selected: (it.scale || 100) === v })); });
-      sel.addEventListener("change", function () {
-        var v = currentValue(owner), n = parseInt(sel.value, 10);
-        if (n === 100) delete v.scale; else v.scale = n;
+      var setScale = function (n) {
+        var v = currentValue(owner);
+        n = Math.round(n);
+        if (!(n >= SCALE_MIN) || n >= 100) delete v.scale; else v.scale = n;
         setPending(owner, v);
         renderPanel();
+      };
+      var num = h("input", { type: "number", class: "scale-num", min: SCALE_MIN, max: 100, step: 1, value: it.scale || 100 });
+      num.addEventListener("change", function () {
+        var n = parseInt(num.value, 10);
+        if (isNaN(n)) n = 100;
+        setScale(Math.max(SCALE_MIN, Math.min(100, n)));
       });
-      box.appendChild(h("label", { class: "field" }, h("span", { text: "보이는 크기 (가운데 기준으로 줄어듭니다)" }), sel));
+      var quick = h("span", { class: "scale-quick" });
+      [100, 90, 80, 70, 50].forEach(function (q) {
+        quick.appendChild(h("button", { class: "ghost" + ((it.scale || 100) === q ? " on" : ""), text: q + "%", onclick: function () { setScale(q); } }));
+      });
+      box.appendChild(h("div", { class: "field" }, h("span", { text: "보이는 크기 % (" + SCALE_MIN + "~100, 가운데 기준으로 줄어듭니다)" }),
+        h("div", { class: "scale-row" }, num, h("span", { text: "%" }), quick)));
     }
     return box;
   }
@@ -1346,17 +1357,123 @@
   }
 
   // ── 패널 ─────────────────────────────────────────
+  // ── Works 카드 순서 (11.20) ─────────────────────────
+  // 미리보기의 두 열에서 카드를 읽어 위·아래·옆 줄로 옮긴다. 저장하면 서버(admin/pages.php works_order)가
+  // pages.json 에 순서를 두고 Works 목록 html 을 다시 쓴다. 이름표: 새 페이지 = p:<id>, 기존 카드 = 첫 data-cms id
+  function isWorks() {
+    return S.mode !== "pages" && S.page && S.page.route === "works/";
+  }
+  function readCards() {
+    var d = frameDoc();
+    var cols = d ? d.querySelectorAll(".wk-grid > .wk-col") : [];
+    if (cols.length !== 2) return null;
+    return [0, 1].map(function (ci) {
+      return Array.prototype.map.call(cols[ci].children, function (c) {
+        var pid = c.getAttribute("data-cms-page");
+        var first = c.querySelector("[data-cms]");
+        var media = c.querySelector(".wk-card-media");
+        var proj = c.querySelector(".wk-card-project"), brand = c.querySelector(".wk-card-brand");
+        return {
+          key: pid ? "p:" + pid : first ? first.getAttribute("data-cms") : "",
+          thumb: media ? (media.tagName === "VIDEO" ? media.poster : media.currentSrc || media.src) : "",
+          name: proj ? proj.textContent.trim() : "",
+          brand: brand ? brand.textContent.trim() : "",
+          isNew: !!pid,
+          hidden: c.tagName === "ARTICLE"
+        };
+      }).filter(function (x) { return x.key; });
+    });
+  }
+  function cardNode(d, key) {
+    if (key.slice(0, 2) === "p:") return d.querySelector('.wk-col > [data-cms-page="' + key.slice(2) + '"]');
+    var el = d.querySelector('.wk-col [data-cms="' + key + '"]');
+    while (el && !(el.parentNode && el.parentNode.classList && el.parentNode.classList.contains("wk-col"))) el = el.parentNode;
+    return el;
+  }
+  function previewOrder() {
+    var d = frameDoc();
+    var cols = d ? d.querySelectorAll(".wk-grid > .wk-col") : [];
+    if (cols.length !== 2 || !S.wo) return;
+    S.wo.cols.forEach(function (col, ci) {
+      col.forEach(function (x) { var n = cardNode(d, x.key); if (n) cols[ci].appendChild(n); });
+    });
+  }
+  function orderPanel(body) {
+    if (!S.wo) {
+      var c = readCards();
+      if (!c) {
+        body.appendChild(h("p", { class: "empty", text: "미리보기를 불러오는 중입니다. 잠시 뒤 다시 눌러 주세요." }));
+        return;
+      }
+      S.wo = { cols: c, saved: clone(c), dirty: false };
+    }
+    var wo = S.wo;
+    function moved() {
+      wo.dirty = true;
+      previewOrder();
+      var y = body.scrollTop;
+      renderPanel();
+      var b2 = panel.querySelector(".panel-body");
+      if (b2) b2.scrollTop = y;
+    }
+    body.appendChild(h("p", { class: "hint", text: "PC 에서는 왼쪽·오른쪽 두 줄로 보이고, 모바일에서는 두 줄을 위에서부터 번갈아 섞어 한 줄로 보여요. 화살표로 옮기면 미리보기에 바로 보이고, ‘카드 순서 저장’ 을 눌러야 사이트에 반영됩니다." }));
+    var grid = h("div", { class: "wo-cols" });
+    ["왼쪽 줄", "오른쪽 줄"].forEach(function (label, ci) {
+      var col = wo.cols[ci];
+      var box = h("div", { class: "wo-col" }, h("b", { text: label + " (" + col.length + ")" }));
+      col.forEach(function (x, i) {
+        box.appendChild(h("div", { class: "wo-item" + (x.isNew ? " is-new" : "") },
+          x.thumb ? h("img", { src: x.thumb, alt: "", class: "wo-thumb" }) : h("div", { class: "wo-thumb" }),
+          h("small", { class: "wo-name", text: (x.name || x.brand || x.key) + (x.hidden ? " (비공개 카드)" : "") }),
+          h("div", { class: "wo-btns" },
+            h("button", { class: "ghost", text: "↑", title: "위로", disabled: i === 0, onclick: function () { col.splice(i - 1, 0, col.splice(i, 1)[0]); moved(); } }),
+            h("button", { class: "ghost", text: "↓", title: "아래로", disabled: i === col.length - 1, onclick: function () { col.splice(i + 1, 0, col.splice(i, 1)[0]); moved(); } }),
+            h("button", { class: "ghost", text: ci === 0 ? "→" : "←", title: ci === 0 ? "오른쪽 줄로" : "왼쪽 줄로", onclick: function () {
+              var other = wo.cols[1 - ci];
+              other.splice(Math.min(i, other.length), 0, col.splice(i, 1)[0]);
+              moved();
+            } }))));
+      });
+      grid.appendChild(box);
+    });
+    body.appendChild(grid);
+    body.appendChild(h("div", { class: "actions pe-save" },
+      h("button", { class: "primary", text: "카드 순서 저장", disabled: !wo.dirty, onclick: function () {
+        var btn = this;
+        btn.disabled = true;
+        api("works_order", { cols: wo.cols.map(function (col) { return col.map(function (x) { return x.key; }); }) }).then(function (r) {
+          S.pages = r.pages;
+          wo.saved = clone(wo.cols);
+          wo.dirty = false;
+          toast("카드 순서를 저장했습니다. 사이트 Works 목록에 반영됐어요.");
+          renderPanel();
+        }).catch(function (e) { toast(e.message, "err"); btn.disabled = false; });
+      } }),
+      h("button", { class: "ghost", text: "옮긴 것 되돌리기", disabled: !wo.dirty, onclick: function () {
+        wo.cols = clone(wo.saved);
+        wo.dirty = false;
+        previewOrder();
+        renderPanel();
+      } })));
+  }
+
   function renderPanel() {
     if (!panel) return;
     if (S.mode === "pages") { pagesPanel(); return; }
     panel.innerHTML = "";
     var tabs = h("div", { class: "tabs" },
       h("button", { class: S.tab === "item" ? "on" : "", text: "선택한 항목", onclick: function () { S.tab = "item"; renderPanel(); } }),
-      h("button", { class: S.tab === "list" ? "on" : "", text: "이 페이지 전체 목록", onclick: function () { S.tab = "list"; renderPanel(); } })
+      h("button", { class: S.tab === "list" ? "on" : "", text: "이 페이지 전체 목록", onclick: function () { S.tab = "list"; renderPanel(); } }),
+      isWorks() ? h("button", { class: S.tab === "order" ? "on" : "", text: "카드 순서", onclick: function () { S.tab = "order"; renderPanel(); } }) : null
     );
     panel.appendChild(tabs);
     var body = h("div", { class: "panel-body" });
     panel.appendChild(body);
+    if (S.tab === "order") {
+      if (isWorks()) { orderPanel(body); return; }
+      S.tab = "item";
+      tabs.firstChild.classList.add("on");
+    }
 
     if (S.tab === "item") {
       var ids = S.selected.filter(function (id) { return meta(id) && meta(id).files.indexOf(S.page.file) >= 0; });
@@ -1477,8 +1594,13 @@
     var sel = S.pageSel;
     if (!sel) return;
     sel.innerHTML = "";
-    S.index.pages.forEach(function (p, i) {
-      sel.appendChild(h("option", { value: i, text: pageLabel(p), selected: S.mode !== "pages" && p === S.page }));
+    [["기본 페이지", false], ["상세 페이지", true]].forEach(function (g) {
+      var og = h("optgroup", { label: g[0] });
+      S.index.pages.forEach(function (p, i) {
+        if (!!p.num !== g[1]) return;
+        og.appendChild(h("option", { value: i, text: pageLabel(p), selected: S.mode !== "pages" && p === S.page }));
+      });
+      if (og.children.length) sel.appendChild(og);
     });
     var list = (S.pages && S.pages.pages) || [];
     if (list.length) {
@@ -1508,6 +1630,11 @@
         fillPageSel();
         return;
       }
+      if (S.wo && S.wo.dirty && !confirm("Works 카드 순서를 저장하지 않았습니다. 나갈까요?")) {
+        fillPageSel();
+        return;
+      }
+      S.wo = null;
       if (v === "pages" || v.slice(0, 3) === "pe:") {
         if (S.mode !== "pages" && pendingCount()) toast("저장 안 한 글·이미지 변경은 그대로 남아 있어요. 페이지로 돌아가 저장해 주세요.");
         S.mode = "pages";
@@ -1647,7 +1774,7 @@
   function previewCopy(p) {
     var c = clone(p);
     c.blocks = (c.blocks || []).map(function (b) {
-      if (b.type === "media") return { type: "media", items: (b.items || []).filter(function (m) { return m && m.src; }) };
+      if (b.type === "media") { b.items = (b.items || []).filter(function (m) { return m && m.src; }); return b; }
       return b;
     }).filter(function (b) {
       if (b.type === "media") return b.items.length > 0;
@@ -1696,6 +1823,13 @@
   // 이미지·영상 한 칸 고르기. onSet(새 값 | null)
   function mediaPick(cur, onSet, optional) {
     var box = h("div", { class: "pm" }, mediaThumb(cur));
+    if (cur && cur.src) {
+      var dims = h("small", { class: "hint pm-dims", text: "파일 크기 읽는 중…" });
+      box.appendChild(dims);
+      mediaSize(cur.src, cur.type === "video").then(function (r) {
+        dims.textContent = r ? "지금 파일: " + r[0] + "×" + r[1] + (r[0] < 1200 && cur.type !== "video" ? " — 작아서 큰 화면에서 흐려 보일 수 있어요" : "") : "";
+      });
+    }
     var btns = h("div", { class: "pm-btns" });
     btns.appendChild(fileButton(cur && cur.src ? "이미지로 바꾸기" : "이미지 올리기", "image/jpeg,image/png,image/webp", function (file, bar) {
       return upload(file, "image", 1920, bar).then(function (r) { onSet({ type: "img", src: r.url }); });
@@ -1720,6 +1854,37 @@
     el.value = obj[key] || "";
     el.addEventListener("input", function () { obj[key] = el.value; peChanged(false); });
     return el;
+  }
+
+  // 선택 상자 하나. opts = [[값, 이름]…], onPick(값) 뒤 미리보기 갱신
+  function optSel(opts, cur, onPick) {
+    var sel = h("select", {});
+    opts.forEach(function (o) { sel.appendChild(h("option", { value: o[0], text: o[1], selected: o[0] === cur })); });
+    sel.addEventListener("change", function () { onPick(sel.value); peChanged(false); });
+    return sel;
+  }
+  var GAP_OPTS = [["320", "넓게 (기본)"], ["160", "보통"], ["80", "좁게"], ["40", "아주 좁게"]];
+  // 줄 배치: 한 칸이면 폭, 두 칸이면 비율 (모바일은 언제나 꽉 찬 1열)
+  function layoutField(b) {
+    var opts = b.items.length === 2
+      ? [["", "반반 (1:1)"], ["2-1", "왼쪽을 크게 (2:1)"], ["1-2", "오른쪽을 크게 (1:2)"]]
+      : [["", "꽉 차게 (100%)"], ["90", "90%"], ["80", "80%"], ["70", "70%"], ["60", "60%"], ["50", "50%"]];
+    return field(b.items.length === 2 ? "두 칸 비율 (PC)" : "폭 (PC, 가운데 정렬)", optSel(opts, b.layout || "", function (v) { if (v) b.layout = v; else delete b.layout; }));
+  }
+  function captionField(m) {
+    var on = typeof m.caption === "string";
+    var cb = h("input", { type: "checkbox", checked: on });
+    var box = h("div", { class: "pe-cap" }, h("label", { class: "check" }, cb, h("span", { text: "아래에 캡션 달기" })));
+    if (on) {
+      var inp = h("input", { type: "text", value: m.caption, placeholder: "예: SLBS Studio X Samsung - Gangnam Store" });
+      inp.addEventListener("input", function () { m.caption = inp.value; peChanged(false); });
+      box.appendChild(inp);
+    }
+    cb.addEventListener("change", function () {
+      if (cb.checked) m.caption = ""; else delete m.caption;
+      peChanged(true);
+    });
+    return box;
   }
 
   function pagesPanel() {
@@ -1812,16 +1977,26 @@
       if (b.type === "media") {
         var cells = h("div", { class: "pe-cells" + (b.items.length === 2 ? " two" : "") });
         b.items.forEach(function (m, k) {
-          var cell = h("div", { class: "pe-cell" }, mediaPick(m, function (v) { b.items[k] = v; peChanged(true); }, false));
-          if (b.items.length === 2) cell.appendChild(h("button", { class: "ghost", text: "이 칸 빼기", onclick: function () { b.items.splice(k, 1); peChanged(true); } }));
+          var cell = h("div", { class: "pe-cell" }, mediaPick(m, function (v) {
+            if (v && m && m.caption) v.caption = m.caption; // 파일을 바꿔도 캡션은 둔다
+            b.items[k] = v;
+            peChanged(true);
+          }, false));
+          if (m && m.src) cell.appendChild(captionField(m));
+          if (b.items.length === 2) cell.appendChild(h("button", { class: "ghost", text: "이 칸 빼기", onclick: function () { b.items.splice(k, 1); delete b.layout; peChanged(true); } }));
           cells.appendChild(cell);
         });
         row.appendChild(cells);
-        if (b.items.length === 1) row.appendChild(h("button", { class: "ghost", text: "＋ 옆에 한 칸 더 (한 줄에 2개)", onclick: function () { b.items.push(null); peChanged(true); } }));
+        row.appendChild(layoutField(b));
+        if (b.items.length === 1) row.appendChild(h("button", { class: "ghost", text: "＋ 옆에 한 칸 더 (한 줄에 2개)", onclick: function () { b.items.push(null); delete b.layout; peChanged(true); } }));
       } else if (b.type === "text") {
         row.appendChild(field("제목", textIn(b, "title", false, "")));
         row.appendChild(field("한글", textIn(b, "ko", true, "")));
         row.appendChild(field("영문 (선택)", textIn(b, "en", true, "")));
+        row.appendChild(h("div", { class: "pe-opts" },
+          field("정렬 (PC)", optSel([["c", "가운데"], ["l", "왼쪽"], ["r", "오른쪽"]], b.align || "c", function (v) { if (v === "c") delete b.align; else b.align = v; })),
+          field("위 간격", optSel(GAP_OPTS, String(b.above || 320), function (v) { if (v === "320") delete b.above; else b.above = +v; })),
+          field("아래 간격", optSel(GAP_OPTS, String(b.below || 320), function (v) { if (v === "320") delete b.below; else b.below = +v; }))));
       } else {
         var vim = h("input", { type: "text", value: b.vimeo || "", placeholder: "https://vimeo.com/123456789" });
         vim.addEventListener("input", function () {
@@ -1878,7 +2053,7 @@
   }
 
   window.addEventListener("beforeunload", function (e) {
-    if (S.mode === "pages" && S.pe && S.peDirty) {
+    if ((S.mode === "pages" && S.pe && S.peDirty) || (S.wo && S.wo.dirty)) {
       e.preventDefault();
       e.returnValue = "";
     }

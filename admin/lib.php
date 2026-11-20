@@ -385,6 +385,12 @@ function cms_attrs_html($attrs, $drop)
     return $s;
 }
 
+// 크기 % — 30~99 정수 (100 = 원래 크기). cms.py scale_ok · editor.js 와 같게
+function cms_scale_ok($v)
+{
+    return is_int($v) && $v >= 30 && $v <= 99;
+}
+
 // 원래 속성 + 크기 설정 (tools/cms.py size_attrs 와 같은 결과)
 function cms_size_attrs($attrs, $item, $drop)
 {
@@ -405,7 +411,7 @@ function cms_size_attrs($attrs, $item, $drop)
         $flags .= ' data-cms-fit';
     }
     $sc = cms_get($item, 'scale');
-    if (in_array($sc, array(70, 80, 90), true)) {
+    if (cms_scale_ok($sc)) {
         $parts[] = 'scale: ' . $sc . '%';
         $flags .= ' data-cms-scale';
     }
@@ -716,7 +722,7 @@ function cms_clean_item($id, $item)
     }
     $sc = cms_get($item, 'scale');
     if ($sc !== null) {
-        if (!cms_get($meta, 'scale') || !in_array($sc, array(70, 80, 90), true)) {
+        if (!cms_get($meta, 'scale') || !cms_scale_ok($sc)) {
             return '이 자리는 크기를 바꿀 수 없습니다';
         }
         $size['scale'] = $sc;

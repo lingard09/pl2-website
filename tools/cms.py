@@ -329,7 +329,9 @@ def attrs_html(attrs, drop=()):
     return "".join(f' {n}="{v}"' if v is not None else f" {n}" for n, v in attrs if n not in drop)
 
 
-SCALES = (70, 80, 90)
+def scale_ok(v):
+    """크기 % — 30~99 정수 (100 = 원래 크기). lib.php cms_scale_ok · editor.js 와 같게"""
+    return type(v) is int and 30 <= v <= 99
 
 
 def size_attrs(attrs, item, drop=()):
@@ -344,7 +346,7 @@ def size_attrs(attrs, item, drop=()):
             parts.append(f"--cms-ar-mo: {int(fit['mw'])} / {int(fit['mh'])}")
         flags += " data-cms-fit"
     sc = item.get("scale")
-    if sc in SCALES:
+    if scale_ok(sc):
         parts.append(f"scale: {sc}%")
         flags += " data-cms-scale"
     if not parts:
@@ -477,6 +479,20 @@ def pmedia(m, cls="", extra=""):
     return f'<img{c}{extra} src="{esc_attr(m.get("src") or "")}" alt="" />'
 
 
+GAPS = (40, 80, 160)  # 글 칸 위·아래 간격 (기본은 섹션 간격 320)
+WIDTHS = ("90", "80", "70", "60", "50")  # 한 칸 줄의 폭 (가운데)
+SPLITS = ("2-1", "1-2")  # 두 칸 줄의 비율 (기본 1:1)
+
+
+def pcell(m):
+    """줄의 한 칸 — 캡션이 있으면 figure 로 감싼다"""
+    el = pmedia(m, "", " data-reveal")
+    cap = norm(m["caption"]) if isinstance(m.get("caption"), str) else ""
+    if cap:
+        return f'<figure class="wdc-fig">{el}<figcaption class="wdc-cap">{ptext(cap)}</figcaption></figure>'
+    return el
+
+
 def page_main(p):
     out = ['<div class="wd-container">', '<section class="wd-top">', '<div class="wd-hero wd-hero--fade-black">']
     out.append(pmedia(p.get("hero") or {}, "wd-hero-media"))
@@ -509,13 +525,22 @@ def page_main(p):
             if not inlist:
                 out.append('<section class="wdc-list">')
                 inlist = True
-            out.append(f'<div class="wdc-row wdc-row--{len(items)}">' + "".join(pmedia(m, "", " data-reveal") for m in items) + "</div>")
+            cls = f"wdc-row wdc-row--{len(items)}"
+            lay = b.get("layout")
+            if (len(items) == 1 and lay in WIDTHS) or (len(items) == 2 and lay in SPLITS):
+                cls += f" wdc-row--{lay}"
+            out.append(f'<div class="{cls}">' + "".join(pcell(m) for m in items) + "</div>")
             continue
         if inlist:
             out.append("</section>")
             inlist = False
         if t == "text":
-            x = '<section class="wdc-text"><div class="wd-head wd-head--center">'
+            cls = "wdc-text"
+            for k, pre in (("above", "t"), ("below", "b")):
+                if type(b.get(k)) is int and b[k] in GAPS:  # PHP in_array(…, true) 와 같게 (정수만)
+                    cls += f" wdc-text--{pre}{b[k]}"
+            al = {"l": "left", "r": "right"}.get(b.get("align"), "center")
+            x = f'<section class="{cls}"><div class="wd-head wd-head--{al}">'
             if norm(b.get("title") or ""):
                 x += f'<h2 class="wd-head-title">{ptext(b["title"])}</h2>'
             if norm(b.get("ko") or ""):
@@ -569,20 +594,95 @@ def public_pages(pages):
     return sorted(lst, key=lambda p: str(p.get("created") or ""), reverse=True)
 
 
-CARD_RE = re.compile(r'\s*<a class="wk-card[^"]*" data-cms-page="[^"]*".*?</a>', re.S)
+CARD_START = re.compile(r'<(a|article) class="wk-card[^"]*"')
+CARD_GAP = re.compile(r"\s*(?:<!--.*?-->\s*)*", re.S)
+PAGE_CARD = re.compile(r'<a class="wk-card[^"]*" data-cms-page="')
 
 
-def works_with_cards(doc, pages):
-    """Works 목록 html 에 새 페이지 카드를 넣는다 (먼저 있던 카드는 지우고). 최신이 왼쪽 열 맨 위, 다음이 오른쪽 열 맨 위 …"""
-    doc = CARD_RE.sub("", doc)
-    pub = public_pages(pages)
-    cols = ["", ""]
-    for i, p in enumerate(pub):
-        cols[i % 2] += "\n" + card_html(p)
+def split_cols(doc):
+    """Works 목록 html → (앞, [왼쪽 카드들, 오른쪽 카드들], [각 열 뒤]) — 모양이 다르면 None"""
     parts = doc.split('<div class="wk-col">')
     if len(parts) != 3:
+        return None
+    cols, rests = [], []
+    for part in parts[1:]:
+        pos, cards = 0, []
+        while True:
+            pos = CARD_GAP.match(part, pos).end()
+            if part.startswith("</div>", pos):
+                break
+            m = CARD_START.match(part, pos)
+            if not m:
+                return None
+            end = part.find("</" + m.group(1) + ">", pos)
+            if end < 0:
+                return None
+            end += len(m.group(1)) + 3
+            cards.append(part[pos:end])
+            pos = end
+        cols.append(cards)
+        rests.append(part[pos:])
+    return parts[0], cols, rests
+
+
+def card_key(c):
+    """카드 이름표: 새 페이지 = p:<id>, 기존 카드 = 안에 있는 첫 data-cms id"""
+    m = re.search(r'data-cms-page="([^"]+)"', c) or re.search(r'data-cms="([^"]+)"', c)
+    if not m:
+        return None
+    return ("p:" if "data-cms-page" in m.group(0) else "") + m.group(1)
+
+
+def works_order(data):
+    """pages.json 의 works.cols — [[왼쪽 카드 이름표…], [오른쪽 …]] (없거나 모양이 틀리면 빈 순서)"""
+    w = data.get("works") if isinstance(data, dict) else None
+    cols = w.get("cols") if isinstance(w, dict) else None
+    if not isinstance(cols, list) or len(cols) != 2 or not all(isinstance(c, list) for c in cols):
+        return [[], []]
+    return [[k for k in c if isinstance(k, str)] for c in cols]
+
+
+def works_with_cards(doc, pages, order=None):
+    """Works 목록 html 에 새 페이지 카드를 넣고 카드 순서를 맞춘다.
+    - 순서(order)에 있는 카드는 그 열·그 차례로
+    - 순서에 없는 새 페이지 카드는 맨 위에, 최신부터 왼쪽·오른쪽 번갈아
+    - 순서에 없는 기존 카드는 원래 열 맨 끝에 (원래 차례대로)"""
+    sp = split_cols(doc)
+    if not sp:
         return doc
-    return parts[0] + '<div class="wk-col">' + cols[0] + parts[1] + '<div class="wk-col">' + cols[1] + parts[2]
+    head, cols, rests = sp
+    order = order or [[], []]
+    static = [[c for c in col if not PAGE_CARD.match(c)] for col in cols]
+    pub = public_pages(pages)
+    pcard = {"p:" + p["id"]: card_html(p) for p in pub}
+    smap = {}
+    for col in static:
+        for c in col:
+            k = card_key(c)
+            if k and k not in smap:
+                smap[k] = c
+    listed = set(order[0]) | set(order[1])
+    out = [[], []]
+    for i, p in enumerate([p for p in pub if "p:" + p["id"] not in listed]):
+        out[i % 2].append(pcard["p:" + p["id"]])
+    used = set()
+    for ci in (0, 1):
+        for k in order[ci]:
+            if k in used:
+                continue
+            c = pcard.get(k) or smap.get(k)
+            if c:
+                out[ci].append(c)
+                used.add(k)
+    for ci, col in enumerate(static):
+        for c in col:
+            k = card_key(c)
+            if k is None or k not in used:
+                out[ci].append(c)
+                if k:
+                    used.add(k)
+    return (head + '<div class="wk-col">' + "".join("\n" + c for c in out[0]) + "\n" + rests[0]
+            + '<div class="wk-col">' + "".join("\n" + c for c in out[1]) + "\n" + rests[1])
 
 
 def cmd_skeleton(dist):
@@ -616,7 +716,8 @@ def cmd_skeleton(dist):
 
 def cmd_pages(dist, pages_path, content_path=None):
     """서버의 pages.json 으로 새 페이지 html 과 Works 카드를 dist 에 만든다 (메뉴·바닥글 고친 값도 적용)"""
-    pages = json.load(open(pages_path, encoding="utf-8")).get("pages") or []
+    data = json.load(open(pages_path, encoding="utf-8"))
+    pages = data.get("pages") or []
     skeleton = open(os.path.join(dist, "admin", "page-skeleton.html"), encoding="utf-8").read()
     items = {}
     if content_path and os.path.exists(content_path):
@@ -636,7 +737,7 @@ def cmd_pages(dist, pages_path, content_path=None):
     wp = os.path.join(dist, "works", "index.html")
     w = open(wp, encoding="utf-8").read()
     with open(wp, "w", encoding="utf-8") as fh:
-        fh.write(works_with_cards(w, pages))
+        fh.write(works_with_cards(w, pages, works_order(data)))
     sm = os.path.join(dist, "sitemap.xml")
     if made and os.path.exists(sm):
         x = open(sm, encoding="utf-8").read()
