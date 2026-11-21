@@ -807,3 +807,42 @@ button.danger {
 .fx-ch-card .fx-thumb { width: 56px; }
 .fx-ch-card input[type="number"] { width: 100%; padding: 6px; border: 1px solid var(--line); border-radius: 6px; }
 .fx-ch-card .fx-cell-btns { flex-direction: column; }
+
+/* 11.21: 새 페이지 편집 — 블록 · 블록 추가 영역 · 블록 안 버튼을 눈으로 구분 */
+.pe-block { padding: 0; gap: 0; overflow: hidden; background: #fff; border-width: 1px 1px 1px 4px; }
+.pe-block > :not(.pe-block-bar) { margin: 0 10px; }
+.pe-block > :not(.pe-block-bar):nth-child(2) { margin-top: 10px; }
+.pe-block > :last-child { margin-bottom: 12px; }
+.pe-block > * + :not(.pe-block-bar) { margin-top: 8px; }
+.pe-kind-basic { border-color: #d6d6d1 #d6d6d1 #d6d6d1 #3a3a37; }
+.pe-kind-fx { border-color: #f3c6a6 #f3c6a6 #f3c6a6 var(--accent); background: #fffaf6; }
+.pe-block-bar { padding: 7px 8px 7px 10px; gap: 6px; }
+.pe-kind-basic .pe-block-bar { background: #3a3a37; color: #fff; }
+.pe-kind-fx .pe-block-bar { background: var(--accent); color: #fff; }
+.pe-block-bar b { font-size: 13.5px; }
+.pe-block-bar button { background: rgba(255, 255, 255, 0.16); border-color: rgba(255, 255, 255, 0.35); color: #fff; }
+.pe-block-bar button:disabled { opacity: 0.35; }
+.pe-block-bar button.danger { background: #fff; color: var(--err); border-color: #fff; }
+.pe-num { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 5px; border-radius: 11px; background: #fff; color: var(--text); font-size: 12px; font-weight: 700; }
+.pe-kind { display: inline-block; padding: 1px 7px; border-radius: 4px; font-size: 11px; font-weight: 600; background: rgba(255, 255, 255, 0.2); }
+/* 블록 안에서 무언가 더하는 버튼: 작고 점선 (블록 추가와 다르다) */
+button.inner-add { width: 100%; padding: 6px 10px; border: 1px dashed #b9b9b3; border-radius: 6px; background: transparent; color: var(--muted); font-size: 12.5px; font-weight: 500; }
+button.inner-add:hover { border-color: var(--text); color: var(--text); background: #fff; }
+.pe-kind-fx button.inner-add { border-color: #f0b48a; color: #b4541a; }
+.pe-kind-fx button.inner-add:hover { border-color: var(--accent); color: var(--accent); }
+/* 블록 추가 영역 */
+.pe-adder { display: flex; flex-direction: column; gap: 12px; margin: 4px 0 16px; padding: 14px; border: 2px dashed #9fb8e8; border-radius: 12px; background: #f1f6ff; }
+.pe-adder-title { display: flex; flex-direction: column; gap: 2px; }
+.pe-adder-title b { font-size: 15px; color: #1d4ea8; }
+.pe-adder-title small { color: var(--muted); font-size: 12px; }
+.pe-adder-group { display: flex; flex-direction: column; gap: 6px; }
+.pe-adder-group > .pe-kind { align-self: flex-start; background: #3a3a37; color: #fff; }
+.pe-adder-group > .pe-kind.is-fx { background: var(--accent); }
+.pe-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; }
+.pe-tile { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 8px 10px; border: 1px solid #d6d6d1; border-left-width: 4px; border-radius: 8px; background: #fff; text-align: left; cursor: pointer; }
+.pe-tile b { font-size: 13px; }
+.pe-tile small { color: var(--muted); font-size: 11.5px; line-height: 1.35; }
+.pe-tile.is-basic { border-left-color: #3a3a37; }
+.pe-tile.is-fx { border-left-color: var(--accent); }
+.pe-tile:hover { border-color: #1d4ea8; box-shadow: 0 2px 8px rgba(29, 78, 168, 0.15); }
+.pe-block > button.inner-add { width: auto; }

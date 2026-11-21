@@ -1894,22 +1894,22 @@
     return { num: (n < 10 ? "0" : "") + n, title: "", ko: "", en: "", cards: [] };
   }
   var FX = {
-    strip: { label: "필름스트립", from: "상세 01",
+    strip: { short: "가운데로 한 장씩", label: "필름스트립", from: "상세 01",
       hint: "스크롤하면 이미지가 한 장씩 가운데 큰 칸으로 와요. 3~20장. 세로로 긴 이미지(518×740 비율)가 잘 맞아요. 모바일은 손으로 넘기는 가로 목록이에요.",
       make: function () { return { type: "strip", items: [], caption: "" }; } },
-    stack: { label: "레이어 얹힘", from: "상세 01",
+    stack: { short: "카드에 겹쳐 얹힘", label: "레이어 얹힘", from: "상세 01",
       hint: "어두운 띠 가운데 카드에 세트마다 이미지 1~3장이 아래에서 올라와 겹쳐요. 400×760 비율, 배경이 투명한 PNG 를 쓰면 겹치는 모양이 보여요. 모바일은 마지막 세트를 다 겹친 모양으로 보여 줘요.",
       make: function () { return { type: "stack", sets: [[]] }; } },
-    compare: { label: "전/후 비교", from: "상세 05",
+    compare: { short: "선을 끌어 비교", label: "전/후 비교", from: "상세 05",
       hint: "가운데 선을 끌어 전·후를 비교해요. 두 이미지는 같은 크기로 만들어 주세요. 높이는 '후' 이미지 비율을 따라가요.",
       make: function () { return { type: "compare", before: null, after: null }; } },
-    wipe: { label: "스크롤 전환", from: "상세 07",
+    wipe: { short: "둘째 장이 덮어 내림", label: "스크롤 전환", from: "상세 07",
       hint: "화면에 멈춘 채 스크롤하면 둘째 이미지가 위에서 아래로 덮어요. 두 이미지는 같은 크기로 만들어 주세요. 모바일은 두 장을 위아래로 보여 줘요.",
       make: function () { return { type: "wipe", a: null, b: null, caption: "" }; } },
-    slide: { label: "스크롤 캐러셀", from: "상세 09",
+    slide: { short: "스크롤로 넘김", label: "스크롤 캐러셀", from: "상세 09",
       hint: "PC 는 화면에 멈춘 채 스크롤할 때마다 한 장씩, 모바일은 3초마다 넘어가요. 2~8장, 높이는 첫 장 비율을 따라가요.",
       make: function () { return { type: "slide", items: [] }; } },
-    chapters: { label: "스크롤 챕터", from: "상세 02",
+    chapters: { short: "번호 목록 + 사진 배치", label: "스크롤 챕터", from: "상세 02",
       hint: "챕터마다 왼쪽 사진은 끌어서 자리·크기를 정해요. 오른쪽 목록은 화면에 고정된 채 지금 챕터가 커지고 설명이 펼쳐져요. 모바일은 챕터마다 글 + 사진 넘기기예요.",
       make: function () { return { type: "chapters", list: [blankChapter(1), blankChapter(2)] }; } }
   };
@@ -1925,7 +1925,7 @@
   function multiUpload(label, room, onEach) {
     var input = h("input", { type: "file", accept: "image/jpeg,image/png,image/webp", multiple: true, hidden: true });
     var prog = h("div", { class: "progress" }, h("i"));
-    var btn = h("button", { text: label, onclick: function () { input.click(); } });
+    var btn = h("button", { class: "inner-add", text: label, onclick: function () { input.click(); } });
     input.addEventListener("change", function () {
       var all = Array.prototype.slice.call(input.files);
       input.value = "";
@@ -2064,7 +2064,7 @@
         chCanvas(c),
         cards));
     });
-    if (b.list.length < 6) wrap.appendChild(h("button", { text: "＋ 챕터 추가", onclick: function () { b.list.push(blankChapter(b.list.length + 1)); peChanged(true); } }));
+    if (b.list.length < 6) wrap.appendChild(h("button", { class: "inner-add", text: "＋ 이 블록에 챕터 추가", onclick: function () { b.list.push(blankChapter(b.list.length + 1)); peChanged(true); } }));
     return wrap;
   }
   function fxEditor(b, row) {
@@ -2085,7 +2085,7 @@
             b.sets.length > 1 ? h("button", { class: "ghost danger", text: "세트 빼기", onclick: function () { b.sets.splice(j, 1); peChanged(true); } }) : null),
           imgGrid(s, 3)));
       });
-      if (b.sets.length < 5) row.appendChild(h("button", { text: "＋ 세트 추가", onclick: function () { b.sets.push([]); peChanged(true); } }));
+      if (b.sets.length < 5) row.appendChild(h("button", { class: "inner-add", text: "＋ 이 블록에 세트 추가", onclick: function () { b.sets.push([]); peChanged(true); } }));
     } else if (b.type === "compare" || b.type === "wipe") {
       var keys = b.type === "compare" ? [["before", "전 (왼쪽)"], ["after", "후 (오른쪽)"]] : [["a", "첫 이미지"], ["b", "덮어 내리는 이미지"]];
       var main = b.type === "compare" ? "after" : "a";
@@ -2201,9 +2201,13 @@
     // 내용 칸
     var blocksBox = h("section", { class: "card" }, h("b", { text: "내용 (위에서부터 차례로)" }));
     (p.blocks || []).forEach(function (b, i) {
-      var label = { media: "이미지·영상 줄", text: "글", film: "풀필름 (비메오)" }[b.type] || (FX[b.type] ? "인터랙션 · " + FX[b.type].label : b.type);
-      var row = h("div", { class: "pe-block" },
-        h("div", { class: "pe-block-head" }, h("b", { text: (i + 1) + ". " + label }),
+      var fx = !!FX[b.type];
+      var label = { media: "이미지·영상 줄", text: "글", film: "풀필름 (비메오)" }[b.type] || (fx ? FX[b.type].label : b.type);
+      var row = h("div", { class: "pe-block " + (fx ? "pe-kind-fx" : "pe-kind-basic") },
+        h("div", { class: "pe-block-head pe-block-bar" },
+          h("span", { class: "pe-num", text: String(i + 1) }),
+          h("span", { class: "pe-kind", text: fx ? "인터랙션" : "기본" }),
+          h("b", { text: label }),
           h("span", { class: "spacer" }),
           h("button", { class: "ghost", text: "↑", disabled: i === 0, onclick: function () { p.blocks.splice(i - 1, 0, p.blocks.splice(i, 1)[0]); peChanged(true); } }),
           h("button", { class: "ghost", text: "↓", disabled: i === p.blocks.length - 1, onclick: function () { p.blocks.splice(i + 1, 0, p.blocks.splice(i, 1)[0]); peChanged(true); } }),
@@ -2222,7 +2226,7 @@
         });
         row.appendChild(cells);
         row.appendChild(layoutField(b));
-        if (b.items.length === 1) row.appendChild(h("button", { class: "ghost", text: "＋ 옆에 한 칸 더 (한 줄에 2개)", onclick: function () { b.items.push(null); delete b.layout; peChanged(true); } }));
+        if (b.items.length === 1) row.appendChild(h("button", { class: "inner-add", text: "＋ 이 줄에 한 칸 더 (한 줄에 2개)", onclick: function () { b.items.push(null); delete b.layout; peChanged(true); } }));
       } else if (b.type === "text") {
         row.appendChild(field("제목", textIn(b, "title", false, "")));
         row.appendChild(field("한글", textIn(b, "ko", true, "")));
@@ -2231,8 +2235,7 @@
           field("정렬 (PC)", optSel([["c", "가운데"], ["l", "왼쪽"], ["r", "오른쪽"]], b.align || "c", function (v) { if (v === "c") delete b.align; else b.align = v; })),
           field("위 간격", optSel(GAP_OPTS, String(b.above || 320), function (v) { if (v === "320") delete b.above; else b.above = +v; })),
           field("아래 간격", optSel(GAP_OPTS, String(b.below || 320), function (v) { if (v === "320") delete b.below; else b.below = +v; }))));
-      } else if (FX[b.type]) {
-        row.classList.add("pe-fx");
+      } else if (fx) {
         fxEditor(b, row);
       } else {
         var vim = h("input", { type: "text", value: b.vimeo || "", placeholder: "https://vimeo.com/123456789" });
@@ -2252,19 +2255,31 @@
       }
       blocksBox.appendChild(row);
     });
-    blocksBox.appendChild(h("div", { class: "actions" },
-      h("button", { text: "＋ 이미지·영상 줄", onclick: function () { p.blocks.push({ type: "media", items: [null] }); peChanged(true); } }),
-      h("button", { text: "＋ 글", onclick: function () { p.blocks.push({ type: "text", title: "", ko: "", en: "" }); peChanged(true); } }),
-      h("button", { text: "＋ 풀필름", onclick: function () { p.blocks.push({ type: "film", title: "", vimeo: "", poster: "" }); peChanged(true); } })));
-    var fxSel = h("select", { class: "fx-add" }, h("option", { value: "", text: "＋ 인터랙션 넣기 (기존 상세 페이지의 움직임)…" }));
-    Object.keys(FX).forEach(function (k) { fxSel.appendChild(h("option", { value: k, text: FX[k].label + " — " + FX[k].from })); });
-    fxSel.addEventListener("change", function () {
-      if (!FX[fxSel.value]) return;
-      p.blocks.push(FX[fxSel.value].make());
+    if (!(p.blocks || []).length) blocksBox.appendChild(h("p", { class: "empty", text: "아직 내용 칸이 없습니다. 아래에서 추가하세요." }));
+    // 내용 칸 추가 — 블록 안의 버튼과 헷갈리지 않게 따로 묶은 영역 (11.21)
+    var addBlock = function (nb) {
+      p.blocks.push(nb);
       peChanged(true);
+      var rows = panel.querySelectorAll(".pe-block");
+      if (rows.length) rows[rows.length - 1].scrollIntoView({ block: "start", behavior: "smooth" });
+    };
+    var tile = function (cls, name, desc, fn) {
+      return h("button", { class: "pe-tile " + cls, onclick: fn }, h("b", { text: "＋ " + name }), h("small", { text: desc }));
+    };
+    var basic = h("div", { class: "pe-tiles" },
+      tile("is-basic", "이미지·영상 줄", "한 줄에 1~2개", function () { addBlock({ type: "media", items: [null] }); }),
+      tile("is-basic", "글", "제목 + 설명", function () { addBlock({ type: "text", title: "", ko: "", en: "" }); }),
+      tile("is-basic", "풀필름", "비메오 영상", function () { addBlock({ type: "film", title: "", vimeo: "", poster: "" }); }));
+    var fxTiles = h("div", { class: "pe-tiles" });
+    Object.keys(FX).forEach(function (k) {
+      fxTiles.appendChild(tile("is-fx", FX[k].label, FX[k].short + " · " + FX[k].from, function () { addBlock(FX[k].make()); }));
     });
-    blocksBox.appendChild(fxSel);
+    var adder = h("section", { class: "pe-adder" },
+      h("div", { class: "pe-adder-title" }, h("b", { text: "내용 칸 추가" }), h("small", { text: "누르면 위 목록 맨 아래에 새 칸이 생겨요" })),
+      h("div", { class: "pe-adder-group" }, h("span", { class: "pe-kind", text: "기본" }), basic),
+      h("div", { class: "pe-adder-group" }, h("span", { class: "pe-kind is-fx", text: "인터랙션" }), fxTiles));
     body.appendChild(blocksBox);
+    body.appendChild(adder);
     // Works 카드
     var card = p.card || (p.card = { size: "m" });
     var size = h("select", {});
