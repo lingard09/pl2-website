@@ -1779,6 +1779,7 @@
     }).filter(function (b) {
       if (b.type === "media") return b.items.length > 0;
       if (b.type === "film") return /^[0-9]{5,12}$/.test(b.vimeo || "") && b.poster;
+      if (FX[b.type]) return fxReady(b);
       return true;
     });
     if (c.card && !c.card.media) delete c.card.media;
@@ -1821,7 +1822,7 @@
       : h("img", { src: m.src, alt: "", class: "pm-thumb" });
   }
   // 이미지·영상 한 칸 고르기. onSet(새 값 | null)
-  function mediaPick(cur, onSet, optional) {
+  function mediaPick(cur, onSet, optional, imgOnly) {
     var box = h("div", { class: "pm" }, mediaThumb(cur));
     if (cur && cur.src) {
       var dims = h("small", { class: "hint pm-dims", text: "파일 크기 읽는 중…" });
@@ -1834,7 +1835,7 @@
     btns.appendChild(fileButton(cur && cur.src ? "이미지로 바꾸기" : "이미지 올리기", "image/jpeg,image/png,image/webp", function (file, bar) {
       return upload(file, "image", 1920, bar).then(function (r) { onSet({ type: "img", src: r.url }); });
     }));
-    btns.appendChild(fileButton(cur && cur.src ? "영상으로 바꾸기" : "영상 올리기 (mp4)", "video/mp4", function (file, bar) {
+    if (!imgOnly) btns.appendChild(fileButton(cur && cur.src ? "영상으로 바꾸기" : "영상 올리기 (mp4)", "video/mp4", function (file, bar) {
       if (file.size > 100 * 1024 * 1024) { toast("영상이 100MB 보다 큽니다. 줄여서 올려 주세요.", "err"); return; }
       return upload(file, "video", 0, bar).then(function (r) {
         return makePoster(file, false).then(function (blob) {
@@ -1885,6 +1886,239 @@
       peChanged(true);
     });
     return box;
+  }
+
+  // ── 인터랙션 블록 (11.20 "하단 캡처들의 액션을 새 페이지에서도") ─────────
+  // 사이트 모양·움직임은 assets/wdc-blocks.css · wdc-blocks.js, html 은 cms.py pfx_block = pages.php cms_p_fx.
+  function blankChapter(n) {
+    return { num: (n < 10 ? "0" : "") + n, title: "", ko: "", en: "", cards: [] };
+  }
+  var FX = {
+    strip: { label: "필름스트립", from: "상세 01",
+      hint: "스크롤하면 이미지가 한 장씩 가운데 큰 칸으로 와요. 3~20장. 세로로 긴 이미지(518×740 비율)가 잘 맞아요. 모바일은 손으로 넘기는 가로 목록이에요.",
+      make: function () { return { type: "strip", items: [], caption: "" }; } },
+    stack: { label: "레이어 얹힘", from: "상세 01",
+      hint: "어두운 띠 가운데 카드에 세트마다 이미지 1~3장이 아래에서 올라와 겹쳐요. 400×760 비율, 배경이 투명한 PNG 를 쓰면 겹치는 모양이 보여요. 모바일은 마지막 세트를 다 겹친 모양으로 보여 줘요.",
+      make: function () { return { type: "stack", sets: [[]] }; } },
+    compare: { label: "전/후 비교", from: "상세 05",
+      hint: "가운데 선을 끌어 전·후를 비교해요. 두 이미지는 같은 크기로 만들어 주세요. 높이는 '후' 이미지 비율을 따라가요.",
+      make: function () { return { type: "compare", before: null, after: null }; } },
+    wipe: { label: "스크롤 전환", from: "상세 07",
+      hint: "화면에 멈춘 채 스크롤하면 둘째 이미지가 위에서 아래로 덮어요. 두 이미지는 같은 크기로 만들어 주세요. 모바일은 두 장을 위아래로 보여 줘요.",
+      make: function () { return { type: "wipe", a: null, b: null, caption: "" }; } },
+    slide: { label: "스크롤 캐러셀", from: "상세 09",
+      hint: "PC 는 화면에 멈춘 채 스크롤할 때마다 한 장씩, 모바일은 3초마다 넘어가요. 2~8장, 높이는 첫 장 비율을 따라가요.",
+      make: function () { return { type: "slide", items: [] }; } },
+    chapters: { label: "스크롤 챕터", from: "상세 02",
+      hint: "챕터마다 왼쪽 사진은 끌어서 자리·크기를 정해요. 오른쪽 목록은 화면에 고정된 채 지금 챕터가 커지고 설명이 펼쳐져요. 모바일은 챕터마다 글 + 사진 넘기기예요.",
+      make: function () { return { type: "chapters", list: [blankChapter(1), blankChapter(2)] }; } }
+  };
+  function clampI(v, lo, hi) { return Math.max(lo, Math.min(hi, Math.round(v))); }
+  // 높이를 따라갈 이미지의 비율 [가로, 세로] 를 블록에 적어 둔다
+  function setRatio(b, m) {
+    if (!m || !m.src) { delete b.ratio; return; }
+    mediaSize(m.src, false).then(function (r) {
+      if (r && r[0] > 0 && r[1] > 0 && r[0] <= 20000 && r[1] <= 20000) { b.ratio = [r[0], r[1]]; peChanged(false); }
+    });
+  }
+  // 이미지 여러 장 한 번에 올리기. onEach(주소) 를 올린 순서대로 부른다
+  function multiUpload(label, room, onEach) {
+    var input = h("input", { type: "file", accept: "image/jpeg,image/png,image/webp", multiple: true, hidden: true });
+    var prog = h("div", { class: "progress" }, h("i"));
+    var btn = h("button", { text: label, onclick: function () { input.click(); } });
+    input.addEventListener("change", function () {
+      var all = Array.prototype.slice.call(input.files);
+      input.value = "";
+      if (!all.length) return;
+      var files = all.slice(0, room);
+      if (all.length > room) toast("여기에는 " + room + "장만 더 넣을 수 있어서 앞의 " + room + "장만 올립니다.", "err");
+      btn.disabled = true;
+      prog.classList.add("on");
+      S.uploading++;
+      renderBar();
+      var i = 0;
+      var next = function () {
+        if (i >= files.length) return Promise.resolve();
+        var f = files[i++];
+        return upload(f, "image", 1920, function (r) { prog.firstChild.style.width = Math.round(((i - 1 + r) / files.length) * 100) + "%"; })
+          .then(function (r) { onEach(r.url); }).then(next);
+      };
+      next().catch(function (e) { toast(e.message, "err"); }).then(function () {
+        S.uploading--;
+        renderBar();
+        peChanged(true);
+      });
+    });
+    return h("div", { class: "file" }, btn, input, prog);
+  }
+  // 이미지 목록: 썸네일 + 앞/뒤로 + 빼기, 끝에 올리기. onFirst() 는 첫 장이 바뀌었을 때
+  function imgGrid(arr, max, onFirst) {
+    var box = h("div", { class: "fx-grid" });
+    var moved = function (k) { if (k === 0 && onFirst) onFirst(); peChanged(true); };
+    arr.forEach(function (m, k) {
+      box.appendChild(h("div", { class: "fx-cell" },
+        h("img", { src: m.src, alt: "", class: "fx-thumb" }),
+        h("span", { class: "fx-no", text: String(k + 1) }),
+        h("div", { class: "fx-cell-btns" },
+          h("button", { class: "ghost", text: "←", title: "앞으로", disabled: k === 0, onclick: function () { arr.splice(k - 1, 0, arr.splice(k, 1)[0]); moved(k - 1); } }),
+          h("button", { class: "ghost", text: "→", title: "뒤로", disabled: k === arr.length - 1, onclick: function () { arr.splice(k + 1, 0, arr.splice(k, 1)[0]); moved(k); } }),
+          h("button", { class: "ghost danger", text: "×", title: "빼기", onclick: function () { arr.splice(k, 1); moved(k); } }))));
+    });
+    if (arr.length < max) {
+      box.appendChild(multiUpload(arr.length ? "＋ 더 올리기" : "＋ 이미지 올리기 (여러 장 한 번에 가능)", max - arr.length, function (url) {
+        arr.push({ type: "img", src: url });
+        if (arr.length === 1 && onFirst) onFirst();
+      }));
+    }
+    return box;
+  }
+  function fxCount(n, min, max, unit) {
+    return h("small", { class: "hint" + (n < min ? " fx-warn" : ""), text: n + unit + " / " + min + "~" + max + unit + (n < min ? " — " + (min - n) + unit + " 더 넣어야 보여요" : "") });
+  }
+  // 스크롤 챕터의 사진 판 (사이트의 1920×960 판과 같은 비율). 끌면 옮기고 오른쪽 아래 모서리를 끌면 크기
+  function chCanvas(c) {
+    var cv = h("div", { class: "fx-canvas" }, h("div", { class: "fx-canvas-text", text: "글 자리" }));
+    c.cards.forEach(function (k, n) {
+      var el = h("div", { class: "fx-card" },
+        h("img", { src: k.src, alt: "", draggable: "false" }),
+        h("b", { class: "fx-card-no", text: String(n + 1) }),
+        h("i", { class: "fx-card-size", title: "끌어서 크기 바꾸기" }));
+      var place = function () {
+        el.style.left = k.x / 100 + "%";
+        el.style.top = k.y / 100 + "%";
+        el.style.width = k.w / 100 + "%";
+      };
+      place();
+      el.addEventListener("pointerdown", function (e) {
+        if (e.button !== 0) return;
+        e.preventDefault();
+        var r = cv.getBoundingClientRect();
+        var resize = e.target.classList.contains("fx-card-size");
+        var sx = e.clientX, sy = e.clientY, ox = k.x, oy = k.y, ow = k.w;
+        el.setPointerCapture(e.pointerId);
+        el.classList.add("on");
+        var mv = function (ev) {
+          var dx = ((ev.clientX - sx) / r.width) * 10000;
+          var dy = ((ev.clientY - sy) / r.height) * 10000;
+          if (resize) k.w = clampI(ow + dx, 300, 10000);
+          else { k.x = clampI(ox + dx, 0, 10000); k.y = clampI(oy + dy, 0, 10000); }
+          place();
+        };
+        var up = function () {
+          el.removeEventListener("pointermove", mv);
+          el.removeEventListener("pointerup", up);
+          el.removeEventListener("pointercancel", up);
+          el.classList.remove("on");
+          if (k.x !== ox || k.y !== oy || k.w !== ow) peChanged(true);
+        };
+        el.addEventListener("pointermove", mv);
+        el.addEventListener("pointerup", up);
+        el.addEventListener("pointercancel", up);
+      });
+      cv.appendChild(el);
+    });
+    return cv;
+  }
+  function pctIn(k, key, lo, hi) {
+    var el = h("input", { type: "number", step: "0.5", min: String(lo / 100), max: String(hi / 100), value: String(k[key] / 100) });
+    el.addEventListener("change", function () {
+      var v = parseFloat(el.value);
+      if (isNaN(v)) { el.value = String(k[key] / 100); return; }
+      k[key] = clampI(v * 100, lo, hi);
+      peChanged(true);
+    });
+    return el;
+  }
+  function chapterEditor(b) {
+    var wrap = h("div", { class: "fx-ch" });
+    b.list.forEach(function (c, i) {
+      var cards = h("div", { class: "fx-ch-cards" });
+      c.cards.forEach(function (k, n) {
+        cards.appendChild(h("div", { class: "fx-ch-card" },
+          h("img", { src: k.src, alt: "", class: "fx-thumb" }),
+          h("span", { class: "fx-no", text: String(n + 1) }),
+          field("가로 %", pctIn(k, "x", 0, 10000)),
+          field("세로 %", pctIn(k, "y", 0, 10000)),
+          field("폭 %", pctIn(k, "w", 300, 10000)),
+          h("div", { class: "fx-cell-btns" },
+            h("button", { class: "ghost", text: "↑", title: "앞으로 (먼저 그려짐)", disabled: n === 0, onclick: function () { c.cards.splice(n - 1, 0, c.cards.splice(n, 1)[0]); peChanged(true); } }),
+            h("button", { class: "ghost danger", text: "×", title: "빼기", onclick: function () { c.cards.splice(n, 1); peChanged(true); } }))));
+      });
+      if (c.cards.length < 6) {
+        cards.appendChild(multiUpload(c.cards.length ? "＋ 사진 더 올리기" : "＋ 사진 올리기 (여러 장 가능)", 6 - c.cards.length, function (url) {
+          var n = c.cards.length;
+          // 처음 자리: 왼쪽 절반 안에서 지그재그로 (판에서 끌어 옮기면 된다)
+          c.cards.push({ type: "img", src: url, x: (n % 2) * 1800, y: Math.min(n * 2600, 7400), w: 3000 });
+        }));
+      }
+      wrap.appendChild(h("div", { class: "fx-ch-item" },
+        h("div", { class: "pe-block-head" }, h("b", { text: "챕터 " + (i + 1) }),
+          h("span", { class: "spacer" }),
+          h("button", { class: "ghost", text: "↑", disabled: i === 0, onclick: function () { b.list.splice(i - 1, 0, b.list.splice(i, 1)[0]); peChanged(true); } }),
+          h("button", { class: "ghost", text: "↓", disabled: i === b.list.length - 1, onclick: function () { b.list.splice(i + 1, 0, b.list.splice(i, 1)[0]); peChanged(true); } }),
+          b.list.length > 1 ? h("button", { class: "ghost danger", text: "빼기", onclick: function () { b.list.splice(i, 1); peChanged(true); } }) : null),
+        h("div", { class: "pe-opts fx-ch-names" }, field("번호", textIn(c, "num", false, "01")), field("제목", textIn(c, "title", false, "예: Landscape"))),
+        field("설명 (한글)", textIn(c, "ko", true, "PC 에서 줄을 나눌 곳에 Enter")),
+        field("설명 (영문, 선택)", textIn(c, "en", true, "")),
+        h("small", { class: "hint", text: "사진을 끌어 옮기고, 오른쪽 아래 모서리를 끌어 크기를 바꿔요. 점선 자리에는 오른쪽 글 목록이 와요. 숫자로 고쳐도 돼요." }),
+        chCanvas(c),
+        cards));
+    });
+    if (b.list.length < 6) wrap.appendChild(h("button", { text: "＋ 챕터 추가", onclick: function () { b.list.push(blankChapter(b.list.length + 1)); peChanged(true); } }));
+    return wrap;
+  }
+  function fxEditor(b, row) {
+    var d = FX[b.type];
+    row.appendChild(h("small", { class: "hint", text: d.hint }));
+    if (b.type === "strip") {
+      row.appendChild(fxCount(b.items.length, 3, 20, "장"));
+      row.appendChild(imgGrid(b.items, 20));
+      row.appendChild(field("캡션 (선택)", textIn(b, "caption", false, "예: [Prompt] Childhood Sketchbook 안정성 테스트")));
+    } else if (b.type === "slide") {
+      row.appendChild(fxCount(b.items.length, 2, 8, "장"));
+      row.appendChild(imgGrid(b.items, 8, function () { setRatio(b, b.items[0]); }));
+    } else if (b.type === "stack") {
+      b.sets.forEach(function (s, j) {
+        row.appendChild(h("div", { class: "fx-set" },
+          h("div", { class: "pe-block-head" }, h("b", { text: "세트 " + (j + 1) + " (아래 장부터 차례로 얹혀요)" }),
+            h("span", { class: "spacer" }),
+            b.sets.length > 1 ? h("button", { class: "ghost danger", text: "세트 빼기", onclick: function () { b.sets.splice(j, 1); peChanged(true); } }) : null),
+          imgGrid(s, 3)));
+      });
+      if (b.sets.length < 5) row.appendChild(h("button", { text: "＋ 세트 추가", onclick: function () { b.sets.push([]); peChanged(true); } }));
+    } else if (b.type === "compare" || b.type === "wipe") {
+      var keys = b.type === "compare" ? [["before", "전 (왼쪽)"], ["after", "후 (오른쪽)"]] : [["a", "첫 이미지"], ["b", "덮어 내리는 이미지"]];
+      var main = b.type === "compare" ? "after" : "a";
+      var cells = h("div", { class: "pe-cells two" });
+      keys.forEach(function (kv) {
+        cells.appendChild(h("div", { class: "pe-cell" }, h("small", { class: "hint", text: kv[1] }),
+          mediaPick(b[kv[0]], function (m) {
+            b[kv[0]] = m;
+            if (kv[0] === main) setRatio(b, m);
+            peChanged(true);
+          }, false, true)));
+      });
+      row.appendChild(cells);
+      if (b.type === "wipe") row.appendChild(field("캡션 (선택)", textIn(b, "caption", false, "예: Light/Dark Theme")));
+    } else if (b.type === "chapters") {
+      row.appendChild(chapterEditor(b));
+    }
+  }
+  // 미리보기·저장 전에 덜 채운 인터랙션 블록 걸러내기 (미리보기 전용 — 저장은 서버가 이유를 알려 준다)
+  function fxReady(b) {
+    if (b.type === "strip") return b.items.length >= 3;
+    if (b.type === "slide") return b.items.length >= 2;
+    if (b.type === "stack") { b.sets = b.sets.filter(function (s) { return s.length; }); return b.sets.length > 0; }
+    if (b.type === "compare") return !!(b.before && b.after);
+    if (b.type === "wipe") return !!(b.a && b.b);
+    if (b.type === "chapters") {
+      b.list = b.list.filter(function (c) { return c.cards.length; }).map(function (c) {
+        if (!String(c.title || "").trim()) c.title = "(제목)";
+        return c;
+      });
+      return b.list.length > 0;
+    }
+    return true;
   }
 
   function pagesPanel() {
@@ -1967,7 +2201,7 @@
     // 내용 칸
     var blocksBox = h("section", { class: "card" }, h("b", { text: "내용 (위에서부터 차례로)" }));
     (p.blocks || []).forEach(function (b, i) {
-      var label = { media: "이미지·영상 줄", text: "글", film: "풀필름 (비메오)" }[b.type];
+      var label = { media: "이미지·영상 줄", text: "글", film: "풀필름 (비메오)" }[b.type] || (FX[b.type] ? "인터랙션 · " + FX[b.type].label : b.type);
       var row = h("div", { class: "pe-block" },
         h("div", { class: "pe-block-head" }, h("b", { text: (i + 1) + ". " + label }),
           h("span", { class: "spacer" }),
@@ -1997,6 +2231,9 @@
           field("정렬 (PC)", optSel([["c", "가운데"], ["l", "왼쪽"], ["r", "오른쪽"]], b.align || "c", function (v) { if (v === "c") delete b.align; else b.align = v; })),
           field("위 간격", optSel(GAP_OPTS, String(b.above || 320), function (v) { if (v === "320") delete b.above; else b.above = +v; })),
           field("아래 간격", optSel(GAP_OPTS, String(b.below || 320), function (v) { if (v === "320") delete b.below; else b.below = +v; }))));
+      } else if (FX[b.type]) {
+        row.classList.add("pe-fx");
+        fxEditor(b, row);
       } else {
         var vim = h("input", { type: "text", value: b.vimeo || "", placeholder: "https://vimeo.com/123456789" });
         vim.addEventListener("input", function () {
@@ -2019,6 +2256,14 @@
       h("button", { text: "＋ 이미지·영상 줄", onclick: function () { p.blocks.push({ type: "media", items: [null] }); peChanged(true); } }),
       h("button", { text: "＋ 글", onclick: function () { p.blocks.push({ type: "text", title: "", ko: "", en: "" }); peChanged(true); } }),
       h("button", { text: "＋ 풀필름", onclick: function () { p.blocks.push({ type: "film", title: "", vimeo: "", poster: "" }); peChanged(true); } })));
+    var fxSel = h("select", { class: "fx-add" }, h("option", { value: "", text: "＋ 인터랙션 넣기 (기존 상세 페이지의 움직임)…" }));
+    Object.keys(FX).forEach(function (k) { fxSel.appendChild(h("option", { value: k, text: FX[k].label + " — " + FX[k].from })); });
+    fxSel.addEventListener("change", function () {
+      if (!FX[fxSel.value]) return;
+      p.blocks.push(FX[fxSel.value].make());
+      peChanged(true);
+    });
+    blocksBox.appendChild(fxSel);
     body.appendChild(blocksBox);
     // Works 카드
     var card = p.card || (p.card = { size: "m" });

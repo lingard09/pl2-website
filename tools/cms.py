@@ -493,6 +493,122 @@ def pcell(m):
     return el
 
 
+# ── 인터랙션 블록 (11.20 CMS 피드백, assets/wdc-blocks.css · wdc-blocks.js) ──
+# 값은 서버 cms_page_clean 이 검사한 것만 들어온다. 여기서는 모양이 맞지 않으면 조용히 건너뛴다 (PHP 와 같게).
+
+def pimgs(lst):
+    """이미지만 (src 가 있는 img) — 순서 그대로"""
+    return [m for m in (lst or []) if isinstance(m, dict) and m.get("type") == "img" and isinstance(m.get("src"), str) and m["src"]]
+
+
+def pimg(m, extra=""):
+    return f'<img{extra} src="{esc_attr(m["src"])}" alt="" />'
+
+
+def pratio(r):
+    """[가로, 세로] 정수 → 'W / H' (없거나 이상하면 None)"""
+    if isinstance(r, list) and len(r) == 2 and all(type(x) is int and 0 < x <= 20000 for x in r):
+        return f"{r[0]} / {r[1]}"
+    return None
+
+
+def ppct(v):
+    """0.01% 단위 정수 → '12.34'"""
+    return f"{v // 100}.{v % 100:02d}"
+
+
+def pcard_ok(c):
+    return (isinstance(c, dict) and c.get("type") == "img" and isinstance(c.get("src"), str) and c["src"]
+            and all(type(c.get(k)) is int for k in ("x", "y", "w")))
+
+
+def pfx_block(b):
+    """인터랙션 블록 html (모르는 종류·빈 블록이면 None)"""
+    t = b.get("type")
+    cap = norm(b["caption"]) if isinstance(b.get("caption"), str) else ""
+    if t == "strip":
+        items = pimgs(b.get("items"))
+        if len(items) < 3:
+            return None
+        n = len(items)
+        copies = -(-10 // n)  # 칸이 화면을 채우도록 10장 이상이 될 때까지 반복
+        imgs = "".join(pimg(m) for m in items)
+        imgs += "".join(pimg(m, ' data-dup aria-hidden="true"') for _ in range(copies - 1) for m in items)
+        x = (f'<section class="wdc-strip" data-wdc-strip data-steps="{n - 1}" style="--steps: {n - 1}">'
+             '<div class="wdc-strip-pin" data-reveal><div class="wdc-strip-band"><div class="wdc-strip-track">'
+             + imgs + "</div></div>")
+        if cap:
+            x += f'<p class="wdc-strip-cap">{ptext(cap)}</p>'
+        return x + "</div></section>"
+    if t == "stack":
+        sets = [pimgs(s)[:3] for s in (b.get("sets") or []) if isinstance(s, list)]
+        sets = [s for s in sets if s][:5]
+        if not sets:
+            return None
+        x = f'<section class="wdc-stack" data-wdc-stack style="--sets: {len(sets)}"><div class="wdc-stack-pin"><div class="wdc-stack-stage">'
+        for j, s in enumerate(sets):
+            x += f'<div class="wdc-stack-set{" wdc-stack-set--up" if j else ""}">' + "".join(pimg(m, ' decoding="async"') for m in s) + "</div>"
+        return x + "</div></div></section>"
+    if t == "compare":
+        bf, af = pimgs([b.get("before")]), pimgs([b.get("after")])
+        if not bf or not af:
+            return None
+        ar = pratio(b.get("ratio"))
+        return (f'<section class="wdc-compare" data-reveal style="--pos: 50%{"; aspect-ratio: " + ar if ar else ""}">'
+                + pimg(af[0], ' class="wdc-compare-after" draggable="false"')
+                + '<div class="wdc-compare-before" aria-hidden="true">' + pimg(bf[0], ' draggable="false"') + "</div>"
+                + '<div class="wdc-compare-handle" role="slider" tabindex="0" aria-label="전후 비교 경계" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">'
+                '<button type="button" class="wdc-compare-btn wdc-compare-btn--prev" aria-label="경계를 왼쪽으로" tabindex="-1"></button>'
+                '<button type="button" class="wdc-compare-btn wdc-compare-btn--next" aria-label="경계를 오른쪽으로" tabindex="-1"></button>'
+                "</div></section>")
+    if t == "wipe":
+        a, c = pimgs([b.get("a")]), pimgs([b.get("b")])
+        if not a or not c:
+            return None
+        ar = pratio(b.get("ratio"))
+        st = f' style="aspect-ratio: {ar}; --ar: {ar}"' if ar else ""
+        x = (f'<figure class="wdc-wipe" data-reveal><div class="wdc-wipe-scroll" data-wdc-wipe><div class="wdc-wipe-pin"{st}>'
+             + pimg(a[0]) + pimg(c[0]) + "</div></div>")
+        if cap:
+            x += f'<figcaption class="wdc-cap">{ptext(cap)}</figcaption>'
+        return x + "</figure>"
+    if t == "slide":
+        items = pimgs(b.get("items"))[:8]
+        if len(items) < 2:
+            return None
+        ar = pratio(b.get("ratio"))
+        st = f' style="aspect-ratio: {ar}"' if ar else ""
+        return (f'<section class="wdc-slide-scroll" data-wdc-slide style="--steps: {len(items) - 1}"><div class="wdc-slide">'
+                f'<div class="wdc-slide-window"{st}><div class="wdc-slide-track">'
+                + "".join(pimg(m) for m in items) + pimg(items[0], ' aria-hidden="true"')
+                + '</div></div><div class="wdc-slide-dots" aria-hidden="true">'
+                + "".join('<span class="is-active"></span>' if i == 0 else "<span></span>" for i in range(len(items)))
+                + "</div></div></section>")
+    if t == "chapters":
+        chs = [c for c in (b.get("list") or []) if isinstance(c, dict)][:6]
+        out = []
+        for c in chs:
+            cards = [k for k in (c.get("cards") or []) if pcard_ok(k)][:6]
+            x = '<section class="wdc-ch-sec"><div class="wdc-ch-cards">'
+            x += "".join(pimg(k, f' class="wdc-ch-card" style="left:{ppct(k["x"])}%;top:{ppct(k["y"])}%;width:{ppct(k["w"])}%"') for k in cards)
+            x += '</div><div class="wdc-ch-mo" data-wdc-swipe><div class="wdc-ch-mo-track">'
+            x += "".join(pimg(k, ' loading="lazy"') for k in cards)
+            x += '</div></div><div class="wdc-ch-text"><p class="wdc-ch-head">'
+            if norm(c.get("num") or ""):
+                x += f'<span>{ptext(c["num"])}</span>'
+            x += f'<span>{ptext(c.get("title") or "")}</span></p>'
+            if norm(c.get("ko") or ""):
+                x += f'<p class="wdc-ch-desc">{pkoen(c.get("ko"), c.get("en"))}</p>'
+            out.append(x + "</div></section>")
+        if not out:
+            return None
+        return '<section class="wdc-ch" data-wdc-ch>' + "".join(out) + "</section>"
+    return None
+
+
+FX_TYPES = ("strip", "stack", "compare", "wipe", "slide", "chapters")
+
+
 def page_main(p):
     out = ['<div class="wd-container">', '<section class="wd-top">', '<div class="wd-hero wd-hero--fade-black">']
     out.append(pmedia(p.get("hero") or {}, "wd-hero-media"))
@@ -552,6 +668,10 @@ def page_main(p):
                        f'<div class="wd-film-frame" data-playing="false" data-vimeo="{b["vimeo"]}">'
                        f'<img src="{esc_attr(b.get("poster") or "")}" alt="" />'
                        '<button type="button" class="wd-film-play" aria-label="영상 재생"></button></div></section>')
+        elif t in FX_TYPES:
+            x = pfx_block(b)
+            if x:
+                out.append(x)
     if inlist:
         out.append("</section>")
     out.append("</div>")
@@ -705,7 +825,10 @@ def cmd_skeleton(dist):
     sub(r'\s*<link rel="stylesheet" href="[^"]*works-detail-' + SKELETON_FROM + r'\.css" />', "")
     sub(r'<main class="wd-main">.*?</main>', '<main class="wd-main">\n{{MAIN}}\n</main>', re.S)
     sub(r'<script src="([^"]*)wd' + str(int(SKELETON_FROM)) + r'-slider\.js"></script>', "")
-    t = re.sub(r'<script src="([^"]*)top-btn\.js"></script>', r'<script src="\1top-btn.js"></script>\n    <script src="\1video-play.js"></script>', t)
+    t = re.sub(r'<script src="([^"]*)top-btn\.js"></script>', r'<script src="\1top-btn.js"></script>\n    <script src="\1video-play.js"></script>\n    <script src="\1wdc-blocks.js"></script>', t)
+    # 인터랙션 블록 (11.20) 스타일: 공용 works-detail.css 바로 뒤
+    t, n = re.subn(r'(<link rel="stylesheet" href="([^"]*)works-detail\.css" />)', r'\1\n    <link rel="stylesheet" href="\2wdc-blocks.css" />', t)
+    assert n == 1, "works-detail.css 링크"
     t = re.sub(r'(<img) data-cms="d' + SKELETON_FROM + r'-[0-9]+"( class="top-btn-arrow")', r"\1\2", t)
     assert "{{MAIN}}" in t and "{{TITLE}}" in t and "{{DESC}}" in t and "{{OG}}" in t and "{{SLUG}}" in t
     assert not re.search(r'data-cms="d[0-9]', t)

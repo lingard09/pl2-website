@@ -1,0 +1,725 @@
+/* CMS 새 페이지 인터랙션 블록 (11.20 CMS 피드백: "하단 캡처들의 액션을 새 페이지에서도 선택해서 적용")
+   기존 상세 페이지의 모션을 고객사가 이미지만 넣어 쓸 수 있게 옮긴 것. 모양·타이밍은 원본과 같다.
+   새 페이지(admin/page-skeleton.html)에서만 불러온다. 움직임은 assets/wdc-blocks.js.
+
+     .wdc-strip    필름스트립 — 상세 01 (wd1-strip.js · works-detail-01.css)
+     .wdc-stack    레이어 얹힘 — 상세 01 (wd1-stack.js)
+     .wdc-compare  보정 전/후 비교 — 상세 05 (compare.js)
+     .wdc-wipe     두 장 스크롤 전환 — 상세 07 코드 Light → Dark (wd7-code.js)
+     .wdc-slide    스크롤로 넘기는 캐러셀 — 상세 09 (wd9-carousel.js)
+     .wdc-ch       스크롤 챕터 — 상세 02 · 13 (wd-magnet-story.js). 왼쪽 사진은 고객사가 자리·폭을 정한다
+
+   PC 의 고정(sticky) 구간은 동작 줄이기 설정이면 풀고 그냥 늘어놓는다. 모바일은 고정 없이 단순한 모양. */
+
+/* ══ 필름스트립 ═══════════════════════════════════════
+   작은 칸 200x300 (212 간격, 아래 정렬) + 가운데 큰 칸 518x740. --u = 피그마 1px.
+   칸 위치·크기는 wdc-blocks.js 가 정한다 (장 수가 페이지마다 달라서). */
+.wdc-strip-pin {
+  display: flex;
+  flex-direction: column;
+  gap: min(1.6667vw, 32px);
+}
+
+.wdc-strip-band {
+  --u: min(0.052083vw, 1px);
+  position: relative;
+  height: calc(var(--u) * 740);
+  overflow: hidden;
+}
+
+.wdc-strip-track {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: calc(var(--u) * 2638);
+  height: calc(var(--u) * 740);
+  transform: translateX(-50%);
+}
+
+.wdc-strip-track img {
+  position: absolute;
+  top: calc(var(--u) * 440);
+  left: 0;
+  width: calc(var(--u) * 200);
+  height: calc(var(--u) * 300);
+  object-fit: cover;
+  will-change: left, top, width, height;
+}
+
+.wdc-strip-band::before,
+.wdc-strip-band::after {
+  content: "";
+  position: absolute;
+  top: min(19.8438vw, 381px);
+  z-index: 1;
+  width: min(12.7604vw, 245px);
+  height: min(18.75vw, 360px);
+  pointer-events: none;
+}
+
+.wdc-strip-band::before {
+  left: min(-0.1042vw, -2px);
+  background: linear-gradient(to right, #000 0%, rgba(0, 0, 0, 0) 100%);
+}
+
+.wdc-strip-band::after {
+  right: 0;
+  background: linear-gradient(to left, #000 0%, rgba(0, 0, 0, 0) 100%);
+}
+
+.wdc-strip-cap {
+  color: var(--pl2-neutral-60);
+  font-size: min(1.0417vw, 20px);
+  font-weight: 500;
+  line-height: min(1.6667vw, 32px);
+  text-align: center;
+}
+
+/* 한 장이 가운데를 지날 때마다 40vh (원본: 아홉 칸에 360vh) */
+@media (min-width: 600px) and (prefers-reduced-motion: no-preference) {
+  .wdc-strip {
+    height: calc(var(--strip-pin, 100vh) + var(--steps, 9) * 40vh);
+  }
+
+  .wdc-strip .wdc-strip-pin {
+    position: sticky;
+    top: max(0px, calc((100vh - var(--strip-pin, 100vh)) / 2));
+  }
+}
+
+/* ══ 레이어 얹힘 ══════════════════════════════════════
+   어두운 띠(1920x960, #1E2123) 가운데 400x760 카드. 세트마다 이미지 1~3장이 아래에서 올라와 얹힌다.
+   세트 3개에 500vh (원본). 세트 수에 비례해 늘린다. */
+.wdc-stack {
+  --band: min(50vw, 960px);
+  background: #1e2123;
+}
+
+.wdc-stack-pin {
+  position: relative;
+  height: var(--band);
+  overflow: hidden;
+}
+
+.wdc-stack-stage {
+  position: absolute;
+  top: 10.4167%; /* 100 / 960 */
+  left: 50%;
+  width: min(20.8333vw, 400px);
+  aspect-ratio: 400 / 760;
+  translate: -50% 0;
+}
+
+.wdc-stack-set {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+.wdc-stack-set--up {
+  top: max(-1.0417vw, -20px);
+  bottom: min(1.0417vw, 20px);
+}
+
+.wdc-stack-set img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: min(1.25vw, 24px);
+  opacity: 0;
+  will-change: translate, opacity;
+}
+
+/* 움직이지 않을 때(동작 줄이기·모바일): 마지막 세트를 다 얹힌 모양으로 */
+.wdc-stack-set:last-child,
+.wdc-stack-set:last-child img {
+  opacity: 1;
+}
+
+@media (min-width: 600px) and (prefers-reduced-motion: no-preference) {
+  .wdc-stack {
+    height: calc(var(--band) + var(--sets, 3) * 166.6667vh);
+  }
+
+  .wdc-stack-pin {
+    position: sticky;
+    top: max(0px, calc((100vh - var(--band)) / 2));
+  }
+
+  .wdc-stack.is-on .wdc-stack-set:last-child,
+  .wdc-stack.is-on .wdc-stack-set:last-child img {
+    opacity: 0;
+  }
+}
+
+/* ══ 보정 전/후 비교 ══════════════════════════════════
+   1558 폭 가운데 (좌우 181). 경계선은 흰 1px + 그림자, 왼쪽(전)은 검정 20% 가 덮인다.
+   높이는 올린 이미지 비율 (style 의 aspect-ratio, 없으면 1558x835). */
+.wdc-compare {
+  position: relative;
+  width: 81.135%;
+  margin: 0 auto;
+  aspect-ratio: 1558 / 835;
+  overflow: hidden;
+  cursor: ew-resize;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.wdc-compare img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.wdc-compare-before {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+}
+
+.wdc-compare-before::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.wdc-compare-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--pos);
+  width: 44px;
+  transform: translateX(-50%);
+  outline: none;
+}
+
+.wdc-compare-handle::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: var(--pl2-white);
+  box-shadow: -2px 0 6px rgba(0, 0, 0, 0.4);
+}
+
+.wdc-compare-handle:focus-visible::before {
+  width: 3px;
+  margin-left: -1px;
+}
+
+.wdc-compare-btn {
+  position: absolute;
+  top: 50%;
+  width: min(1.875vw, 36px);
+  height: min(1.875vw, 36px);
+  padding: 0;
+  border: 0.45px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2) url("icon-compare-arrow.svg") center / 50% auto no-repeat;
+  box-shadow: 0 2.4px 12px rgba(0, 0, 0, 0.16), inset 0 0 0 0.5px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  cursor: pointer;
+  translate: 0 -50%;
+  transition: background-color 0.2s ease, scale 0.2s ease;
+}
+
+.wdc-compare-btn--prev {
+  right: calc(50% + min(0.625vw, 12px));
+  scale: -1 1;
+}
+
+.wdc-compare-btn--next {
+  left: calc(50% + min(0.625vw, 12px));
+}
+
+.wdc-compare-btn:hover {
+  background-color: rgba(255, 255, 255, 0.32);
+}
+
+.wdc-compare-btn--prev:active {
+  scale: -0.92 0.92;
+}
+
+.wdc-compare-btn--next:active {
+  scale: 0.92;
+}
+
+@property --pos {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 50%;
+}
+
+.wdc-compare.is-stepping {
+  transition: --pos 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ══ 두 장 스크롤 전환 (상세 07 Light → Dark) ═════════
+   띠를 화면 가운데 세워 두고 120vh 동안 둘째 장이 위에서 아래로 덮어 내린다. 높이는 첫 장 비율. */
+.wdc-wipe {
+  display: flex;
+  flex-direction: column;
+  gap: min(0.8333vw, 16px);
+  margin: 0;
+}
+
+.wdc-wipe-pin {
+  position: relative;
+  aspect-ratio: 1920 / 827;
+  overflow: hidden;
+}
+
+.wdc-wipe-pin img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wdc-wipe-pin img + img {
+  opacity: 0;
+}
+
+@media (min-width: 600px) and (prefers-reduced-motion: no-preference) {
+  .wdc-wipe-scroll {
+    height: calc(var(--band-h, 43vw) + 120vh);
+  }
+
+  .wdc-wipe-pin {
+    position: sticky;
+    top: max(0px, calc((100vh - var(--band-h, 43vw)) / 2));
+  }
+}
+
+/* 움직이지 않을 때(동작 줄이기·모바일): 두 장을 위아래로 */
+@media (max-width: 599.98px), (prefers-reduced-motion: reduce) {
+  .wdc-wipe-pin {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    aspect-ratio: auto !important;
+  }
+
+  .wdc-wipe-pin img {
+    position: static;
+    height: auto;
+    aspect-ratio: var(--ar, 1920 / 827);
+  }
+
+  .wdc-wipe-pin img + img {
+    opacity: 1;
+  }
+}
+
+/* ══ 스크롤 캐러셀 (상세 09) ══════════════════════════
+   1558 폭 창 안에서 한 장씩 왼쪽으로 밀린다. PC 는 화면에 고정한 채 스크롤 100vh 마다 한 장,
+   모바일은 3초마다 자동으로 넘어간다. 아래 점이 지금 장. 높이는 첫 장 비율 (없으면 1558x860). */
+.wdc-slide {
+  position: relative;
+  width: 81.146%;
+  margin: 0 auto;
+}
+
+.wdc-slide-window {
+  position: relative;
+  aspect-ratio: 1558 / 860;
+  overflow: hidden;
+}
+
+.wdc-slide-track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.wdc-slide-track.is-wrapping {
+  transition: none;
+}
+
+.wdc-slide-track img {
+  flex: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wdc-slide-dots {
+  position: absolute;
+  bottom: min(1.25vw, 24px);
+  left: 50%;
+  display: flex;
+  gap: min(0.4167vw, 8px);
+  transform: translateX(-50%);
+}
+
+.wdc-slide-dots span {
+  width: min(0.4167vw, 8px);
+  height: min(0.4167vw, 8px);
+  border-radius: 50%;
+  background: #a6a6a6;
+  transition: background-color 0.4s ease;
+}
+
+.wdc-slide-dots span.is-active {
+  background: #eeeeee;
+}
+
+@media (min-width: 600px) and (prefers-reduced-motion: no-preference) {
+  .wdc-slide-scroll {
+    height: calc(var(--band-h, 36vw) + var(--steps, 2) * 100vh);
+  }
+
+  .wdc-slide-scroll .wdc-slide {
+    position: sticky;
+    top: max(0px, calc((100vh - var(--band-h, 36vw)) / 2));
+  }
+}
+
+/* ══ 스크롤 챕터 (상세 02 · 13) ═══════════════════════
+   챕터마다 1920x960 판에 사진을 고객사가 정한 자리(left · top · width %)에 놓는다.
+   PC: 사진은 카드마다 다른 속도로 올라오고, 오른쪽 목록은 화면에 고정된 채 지금 챕터가 커지며 설명이 펼쳐진다.
+   모바일: 챕터마다 번호·제목·설명 + 사진 가로 넘김. */
+.wdc-ch {
+  position: relative;
+}
+
+.wdc-ch-sec {
+  position: relative;
+}
+
+.wdc-ch-sec + .wdc-ch-sec {
+  margin-top: min(16.6667vw, 320px);
+}
+
+.wdc-ch-cards {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1920 / 960;
+}
+
+.wdc-ch-card {
+  position: absolute;
+  display: block;
+  height: auto;
+  will-change: transform;
+}
+
+/* 챕터 글 (스크립트가 돌기 전·동작 줄이기: 챕터 오른쪽에 그대로) */
+.wdc-ch-text {
+  position: absolute;
+  top: 50%;
+  left: 60.4167%;
+  width: 34.375%;
+  translate: 0 -50%;
+}
+
+.wdc-ch-head {
+  display: flex;
+  gap: min(0.8333vw, 16px);
+  width: max-content;
+  max-width: 100%;
+  color: var(--pl2-neutral-90);
+  font-family: var(--pl2-font-display);
+  font-size: min(2.7083vw, 52px);
+  font-weight: 400;
+  line-height: min(3.2292vw, 62px);
+}
+
+.wdc-ch-desc {
+  margin-top: min(0.8854vw, 17px);
+  color: var(--pl2-desc-dark);
+  font-size: min(0.9375vw, 18px);
+  font-weight: 400;
+  line-height: min(1.6667vw, 32px);
+}
+
+.is-en .wdc-ch-desc {
+  font-size: min(1.0417vw, 20px);
+  line-height: min(1.7708vw, 34px);
+}
+
+.wdc-ch-mo {
+  display: none;
+}
+
+/* 스크립트가 켠 PC 모양: 챕터 글은 숨기고 고정 목록(.wdc-ch-list) 하나를 쓴다 */
+.wdc-ch.is-on .wdc-ch-text {
+  display: none;
+}
+
+.wdc-ch-rail {
+  position: absolute;
+  inset: min(14.0625vw, 270px) 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.wdc-ch-anchor {
+  position: sticky;
+  top: calc(50vh + 36px);
+  height: 0;
+}
+
+.wdc-ch-list {
+  position: absolute;
+  top: 0;
+  left: 60.4167%;
+  display: flex;
+  flex-direction: column;
+  gap: min(1.5625vw, 30px);
+  width: 34.375%;
+  translate: 0 -50%;
+  pointer-events: auto;
+}
+
+.wdc-ch-list .wdc-ch-head {
+  color: var(--pl2-neutral-30);
+  transform-origin: left center;
+  translate: min(1.0417vw, 20px) 0;
+  transition: translate 1.1s var(--mo-magnet), scale 1.1s var(--mo-magnet), color 0.5s ease;
+}
+
+.wdc-ch-list .is-active .wdc-ch-head {
+  color: var(--pl2-neutral-90);
+  translate: 0 0;
+  scale: 1.1538;
+  font-weight: 500;
+}
+
+/* 설명은 높이 0 → 자기 높이로 펼친다 */
+.wdc-ch-fold {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+}
+
+.wdc-ch-fold > .wdc-ch-desc {
+  overflow: hidden;
+  min-height: 0;
+  margin-top: 0;
+}
+
+.wdc-ch-fold > .wdc-ch-desc::before {
+  content: "";
+  display: block;
+  height: min(0.8854vw, 17px);
+}
+
+.wdc-ch-list .is-active .wdc-ch-fold {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition: grid-template-rows 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease 0.15s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wdc-ch-list .wdc-ch-head,
+  .wdc-ch-fold {
+    transition: none;
+  }
+}
+
+/* ══ 모바일 ═══════════════════════════════════════════ */
+@media (max-width: 599.98px) {
+  /* 필름스트립 → 300x400 가로 넘김 (원본 모바일과 같다). 장 수를 채우려 반복한 장은 뺀다 */
+  .wdc-strip-pin {
+    gap: 16px;
+  }
+
+  .wdc-strip-band {
+    height: auto;
+    overflow: visible;
+  }
+
+  .wdc-strip-band::before,
+  .wdc-strip-band::after {
+    display: none;
+  }
+
+  .wdc-strip-track {
+    position: static;
+    display: flex;
+    gap: 12px;
+    width: auto;
+    height: auto;
+    padding: 0 20px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 0 20px;
+    scrollbar-width: none;
+    transform: none;
+  }
+
+  .wdc-strip-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .wdc-strip-track img {
+    position: static;
+    flex: none;
+    width: 300px !important;
+    height: 400px !important;
+    scroll-snap-align: start;
+  }
+
+  .wdc-strip-track img[data-dup] {
+    display: none;
+  }
+
+  .wdc-strip-cap {
+    padding: 0 20px;
+    font-size: 11px;
+    line-height: 16px;
+  }
+
+  /* 레이어 얹힘 → 띠 390x500 가운데 카드에 마지막 세트 */
+  .wdc-stack {
+    --band: 500px;
+  }
+
+  .wdc-stack-stage {
+    top: 40px;
+    width: 220px;
+  }
+
+  .wdc-stack-set img {
+    border-radius: 14px;
+  }
+
+  .wdc-compare,
+  .wdc-slide {
+    width: 100%;
+  }
+
+  .wdc-compare-btn {
+    width: 28px;
+    height: 28px;
+  }
+
+  .wdc-wipe {
+    gap: 8px;
+  }
+
+  .wdc-slide-dots {
+    bottom: 12px;
+    gap: 4px;
+  }
+
+  .wdc-slide-dots span {
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.4);
+  }
+
+  .wdc-slide-dots span.is-active {
+    background: #f5f5f5;
+  }
+
+  /* 챕터 → 위에서 아래로 (사이 200, 글 ↔ 사진 60) */
+  .wdc-ch-sec {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+  }
+
+  .wdc-ch-sec + .wdc-ch-sec {
+    margin-top: 200px;
+  }
+
+  .wdc-ch-cards,
+  .wdc-ch-rail {
+    display: none;
+  }
+
+  .wdc-ch-text,
+  .wdc-ch.is-on .wdc-ch-text {
+    position: static;
+    order: -1;
+    display: block;
+    width: auto;
+    padding: 0 20px;
+    translate: none;
+  }
+
+  .wdc-ch-head {
+    gap: 12px;
+    color: var(--pl2-neutral-80);
+    font-size: 26px;
+    line-height: 28px;
+    letter-spacing: -0.02em;
+  }
+
+  .wdc-ch-desc,
+  .is-en .wdc-ch-desc {
+    margin-top: 20px;
+    font-size: 13px;
+    line-height: 24px;
+    letter-spacing: -0.02em;
+    word-break: keep-all;
+  }
+
+  .wdc-ch-desc br {
+    display: none;
+  }
+
+  .wdc-ch-mo {
+    position: relative;
+    display: block;
+  }
+
+  .wdc-ch-mo-track {
+    display: flex;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .wdc-ch-mo-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .wdc-ch-mo-track img {
+    flex: none;
+    width: 100%;
+    aspect-ratio: 390 / 220;
+    object-fit: cover;
+    scroll-snap-align: start;
+  }
+
+  .wdc-dots {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    display: flex;
+    gap: 4px;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .wdc-dots span {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transition: background-color 0.3s ease;
+  }
+
+  .wdc-dots span.is-active {
+    background: var(--pl2-neutral-90);
+  }
+}

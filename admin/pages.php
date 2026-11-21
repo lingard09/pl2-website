@@ -73,6 +73,203 @@ function cms_p_cell($m)
     return $el;
 }
 
+// ── 인터랙션 블록 (11.20 CMS 피드백, cms.py pfx_block 과 같은 결과) ──
+
+function cms_p_imgs($lst)
+{
+    $out = array();
+    foreach ((array)$lst as $m) {
+        if (is_array($m) && cms_get($m, 'type') === 'img' && is_string(cms_get($m, 'src')) && $m['src'] !== '') {
+            $out[] = $m;
+        }
+    }
+    return $out;
+}
+
+function cms_p_img($m, $extra)
+{
+    return '<img' . $extra . ' src="' . cms_esc_attr($m['src']) . '" alt="" />';
+}
+
+function cms_p_ratio($r)
+{
+    if (!is_array($r) || count($r) !== 2 || !isset($r[0], $r[1])) {
+        return null;
+    }
+    foreach (array($r[0], $r[1]) as $x) {
+        if (!is_int($x) || $x <= 0 || $x > 20000) {
+            return null;
+        }
+    }
+    return $r[0] . ' / ' . $r[1];
+}
+
+function cms_p_pct($v)
+{
+    return sprintf('%d.%02d', (int)floor($v / 100), $v % 100);
+}
+
+function cms_p_card_ok($c)
+{
+    if (!is_array($c) || cms_get($c, 'type') !== 'img' || !is_string(cms_get($c, 'src')) || $c['src'] === '') {
+        return false;
+    }
+    foreach (array('x', 'y', 'w') as $k) {
+        if (!is_int(cms_get($c, $k))) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function cms_p_fx_types()
+{
+    return array('strip', 'stack', 'compare', 'wipe', 'slide', 'chapters');
+}
+
+function cms_p_fx($b)
+{
+    $t = cms_get($b, 'type');
+    $cap = is_string(cms_get($b, 'caption')) ? cms_norm($b['caption']) : '';
+    if ($t === 'strip') {
+        $items = cms_p_imgs(cms_get($b, 'items', array()));
+        $n = count($items);
+        if ($n < 3) {
+            return null;
+        }
+        $copies = (int)ceil(10 / $n);
+        $imgs = '';
+        foreach ($items as $m) {
+            $imgs .= cms_p_img($m, '');
+        }
+        for ($i = 1; $i < $copies; $i++) {
+            foreach ($items as $m) {
+                $imgs .= cms_p_img($m, ' data-dup aria-hidden="true"');
+            }
+        }
+        $x = '<section class="wdc-strip" data-wdc-strip data-steps="' . ($n - 1) . '" style="--steps: ' . ($n - 1) . '">'
+            . '<div class="wdc-strip-pin" data-reveal><div class="wdc-strip-band"><div class="wdc-strip-track">'
+            . $imgs . '</div></div>';
+        if ($cap !== '') {
+            $x .= '<p class="wdc-strip-cap">' . cms_p_text($cap) . '</p>';
+        }
+        return $x . '</div></section>';
+    }
+    if ($t === 'stack') {
+        $sets = array();
+        foreach ((array)cms_get($b, 'sets', array()) as $s) {
+            if (!is_array($s)) {
+                continue;
+            }
+            $s = array_slice(cms_p_imgs($s), 0, 3);
+            if ($s) {
+                $sets[] = $s;
+            }
+        }
+        $sets = array_slice($sets, 0, 5);
+        if (!$sets) {
+            return null;
+        }
+        $x = '<section class="wdc-stack" data-wdc-stack style="--sets: ' . count($sets) . '"><div class="wdc-stack-pin"><div class="wdc-stack-stage">';
+        foreach ($sets as $j => $s) {
+            $x .= '<div class="wdc-stack-set' . ($j ? ' wdc-stack-set--up' : '') . '">';
+            foreach ($s as $m) {
+                $x .= cms_p_img($m, ' decoding="async"');
+            }
+            $x .= '</div>';
+        }
+        return $x . '</div></div></section>';
+    }
+    if ($t === 'compare') {
+        $bf = cms_p_imgs(array(cms_get($b, 'before')));
+        $af = cms_p_imgs(array(cms_get($b, 'after')));
+        if (!$bf || !$af) {
+            return null;
+        }
+        $ar = cms_p_ratio(cms_get($b, 'ratio'));
+        return '<section class="wdc-compare" data-reveal style="--pos: 50%' . ($ar !== null ? '; aspect-ratio: ' . $ar : '') . '">'
+            . cms_p_img($af[0], ' class="wdc-compare-after" draggable="false"')
+            . '<div class="wdc-compare-before" aria-hidden="true">' . cms_p_img($bf[0], ' draggable="false"') . '</div>'
+            . '<div class="wdc-compare-handle" role="slider" tabindex="0" aria-label="전후 비교 경계" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">'
+            . '<button type="button" class="wdc-compare-btn wdc-compare-btn--prev" aria-label="경계를 왼쪽으로" tabindex="-1"></button>'
+            . '<button type="button" class="wdc-compare-btn wdc-compare-btn--next" aria-label="경계를 오른쪽으로" tabindex="-1"></button>'
+            . '</div></section>';
+    }
+    if ($t === 'wipe') {
+        $a = cms_p_imgs(array(cms_get($b, 'a')));
+        $c = cms_p_imgs(array(cms_get($b, 'b')));
+        if (!$a || !$c) {
+            return null;
+        }
+        $ar = cms_p_ratio(cms_get($b, 'ratio'));
+        $st = $ar !== null ? ' style="aspect-ratio: ' . $ar . '; --ar: ' . $ar . '"' : '';
+        $x = '<figure class="wdc-wipe" data-reveal><div class="wdc-wipe-scroll" data-wdc-wipe><div class="wdc-wipe-pin"' . $st . '>'
+            . cms_p_img($a[0], '') . cms_p_img($c[0], '') . '</div></div>';
+        if ($cap !== '') {
+            $x .= '<figcaption class="wdc-cap">' . cms_p_text($cap) . '</figcaption>';
+        }
+        return $x . '</figure>';
+    }
+    if ($t === 'slide') {
+        $items = array_slice(cms_p_imgs(cms_get($b, 'items', array())), 0, 8);
+        if (count($items) < 2) {
+            return null;
+        }
+        $ar = cms_p_ratio(cms_get($b, 'ratio'));
+        $st = $ar !== null ? ' style="aspect-ratio: ' . $ar . '"' : '';
+        $x = '<section class="wdc-slide-scroll" data-wdc-slide style="--steps: ' . (count($items) - 1) . '"><div class="wdc-slide">'
+            . '<div class="wdc-slide-window"' . $st . '><div class="wdc-slide-track">';
+        foreach ($items as $m) {
+            $x .= cms_p_img($m, '');
+        }
+        $x .= cms_p_img($items[0], ' aria-hidden="true"') . '</div></div><div class="wdc-slide-dots" aria-hidden="true">';
+        foreach ($items as $i => $m) {
+            $x .= $i === 0 ? '<span class="is-active"></span>' : '<span></span>';
+        }
+        return $x . '</div></div></section>';
+    }
+    if ($t === 'chapters') {
+        $chs = array();
+        foreach ((array)cms_get($b, 'list', array()) as $c) {
+            if (is_array($c)) {
+                $chs[] = $c;
+            }
+        }
+        $out = '';
+        foreach (array_slice($chs, 0, 6) as $c) {
+            $cards = array();
+            foreach ((array)cms_get($c, 'cards', array()) as $k) {
+                if (cms_p_card_ok($k)) {
+                    $cards[] = $k;
+                }
+            }
+            $cards = array_slice($cards, 0, 6);
+            $x = '<section class="wdc-ch-sec"><div class="wdc-ch-cards">';
+            foreach ($cards as $k) {
+                $x .= cms_p_img($k, ' class="wdc-ch-card" style="left:' . cms_p_pct($k['x']) . '%;top:' . cms_p_pct($k['y']) . '%;width:' . cms_p_pct($k['w']) . '%"');
+            }
+            $x .= '</div><div class="wdc-ch-mo" data-wdc-swipe><div class="wdc-ch-mo-track">';
+            foreach ($cards as $k) {
+                $x .= cms_p_img($k, ' loading="lazy"');
+            }
+            $x .= '</div></div><div class="wdc-ch-text"><p class="wdc-ch-head">';
+            if (cms_norm((string)cms_get($c, 'num', '')) !== '') {
+                $x .= '<span>' . cms_p_text($c['num']) . '</span>';
+            }
+            $x .= '<span>' . cms_p_text((string)cms_get($c, 'title', '')) . '</span></p>';
+            if (cms_norm((string)cms_get($c, 'ko', '')) !== '') {
+                $x .= '<p class="wdc-ch-desc">' . cms_p_koen($c['ko'], cms_get($c, 'en', '')) . '</p>';
+            }
+            $out .= $x . '</div></section>';
+        }
+        if ($out === '') {
+            return null;
+        }
+        return '<section class="wdc-ch" data-wdc-ch>' . $out . '</section>';
+    }
+    return null;
+}
+
 function cms_page_main($p)
 {
     $out = array('<div class="wd-container">', '<section class="wd-top">', '<div class="wd-hero wd-hero--fade-black">');
@@ -166,6 +363,11 @@ function cms_page_main($p)
                 . '<div class="wd-film-frame" data-playing="false" data-vimeo="' . $b['vimeo'] . '">'
                 . '<img src="' . cms_esc_attr(cms_get($b, 'poster', '')) . '" alt="" />'
                 . '<button type="button" class="wd-film-play" aria-label="영상 재생"></button></div></section>';
+        } elseif (in_array($t, cms_p_fx_types(), true)) {
+            $x = cms_p_fx($b);
+            if ($x !== null) {
+                $out[] = $x;
+            }
         }
     }
     if ($inlist) {
@@ -523,6 +725,139 @@ function cms_p_clean_media($m, $need)
     return array('type' => 'video', 'src' => $src, 'poster' => $poster);
 }
 
+// 인터랙션 블록용 이미지 한 장 (영상은 받지 않는다)
+function cms_p_clean_img($m)
+{
+    $mm = cms_p_clean_media($m, true);
+    return ($mm && $mm['type'] === 'img') ? $mm : false;
+}
+
+// 이미지 목록 — 개수가 $min~$max 가 아니면 false
+function cms_p_clean_imgs($lst, $min, $max)
+{
+    if (!is_array($lst) || count($lst) < $min || count($lst) > $max) {
+        return false;
+    }
+    $out = array();
+    foreach (array_values($lst) as $m) {
+        $mm = cms_p_clean_img($m);
+        if ($mm === false) {
+            return false;
+        }
+        $out[] = $mm;
+    }
+    return $out;
+}
+
+function cms_p_clean_ratio($r)
+{
+    return cms_p_ratio($r) !== null ? array($r[0], $r[1]) : null;
+}
+
+// 인터랙션 블록 검사 (11.20). 고친 블록 또는 고객사에게 보일 오류 문구
+function cms_p_clean_fx($b)
+{
+    $t = $b['type'];
+    $x = array('type' => $t);
+    $cap = cms_p_str(cms_get($b, 'caption'), 300, false);
+    if ($cap === false) {
+        return '캡션이 너무 깁니다';
+    }
+    if ($t === 'strip') {
+        $items = cms_p_clean_imgs(cms_get($b, 'items'), 3, 20);
+        if ($items === false) {
+            return '필름스트립에는 이미지를 3~20장 넣어 주세요 (빈 칸은 지워 주세요)';
+        }
+        $x['items'] = $items;
+        if ($cap !== '') {
+            $x['caption'] = $cap;
+        }
+    } elseif ($t === 'stack') {
+        $sets = cms_get($b, 'sets');
+        if (!is_array($sets) || count($sets) < 1 || count($sets) > 5) {
+            return '레이어 얹힘에는 세트를 1~5개 넣어 주세요';
+        }
+        $x['sets'] = array();
+        foreach (array_values($sets) as $s) {
+            $s = cms_p_clean_imgs($s, 1, 3);
+            if ($s === false) {
+                return '레이어 얹힘의 세트마다 이미지를 1~3장 넣어 주세요 (빈 칸은 지워 주세요)';
+            }
+            $x['sets'][] = $s;
+        }
+    } elseif ($t === 'compare' || $t === 'wipe') {
+        $k1 = $t === 'compare' ? 'before' : 'a';
+        $k2 = $t === 'compare' ? 'after' : 'b';
+        $m1 = cms_p_clean_img(cms_get($b, $k1));
+        $m2 = cms_p_clean_img(cms_get($b, $k2));
+        if ($m1 === false || $m2 === false) {
+            return $t === 'compare' ? '전/후 비교에 두 이미지를 다 올려 주세요' : '스크롤 전환에 두 이미지를 다 올려 주세요';
+        }
+        $x[$k1] = $m1;
+        $x[$k2] = $m2;
+        $r = cms_p_clean_ratio(cms_get($b, 'ratio'));
+        if ($r) {
+            $x['ratio'] = $r;
+        }
+        if ($t === 'wipe' && $cap !== '') {
+            $x['caption'] = $cap;
+        }
+    } elseif ($t === 'slide') {
+        $items = cms_p_clean_imgs(cms_get($b, 'items'), 2, 8);
+        if ($items === false) {
+            return '캐러셀에는 이미지를 2~8장 넣어 주세요 (빈 칸은 지워 주세요)';
+        }
+        $x['items'] = $items;
+        $r = cms_p_clean_ratio(cms_get($b, 'ratio'));
+        if ($r) {
+            $x['ratio'] = $r;
+        }
+    } else { // chapters
+        $list = cms_get($b, 'list');
+        if (!is_array($list) || count($list) < 1 || count($list) > 6) {
+            return '스크롤 챕터는 1~6개까지 넣을 수 있습니다';
+        }
+        $x['list'] = array();
+        foreach (array_values($list) as $c) {
+            if (!is_array($c)) {
+                return '스크롤 챕터 형식이 잘못됐습니다';
+            }
+            $y = array();
+            foreach (array('num' => array(10, false), 'title' => array(100, false), 'ko' => array(4000, true), 'en' => array(4000, true)) as $k => $o) {
+                $v = cms_p_str(cms_get($c, $k), $o[0], $o[1]);
+                if ($v === false) {
+                    return '스크롤 챕터 글이 너무 깁니다';
+                }
+                $y[$k] = $v;
+            }
+            if (cms_norm($y['title']) === '') {
+                return '스크롤 챕터마다 제목을 넣어 주세요';
+            }
+            $cards = cms_get($c, 'cards');
+            if (!is_array($cards) || count($cards) < 1 || count($cards) > 6) {
+                return '스크롤 챕터마다 사진을 1~6장 넣어 주세요';
+            }
+            $y['cards'] = array();
+            foreach (array_values($cards) as $k) {
+                $mm = cms_p_clean_img($k);
+                if ($mm === false) {
+                    return '스크롤 챕터에 비어 있는 사진 칸이 있습니다. 올리거나 지워 주세요';
+                }
+                foreach (array('x' => array(0, 10000), 'y' => array(0, 10000), 'w' => array(300, 10000)) as $kk => $lim) {
+                    $v = cms_get($k, $kk);
+                    if (!is_int($v) || $v < $lim[0] || $v > $lim[1]) {
+                        return '스크롤 챕터 사진 자리가 올바르지 않습니다';
+                    }
+                    $mm[$kk] = $v;
+                }
+                $y['cards'][] = $mm;
+            }
+            $x['list'][] = $y;
+        }
+    }
+    return $x;
+}
+
 // 이미 있는 주소 (사이트 페이지·다른 새 페이지)
 function cms_reserved_slugs($pages, $selfId)
 {
@@ -677,6 +1012,12 @@ function cms_page_clean($in, $pages, $old, $preview = false)
                 return '글이 너무 깁니다';
             }
             $p['blocks'][] = array('type' => 'film', 'title' => $ft, 'vimeo' => $vim, 'poster' => $poster);
+        } elseif (in_array($t, cms_p_fx_types(), true)) {
+            $x = cms_p_clean_fx($b);
+            if (is_string($x)) {
+                return $x;
+            }
+            $p['blocks'][] = $x;
         } else {
             return '모르는 칸 종류입니다';
         }
