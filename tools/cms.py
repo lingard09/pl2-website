@@ -11,6 +11,7 @@
   각각 따로 된 요소라 각자 편집 단위가 된다.
 - 이미지: <img src>, <picture><source srcset> (모바일 이미지)
 - 영상: <video poster>, <video><source src>, 비메오 자리 [data-vimeo]
+- 연결 페이지 (11.24): <a> 가 아닌 요소의 data-href (Home 타일 → 상세 페이지). 값은 사이트 맨 위 기준 /works/…/ 주소
 - 이미지 ↔ 영상 교체 (11.19): 본문의 <img>·자동재생 <video> 는 서로 바꿀 수 있다 (swap_ok 의 예외 자리와
   tools/cms-noswap.json 에 적힌 자리 제외). 목록에 원래 태그의 속성을 넣어 두고, 바꾸면 그 속성을 옮긴 새 태그를
   만든다 (swap_html). 값: {"as": "video", "src", "poster"} 또는 {"as": "img", "src"}.
@@ -120,6 +121,9 @@ class Scan(HTMLParser):
             if kind == "vsource":
                 it["parent"] = self.stack[-1]["attrs"].get("data-cms")
             self.items.append(it)
+        if not self.inlist and tag not in ("a", "source") and "data-href" in a:
+            self.items.append({"kind": "link", "start": start, "raw": raw, "attrs": a, "main": self.main > 0,
+                               "sig": ("link", self.chain(), a["data-href"])})
         if tag in SKIP and tag not in VOID:
             self.skip = 1
             return
@@ -440,7 +444,7 @@ def apply_one(doc, cid, item, meta=None):
             nonlocal count
             count += 1
             tag = m.group(0)
-            for attr in ("src", "srcset", "poster", "data-vimeo"):
+            for attr in ("src", "srcset", "poster", "data-vimeo", "data-href"):
                 if attr in item and item[attr] is not None:
                     val = esc_attr(item[attr])
                     if re.search(r"\b" + attr + r'="', tag):
@@ -1018,10 +1022,13 @@ def cmd_index(dist):
                     e["parent"] = it["parent"]
                 a = it["attrs"]
                 base = {}
-                for k in ("src", "srcset", "poster", "data-vimeo"):
+                for k in ("src", "srcset", "poster", "data-vimeo", "data-href"):
                     if k in a:
                         v = a[k]
-                        if k != "data-vimeo" and not re.match(r"^(/|https?:)", v):
+                        if k == "data-href" and not re.match(r"^(/|https?:)", v):
+                            # 맨 위 기준 주소로 (끝의 / 는 지킨다: works/haruharu/ → /works/haruharu/)
+                            v = "/" + posixpath.normpath(posixpath.join(posixpath.dirname(rel), v)).lstrip("./") + ("/" if v.endswith("/") else "")
+                        elif k not in ("data-vimeo", "data-href") and not re.match(r"^(/|https?:)", v):
                             v = "/" + posixpath.normpath(posixpath.join(posixpath.dirname(rel), v)).lstrip("./")
                         base[k] = v
                 e["base"] = base

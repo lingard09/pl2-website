@@ -527,7 +527,7 @@ function cms_apply_one($doc, $id, $item, &$count, $meta = null)
         $cb = function ($m) use ($item, &$count) {
             $count++;
             $tag = $m[0];
-            foreach (array('src', 'srcset', 'poster', 'data-vimeo') as $attr) {
+            foreach (array('src', 'srcset', 'poster', 'data-vimeo', 'data-href') as $attr) {
                 if (array_key_exists($attr, $item) && $item[$attr] !== null && preg_match('/\b' . $attr . '="/', $tag)) {
                     $val = cms_esc_attr($item[$attr]);
                     $tag = preg_replace_callback('/(\s)' . preg_quote($attr, '/') . '="[^"]*"/', function ($mm) use ($attr, $val) {
@@ -764,6 +764,11 @@ function cms_clean_item($id, $item)
         if ($k === 'data-vimeo') {
             if (!is_string($val) || !preg_match('/^[0-9]{5,12}$/', $val)) {
                 return '비메오 영상 번호가 올바르지 않습니다';
+            }
+        } elseif ($k === 'data-href') {
+            // 연결 페이지 (11.24, Home 타일): Works 목록이나 그 아래 페이지만
+            if (!is_string($val) || !preg_match('#^/works/(?:[a-z0-9]+(?:-[a-z0-9]+)*/)?$#', $val)) {
+                return '연결할 페이지 주소가 올바르지 않습니다';
             }
         } elseif (!cms_valid_media_url($val, $v)) {
             return '파일 주소가 올바르지 않습니다: ' . $id;

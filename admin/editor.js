@@ -460,7 +460,7 @@
         el.innerHTML = textHtml(item);
         if (item.href && el.tagName === "A") el.setAttribute("href", item.href);
       } else {
-        ["src", "srcset", "poster", "data-vimeo"].forEach(function (k) {
+        ["src", "srcset", "poster", "data-vimeo", "data-href"].forEach(function (k) {
           if (item[k] !== undefined && el.hasAttribute(k)) el.setAttribute(k, item[k]);
         });
         if (m.kind === "vsource" && el.parentNode && el.parentNode.load) el.parentNode.load();
@@ -528,6 +528,11 @@
     var stack = d.elementsFromPoint ? d.elementsFromPoint(e.clientX, e.clientY) : [e.target];
     stack.forEach(function (el) {
       var c = el.closest("[data-cms]");
+      if (c && meta(c.getAttribute("data-cms")) && meta(c.getAttribute("data-cms")).kind === "link") {
+        Array.prototype.forEach.call(c.querySelectorAll("[data-cms]"), add);
+        add(c);
+        return;
+      }
       // 글은 가장 위의 것 하나만 (바깥 요소의 글까지 잡지 않게)
       if (c && meta(c.getAttribute("data-cms")).kind === "text") {
         if (!found.some(function (id) { return meta(id).kind === "text"; })) add(c);
@@ -609,7 +614,7 @@
     var el = frameEls(id)[0];
     var bits = [];
     var kind = {
-      text: "글", img: "이미지", msource: "모바일 이미지", video: "영상 포스터", vsource: "영상 파일", vimeo: "비메오 영상", logos: "로고 목록",
+      text: "글", img: "이미지", msource: "모바일 이미지", video: "영상 포스터", vsource: "영상 파일", vimeo: "비메오 영상", logos: "로고 목록", link: "누르면 가는 페이지",
     }[m.kind];
     if (m.kind === "text" && el) {
       var t = el.tagName;
@@ -1089,16 +1094,44 @@
       head(id), body, actions(id, function () {}));
   }
 
+  // 연결 페이지 (11.24, Home 타일): 상세 01~14 · 직접 만든 공개 페이지 · Works 목록. 값은 맨 위 기준 /works/…/
+  function linkOptions() {
+    var out = [];
+    (S.index.pages || []).forEach(function (p) {
+      if (p.num) out.push(["/" + p.route, "상세 " + p.num + " · " + String(p.title || "").replace(/\s*\|\s*PL2 Creative Studio\s*$/, "")]);
+    });
+    ((S.pages && S.pages.pages) || []).forEach(function (pg) {
+      if (pg.status === "public") out.push(["/works/" + pg.slug + "/", "직접 만든 페이지 · " + String(pg.title || "").split("\n").join(" ")]);
+    });
+    out.push(["/works/", "Works 목록"]);
+    return out;
+  }
+  function linkLabel(v) {
+    var o = linkOptions().filter(function (x) { return x[0] === v; })[0];
+    return o ? o[1] : v || "";
+  }
+
   function mediaEditor(id) {
     var m = meta(id);
     var item = currentValue(id);
     if (item.as) return swappedEditor(id, item);
-    var key = { img: "src", msource: "srcset", video: "poster", vsource: "src", vimeo: "data-vimeo" }[m.kind];
+    var key = { img: "src", msource: "srcset", video: "poster", vsource: "src", vimeo: "data-vimeo", link: "data-href" }[m.kind];
     var val = item[key] !== undefined ? item[key] : m.base[key];
     var body = h("div", { class: "media" });
     var el = frameEls(id)[0];
 
-    if (m.kind === "vimeo") {
+    if (m.kind === "link") {
+      var opts = linkOptions();
+      if (!opts.some(function (o) { return o[0] === val; })) opts.unshift([val, "지금 연결: " + val + " (목록에 없는 페이지)"]);
+      var sel = h("select", {});
+      opts.forEach(function (o) { sel.appendChild(h("option", { value: o[0], text: o[1], selected: o[0] === val })); });
+      sel.addEventListener("change", function () {
+        var it = {}; it[key] = sel.value;
+        setPending(id, sel.value === m.base[key] ? null : it);
+      });
+      body.appendChild(h("label", { class: "field" }, h("span", { text: "이 이미지·영상을 누르면 가는 페이지" }), sel));
+      body.appendChild(h("p", { class: "hint", text: "Home 의 이미지·영상을 누르면 여기서 고른 페이지로 갑니다. 글자(PHOTOGRAPHY 등)는 언제나 Works 목록으로 가요. 직접 만든 페이지는 ‘공개’로 저장한 것만 고를 수 있어요." }));
+    } else if (m.kind === "vimeo") {
       var inp = h("input", { type: "text", value: val, placeholder: "https://vimeo.com/123456789" });
       var note = h("p", { class: "hint", text: "비메오 주소나 영상 번호를 넣으세요. 재생 버튼을 누르면 이 영상이 나옵니다." });
       inp.addEventListener("input", function () {
@@ -1504,7 +1537,7 @@
         var m = meta(id);
         var v = currentValue(id);
         var label = m.kind === "logos" ? "로고 " + v.rows.map(function (r) { return r.length; }).join(" + ") + "개: " + v.rows[0].concat(v.rows[1]).map(function (x) { return x.alt; }).join(", ") :
-          m.kind === "text" ? v.lines.join(" ⏎ ") : (v.src || v.srcset || v.poster || v["data-vimeo"] || "").split("/").pop();
+          m.kind === "text" ? v.lines.join(" ⏎ ") : (m.kind === "link" ? linkLabel(v["data-href"]) : (v.src || v.srcset || v.poster || v["data-vimeo"] || "").split("/").pop());
         if (term && label.toLowerCase().indexOf(term) < 0) return;
         var row = h("button", { class: "list-row" + (Object.prototype.hasOwnProperty.call(S.pending, id) ? " is-pending" : isEdited(id) ? " is-edited" : "") + (hiddenNow(id) ? " is-hidden" : ""), onclick: function () {
           select([id], true);
