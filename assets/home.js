@@ -206,7 +206,21 @@
       if (dragged) {
         e.preventDefault();
         dragged = false;
+        return;
       }
+      // 11.23: 이미지·영상 타일 → 그 상세 페이지, 단어·빈 곳 → Works (hero 링크 그대로).
+      // 임시 링크를 눌러서 motion.js 의 페이지 전환(덮개)을 그대로 탄다. 새 탭 열기(⌘·Ctrl 클릭)도 같은 주소로.
+      var tile = e.target.closest && e.target.closest(".hm-tile[data-href]");
+      if (!tile || tile.closest(".hm-row").style.visibility === "hidden") return;
+      e.preventDefault();
+      e.stopPropagation();
+      var a = document.createElement("a");
+      a.href = tile.getAttribute("data-href");
+      if (e.metaKey || e.ctrlKey) a.target = "_blank";
+      a.style.display = "none";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
     },
     true
   );

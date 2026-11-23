@@ -846,3 +846,15 @@ button.inner-add:hover { border-color: var(--text); color: var(--text); backgrou
 .pe-tile.is-fx { border-left-color: var(--accent); }
 .pe-tile:hover { border-color: #1d4ea8; box-shadow: 0 2px 8px rgba(29, 78, 168, 0.15); }
 .pe-block > button.inner-add { width: auto; }
+
+/* 11.23: 이미지·영상 배치 — 열(.pg-col)은 패널이 좁아 위아래로 쌓고, 열 안 항목(.pg-item)은 흰 카드 */
+.pg-cols { display: flex; flex-direction: column; gap: 10px; }
+.pg-col { display: flex; flex-direction: column; gap: 8px; padding: 8px; border: 1px solid var(--line); border-left: 3px solid #9fb4d9; border-radius: 8px; background: #f6f8fc; }
+.pg-cols.n1 > .pg-col { padding: 0; border: 0; background: transparent; }
+.pg-col-head { display: flex; align-items: end; justify-content: space-between; gap: 8px; }
+.pg-col-head .field { width: 110px; margin: 0; }
+.pg-item { display: flex; flex-direction: column; gap: 6px; padding: 8px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+.pg-item .pe-opts input[type="number"] { width: 100%; }
+.pg-adds { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.pg-checks { display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; }
+.pg-checks input:disabled + span { color: var(--muted); }

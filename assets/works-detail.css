@@ -1110,3 +1110,113 @@
   .wdc-text--b80 { margin-bottom: -152px; }
   .wdc-text--b40 { margin-bottom: -176px; }
 }
+
+/* ── 이미지·영상 배치 (11.23 CMS 피드백, 피그마 4532:21171 — tools/cms.py pgrid · admin/pages.php cms_p_grid) ──
+   유형: 한 개(--single) · 2열(--two) · 여러 열(--multi, 2~4). 열(.wdc-col)은 줄 폭의 --w %, 열 사이 --gap.
+   항목(.wdc-it)은 열 폭의 --iw %, 위로 --ig 만큼 띄운다 (첫 항목이면 '시작 높이'). 숫자는 1920 시안 px.
+   폭을 다 쓰지 않으면 줄 안에서 왼쪽(기본)·가운데(--c)·오른쪽(--r) 으로 모은다.
+   모바일: 한 개·2열은 꽉 찬 1열, 여러 열은 2개씩. 간격·시작 높이는 쓰지 않고 8 로 붙인다. */
+.wdc-grid {
+  --gu: min(0.052083vw, 1px); /* 1920 시안 1px */
+  display: flex;
+  align-items: flex-start;
+  gap: calc(var(--gap) * var(--gu));
+}
+
+.wdc-grid--c { justify-content: center; }
+.wdc-grid--r { justify-content: flex-end; }
+
+.wdc-col {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  min-width: 0;
+  /* 폭 합이 100% 면 열 사이 간격까지 넣어 꼭 맞게 */
+  width: calc(var(--w) * 1% - var(--gap) * var(--gu) * (var(--n) - 1) / var(--n));
+}
+
+.wdc-it {
+  display: flex;
+  flex-direction: column;
+  gap: min(0.8333vw, 16px);
+  width: calc(var(--iw) * 1%);
+  margin: calc(var(--ig) * var(--gu)) 0 0;
+}
+
+.wdc-it--c {
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+}
+
+.wdc-it--r {
+  margin-left: auto;
+  text-align: right;
+}
+
+.wdc-it > img,
+.wdc-it > video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* 글 항목: 상세 헤더와 같은 글씨, 칸 폭 안에서 줄바꿈 */
+.wdc-it--text {
+  gap: min(1.25vw, 24px);
+}
+
+/* 2열 '좌우 높이 맞춤': 열마다 한 개뿐인 이미지·영상을 더 긴 쪽 높이로 채운다 (넘치는 만큼 잘림) */
+.wdc-grid--eq {
+  align-items: stretch;
+}
+
+.wdc-grid--eq .wdc-it:only-child {
+  flex: 1 1 auto;
+}
+
+.wdc-grid--eq .wdc-it:only-child > img,
+.wdc-grid--eq .wdc-it:only-child > video {
+  flex: 1 1 auto;
+  min-height: 0;
+  object-fit: cover;
+}
+
+@media (max-width: 599.98px) {
+  .wdc-grid {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .wdc-col,
+  .wdc-it {
+    width: 100%;
+  }
+
+  .wdc-it {
+    gap: 8px;
+    margin: 8px 0 0;
+  }
+
+  .wdc-col > .wdc-it:first-child {
+    margin-top: 0;
+  }
+
+  .wdc-grid--multi {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .wdc-grid--multi .wdc-col {
+    width: calc(50% - 4px);
+  }
+
+  .wdc-it--text {
+    padding: 0 20px;
+  }
+
+  .wdc-grid--eq .wdc-it:only-child > img,
+  .wdc-grid--eq .wdc-it:only-child > video {
+    flex: none;
+  }
+}

@@ -609,8 +609,66 @@ def pfx_block(b):
 FX_TYPES = ("strip", "stack", "compare", "wipe", "slide", "chapters")
 
 
+# ── 이미지·영상 배치 (11.23 CMS 피드백, 피그마 4532:21171) ──
+# 유형(kind): single 한 개 · two 2열 · multi 2~4열. 열(cols)마다 폭 w(%), 열 안에 항목을 위에서부터 쌓는다.
+# 항목: 이미지·영상 또는 글. 크기 w(열 폭의 %), 위 간격 gap(1920 기준 px — 첫 항목이면 시작 높이), 정렬 x(l/c/r).
+# 값은 서버 cms_p_clean_grid 가 검사한 것만 들어온다 (admin/pages.php cms_p_grid 와 바이트 같게).
+
+def pint(v, d):
+    return v if type(v) is int else d
+
+
+def pgrid_item(it):
+    if not isinstance(it, dict):
+        return None
+    xa = it.get("x")
+    al = f" wdc-it--{xa}" if xa in ("c", "r") else ""
+    st = f' style="--iw: {pint(it.get("w"), 100)}; --ig: {pint(it.get("gap"), 0)}"'
+    if it.get("type") == "text":
+        ti, ko = str(it.get("title") or ""), str(it.get("ko") or "")
+        if not norm(ti) and not norm(ko):
+            return None
+        x = f'<div class="wdc-it wdc-it--text{al}"{st}>'
+        if norm(ti):
+            x += f'<h2 class="wd-head-title">{ptext(ti)}</h2>'
+        if norm(ko):
+            x += f'<p class="wd-head-desc">{pkoen(ko, it.get("en"))}</p>'
+        return x + "</div>"
+    if it.get("type") in ("img", "video") and isinstance(it.get("src"), str) and it["src"]:
+        cap = norm(it["caption"]) if isinstance(it.get("caption"), str) else ""
+        x = f'<figure class="wdc-it{al}"{st}>' + pmedia(it, "", " data-reveal")
+        if cap:
+            x += f'<figcaption class="wdc-cap">{ptext(cap)}</figcaption>'
+        return x + "</figure>"
+    return None
+
+
+def pgrid(b):
+    kind = b.get("kind")
+    if kind not in ("single", "two", "multi"):
+        return None
+    cols = [c for c in (b.get("cols") or []) if isinstance(c, dict)][:4]
+    if not cols:
+        return None
+    body, any_item = "", False
+    for c in cols:
+        its = [x for x in (pgrid_item(it) for it in (c.get("items") or [])) if x]
+        any_item = any_item or bool(its)
+        body += f'<div class="wdc-col" style="--w: {pint(c.get("w"), 100)}">' + "".join(its) + "</div>"
+    if not any_item:
+        return None
+    cls = f"wdc-grid wdc-grid--{kind}"
+    if b.get("eq") is True:
+        cls += " wdc-grid--eq"
+    if b.get("align") in ("c", "r"):
+        cls += f" wdc-grid--{b['align']}"
+    return f'<div class="{cls}" style="--n: {len(cols)}; --gap: {pint(b.get("gap"), 12)}">' + body + "</div>"
+
+
 def page_main(p):
-    out = ['<div class="wd-container">', '<section class="wd-top">', '<div class="wd-hero wd-hero--fade-black">']
+    # 배경 (11.23): 흰색이면 상세 03·04 처럼 라이트 테마 + 히어로만 어둡게 (page_html 이 body 클래스를 바꾼다)
+    hero_cls = "wd-hero--dark" if p.get("theme") == "light" else "wd-hero--fade-black"
+    out = ['<div class="wd-container">', '<section class="wd-top">', f'<div class="wd-hero {hero_cls}">']
     out.append(pmedia(p.get("hero") or {}, "wd-hero-media"))
     out.append('<div class="wd-hero-dim" aria-hidden="true"></div>')
     head = '<div class="wd-hero-title"><div class="wd-hero-head">'
@@ -634,6 +692,15 @@ def page_main(p):
     inlist = False
     for b in p.get("blocks") or []:
         t = b.get("type")
+        if t == "grid":
+            x = pgrid(b)
+            if not x:
+                continue
+            if not inlist:
+                out.append('<section class="wdc-list">')
+                inlist = True
+            out.append(x)
+            continue
         if t == "media":
             items = [m for m in (b.get("items") or []) if m and m.get("src")][:2]
             if not items:
@@ -694,6 +761,8 @@ def page_html(p, skeleton):
         "{{SLUG}}": p["slug"],
         "{{MAIN}}": page_main(p),
     }
+    if p.get("theme") == "light":
+        skeleton = skeleton.replace('<body class="wd-body">', '<body class="wd-body wd-body--light">', 1)
     # 한 번에 바꾼다 (넣은 글에 {{...}} 가 있어도 다시 바뀌지 않게)
     return re.sub(r"\{\{(TITLE|DESC|OG|SLUG|MAIN)\}\}", lambda m: rep_[m.group(0)], skeleton)
 

@@ -1735,7 +1735,7 @@
   // 미리보기는 서버가 실제와 같은 틀로 만들어 준 html 을 그대로 보여 준다.
   function blankPage() {
     return { slug: "", status: "draft", brand: "", title: "", tags: [], desc: "", hero: null,
-      intro: { title: "", ko: "", en: "" }, card: { size: "m" }, blocks: [{ type: "media", items: [null] }] };
+      intro: { title: "", ko: "", en: "" }, card: { size: "m" }, blocks: [newGrid("single")] };
   }
   function openPages(id) {
     return api("pages").then(function (r) {
@@ -1775,9 +1775,15 @@
     var c = clone(p);
     c.blocks = (c.blocks || []).map(function (b) {
       if (b.type === "media") { b.items = (b.items || []).filter(function (m) { return m && m.src; }); return b; }
+      if (b.type === "grid") {
+        b.cols.forEach(function (c) { c.items = c.items.filter(function (it) { return it.type === "text" || it.src; }); });
+        return b;
+      }
       return b;
     }).filter(function (b) {
       if (b.type === "media") return b.items.length > 0;
+      if (b.type === "grid") return b.cols.some(function (c) { return c.items.some(function (it) { return it.src; }); }) &&
+        b.cols.reduce(function (a, c) { return a + c.w; }, 0) <= 100;
       if (b.type === "film") return /^[0-9]{5,12}$/.test(b.vimeo || "") && b.poster;
       if (FX[b.type]) return fxReady(b);
       return true;
@@ -1886,6 +1892,138 @@
       peChanged(true);
     });
     return box;
+  }
+
+  // ── 이미지·영상 배치 (11.23 "기존 페이지들 배치가 일관되지 않아서 … 레이아웃 유형별 세부 옵션") ─────
+  // 사이트 html 은 cms.py pgrid = pages.php cms_p_grid, 모양은 works-detail.css .wdc-grid.
+  // 숫자: 열 폭 · 크기는 %, 간격은 1920 화면 기준 px (모바일은 간격 없이 붙는다).
+  var GRID_KIND = { single: "한 개", two: "2열", multi: "여러 열" };
+  function gMedia(w, x) { var it = { w: w, gap: 0 }; if (x) it.x = x; return it; }
+  function gText() { return { type: "text", title: "", ko: "", en: "", w: 80, gap: 0, x: "c" }; }
+  function newGrid(kind, withText) {
+    if (kind === "single") return { type: "grid", kind: "single", gap: 12, cols: [{ w: 100, items: [gMedia(100, "c")] }] };
+    if (kind === "two") return { type: "grid", kind: "two", gap: 12, eq: !withText,
+      cols: [{ w: 50, items: [gMedia(100)] }, { w: 50, items: [withText ? gText() : gMedia(100)] }] };
+    return { type: "grid", kind: "multi", gap: 12, cols: [0, 1, 2, 3].map(function () { return { w: 25, items: [gMedia(100)] }; }) };
+  }
+  function numIn(obj, key, lo, hi, def, redraw) {
+    var el = h("input", { type: "number", step: "1", min: String(lo), max: String(hi), value: String(obj[key] === undefined ? def : obj[key]) });
+    el.addEventListener("change", function () {
+      var v = parseInt(el.value, 10);
+      if (isNaN(v)) v = def;
+      obj[key] = clampI(v, lo, hi);
+      el.value = String(obj[key]);
+      peChanged(!!redraw);
+    });
+    return el;
+  }
+  var ALIGN_OPTS = [["l", "왼쪽"], ["c", "가운데"], ["r", "오른쪽"]];
+  function alignSel(obj, key) {
+    return optSel(ALIGN_OPTS, obj[key] || "l", function (v) { if (v === "l") delete obj[key]; else obj[key] = v; });
+  }
+  function colSum(b) { return b.cols.reduce(function (a, c) { return a + c.w; }, 0); }
+  // 열 폭을 똑같이 나눈다 (합 100)
+  function evenCols(b) {
+    var n = b.cols.length;
+    b.cols.forEach(function (c, i) { c.w = Math.floor(100 / n) + (i < 100 % n ? 1 : 0); });
+  }
+  // 항목 하나 (이미지·영상 또는 글)
+  function gridItem(b, col, it, k) {
+    var single = b.kind === "single";
+    var box = h("div", { class: "pg-item" });
+    var head = h("div", { class: "pe-block-head" },
+      h("b", { text: it.type === "text" ? "글" : "이미지·영상" }),
+      h("span", { class: "spacer" }));
+    if (!single) {
+      head.appendChild(h("button", { class: "ghost", text: "↑", title: "위로", disabled: k === 0, onclick: function () { col.items.splice(k - 1, 0, col.items.splice(k, 1)[0]); peChanged(true); } }));
+      head.appendChild(h("button", { class: "ghost", text: "↓", title: "아래로", disabled: k === col.items.length - 1, onclick: function () { col.items.splice(k + 1, 0, col.items.splice(k, 1)[0]); peChanged(true); } }));
+      head.appendChild(h("button", { class: "ghost danger", text: "빼기", onclick: function () { col.items.splice(k, 1); peChanged(true); } }));
+    }
+    box.appendChild(head);
+    if (it.type === "text") {
+      box.appendChild(field("제목", textIn(it, "title", false, "")));
+      box.appendChild(field("한글", textIn(it, "ko", true, "")));
+      box.appendChild(field("영문 (선택)", textIn(it, "en", true, "")));
+    } else {
+      box.appendChild(mediaPick(it.src ? it : null, function (v) {
+        delete it.src; delete it.poster; delete it.type;
+        if (v) { it.type = v.type; it.src = v.src; if (v.poster) it.poster = v.poster; }
+        peChanged(true);
+      }, false));
+      if (it.src) box.appendChild(captionField(it));
+    }
+    box.appendChild(h("div", { class: "pe-opts" },
+      field("크기 (%)", numIn(it, "w", 10, 100, 100)),
+      field(k === 0 ? "시작 높이 (px)" : "위 간격 (px)", numIn(it, "gap", 0, 2000, 0)),
+      field("정렬", alignSel(it, "x"))));
+    return box;
+  }
+  function gridEditor(b, row) {
+    var hints = {
+      single: "이미지·영상 한 개를 원하는 크기로 왼쪽·가운데·오른쪽에 놓아요.",
+      two: "왼쪽·오른쪽 열에 이미지·영상·글을 각각 원하는 만큼 쌓아요. ‘시작 높이’로 한쪽을 내려 높이 차이를 만들고, 열 아래에 이미지를 더 넣을 수 있어요.",
+      multi: "주로 세로형 이미지·영상을 2~4열로 놓아요. 열마다 시작 높이와 간격을 따로 정할 수 있어요."
+    };
+    row.appendChild(h("small", { class: "hint", text: hints[b.kind] + " 모바일은 " + (b.kind === "multi" ? "2개씩" : "1열로") + " 붙여서 보여 줘요." }));
+    if (b.kind !== "single") {
+      var opts = h("div", { class: "pe-opts" });
+      if (b.kind === "two") {
+        var r = b.cols[0].w + ":" + b.cols[1].w;
+        var preset = { "50:50": "1-1", "67:33": "2-1", "33:67": "1-2" }[r] || "custom";
+        opts.appendChild(field("열 비율", optSel([["1-1", "반반 (1:1)"], ["2-1", "왼쪽을 크게 (2:1)"], ["1-2", "오른쪽을 크게 (1:2)"], ["custom", "직접 (아래 열 폭)"]], preset, function (v) {
+          var m = { "1-1": [50, 50], "2-1": [67, 33], "1-2": [33, 67] }[v];
+          if (m) { b.cols[0].w = m[0]; b.cols[1].w = m[1]; }
+          peChanged(true);
+        })));
+      } else {
+        opts.appendChild(field("열 개수", optSel([["2", "2열"], ["3", "3열"], ["4", "4열"]], String(b.cols.length), function (v) {
+          var n = +v;
+          while (b.cols.length < n) b.cols.push({ w: 25, items: [gMedia(100)] });
+          if (b.cols.length > n) {
+            var lost = b.cols.slice(n).some(function (c) { return c.items.some(function (it) { return it.src || it.type === "text"; }); });
+            if (lost && !confirm("뒤쪽 열에 넣은 것이 함께 빠집니다. 줄일까요?")) { peChanged(true); return; }
+            b.cols.length = n;
+          }
+          evenCols(b);
+          peChanged(true);
+        })));
+      }
+      opts.appendChild(field("열 사이 간격 (px)", numIn(b, "gap", 0, 400, 12)));
+      opts.appendChild(field("남는 폭에서 줄 정렬", alignSel(b, "align")));
+      row.appendChild(opts);
+      if (b.kind === "two") {
+        var onlyMedia = b.cols.every(function (c) { return c.items.length === 1 && c.items[0].type !== "text"; });
+        var eq = h("input", { type: "checkbox", checked: b.eq === true, disabled: !onlyMedia });
+        eq.addEventListener("change", function () { if (eq.checked) b.eq = true; else delete b.eq; peChanged(true); });
+        var drop = h("input", { type: "checkbox", checked: (b.cols[1].items[0] || {}).gap > 0 });
+        drop.addEventListener("change", function () {
+          var first = b.cols[1].items[0];
+          if (!first) { drop.checked = false; return; }
+          first.gap = drop.checked ? 240 : 0;
+          if (drop.checked) delete b.eq;
+          peChanged(true);
+        });
+        row.appendChild(h("div", { class: "pg-checks" },
+          h("label", { class: "check" }, eq, h("span", { text: "좌우 높이 맞춤 — 짧은 쪽을 긴 쪽 높이로 채워요 (열마다 이미지·영상이 하나일 때만)" })),
+          h("label", { class: "check" }, drop, h("span", { text: "좌우 높이 차이 — 오른쪽 열을 240px 내려서 시작해요 (오른쪽 첫 칸 ‘시작 높이’로 조절)" }))));
+      }
+      var sum = colSum(b);
+      if (sum > 100) row.appendChild(h("small", { class: "hint fx-warn", text: "열 폭을 더하면 " + sum + "% 예요. 100% 이하로 줄여야 저장·미리보기가 돼요." }));
+    }
+    var cols = h("div", { class: "pg-cols n" + b.cols.length });
+    b.cols.forEach(function (col, ci) {
+      var name = b.kind === "single" ? "" : b.kind === "two" ? (ci === 0 ? "왼쪽 열" : "오른쪽 열") : ci + 1 + "열";
+      var box = h("div", { class: "pg-col" });
+      if (name) box.appendChild(h("div", { class: "pg-col-head" }, h("b", { text: name }), field("열 폭 (%)", numIn(col, "w", 10, 100, 50, true))));
+      col.items.forEach(function (it, k) { box.appendChild(gridItem(b, col, it, k)); });
+      if (b.kind !== "single" && col.items.length < 8) {
+        box.appendChild(h("div", { class: "pg-adds" },
+          h("button", { class: "inner-add", text: "＋ 이 열 아래에 이미지·영상", onclick: function () { col.items.push(gMedia(100)); col.items[col.items.length - 1].gap = col.items.length > 1 ? 12 : 0; delete b.eq; peChanged(true); } }),
+          h("button", { class: "inner-add", text: "＋ 이 열 아래에 글", onclick: function () { var t = gText(); t.gap = col.items.length ? 40 : 0; col.items.push(t); delete b.eq; peChanged(true); } })));
+      }
+      cols.appendChild(box);
+    });
+    row.appendChild(cols);
   }
 
   // ── 인터랙션 블록 (11.20 "하단 캡처들의 액션을 새 페이지에서도") ─────────
@@ -2182,6 +2320,7 @@
       h("b", { text: "기본 정보" }),
       field("페이지 주소  pl2std.com/works/…/", slug, "영문 소문자·숫자·하이픈(-)만"),
       field("공개 여부", status),
+      field("배경색", optSel([["dark", "검정 (기본)"], ["light", "흰색"]], p.theme === "light" ? "light" : "dark", function (v) { if (v === "light") p.theme = "light"; else delete p.theme; })),
       field("브랜드", textIn(p, "brand", false, "예: Samsung")),
       field("제목 (Enter 로 줄을 나눕니다)", textIn(p, "title", true, "프로젝트 제목")),
       field("태그 (쉼표로 구분)", tags),
@@ -2202,7 +2341,8 @@
     var blocksBox = h("section", { class: "card" }, h("b", { text: "내용 (위에서부터 차례로)" }));
     (p.blocks || []).forEach(function (b, i) {
       var fx = !!FX[b.type];
-      var label = { media: "이미지·영상 줄", text: "글", film: "풀필름 (비메오)" }[b.type] || (fx ? FX[b.type].label : b.type);
+      var label = { media: "이미지·영상 줄 (예전 방식)", text: "글", film: "풀필름 (비메오)" }[b.type] ||
+        (b.type === "grid" ? "이미지·영상 배치 · " + GRID_KIND[b.kind] : fx ? FX[b.type].label : b.type);
       var row = h("div", { class: "pe-block " + (fx ? "pe-kind-fx" : "pe-kind-basic") },
         h("div", { class: "pe-block-head pe-block-bar" },
           h("span", { class: "pe-num", text: String(i + 1) }),
@@ -2227,6 +2367,8 @@
         row.appendChild(cells);
         row.appendChild(layoutField(b));
         if (b.items.length === 1) row.appendChild(h("button", { class: "inner-add", text: "＋ 이 줄에 한 칸 더 (한 줄에 2개)", onclick: function () { b.items.push(null); delete b.layout; peChanged(true); } }));
+      } else if (b.type === "grid") {
+        gridEditor(b, row);
       } else if (b.type === "text") {
         row.appendChild(field("제목", textIn(b, "title", false, "")));
         row.appendChild(field("한글", textIn(b, "ko", true, "")));
@@ -2267,7 +2409,10 @@
       return h("button", { class: "pe-tile " + cls, onclick: fn }, h("b", { text: "＋ " + name }), h("small", { text: desc }));
     };
     var basic = h("div", { class: "pe-tiles" },
-      tile("is-basic", "이미지·영상 줄", "한 줄에 1~2개", function () { addBlock({ type: "media", items: [null] }); }),
+      tile("is-basic", "이미지·영상 한 개", "크기 · 왼쪽/가운데/오른쪽", function () { addBlock(newGrid("single")); }),
+      tile("is-basic", "2열 · 이미지+이미지", "높이 맞춤 · 높이 차이 · 열마다 개수", function () { addBlock(newGrid("two")); }),
+      tile("is-basic", "2열 · 이미지+글", "한쪽은 이미지, 한쪽은 글", function () { addBlock(newGrid("two", true)); }),
+      tile("is-basic", "여러 열 (2~4)", "주로 세로형 · 열마다 시작 높이", function () { addBlock(newGrid("multi")); }),
       tile("is-basic", "글", "제목 + 설명", function () { addBlock({ type: "text", title: "", ko: "", en: "" }); }),
       tile("is-basic", "풀필름", "비메오 영상", function () { addBlock({ type: "film", title: "", vimeo: "", poster: "" }); }));
     var fxTiles = h("div", { class: "pe-tiles" });

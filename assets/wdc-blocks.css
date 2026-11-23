@@ -723,3 +723,40 @@
     background: var(--pl2-neutral-90);
   }
 }
+
+/* ══ 흰 배경 새 페이지 (11.23, body.wd-body--light) ═════════════════
+   어두운 배경을 전제로 한 색만 뒤집는다. 레이어 얹힘의 어두운 띠(#1E2123)는 디자인이라 그대로 둔다. */
+.wd-body--light .wdc-strip-band::before {
+  background: linear-gradient(to right, #fff 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.wd-body--light .wdc-strip-band::after {
+  background: linear-gradient(to left, #fff 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.wd-body--light .wdc-strip-cap {
+  color: var(--pl2-neutral-40);
+}
+
+.wd-body--light .wdc-slide-dots span,
+.wd-body--light .wdc-dots span {
+  background: var(--pl2-neutral-60);
+}
+
+.wd-body--light .wdc-slide-dots span.is-active,
+.wd-body--light .wdc-dots span.is-active {
+  background: var(--pl2-neutral-20);
+}
+
+.wd-body--light .wdc-ch-head,
+.wd-body--light .wdc-ch-list .is-active .wdc-ch-head {
+  color: var(--pl2-neutral-10);
+}
+
+.wd-body--light .wdc-ch-list .wdc-ch-head {
+  color: var(--pl2-neutral-60);
+}
+
+.wd-body--light .wdc-ch-desc {
+  color: var(--pl2-neutral-30);
+}
