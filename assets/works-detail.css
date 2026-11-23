@@ -1140,7 +1140,8 @@
   flex-direction: column;
   gap: min(0.8333vw, 16px);
   width: calc(var(--iw) * 1%);
-  margin: calc(var(--ig) * var(--gu)) 0 0;
+  /* --ml: 왼쪽 정렬일 때 왼쪽에서 띄우기 (열 폭의 %) — 짝지은 세로 이미지·목업처럼 칸마다 자리를 잡는다 */
+  margin: calc(var(--ig) * var(--gu)) 0 0 calc(var(--ml, 0) * 1%);
 }
 
 .wdc-it--c {

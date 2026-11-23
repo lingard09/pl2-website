@@ -137,7 +137,8 @@ function cms_p_grid_item($it)
     }
     $xa = cms_get($it, 'x');
     $al = in_array($xa, array('c', 'r'), true) ? ' wdc-it--' . $xa : '';
-    $st = ' style="--iw: ' . cms_p_int(cms_get($it, 'w'), 100) . '; --ig: ' . cms_p_int(cms_get($it, 'gap'), 0) . '"';
+    $ml = cms_p_int(cms_get($it, 'ml'), 0); // 왼쪽에서 띄우기 (열 폭의 %, 왼쪽 정렬일 때만)
+    $st = ' style="--iw: ' . cms_p_int(cms_get($it, 'w'), 100) . '; --ig: ' . cms_p_int(cms_get($it, 'gap'), 0) . ($ml > 0 && $al === '' ? '; --ml: ' . $ml : '') . '"';
     $type = cms_get($it, 'type');
     if ($type === 'text') {
         $ti = (string)cms_get($it, 'title', '');
@@ -1027,6 +1028,17 @@ function cms_p_clean_grid($b)
             $o['gap'] = $ig;
             if (in_array(cms_get($it, 'x'), array('c', 'r'), true)) {
                 $o['x'] = $it['x'];
+            } else {
+                $ml = cms_get($it, 'ml', 0);
+                if (!is_int($ml) || $ml < 0 || $ml > 90) {
+                    return '왼쪽에서 띄우기는 0~90% 사이로 적어 주세요';
+                }
+                if ($iw + $ml > 100) {
+                    return '크기와 왼쪽에서 띄우기를 더하면 100% 를 넘습니다 (지금 ' . ($iw + $ml) . '%)';
+                }
+                if ($ml > 0) {
+                    $o['ml'] = $ml;
+                }
             }
             $col['items'][] = $o;
         }

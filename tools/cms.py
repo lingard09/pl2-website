@@ -623,7 +623,8 @@ def pgrid_item(it):
         return None
     xa = it.get("x")
     al = f" wdc-it--{xa}" if xa in ("c", "r") else ""
-    st = f' style="--iw: {pint(it.get("w"), 100)}; --ig: {pint(it.get("gap"), 0)}"'
+    ml = pint(it.get("ml"), 0)  # 왼쪽에서 띄우기 (열 폭의 %, 왼쪽 정렬일 때만)
+    st = f' style="--iw: {pint(it.get("w"), 100)}; --ig: {pint(it.get("gap"), 0)}' + (f"; --ml: {ml}" if ml > 0 and not al else "") + '"'
     if it.get("type") == "text":
         ti, ko = str(it.get("title") or ""), str(it.get("ko") or "")
         if not norm(ti) and not norm(ko):

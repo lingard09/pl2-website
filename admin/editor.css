@@ -858,3 +858,4 @@ button.inner-add:hover { border-color: var(--text); color: var(--text); backgrou
 .pg-adds { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .pg-checks { display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; }
 .pg-checks input:disabled + span { color: var(--muted); }
+.pg-opts { grid-template-columns: repeat(4, 1fr); }

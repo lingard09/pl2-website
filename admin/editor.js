@@ -1783,7 +1783,8 @@
     }).filter(function (b) {
       if (b.type === "media") return b.items.length > 0;
       if (b.type === "grid") return b.cols.some(function (c) { return c.items.some(function (it) { return it.src; }); }) &&
-        b.cols.reduce(function (a, c) { return a + c.w; }, 0) <= 100;
+        b.cols.reduce(function (a, c) { return a + c.w; }, 0) <= 100 &&
+        b.cols.every(function (c) { return c.items.every(function (it) { return it.x || (it.w || 100) + (it.ml || 0) <= 100; }); });
       if (b.type === "film") return /^[0-9]{5,12}$/.test(b.vimeo || "") && b.poster;
       if (FX[b.type]) return fxReady(b);
       return true;
@@ -1952,17 +1953,25 @@
       }, false));
       if (it.src) box.appendChild(captionField(it));
     }
-    box.appendChild(h("div", { class: "pe-opts" },
-      field("크기 (%)", numIn(it, "w", 10, 100, 100)),
+    // 정렬: 왼쪽이면 '왼쪽 띄우기 %' 로 열 안 어디서 시작할지 정한다 (11.23 재검토 — 짝지은 세로 이미지·목업 자리)
+    var pos = optSel(ALIGN_OPTS, it.x || "l", function (v) {
+      if (v === "l") delete it.x; else { it.x = v; delete it.ml; }
+      peChanged(true);
+    });
+    var opts = h("div", { class: "pe-opts pg-opts" },
+      field("크기 (%)", numIn(it, "w", 10, 100, 100, true)),
       field(k === 0 ? "시작 높이 (px)" : "위 간격 (px)", numIn(it, "gap", 0, 2000, 0)),
-      field("정렬", alignSel(it, "x"))));
+      field("정렬", pos));
+    if (!it.x) opts.appendChild(field("왼쪽 띄우기 (%)", numIn(it, "ml", 0, 90, 0, true)));
+    box.appendChild(opts);
+    if (!it.x && (it.w || 100) + (it.ml || 0) > 100) box.appendChild(h("small", { class: "hint fx-warn", text: "크기 + 왼쪽 띄우기가 " + ((it.w || 100) + (it.ml || 0)) + "% 예요. 100% 이하로 줄여야 저장돼요." }));
     return box;
   }
   function gridEditor(b, row) {
     var hints = {
-      single: "이미지·영상 한 개를 원하는 크기로 왼쪽·가운데·오른쪽에 놓아요.",
+      single: "이미지·영상 한 개를 원하는 크기로 왼쪽·가운데·오른쪽에 놓아요. 정렬이 왼쪽이면 ‘왼쪽 띄우기’로 원하는 자리에 놓을 수 있어요.",
       two: "왼쪽·오른쪽 열에 이미지·영상·글을 각각 원하는 만큼 쌓아요. ‘시작 높이’로 한쪽을 내려 높이 차이를 만들고, 열 아래에 이미지를 더 넣을 수 있어요.",
-      multi: "주로 세로형 이미지·영상을 2~4열로 놓아요. 열마다 시작 높이와 간격을 따로 정할 수 있어요."
+      multi: "주로 세로형 이미지·영상을 2~4열로 놓아요. 칸마다 시작 높이·간격을 정하고, ‘왼쪽 띄우기’로 두 장씩 짝지어 모을 수도 있어요."
     };
     row.appendChild(h("small", { class: "hint", text: hints[b.kind] + " 모바일은 " + (b.kind === "multi" ? "2개씩" : "1열로") + " 붙여서 보여 줘요." }));
     if (b.kind !== "single") {
