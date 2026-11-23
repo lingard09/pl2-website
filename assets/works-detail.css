@@ -1138,7 +1138,7 @@
 .wdc-it {
   display: flex;
   flex-direction: column;
-  gap: min(0.8333vw, 16px);
+  gap: min(1.6667vw, 32px); /* 이미지 ↔ 캡션 32 (상세 07 기준, 11.23 고객 견본). 예전 줄(.wdc-fig)은 16 그대로 */
   width: calc(var(--iw) * 1%);
   /* --ml: 왼쪽 정렬일 때 왼쪽에서 띄우기 (열 폭의 %) — 짝지은 세로 이미지·목업처럼 칸마다 자리를 잡는다 */
   margin: calc(var(--ig) * var(--gu)) 0 0 calc(var(--ml, 0) * 1%);
