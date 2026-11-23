@@ -1094,7 +1094,7 @@
       head(id), body, actions(id, function () {}));
   }
 
-  // 연결 페이지 (11.24, Home 타일): 상세 01~14 · 직접 만든 공개 페이지 · Works 목록. 값은 맨 위 기준 /works/…/
+  // 연결 페이지 (11.23, Home 타일): 상세 01~14 · 직접 만든 공개 페이지 · Works 목록. 값은 맨 위 기준 /works/…/
   function linkOptions() {
     var out = [];
     (S.index.pages || []).forEach(function (p) {

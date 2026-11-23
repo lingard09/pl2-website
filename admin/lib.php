@@ -766,7 +766,7 @@ function cms_clean_item($id, $item)
                 return '비메오 영상 번호가 올바르지 않습니다';
             }
         } elseif ($k === 'data-href') {
-            // 연결 페이지 (11.24, Home 타일): Works 목록이나 그 아래 페이지만
+            // 연결 페이지 (11.23, Home 타일): Works 목록이나 그 아래 페이지만
             if (!is_string($val) || !preg_match('#^/works/(?:[a-z0-9]+(?:-[a-z0-9]+)*/)?$#', $val)) {
                 return '연결할 페이지 주소가 올바르지 않습니다';
             }

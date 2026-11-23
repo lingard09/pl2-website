@@ -11,7 +11,7 @@
   각각 따로 된 요소라 각자 편집 단위가 된다.
 - 이미지: <img src>, <picture><source srcset> (모바일 이미지)
 - 영상: <video poster>, <video><source src>, 비메오 자리 [data-vimeo]
-- 연결 페이지 (11.24): <a> 가 아닌 요소의 data-href (Home 타일 → 상세 페이지). 값은 사이트 맨 위 기준 /works/…/ 주소
+- 연결 페이지 (11.23): <a> 가 아닌 요소의 data-href (Home 타일 → 상세 페이지). 값은 사이트 맨 위 기준 /works/…/ 주소
 - 이미지 ↔ 영상 교체 (11.19): 본문의 <img>·자동재생 <video> 는 서로 바꿀 수 있다 (swap_ok 의 예외 자리와
   tools/cms-noswap.json 에 적힌 자리 제외). 목록에 원래 태그의 속성을 넣어 두고, 바꾸면 그 속성을 옮긴 새 태그를
   만든다 (swap_html). 값: {"as": "video", "src", "poster"} 또는 {"as": "img", "src"}.
